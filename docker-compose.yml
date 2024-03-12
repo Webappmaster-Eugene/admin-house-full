@@ -1,43 +1,63 @@
-version: '3.2'
+version: "3.9"
 
 services:
   back:
-    build:
-      context: ./back
-      dockerfile: Dockerfile.back
-    ports:
-      - 3000:3000
+    image: eugenenumart/admin-house-back:latest
+    expose:
+      - 3000
     command: "npm run start"
 
   front:
-    build:
-      context: ./front
-      dockerfile: Dockerfile.front
-    ports:
-      - 8080:8080
+    image: eugenenumart/admin-house-front:latest
+    expose:
+      - 8080
     command: "npm run start"
 
   postgres:
-    image: postgres:16.2-alpine
+    image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_USER: ${USERNAME}
-      POSTGRES_PASSWORD: ${PASSWORD}
-      POSTGRES_DB: ${DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE: ${POSTGRES_DATABASE}
     volumes:
-      - postgres:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+      - data:/var/lib/postgresql/data
+    expose:
+      - 5432
 
   pgadmin:
     image: dpage/pgadmin4:8
     environment:
-      PGADMIN_DEFAULT_EMAIL: jamesnumart@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: postgres
-      PGADMIN_LISTEN_PORT: 80
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${PGADMIN_PORT}
     ports:
-      - 5432:80
-    volumes:
-      - pgadmin:/var/lib/pgadmin
+      - 5050:5050
     depends_on:
       - postgres
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/nginx/ssl
+      - ./certbot/data:/var/www/html
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email jamesnumart@gmail.com --agree-tos --no-eff-email -d alibaba.hhos.ru -d www.alibaba.hhos.ru -d api.alibaba.hhos.ru -d www.api.alibaba.hhos.ru
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/logs:/var/log/letsencrypt
+      - ./certbot/data:/var/www/html
+
+volumes:
+  data:

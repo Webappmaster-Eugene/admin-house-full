@@ -1,0 +1,37 @@
+name: Check
+on: push
+
+jobs:
+  job-back-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["20.9.0"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install deps
+        run: cd back && npm install
+      - name: Lint
+        run: cd back && npm run lint
+  job-back-test:
+    needs: [job-back-lint]
+    strategy:
+      matrix:
+        node: ["20.9.0"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install deps
+        run: cd back && npm install
+      - name: Test
+        run: cd back && npm run test
