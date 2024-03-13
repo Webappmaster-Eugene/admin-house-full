@@ -1,8 +1,8 @@
 {
-  "name": "project-name",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "name": "back-admin-house",
+  "version": "1.0.1",
+  "description": "back-admin-house",
+  "author": "Eugene Webappmaster",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

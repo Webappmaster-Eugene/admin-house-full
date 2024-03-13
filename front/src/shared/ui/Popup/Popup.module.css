@@ -1,0 +1,71 @@
+.background {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(55, 55, 55, 0.6);
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.popup {
+  background-color: var(--dominant-main);
+  padding: 100px;
+  max-width: 664px;
+  width: 100%;
+  margin: 0 12px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.title {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 60px;
+  margin-bottom: 12px;
+}
+
+.description {
+  margin-bottom: 36px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--content-medium);
+}
+
+.closeButton {
+  padding: 0;
+  background-color: transparent;
+  margin: 0;
+  border: none;
+  position: absolute;
+  top: 36px;
+  right: 36px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  color: var(--content-medium);
+}
+
+@media screen and (max-width: 768px) {
+  .popup {
+    padding: 50px 20px;
+  }
+
+  .title {
+    font-size: 30px;
+    line-height: 46px;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+  }
+}

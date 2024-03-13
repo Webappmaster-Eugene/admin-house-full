@@ -1,0 +1,110 @@
+.container {
+  width: 100%;
+  min-height: 66px;
+  position: relative;
+  transition: width 0.3s ease-in-out;
+  padding-top: 28px;
+}
+
+.input {
+  width: 100%;
+  min-height: 100%;
+  padding: 18px 26px;
+  border-radius: 8px;
+  border: solid 1px var(--content-light);
+  font-size: 18px;
+  line-height: 30px;
+  outline: none;
+}
+
+.input:hover,
+.input:focus {
+  border: solid 1px var(--content-dark);
+}
+
+.input::placeholder {
+  color: var(--content-medium);
+}
+
+.password {
+  padding-right: 55px;
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--content-medium);
+}
+
+.error {
+  border-color: var(--red);
+}
+
+.errorMessage {
+  color: var(--red);
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.withIcon {
+  padding-left: 68px;
+}
+
+.icon,
+.passwordIcon,
+.clearIcon {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  color: var(--content-medium);
+}
+
+.icon {
+  bottom: 21px;
+  left: 26px;
+}
+
+.passwordIcon,
+.clearIcon {
+  bottom: 21px;
+  right: 26px;
+  cursor: pointer;
+}
+
+.input:focus ~ .icon,
+.input:focus ~ .passwordIcon,
+.input:focus ~ .clearIcon {
+  color: var(--content-dark);
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    min-height: 40px;
+  }
+
+  .input {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .password {
+    padding-right: 40px;
+  }
+
+  .withIcon {
+    padding-left: 40px;
+  }
+
+  .icon {
+    left: 7px;
+  }
+
+  .passwordIcon,
+  .clearIcon {
+    right: 7px;
+  }
+}

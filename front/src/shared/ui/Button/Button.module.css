@@ -1,0 +1,118 @@
+.button {
+  border-radius: 8px;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  max-width: max-content;
+}
+
+.text {
+  padding: 0 !important;
+}
+
+.primary {
+  background: var(--blue-medium);
+  color: var(--dominant-main);
+}
+
+.primary:hover {
+  background: var(--blue-light);
+}
+
+.primary:active {
+  background: var(--blue-dark);
+}
+
+.outlined,
+.text {
+  color: var(--blue-medium);
+}
+
+.outlined {
+  outline: solid 1px var(--blue-medium);
+}
+
+.outlined:hover,
+.text:hover {
+  color: var(--blue-light);
+}
+
+.outlined:hover {
+  outline: solid 1px var(--blue-light);
+}
+
+.outlined:active,
+.text:active {
+  color: var(--blue-dark);
+}
+
+.outlined:active {
+  outline: solid 1px var(--blue-dark);
+}
+
+.primary .s {
+  font-weight: 500;
+}
+
+.s {
+  padding: 12px;
+  min-height: 44px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.primary .l {
+  font-weight: 500;
+}
+
+.l {
+  padding: 18px 26px;
+  min-height: 66px;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.leftIcon {
+  margin-right: 18px;
+}
+
+.rightIcon {
+  margin-left: 18px;
+}
+
+.leftSmallIcon {
+  margin-right: 8px;
+}
+
+.rightSmallIcon {
+  margin-left: 8px;
+}
+
+.smallIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+@media screen and (max-width: 768px) {
+  .s {
+    padding: 8px;
+    min-height: 36px;
+  }
+  .l {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
