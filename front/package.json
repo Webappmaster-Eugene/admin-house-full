@@ -6,7 +6,7 @@
     "dev": "next dev -p 8080",
     "build": "next build",
     "start": "next start -p 8080",
-    "lint": "npm run lint-eslint && npm run lint-prettier",
+    "lint": "npm run lint-eslint",
     "lint-eslint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "lint-prettier": "prettier . -c",
