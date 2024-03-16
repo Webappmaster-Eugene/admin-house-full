@@ -22,7 +22,7 @@ jobs:
 
     send-telegram-message:
       name: Send Telegram message
-      needs: [ "Build" ]
+      needs: [ deploy ]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout source code
@@ -42,7 +42,7 @@ jobs:
 
     notify-on-error:
       runs-on: ubuntu-latest
-      needs: [ "Build", "Deploy" ]
+      needs: [  build-backend,  build-frontend, deploy ]
       if: failure()
       steps:
         - name: Checkout source code
