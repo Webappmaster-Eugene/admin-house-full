@@ -1,5 +1,6 @@
 #1 шаг
 #Билдим образы фронта и бэка, пушим готовые образы на докерхаб. Делаем это на мощностях гитхаба
+#(front and back) and push to dockerhub
 
 name: Build
 on:
@@ -28,6 +29,7 @@ jobs:
           file: ./back/Dockerfile.back
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:latest
+
   build-frontend:
     runs-on: ubuntu-latest
     steps:
