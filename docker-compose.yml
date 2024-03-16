@@ -3,12 +3,26 @@ version: "3.9"
 services:
   back:
     image: eugenenumart/admin-house-back:latest
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     expose:
       - 3000
     command: "npm run start"
 
   front:
     image: eugenenumart/admin-house-front:latest
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     expose:
       - 8080
     command: "npm run start"
@@ -16,6 +30,12 @@ services:
   postgres:
     image: postgres:16-alpine
     restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -27,6 +47,13 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:8
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
@@ -39,7 +66,13 @@ services:
   nginx:
     container_name: nginx
     image: nginx:latest
-    restart: unless-stopped
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     ports:
       - 80:80
       - 443:443
