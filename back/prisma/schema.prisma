@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                          Int               @id @default(autoincrement())
+  first_name                  String
+  second_name                 String
+  phone                       String?
+  email                       String            @unique
+  password                    String
+  address                     String?
+  info                        String?
+  documents                   String
+  workspace                   Workspace         @relation(fields: [workspace_id], references: [id])
+  workspace_id                Int               @unique
+  organization                Organization[]
+  project_customer            Project[]         @relation("project_customer")
+  project_responsible_manager Project[]         @relation("project_responsible_manager")
+  created_field_of_category   FieldOfCategory[]
+  created_at                  DateTime          @default(now())
+  updated_at                  DateTime          @updatedAt
+  changed_price               PriceChanging[]
+  role_id                     Int
+  role                        Role              @relation(fields: [role_id], references: [id])
+}
+
+model Role {
+  id         Int               @id @default(autoincrement())
+  name       EUserTypeVariants
+  created_at DateTime          @default(now())
+  updated_at DateTime          @updatedAt
+  User       User[]
+}
+
+enum EUserTypeVariants {
+  USER
+  ADMIN
+  CUSTOMER
+}
+
+model Workspace {
+  id                   Int            @id @default(autoincrement())
+  name                 String
+  description          String?
+  workspace_creator_id Int            @unique
+  workspace_creator    User?
+  organization         Organization[]
+  created_at           DateTime       @default(now())
+  updated_at           DateTime       @updatedAt
+}
+
+model Organization {
+  id                     Int        @id @default(autoincrement())
+  name                   String
+  description            String?
+  workspace_id           Int
+  workspace              Workspace  @relation(fields: [workspace_id], references: [id])
+  organization_leader_id Int
+  organization_leader    User?      @relation(fields: [organization_leader_id], references: [id])
+  project                Project[]
+  handbook_organization  Handbook[]
+  created_at             DateTime   @default(now())
+  updated_at             DateTime   @updatedAt
+}
+
+model Project {
+  id                     Int          @id @default(autoincrement())
+  name                   String
+  description            String?
+  organization_id        Int
+  organization           Organization @relation(fields: [organization_id], references: [id])
+  customer               User         @relation("project_customer", fields: [customer_id], references: [id])
+  customer_id            Int
+  responsible_manager    User         @relation("project_responsible_manager", fields: [responsible_manager_id], references: [id])
+  responsible_manager_id Int
+  created_at             DateTime     @default(now())
+  updated_at             DateTime     @updatedAt
+}
+
+model Handbook {
+  id                Int          @id @default(autoincrement())
+  name              String
+  description       String?
+  can_customer_view Boolean?     @default(false)
+  organization_id   Int
+  organization      Organization @relation(fields: [organization_id], references: [id])
+  created_at        DateTime     @default(now())
+  updated_at        DateTime     @updatedAt
+  material          Material[]
+}
+
+model FieldType {
+  id                Int                @id @default(autoincrement())
+  name              String
+  js_type           EFieldTypeVariants
+  field_of_category FieldOfCategory[]
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+}
+
+enum EFieldTypeVariants {
+  number
+  string
+  array
+}
+
+model FieldUnitMeasurement {
+  id                Int               @id @default(autoincrement())
+  name              String
+  comment           String?
+  field_of_category FieldOfCategory[]
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
+  material          Material[]
+}
+
+model GlobalCategory {
+  id                Int                @id @default(autoincrement())
+  name              String
+  comment           String?
+  color             String?
+  category_material CategoryMaterial[]
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+}
+
+model CategoryMaterial {
+  id                 Int               @id @default(autoincrement())
+  name               String
+  comment            String?
+  template_name      String?
+  global_category_id Int
+  global_category    GlobalCategory    @relation(fields: [global_category_id], references: [id])
+  field_of_category  FieldOfCategory[]
+  created_at         DateTime          @default(now())
+  updated_at         DateTime          @updatedAt
+  material           Material[]
+}
+
+model ResponsiblePartnerProducer {
+  id         Int        @id @default(autoincrement())
+  name       String
+  comment    String?
+  info       String?
+  email      String?
+  phone      String?
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  material   Material[]
+}
+
+model FieldOfCategory {
+  id                     Int                  @id @default(autoincrement())
+  name                   String
+  comment                String?
+  is_required            Boolean?             @default(true)
+  default_value          String?
+  category_id            Int
+  category               CategoryMaterial     @relation(fields: [category_id], references: [id])
+  created_by_id          Int
+  created_by             User                 @relation(fields: [created_by_id], references: [id])
+  unit_of_measurement    FieldUnitMeasurement @relation(fields: [unit_of_measurement_id], references: [id])
+  unit_of_measurement_id Int
+  field_type             FieldType            @relation(fields: [field_type_id], references: [id])
+  field_type_id          Int
+  created_at             DateTime             @default(now())
+  updated_at             DateTime             @updatedAt
+}
+
+model Material {
+  id                     Int                        @id @default(autoincrement())
+  name                   String
+  comment                String?
+  name_public            Boolean?                   @default(true)
+  handbook_id            Int
+  handbook               Handbook                   @relation(fields: [handbook_id], references: [id])
+  price                  Float
+  unit_measurement_id    Int
+  unit_measurement       FieldUnitMeasurement       @relation(fields: [unit_measurement_id], references: [id])
+  category_id            Int
+  category               CategoryMaterial           @relation(fields: [category_id], references: [id])
+  responsible_partner_id Int
+  responsible_partner    ResponsiblePartnerProducer @relation(fields: [responsible_partner_id], references: [id])
+  created_at             DateTime                   @default(now())
+  updated_at             DateTime                   @updatedAt
+  price_changes          PriceChanging[]
+}
+
+model PriceChanging {
+  id            Int      @id @default(autoincrement())
+  new_price     Float
+  comment       String?
+  material_id   Int
+  material      Material @relation(fields: [material_id], references: [id])
+  changed_by_id Int
+  changed_by    User     @relation(fields: [changed_by_id], references: [id])
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}

@@ -32,10 +32,10 @@ services:
     restart: always
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+        condition: any
+        delay: 3s
+        max_attempts: 5
+        window: 10s
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -50,10 +50,10 @@ services:
     restart: always
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+        condition: any
+        delay: 3s
+        max_attempts: 5
+        window: 10s
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
@@ -69,10 +69,10 @@ services:
     restart: always
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+        condition: any
+        delay: 3s
+        max_attempts: 5
+        window: 10s
     ports:
       - 80:80
       - 443:443
