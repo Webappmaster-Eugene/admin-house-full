@@ -10,63 +10,70 @@ datasource db {
 model User {
   id                          Int               @id @default(autoincrement())
   first_name                  String
-  second_name                 String
+  second_name                 String?
   phone                       String?
   email                       String            @unique
   password                    String
   address                     String?
   info                        String?
-  documents                   String
-  workspace                   Workspace         @relation(fields: [workspace_id], references: [id])
-  workspace_id                Int               @unique
-  organization                Organization[]
+  documents                   String?
+  // organizations               Organization[]
   project_customer            Project[]         @relation("project_customer")
   project_responsible_manager Project[]         @relation("project_responsible_manager")
-  created_field_of_category   FieldOfCategory[]
+  created_fields_of_category  FieldOfCategory[]
   created_at                  DateTime          @default(now())
   updated_at                  DateTime          @updatedAt
-  changed_price               PriceChanging[]
+  changed_prices              PriceChanging[]
   role_id                     Int
   role                        Role              @relation(fields: [role_id], references: [id])
+  creator_of_workspace        Workspace?
+  member_of_workspace_id      Int?
+  member_of_workspace         Workspace?        @relation("workspace_members", fields: [member_of_workspace_id], references: [id])
+  member_of_organization_id   Int?
+  member_of_organization      Organization?     @relation("organization_members", fields: [member_of_organization_id], references: [id])
+  leader_of_organization      Organization?
 }
 
 model Role {
   id         Int               @id @default(autoincrement())
-  name       EUserTypeVariants
+  name       EUserTypeVariants @unique
   created_at DateTime          @default(now())
   updated_at DateTime          @updatedAt
-  User       User[]
+  users      User[]
 }
 
 enum EUserTypeVariants {
-  USER
   ADMIN
+  MANAGER
   CUSTOMER
 }
 
 model Workspace {
-  id                   Int            @id @default(autoincrement())
-  name                 String
-  description          String?
-  workspace_creator_id Int            @unique
-  workspace_creator    User?
-  organization         Organization[]
-  created_at           DateTime       @default(now())
-  updated_at           DateTime       @updatedAt
+  id                       Int            @id @default(autoincrement())
+  name                     String
+  description              String?
+  workspace_creator_id     Int            @unique
+  workspace_creator        User?          @relation(fields: [workspace_creator_id], references: [id])
+  workspace_members        User[]         @relation("workspace_members")
+  organizations            Organization[]
+  handbook_of_workspace_id Int?           @unique
+  handbook_of_workspace    Handbook?
+  created_at               DateTime       @default(now())
+  updated_at               DateTime       @updatedAt
 }
 
 model Organization {
-  id                     Int        @id @default(autoincrement())
+  id                     Int       @id @default(autoincrement())
   name                   String
   description            String?
   workspace_id           Int
-  workspace              Workspace  @relation(fields: [workspace_id], references: [id])
-  organization_leader_id Int
-  organization_leader    User?      @relation(fields: [organization_leader_id], references: [id])
-  project                Project[]
-  handbook_organization  Handbook[]
-  created_at             DateTime   @default(now())
-  updated_at             DateTime   @updatedAt
+  workspace              Workspace @relation(fields: [workspace_id], references: [id])
+  organization_leader_id Int       @unique
+  organization_leader    User      @relation(fields: [organization_leader_id], references: [id])
+  organization_members   User[]    @relation("organization_members")
+  projects               Project[]
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
 }
 
 model Project {
@@ -79,25 +86,27 @@ model Project {
   customer_id            Int
   responsible_manager    User         @relation("project_responsible_manager", fields: [responsible_manager_id], references: [id])
   responsible_manager_id Int
+  // project_members User[]
   created_at             DateTime     @default(now())
   updated_at             DateTime     @updatedAt
 }
 
 model Handbook {
-  id                Int          @id @default(autoincrement())
-  name              String
-  description       String?
-  can_customer_view Boolean?     @default(false)
-  organization_id   Int
-  organization      Organization @relation(fields: [organization_id], references: [id])
-  created_at        DateTime     @default(now())
-  updated_at        DateTime     @updatedAt
-  material          Material[]
+  id                    Int        @id @default(autoincrement())
+  name                  String
+  description           String?
+  can_customer_view     Boolean?   @default(false)
+  workspace_handbook    Workspace? @relation(fields: [workspace_handbook_id], references: [id], onDelete: Cascade)
+  workspace_handbook_id Int?       @unique
+  created_at            DateTime   @default(now())
+  updated_at            DateTime   @updatedAt
+  material              Material[]
 }
 
 model FieldType {
   id                Int                @id @default(autoincrement())
   name              String
+  description       String
   js_type           EFieldTypeVariants
   field_of_category FieldOfCategory[]
   created_at        DateTime           @default(now())

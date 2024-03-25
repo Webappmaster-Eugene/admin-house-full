@@ -1,53 +1,29 @@
-import {
-  Body,
-  Controller,
-  Param,
-  ParseEnumPipe,
-  Post,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { GenerateProductKeyDto, SigninDto, SignupDto } from './dto/auth.dto';
-import { UserType } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
+import { AuthSigninRequestDto, AuthSignupRequestDto } from './dto/auth.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('Работа с аутентификацией пользователя')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  @Post('/signup/:userType')
-  async signup(
-    @Body() body: SignupDto,
-    @Param('userType', new ParseEnumPipe(UserType)) userType: UserType,
-  ) {
-    if (userType !== UserType.BUYER) {
-      if (!body.productKey) {
-        throw new UnauthorizedException();
-      }
-
-      const validProductKey = `${body.email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`;
-
-      const isValidProductKey = await bcrypt.compare(
-        validProductKey,
-        body.productKey,
-      );
-
-      if (!isValidProductKey) {
-        throw new UnauthorizedException();
-      }
-    }
-    return this.authService.signup(body, userType);
+  @Post('/signup')
+  async signupEP(@Body() body: AuthSignupRequestDto) {
+    return this.authService.signup(body);
   }
 
   @Post('/signin')
-  async signin(@Body() body: SigninDto) {
+  async signin(@Body() body: AuthSigninRequestDto) {
     return this.authService.signin(body);
   }
 
-  @Post('/key')
-  async generateProductKey(@Body() { email, userType }: GenerateProductKeyDto) {
-    return this.authService.generateProductKey(email, userType);
+  @Post('/strict-admin-key-generate')
+  async generateStrictAdminKeyEP(@Body() { key }: { key: string }) {
+    return this.authService.generateStrictAdminKey(key);
   }
 }

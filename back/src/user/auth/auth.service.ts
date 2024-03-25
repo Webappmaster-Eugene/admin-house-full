@@ -1,54 +1,87 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { SigninParams, SignupParams } from './types/auth.types';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { UserType } from '@prisma/client';
-import * as process from 'process';
 import { ConfigService } from '@nestjs/config';
+import {
+  AuthResponseDto,
+  AuthSigninRequestDto,
+  AuthSignupRequestDto,
+} from './dto/auth.dto';
+import {
+  AuthResponseWithToken,
+  AuthServiceInterface,
+} from './auth.repository.interface';
+import { UserService } from '../user.service';
+import { RolesService } from '../../roles/roles.service';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements AuthServiceInterface {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
+    private readonly userService: UserService,
+    private readonly rolesService: RolesService,
   ) {}
-  async signup(
-    { email, password, phone, name }: SignupParams,
-    userType: UserType,
-  ) {
-    const userExists = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
-    });
 
-    if (userExists) {
-      throw new ConflictException();
+  async signup({
+    email,
+    password,
+    firstName,
+    secretKeyForChooseRole,
+    roleId,
+  }: AuthSignupRequestDto): Promise<AuthResponseWithToken> {
+    console.log(
+      this.rolesService.checkIsAdminSecretKey(secretKeyForChooseRole),
+    );
+
+    if (this.rolesService.checkIsAdminSecretKey(secretKeyForChooseRole)) {
+      if (!roleId) {
+        throw new UnauthorizedException(
+          'Не предоставлена роль для регистрации пользователя',
+        );
+      }
+    } else {
+      roleId = 1;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await this.prismaService.user.create({
-      data: {
+    try {
+      const user = await this.userService.createUser({
         email,
-        phone,
-        name,
-        password: hashedPassword,
-        user_type: userType,
-      },
-    });
-
-    const token = await this.generateJWT(user.name, user.id);
-
-    return token;
+        password,
+        firstName,
+        roleId,
+      });
+      const accessToken = await this.generateJWT(user.email, user.id);
+      const authResponse = new AuthResponseDto({
+        id: user.id,
+        email: user.email,
+        phone: user.phone,
+        firstName: user.firstName(),
+        secondName: user.secondName(),
+        roleId: user.roleId(),
+        workspaceId: user.workspaceId(),
+        createdAt: user.createdAt(),
+        updatedAt: user.updatedAt(),
+      });
+      return {
+        ...authResponse,
+        accessKey: accessToken,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
-  async signin({ email, password }: SigninParams) {
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
-    });
+  async signin({
+    email,
+    password,
+  }: AuthSigninRequestDto): Promise<AuthResponseWithToken> {
+    const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
       throw new HttpException('Invalid credentials', 400);
@@ -60,15 +93,29 @@ export class AuthService {
       throw new HttpException('Invalid credentials', 400);
     }
 
-    const token = await this.generateJWT(user.name, user.id);
+    const accessToken = await this.generateJWT(user.email, user.id);
+    const authResponse = new AuthResponseDto({
+      id: user.id,
+      email: user.email,
+      phone: user.phone,
+      firstName: user.firstName(),
+      secondName: user.secondName(),
+      roleId: user.roleId(),
+      workspaceId: user.workspaceId(),
+      createdAt: user.createdAt(),
+      updatedAt: user.updatedAt(),
+    });
 
-    return token;
+    return {
+      ...authResponse,
+      accessKey: accessToken,
+    };
   }
 
-  async generateJWT(name: string, id: number) {
+  async generateJWT(email: string, id: number): Promise<string> {
     const token = jwt.sign(
       {
-        name,
+        email,
         id,
       },
       this.configService.get('JWT_KEY'),
@@ -79,8 +126,14 @@ export class AuthService {
     return token;
   }
 
-  async generateProductKey(email: string, userType: UserType) {
-    const str = `${email}-${userType}-${this.configService.get('PRODUCT_KEY_SECRET')}`;
-    return bcrypt.hash(str, 10);
+  async generateStrictAdminKey(key: string): Promise<string> {
+    if (key === this.configService.get('KEY_SECRET_FOR_STRICT_ADMIN_KEY')) {
+      const str = `adminHouse-${key}-strict-admin-key-for-role-creating`;
+      return bcrypt.hash(str, 10);
+    } else {
+      throw new UnauthorizedException(
+        'У вас нет прав доступа для создания ключа',
+      );
+    }
   }
 }
