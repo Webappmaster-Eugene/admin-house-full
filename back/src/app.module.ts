@@ -1,16 +1,17 @@
 import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { RolesModule } from './roles/roles.module';
+import { RolesModule } from './modules/roles/roles.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { UserInterceptor } from './interceptors/user.interceptor';
-import { NotFoundExceptionFilter } from './exceptions/notfound.exception';
-import { WorkspaceModule } from './workspace/workspace.module';
+import { UserInterceptor } from './lib/interceptors/user.interceptor';
+import { NotFoundExceptionFilter } from './lib/exceptions/notfound.exception';
+import { WorkspaceModule } from './modules/workspace/workspace.module';
+import { OrganizationModule } from './modules/organization/organization.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { WorkspaceModule } from './workspace/workspace.module';
     }),
     RolesModule,
     WorkspaceModule,
+    OrganizationModule,
   ],
   controllers: [AppController],
   providers: [
