@@ -1,6 +1,4 @@
 import { Logger, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
@@ -22,6 +20,7 @@ import { OrganizationModule } from './modules/organization/organization.module';
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
+      // validate: (config) => validateConfig(config),
     }),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, './static'),
@@ -30,9 +29,8 @@ import { OrganizationModule } from './modules/organization/organization.module';
     WorkspaceModule,
     OrganizationModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     Logger,
     {
       provide: APP_INTERCEPTOR,

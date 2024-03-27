@@ -1,15 +1,13 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import {
-  OrganizationRequestDto,
-  OrganizationResponseDto,
-} from './dto/organization.dto';
+import { OrganizationRequestDto } from './dto/organization.dto';
 import { OrganizationServiceInterface } from './organization.repository.interface';
 import { JWTPayload } from '../../lib/types/jwt.payload.interface';
 import { workspaceExtractor } from './lib/workspace.extractor';
 import { Workspace } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+import { OrganizationEntity } from './entities/organization.entity';
 
 @Injectable()
 export class OrganizationService implements OrganizationServiceInterface {
@@ -22,7 +20,7 @@ export class OrganizationService implements OrganizationServiceInterface {
   async createOrganizationByWorkspaceId(
     { name, description }: OrganizationRequestDto,
     user: JWTPayload,
-  ): Promise<OrganizationResponseDto> {
+  ): Promise<OrganizationEntity> {
     try {
       const workspace: {
         id: number;
@@ -39,8 +37,8 @@ export class OrganizationService implements OrganizationServiceInterface {
         data: {
           name,
           description,
-          workspace_id: workspace.id,
-          organization_leader_id: user.id,
+          workspaceId: workspace.id,
+          organizationLeaderId: user.id,
         },
       });
 
@@ -48,13 +46,13 @@ export class OrganizationService implements OrganizationServiceInterface {
         `Organization created successfully - newOrganizarionId ${newOrganization.id}`,
         OrganizationService.name,
       );
-      return new OrganizationResponseDto(newOrganization);
+      return new OrganizationEntity(newOrganization);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
       //   }
       this.logger.error(
-        `There is an error, when Organization is creating in Workspace by user with id ${user.email}`,
+        `There is an error, when Organization is creating in Workspace by user with id ${user.id}`,
         error.stack,
         OrganizationService.name,
       );
@@ -69,7 +67,7 @@ export class OrganizationService implements OrganizationServiceInterface {
   async updateOrganizationById(
     { name, description }: OrganizationRequestDto,
     id: number,
-  ): Promise<OrganizationResponseDto> {
+  ): Promise<OrganizationEntity> {
     try {
       const updatedWorkspace = await this.prismaService.organization.update({
         where: {
@@ -82,10 +80,10 @@ export class OrganizationService implements OrganizationServiceInterface {
       });
 
       this.logger.log(
-        `Workspace updated successfully - workspaceId ${id}`,
+        `Organization updated successfully - organizationId ${id}`,
         OrganizationService.name,
       );
-      return new OrganizationResponseDto(updatedWorkspace);
+      return new OrganizationEntity(updatedWorkspace);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -98,20 +96,20 @@ export class OrganizationService implements OrganizationServiceInterface {
     }
   }
 
-  async getAllOrganizations(): Promise<OrganizationResponseDto[]> {
+  async getAllOrganizations(): Promise<OrganizationEntity[]> {
     try {
       const allWorkspaces = await this.prismaService.organization.findMany();
       const workspacesToView = allWorkspaces.map(
-        (workspace) => new OrganizationResponseDto(workspace),
+        (workspace) => new OrganizationEntity(workspace),
       );
       this.logger.log(
-        `All workspaces successfully received`,
+        `All organizations successfully received`,
         OrganizationService.name,
       );
       return workspacesToView;
     } catch (error) {
       this.logger.error(
-        `Произошла ошибка при запросе всех Workspaces`,
+        `Произошла ошибка при запросе всех Organizations`,
         error.stack,
         OrganizationService.name,
       );
@@ -122,29 +120,29 @@ export class OrganizationService implements OrganizationServiceInterface {
     }
   }
 
-  async getOrganizationById(id: number): Promise<OrganizationResponseDto> {
+  async getOrganizationById(id: number): Promise<OrganizationEntity> {
     try {
-      const concreteWorkspace =
+      const concreteOrganization =
         await this.prismaService.organization.findUnique({
           where: {
             id,
           },
         });
-      const workspaceToView = new OrganizationResponseDto(concreteWorkspace);
+      const workspaceToView = new OrganizationEntity(concreteOrganization);
 
       this.logger.log(
-        `Workspace received successfully`,
+        `Organization received successfully`,
         OrganizationService.name,
       );
       return workspaceToView;
     } catch (error) {
       this.logger.error(
-        `Произошла ошибка при получении Workspace c id ${id}`,
+        `Произошла ошибка при получении Organization c id ${id}`,
         error.stack,
         OrganizationService.name,
       );
       throw new HttpException(
-        `Произошла ошибка при получении Workspace c id ${id} - Workspace не существует`,
+        `Произошла ошибка при получении Organization c id ${id} - Organization не существует`,
         HttpStatus.NOT_FOUND,
       );
     }

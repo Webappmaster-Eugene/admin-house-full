@@ -25,12 +25,12 @@ export class WorkspaceManagerGuard implements CanActivate {
         },
         select: {
           id: true,
-          role_id: true,
+          roleId: true,
           creator_of_workspace: {
             select: {
               id: true,
               name: true,
-              workspace_creator_id: true,
+              workspaceCreatorId: true,
               workspace_members: true,
             },
           },
@@ -42,8 +42,8 @@ export class WorkspaceManagerGuard implements CanActivate {
       }
 
       if (
-        user.role_id === 2 &&
-        user.id === user.creator_of_workspace.workspace_creator_id
+        user.roleId === 2 &&
+        user.id === user.creator_of_workspace.workspaceCreatorId
       ) {
         return true;
       } else {

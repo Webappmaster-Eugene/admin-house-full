@@ -8,17 +8,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RolesService } from '../roles/roles.service';
-import {
-  UserRequestDto,
-  UserResponseDto,
-  UserUpdateRequestDto,
-} from './dto/user.dto';
+import { UserRequestDto, UserUpdateRequestDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 import { UserServiceInterface } from './user.repository.interface';
 import { WorkspaceService } from '../workspace/workspace.service';
 import { defaultRoleId } from './auth/lib/auth.consts';
-import { WorkspaceResponseDto } from '../workspace/dto/workspace.dto';
+import { UserEntity } from './entities/user.entity';
+import { WorkspaceEntity } from '../workspace/entities/workspace.entity';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
@@ -30,7 +27,7 @@ export class UserService implements UserServiceInterface {
     private readonly logger: Logger,
   ) {}
 
-  async getUserById(id: number): Promise<UserResponseDto> {
+  async getUserById(id: number): Promise<UserEntity> {
     try {
       const findedUser = await this.prismaService.user.findUnique({
         where: {
@@ -38,19 +35,19 @@ export class UserService implements UserServiceInterface {
         },
         select: {
           id: true,
-          first_name: true,
+          firstName: true,
           email: true,
           phone: true,
           address: true,
-          updated_at: true,
-          created_at: true,
+          updatedAt: true,
+          createdAt: true,
           creator_of_workspace: {
             include: { workspace_creator: true },
           },
         },
       });
 
-      return new UserResponseDto(findedUser);
+      return new UserEntity(findedUser);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -69,7 +66,7 @@ export class UserService implements UserServiceInterface {
     }
   }
 
-  async getUserByEmail(email: string): Promise<UserResponseDto> {
+  async getUserByEmail(email: string): Promise<UserEntity> {
     try {
       const findedUser = await this.prismaService.user.findUnique({
         where: {
@@ -77,7 +74,7 @@ export class UserService implements UserServiceInterface {
         },
       });
 
-      return new UserResponseDto(findedUser);
+      return new UserEntity(findedUser);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -96,7 +93,7 @@ export class UserService implements UserServiceInterface {
     }
   }
 
-  async deleteUser(id: number): Promise<UserResponseDto> {
+  async deleteUser(id: number): Promise<UserEntity> {
     try {
       const deletedUser = await this.prismaService.user.delete({
         where: {
@@ -104,7 +101,7 @@ export class UserService implements UserServiceInterface {
         },
       });
 
-      return new UserResponseDto(deletedUser);
+      return new UserEntity(deletedUser);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -123,10 +120,10 @@ export class UserService implements UserServiceInterface {
     }
   }
 
-  async getAllUsers(): Promise<UserResponseDto[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     try {
       const allUsers = await this.prismaService.user.findMany();
-      return allUsers.map((user) => new UserResponseDto(user));
+      return allUsers.map((user) => new UserEntity(user));
     } catch (error) {
       this.logger.error(
         `Произошла ошибка при попытке получения всех пользователей из БД!`,
@@ -150,10 +147,10 @@ export class UserService implements UserServiceInterface {
     info,
     documents,
     roleId,
-  }: UserRequestDto): Promise<UserResponseDto> {
+  }: UserRequestDto): Promise<UserEntity> {
     let userExists: boolean | unknown;
-    let newUserWorkspace: WorkspaceResponseDto;
-    let newUserWithWorkspace: UserResponseDto;
+    let newUserWorkspace: null | WorkspaceEntity;
+    let newUserWithWorkspace: null | UserEntity;
 
     const userRoleId = roleId ? roleId : defaultRoleId;
 
@@ -198,34 +195,30 @@ export class UserService implements UserServiceInterface {
         data: {
           email,
           phone,
-          first_name: firstName,
-          second_name: secondName,
+          firstName,
+          secondName,
           password: hashedPassword,
           address,
           info,
           documents,
-          role_id: userRoleId,
-          // workspace_id: null,
+          roleId: userRoleId,
+          creatorOfWorkspaceId: null,
         },
       });
 
       if (roleId === 2) {
-        newUserWorkspace = await this.workspaceService.createWorkspaceByUserId({
-          workspaceCreatorId: newUser.id,
-        });
+        newUserWorkspace = await this.workspaceService.createWorkspaceByUserId(
+          {},
+          newUser.id,
+        );
 
-        //newUserWithWorkspace = await this.addWorkspaceToUser(
-        //  Number(newUser.id),
-        //  Number(newUserWorkspace.id),
-        //);
-      } else {
-        // newUserWithWorkspace = await this.addWorkspaceToUser(
-        //   newUser.id,
-        //   newUserWorkspace.id,
-        // );
+        newUserWithWorkspace = await this.addExistedWorkspaceToManager(
+          newUser.id,
+          newUserWorkspace.id,
+        );
       }
 
-      return new UserResponseDto(newUser);
+      return new UserEntity(newUserWithWorkspace || newUser);
     } catch (error) {
       throw new HttpException(
         `Ошибка при создании и обработке пользователя в БД`,
@@ -244,7 +237,7 @@ export class UserService implements UserServiceInterface {
       documents,
     }: UserUpdateRequestDto,
     id: number,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserEntity> {
     let userExists: unknown;
 
     try {
@@ -278,14 +271,14 @@ export class UserService implements UserServiceInterface {
         },
         data: {
           phone,
-          first_name: firstName,
-          second_name: secondName,
+          firstName,
+          secondName,
           address,
           info,
           documents,
         },
       });
-      return new UserResponseDto(updatedUser);
+      return new UserEntity(updatedUser);
     } catch (error) {
       this.logger.error(
         `Произошла ошибка при обновлении пользователя`,
@@ -302,7 +295,7 @@ export class UserService implements UserServiceInterface {
   async addExistedWorkspaceToManager(
     workspaceCreatorId: number,
     workspaceId: number,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserEntity> {
     let userExists: unknown;
 
     try {
@@ -330,69 +323,18 @@ export class UserService implements UserServiceInterface {
     }
 
     try {
-      //const updatedUser = await this.prismaService.user.update({
-      //  where: {
-      //   id: workspaceCreatorId,
-      //  },
-      // data: {
-      //   workspace_id: workspaceId,
-      //  },
-      //});
-      return new UserResponseDto(userExists);
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при добавлении Workspace пользователю`,
-        error.stack,
-        UserService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  /*
-  async addUserToManagerWorkspace(userId: number): Promise<UserResponseDto> {
-    let userExists: unknown;
-
-    try {
-      userExists = await this.prismaService.user.findUnique({
-        where: {
-          id: workspaceCreatorId,
-        },
-      });
-    } catch (error) {
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    if (!userExists) {
-      this.logger.error(
-        `Пользователя с таким id ${workspaceCreatorId} не существует!`,
-        UserService.name,
-      );
-
-      throw new NotFoundException(Error, {
-        description: 'Такого пользователя не существует',
-      });
-    }
-
-    try {
-      const updatedUser = await this.prismaService.user.update({
+      const updatedManagerUser = await this.prismaService.user.update({
         where: {
           id: workspaceCreatorId,
         },
         data: {
-          workspace_id: workspaceId,
+          creatorOfWorkspaceId: workspaceId,
         },
       });
-      return new UserResponseDto(updatedUser);
+      return new UserEntity(updatedManagerUser);
     } catch (error) {
       this.logger.error(
-        `Произошла ошибка при добавлении Workspace пользователю`,
+        `Произошла ошибка при добавлении Workspace ${workspaceId} менеджеру с ${workspaceCreatorId}`,
         error.stack,
         UserService.name,
       );
@@ -402,10 +344,76 @@ export class UserService implements UserServiceInterface {
       );
     }
   }
-*/
 
-  async deleteUserById(id: number): Promise<UserResponseDto> {
+  async addUserToManagerWorkspace(
+    userId: number,
+    managerId: number,
+  ): Promise<UserEntity> {
     let userExists: unknown;
+
+    try {
+      userExists = await this.prismaService.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+    } catch (error) {
+      throw new HttpException(
+        `${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (!userExists) {
+      this.logger.error(
+        `Пользователя с таким id ${userId} не существует!`,
+        UserService.name,
+      );
+
+      throw new NotFoundException(Error, {
+        description: 'Такого пользователя не существует',
+      });
+    }
+
+    try {
+      const workspaceForAdding =
+        await this.workspaceService.getWorkspaceByManagerId(managerId);
+
+      if (workspaceForAdding) {
+        const updatedUser = await this.prismaService.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            memberOfWorkspaceId: workspaceForAdding?.id,
+          },
+        });
+        return new UserEntity(updatedUser);
+      } else {
+        this.logger.error(
+          `Произошла ошибка при добавлении пользователя с id ${userId} в Workspace менеджера id ${managerId}`,
+          UserService.name,
+        );
+        throw new HttpException(
+          `Произошла ошибка при добавлении пользователя с id ${userId} в Workspace менеджера id ${managerId}`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Произошла ошибка при добавлении пользователя с id ${userId} в Workspace`,
+        error.stack,
+        UserService.name,
+      );
+      throw new HttpException(
+        `${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async deleteUserById(id: number): Promise<UserEntity> {
+    let userExists: boolean | unknown;
 
     try {
       userExists = await this.prismaService.user.findUnique({
@@ -437,10 +445,10 @@ export class UserService implements UserServiceInterface {
           id,
         },
       });
-      return new UserResponseDto(deletedUser);
+      return new UserEntity(deletedUser);
     } catch (error) {
       this.logger.error(
-        `Произошла ошибка при обновлении пользователя`,
+        `Произошла ошибка при удалении пользователя с id ${id}`,
         error.stack,
         UserService.name,
       );

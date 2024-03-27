@@ -8,8 +8,9 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { EUserTypeVariants, Prisma } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { RolesRequestDto, RolesResponseDto } from './dto/role.dto';
+import { RolesRequestDto } from './dto/role.dto';
 import { RolesServiceInterface } from './roles.repository.interface';
+import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class RolesService implements RolesServiceInterface {
@@ -23,19 +24,24 @@ export class RolesService implements RolesServiceInterface {
     return key === this.configService.get('STRICT_ADMIN_KEY');
   }
 
-  async createRole({ name, key }: RolesRequestDto): Promise<RolesResponseDto> {
+  async createRole({
+    name,
+    description,
+    key,
+  }: RolesRequestDto): Promise<RoleEntity> {
     if (this.checkIsAdminSecretKey(key)) {
       try {
         const newRole = await this.prismaService.role.create({
           data: {
             name,
+            description,
           },
         });
         this.logger.log(
           `Role created successfully - newRoleId ${newRole.id}`,
           RolesService.name,
         );
-        return new RolesResponseDto(newRole);
+        return new RoleEntity(newRole);
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           if (error.code === 'P2002') {
@@ -63,10 +69,10 @@ export class RolesService implements RolesServiceInterface {
     }
   }
 
-  async getAllRoles(): Promise<RolesResponseDto[]> {
+  async getAllRoles(): Promise<RoleEntity[]> {
     try {
       const allRoles = await this.prismaService.role.findMany();
-      const rolesToView = allRoles.map((role) => new RolesResponseDto(role));
+      const rolesToView = allRoles.map((role) => new RoleEntity(role));
       this.logger.log(`All roles successfully received`, RolesService.name);
       return rolesToView;
     } catch (error) {
@@ -82,14 +88,14 @@ export class RolesService implements RolesServiceInterface {
     }
   }
 
-  async getRoleByValue(value: EUserTypeVariants): Promise<RolesResponseDto> {
+  async getRoleByValue(value: EUserTypeVariants): Promise<RoleEntity> {
     try {
       const concreteRole = await this.prismaService.role.findUnique({
         where: {
           name: value,
         },
       });
-      const roleToView = new RolesResponseDto(concreteRole);
+      const roleToView = new RoleEntity(concreteRole);
 
       this.logger.log(`Role received successfully`, RolesService.name);
       return roleToView;

@@ -1,18 +1,16 @@
-import {
-  OrganizationRequestDto,
-  OrganizationResponseDto,
-} from './dto/organization.dto';
+import { OrganizationRequestDto } from './dto/organization.dto';
 import { JWTPayload } from '../../lib/types/jwt.payload.interface';
+import { OrganizationEntity } from './entities/organization.entity';
 
 export interface OrganizationServiceInterface {
-  getAllOrganizations: () => Promise<OrganizationResponseDto[]>;
-  getOrganizationById: (id: number) => Promise<OrganizationResponseDto>;
+  getAllOrganizations: () => Promise<OrganizationEntity[]>;
+  getOrganizationById: (id: number) => Promise<OrganizationEntity>;
   createOrganizationByWorkspaceId: (
-    body: OrganizationResponseDto,
+    body: OrganizationRequestDto,
     user: JWTPayload,
-  ) => Promise<OrganizationResponseDto>;
+  ) => Promise<OrganizationEntity>;
   updateOrganizationById: (
     body: OrganizationRequestDto,
     id: number,
-  ) => Promise<OrganizationResponseDto>;
+  ) => Promise<OrganizationEntity>;
 }

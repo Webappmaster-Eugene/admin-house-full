@@ -3,7 +3,6 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import {
   WorkspaceRequestDto,
-  WorkspaceResponseDto,
   WorkspaceToUpdateRequestDto,
 } from './dto/workspace.dto';
 import { WorkspaceServiceInterface } from './workspace.repository.interface';
@@ -11,6 +10,7 @@ import {
   defaultWorkspaceDescription,
   defaultWorkspaceName,
 } from './workspace.default-data';
+import { WorkspaceEntity } from './entities/workspace.entity';
 
 @Injectable()
 export class WorkspaceService implements WorkspaceServiceInterface {
@@ -20,42 +20,52 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     private readonly logger: Logger,
   ) {}
 
-  async createWorkspaceByUserId({
-    name = defaultWorkspaceName,
-    description = defaultWorkspaceDescription,
-    workspaceCreatorId,
-  }: WorkspaceRequestDto): Promise<WorkspaceResponseDto> {
-    try {
-      const newWorkspace = await this.prismaService.workspace.create({
-        data: {
-          name: name + ` #${workspaceCreatorId}`,
-          description: description + ` #${workspaceCreatorId}`,
-          workspace_creator_id: workspaceCreatorId,
-        },
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          workspace_members: true,
-          workspace_creator_id: true,
-          organizations: true,
-          handbook_of_workspace_id: true,
-          created_at: true,
-          updated_at: true,
-        },
-      });
-      this.logger.log(
-        `Workspace created successfully - newWorkspaceId ${newWorkspace.id}`,
+  async createWorkspaceByUserId(
+    { name, description }: WorkspaceRequestDto,
+    userId: number,
+  ): Promise<WorkspaceEntity> {
+    const isWorkspaceExists = await this.getWorkspaceByManagerId(userId);
+
+    if (!isWorkspaceExists) {
+      try {
+        const newWorkspace = await this.prismaService.workspace.create({
+          data: {
+            name: name || defaultWorkspaceName + ` #${userId}`,
+            description:
+              description || defaultWorkspaceDescription + ` #${userId}`,
+            workspaceCreatorId: userId,
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            workspace_members: true,
+            workspaceCreatorId: true,
+            organizations: true,
+            handbookOfWorkspaceId: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+        this.logger.log(
+          `Workspace created successfully - newWorkspaceId ${newWorkspace.id}`,
+          WorkspaceService.name,
+        );
+        return new WorkspaceEntity(newWorkspace);
+      } catch (error) {
+        throw new HttpException(
+          `${error.message}`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } else {
+      this.logger.error(
+        `Произошла ошибка при создании workspace для менеджера с id ${userId}. У пользователя уже есть один Workspace!`,
         WorkspaceService.name,
       );
-      return new WorkspaceResponseDto(newWorkspace);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      //   }
 
       throw new HttpException(
-        `${error.message}`,
+        `Произошла ошибка при создании workspace для менеджера с id ${userId}. У пользователя уже есть один Workspace!`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -64,7 +74,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
   async updateWorkspaceById(
     { name, description }: WorkspaceToUpdateRequestDto,
     id: number,
-  ): Promise<WorkspaceResponseDto> {
+  ): Promise<WorkspaceEntity> {
     try {
       const updatedWorkspace = await this.prismaService.workspace.update({
         where: {
@@ -79,11 +89,11 @@ export class WorkspaceService implements WorkspaceServiceInterface {
           name: true,
           description: true,
           workspace_members: true,
-          workspace_creator_id: true,
+          workspaceCreatorId: true,
           organizations: true,
-          handbook_of_workspace_id: true,
-          created_at: true,
-          updated_at: true,
+          handbookOfWorkspaceId: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
 
@@ -91,7 +101,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
         `Workspace updated successfully - workspaceId ${id}`,
         WorkspaceService.name,
       );
-      return new WorkspaceResponseDto(updatedWorkspace);
+      return new WorkspaceEntity(updatedWorkspace);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -104,7 +114,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
   }
 
-  async deleteWorkspaceById(id: number): Promise<WorkspaceResponseDto> {
+  async deleteWorkspaceById(id: number): Promise<WorkspaceEntity> {
     try {
       const deletedWorkspace = await this.prismaService.workspace.delete({
         where: {
@@ -115,11 +125,11 @@ export class WorkspaceService implements WorkspaceServiceInterface {
           name: true,
           description: true,
           workspace_members: true,
-          workspace_creator_id: true,
+          workspaceCreatorId: true,
           organizations: true,
-          handbook_of_workspace_id: true,
-          created_at: true,
-          updated_at: true,
+          handbookOfWorkspaceId: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
 
@@ -127,7 +137,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
         `Workspace deleted successfully - workspaceId ${id}`,
         WorkspaceService.name,
       );
-      return new WorkspaceResponseDto(deletedWorkspace);
+      return new WorkspaceEntity(deletedWorkspace);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -143,25 +153,25 @@ export class WorkspaceService implements WorkspaceServiceInterface {
   async changeWorkspaceOwner(
     id: number,
     newOwnerId: number,
-  ): Promise<WorkspaceResponseDto> {
+  ): Promise<WorkspaceEntity> {
     try {
       const changingWorkspace = await this.prismaService.workspace.update({
         where: {
           id,
         },
         data: {
-          workspace_creator_id: newOwnerId,
+          workspaceCreatorId: newOwnerId,
         },
         select: {
           id: true,
           name: true,
           description: true,
           workspace_members: true,
-          workspace_creator_id: true,
+          workspaceCreatorId: true,
           organizations: true,
-          handbook_of_workspace_id: true,
-          created_at: true,
-          updated_at: true,
+          handbookOfWorkspaceId: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
 
@@ -169,7 +179,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
         `Workspace's owner changed  successfully - workspaceId ${id}`,
         WorkspaceService.name,
       );
-      return new WorkspaceResponseDto(changingWorkspace);
+      return new WorkspaceEntity(changingWorkspace);
     } catch (error) {
       // if (error instanceof Prisma.PrismaClientKnownRequestError) {
       //   if (error.code === 'P2002') {
@@ -182,7 +192,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
   }
 
-  async getAllWorkspaces(): Promise<WorkspaceResponseDto[]> {
+  async getAllWorkspaces(): Promise<WorkspaceEntity[]> {
     try {
       const allWorkspaces = await this.prismaService.workspace.findMany({
         select: {
@@ -190,15 +200,15 @@ export class WorkspaceService implements WorkspaceServiceInterface {
           name: true,
           description: true,
           workspace_members: true,
-          workspace_creator_id: true,
+          workspaceCreatorId: true,
           organizations: true,
-          handbook_of_workspace_id: true,
-          created_at: true,
-          updated_at: true,
+          handbookOfWorkspaceId: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
       const workspacesToView = allWorkspaces.map(
-        (workspace) => new WorkspaceResponseDto(workspace),
+        (workspace) => new WorkspaceEntity(workspace),
       );
       this.logger.log(
         `All workspaces successfully received`,
@@ -218,7 +228,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
   }
 
-  async getWorkspaceById(id: number): Promise<WorkspaceResponseDto> {
+  async getWorkspaceById(id: number): Promise<WorkspaceEntity> {
     try {
       const concreteWorkspace = await this.prismaService.workspace.findUnique({
         where: {
@@ -229,14 +239,14 @@ export class WorkspaceService implements WorkspaceServiceInterface {
           name: true,
           description: true,
           workspace_members: true,
-          workspace_creator_id: true,
+          workspaceCreatorId: true,
           organizations: true,
-          handbook_of_workspace_id: true,
-          created_at: true,
-          updated_at: true,
+          handbookOfWorkspaceId: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
-      const workspaceToView = new WorkspaceResponseDto(concreteWorkspace);
+      const workspaceToView = new WorkspaceEntity(concreteWorkspace);
 
       this.logger.log(`Workspace received successfully`, WorkspaceService.name);
       return workspaceToView;
@@ -248,6 +258,41 @@ export class WorkspaceService implements WorkspaceServiceInterface {
       );
       throw new HttpException(
         `Произошла ошибка при получении Workspace c id ${id} - Workspace не существует`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async getWorkspaceByManagerId(managerId: number): Promise<WorkspaceEntity> {
+    try {
+      const managerWorkspace = await this.prismaService.workspace.findUnique({
+        where: {
+          workspaceCreatorId: managerId,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          workspace_members: true,
+          workspaceCreatorId: true,
+          organizations: true,
+          handbookOfWorkspaceId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      const workspaceToView = new WorkspaceEntity(managerWorkspace);
+
+      this.logger.log(`Workspace received successfully`, WorkspaceService.name);
+      return workspaceToView;
+    } catch (error) {
+      this.logger.error(
+        `Произошла ошибка при получении Workspace для менеджера с id ${managerId}`,
+        error.stack,
+        WorkspaceService.name,
+      );
+      throw new HttpException(
+        `Произошла ошибка при получении Workspace для менеджера с id ${managerId}`,
         HttpStatus.NOT_FOUND,
       );
     }

@@ -9,8 +9,8 @@ datasource db {
 
 model User {
   id                          Int               @id @default(autoincrement())
-  first_name                  String
-  second_name                 String?
+  firstName                   String            @map("first_name")
+  secondName                  String?           @map("second_name")
   phone                       String?
   email                       String            @unique
   password                    String
@@ -21,25 +21,27 @@ model User {
   project_customer            Project[]         @relation("project_customer")
   project_responsible_manager Project[]         @relation("project_responsible_manager")
   created_fields_of_category  FieldOfCategory[]
-  created_at                  DateTime          @default(now())
-  updated_at                  DateTime          @updatedAt
+  createdAt                   DateTime          @default(now()) @map("created_at")
+  updatedAt                   DateTime          @updatedAt @map("updated_at")
   changed_prices              PriceChanging[]
-  role_id                     Int
-  role                        Role              @relation(fields: [role_id], references: [id])
-  creator_of_workspace        Workspace?
-  member_of_workspace_id      Int?
-  member_of_workspace         Workspace?        @relation("workspace_members", fields: [member_of_workspace_id], references: [id])
-  member_of_organization_id   Int?
-  member_of_organization      Organization?     @relation("organization_members", fields: [member_of_organization_id], references: [id])
+  roleId                      Int               @map("role_id")
+  role                        Role              @relation(fields: [roleId], references: [id])
+  creatorOfWorkspaceId        Int?              @map("creator_of_workspace_id")
+  creator_of_workspace        Workspace?        @relation("creator_of_workspace")
+  memberOfWorkspaceId         Int?              @map("member_of_workspace_id")
+  member_of_workspace         Workspace?        @relation("workspace_members", fields: [memberOfWorkspaceId], references: [id])
+  memberOfOrganizationId      Int?              @map("member_of_organization_id")
+  member_of_organization      Organization?     @relation("organization_members", fields: [memberOfOrganizationId], references: [id])
   leader_of_organization      Organization?
 }
 
 model Role {
-  id         Int               @id @default(autoincrement())
-  name       EUserTypeVariants @unique
-  created_at DateTime          @default(now())
-  updated_at DateTime          @updatedAt
-  users      User[]
+  id          Int               @id @default(autoincrement())
+  name        EUserTypeVariants @unique
+  description String?
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  users       User[]
 }
 
 enum EUserTypeVariants {
@@ -49,68 +51,68 @@ enum EUserTypeVariants {
 }
 
 model Workspace {
-  id                       Int            @id @default(autoincrement())
-  name                     String
-  description              String?
-  workspace_creator_id     Int            @unique
-  workspace_creator        User?          @relation(fields: [workspace_creator_id], references: [id])
-  workspace_members        User[]         @relation("workspace_members")
-  organizations            Organization[]
-  handbook_of_workspace_id Int?           @unique
-  handbook_of_workspace    Handbook?
-  created_at               DateTime       @default(now())
-  updated_at               DateTime       @updatedAt
+  id                    Int            @id @default(autoincrement())
+  name                  String
+  description           String?
+  workspaceCreatorId    Int            @unique @map("workspace_creator_id")
+  workspace_creator     User?          @relation("creator_of_workspace", fields: [workspaceCreatorId], references: [id])
+  workspace_members     User[]         @relation("workspace_members")
+  organizations         Organization[]
+  handbookOfWorkspaceId Int?           @unique @map("handbook_of_workspace_id")
+  handbook_of_workspace Handbook?
+  createdAt             DateTime       @default(now()) @map("created_at")
+  updatedAt             DateTime       @updatedAt @map("updated_at")
 }
 
 model Organization {
-  id                     Int       @id @default(autoincrement())
-  name                   String
-  description            String?
-  workspace_id           Int
-  workspace              Workspace @relation(fields: [workspace_id], references: [id])
-  organization_leader_id Int       @unique
-  organization_leader    User      @relation(fields: [organization_leader_id], references: [id])
-  organization_members   User[]    @relation("organization_members")
-  projects               Project[]
-  created_at             DateTime  @default(now())
-  updated_at             DateTime  @updatedAt
+  id                   Int       @id @default(autoincrement())
+  name                 String
+  description          String?
+  workspaceId          Int       @map("workspace_id")
+  workspace            Workspace @relation(fields: [workspaceId], references: [id])
+  organizationLeaderId Int       @unique @map("organization_leader_id")
+  organization_leader  User      @relation(fields: [organizationLeaderId], references: [id])
+  organization_members User[]    @relation("organization_members")
+  projects             Project[]
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
 }
 
 model Project {
-  id                     Int          @id @default(autoincrement())
-  name                   String
-  description            String?
-  organization_id        Int
-  organization           Organization @relation(fields: [organization_id], references: [id])
-  customer               User         @relation("project_customer", fields: [customer_id], references: [id])
-  customer_id            Int
-  responsible_manager    User         @relation("project_responsible_manager", fields: [responsible_manager_id], references: [id])
-  responsible_manager_id Int
+  id                   Int          @id @default(autoincrement())
+  name                 String
+  description          String?
+  organizationId       Int          @map("organization_id")
+  organization         Organization @relation(fields: [organizationId], references: [id])
+  customer             User         @relation("project_customer", fields: [customerId], references: [id])
+  customerId           Int          @map("customer_id")
+  responsible_manager  User         @relation("project_responsible_manager", fields: [responsibleManagerId], references: [id])
+  responsibleManagerId Int          @map("responsible_manager_id")
   // project_members User[]
-  created_at             DateTime     @default(now())
-  updated_at             DateTime     @updatedAt
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
 }
 
 model Handbook {
-  id                    Int        @id @default(autoincrement())
-  name                  String
-  description           String?
-  can_customer_view     Boolean?   @default(false)
-  workspace_handbook    Workspace? @relation(fields: [workspace_handbook_id], references: [id], onDelete: Cascade)
-  workspace_handbook_id Int?       @unique
-  created_at            DateTime   @default(now())
-  updated_at            DateTime   @updatedAt
-  material              Material[]
+  id                  Int        @id @default(autoincrement())
+  name                String
+  description         String?
+  canCustomerView     Boolean?   @default(false) @map("can_customer_view")
+  workspace_handbook  Workspace? @relation(fields: [workspaceHandbookId], references: [id], onDelete: Cascade)
+  workspaceHandbookId Int?       @unique @map("workspace_handbook_id")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+  material            Material[]
 }
 
 model FieldType {
   id                Int                @id @default(autoincrement())
   name              String
   description       String
-  js_type           EFieldTypeVariants
+  jsType            EFieldTypeVariants @map("js_type")
   field_of_category FieldOfCategory[]
-  created_at        DateTime           @default(now())
-  updated_at        DateTime           @updatedAt
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
 }
 
 enum EFieldTypeVariants {
@@ -124,8 +126,8 @@ model FieldUnitMeasurement {
   name              String
   comment           String?
   field_of_category FieldOfCategory[]
-  created_at        DateTime          @default(now())
-  updated_at        DateTime          @updatedAt
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
   material          Material[]
 }
 
@@ -135,80 +137,80 @@ model GlobalCategory {
   comment           String?
   color             String?
   category_material CategoryMaterial[]
-  created_at        DateTime           @default(now())
-  updated_at        DateTime           @updatedAt
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
 }
 
 model CategoryMaterial {
-  id                 Int               @id @default(autoincrement())
-  name               String
-  comment            String?
-  template_name      String?
-  global_category_id Int
-  global_category    GlobalCategory    @relation(fields: [global_category_id], references: [id])
-  field_of_category  FieldOfCategory[]
-  created_at         DateTime          @default(now())
-  updated_at         DateTime          @updatedAt
-  material           Material[]
+  id                Int               @id @default(autoincrement())
+  name              String
+  comment           String?
+  templateName      String?           @map("template_name")
+  globalCategoryId  Int               @map("global_category_id")
+  global_category   GlobalCategory    @relation(fields: [globalCategoryId], references: [id])
+  field_of_category FieldOfCategory[]
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  material          Material[]
 }
 
 model ResponsiblePartnerProducer {
-  id         Int        @id @default(autoincrement())
-  name       String
-  comment    String?
-  info       String?
-  email      String?
-  phone      String?
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  material   Material[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  comment   String?
+  info      String?
+  email     String?
+  phone     String?
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  material  Material[]
 }
 
 model FieldOfCategory {
-  id                     Int                  @id @default(autoincrement())
-  name                   String
-  comment                String?
-  is_required            Boolean?             @default(true)
-  default_value          String?
-  category_id            Int
-  category               CategoryMaterial     @relation(fields: [category_id], references: [id])
-  created_by_id          Int
-  created_by             User                 @relation(fields: [created_by_id], references: [id])
-  unit_of_measurement    FieldUnitMeasurement @relation(fields: [unit_of_measurement_id], references: [id])
-  unit_of_measurement_id Int
-  field_type             FieldType            @relation(fields: [field_type_id], references: [id])
-  field_type_id          Int
-  created_at             DateTime             @default(now())
-  updated_at             DateTime             @updatedAt
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  comment             String?
+  isRequired          Boolean?             @default(true) @map("is_required")
+  defaultValue        String?              @map("default_value")
+  categoryId          Int                  @map("category_id")
+  category            CategoryMaterial     @relation(fields: [categoryId], references: [id])
+  createdById         Int                  @map("created_by_id")
+  created_by          User                 @relation(fields: [createdById], references: [id])
+  unit_of_measurement FieldUnitMeasurement @relation(fields: [unitOfMeasurementId], references: [id])
+  unitOfMeasurementId Int                  @map("unit_of_measurement_id")
+  field_type          FieldType            @relation(fields: [fieldTypeId], references: [id])
+  fieldTypeId         Int                  @map("field_type_id")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
 }
 
 model Material {
-  id                     Int                        @id @default(autoincrement())
-  name                   String
-  comment                String?
-  name_public            Boolean?                   @default(true)
-  handbook_id            Int
-  handbook               Handbook                   @relation(fields: [handbook_id], references: [id])
-  price                  Float
-  unit_measurement_id    Int
-  unit_measurement       FieldUnitMeasurement       @relation(fields: [unit_measurement_id], references: [id])
-  category_id            Int
-  category               CategoryMaterial           @relation(fields: [category_id], references: [id])
-  responsible_partner_id Int
-  responsible_partner    ResponsiblePartnerProducer @relation(fields: [responsible_partner_id], references: [id])
-  created_at             DateTime                   @default(now())
-  updated_at             DateTime                   @updatedAt
-  price_changes          PriceChanging[]
+  id                   Int                        @id @default(autoincrement())
+  name                 String
+  comment              String?
+  namePublic           Boolean?                   @default(true) @map("name_public")
+  handbookId           Int                        @map("handbook_id")
+  handbook             Handbook                   @relation(fields: [handbookId], references: [id])
+  price                Float
+  unitMeasurementId    Int                        @map("unit_measurement_id")
+  unit_measurement     FieldUnitMeasurement       @relation(fields: [unitMeasurementId], references: [id])
+  categoryId           Int                        @map("category_id")
+  category             CategoryMaterial           @relation(fields: [categoryId], references: [id])
+  responsiblePartnerId Int                        @map("responsible_partner_id")
+  responsible_partner  ResponsiblePartnerProducer @relation(fields: [responsiblePartnerId], references: [id])
+  createdAt            DateTime                   @default(now()) @map("created_at")
+  updatedAt            DateTime                   @updatedAt @map("updated_at")
+  price_changes        PriceChanging[]
 }
 
 model PriceChanging {
-  id            Int      @id @default(autoincrement())
-  new_price     Float
-  comment       String?
-  material_id   Int
-  material      Material @relation(fields: [material_id], references: [id])
-  changed_by_id Int
-  changed_by    User     @relation(fields: [changed_by_id], references: [id])
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  newPrice    Float    @map("new_price")
+  comment     String?
+  materialId  Int      @map("material_id")
+  material    Material @relation(fields: [materialId], references: [id])
+  changedById Int      @map("changed_by_id")
+  changed_by  User     @relation(fields: [changedById], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 }

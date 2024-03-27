@@ -1,19 +1,21 @@
-import { WorkspaceRequestDto, WorkspaceResponseDto } from './dto/workspace.dto';
+import { WorkspaceRequestDto } from './dto/workspace.dto';
+import { WorkspaceEntity } from './entities/workspace.entity';
 
 export interface WorkspaceServiceInterface {
-  getAllWorkspaces: () => Promise<WorkspaceResponseDto[]>;
-  getWorkspaceById: (id: number) => Promise<WorkspaceResponseDto>;
+  getAllWorkspaces: () => Promise<WorkspaceEntity[]>;
+  getWorkspaceById: (id: number) => Promise<WorkspaceEntity>;
+  getWorkspaceByManagerId: (managerId: number) => Promise<WorkspaceEntity>;
   createWorkspaceByUserId: (
     body: WorkspaceRequestDto,
-    id: number,
-  ) => Promise<WorkspaceResponseDto>;
+    userId: number,
+  ) => Promise<WorkspaceEntity>;
   updateWorkspaceById: (
     body: WorkspaceRequestDto,
     id: number,
-  ) => Promise<WorkspaceResponseDto>;
-  deleteWorkspaceById: (id: number) => Promise<WorkspaceResponseDto>;
+  ) => Promise<WorkspaceEntity>;
+  deleteWorkspaceById: (id: number) => Promise<WorkspaceEntity>;
   changeWorkspaceOwner: (
     id: number,
     newOwnerId: number,
-  ) => Promise<WorkspaceResponseDto>;
+  ) => Promise<WorkspaceEntity>;
 }

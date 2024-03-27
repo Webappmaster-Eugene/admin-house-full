@@ -1,14 +1,11 @@
-import {
-  AuthResponseDto,
-  AuthSigninRequestDto,
-  AuthSignupRequestDto,
-} from './dto/auth.dto';
+import { AuthSigninRequestDto, AuthSignupRequestDto } from './dto/auth.dto';
+import { AuthEntity } from './entities/auth.entity';
 
-export type AuthResponseWithToken = AuthResponseDto & { accessKey: string };
+export type AuthResponseWithToken = AuthEntity & { accessKey: string };
 
 export interface AuthServiceInterface {
-  signup: (body: AuthSignupRequestDto) => Promise<AuthResponseWithToken>;
-  signin: (body: AuthSigninRequestDto) => Promise<AuthResponseWithToken>;
+  signup: (body: AuthSignupRequestDto) => Promise<AuthEntity>;
+  signin: (body: AuthSigninRequestDto) => Promise<AuthEntity>;
   generateJWT: (email: string, id: number) => Promise<string>;
   generateStrictAdminKey: (value: string, key: string) => Promise<string>;
 }

@@ -41,7 +41,7 @@ class CreatorOfWorkspaceNestedResponseDto {
   //   return this.workspace_members;
   // }
 
-  // @Transform(({ key, value }) => 1)
+  @Transform(({ key, value }) => 1)
   handbook_of_workspace_id?: number;
 
   //@Expose({ name: 'handbookOfWorkspaceId' })
@@ -73,7 +73,7 @@ export class UserRequestDto {
     /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
   )
   @ApiProperty({
-    example: '+79200808700',
+    example: '+79200808999',
     description: 'Номер телефона (опционально)',
   })
   phone?: string;
@@ -127,11 +127,6 @@ export class UserRequestDto {
   @IsNumber()
   @IsNotEmpty()
   roleId?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @IsNotEmpty()
-  workspaceId?: number;
 }
 
 export class UserUpdateRequestDto {
@@ -203,6 +198,7 @@ export type UserUpdateRequestDto = Partial<
 >;
 */
 
+/*
 export class UserResponseDto {
   @ApiProperty({ example: 1, description: 'Уникальный идентификатор' })
   @IsNumber()
@@ -348,3 +344,4 @@ export class UserResponseDto {
     return Object.assign(this, partialData);
   }
 }
+*/

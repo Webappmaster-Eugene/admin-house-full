@@ -7,12 +7,14 @@ import { UserController } from './user.controller';
 import { RolesModule } from '../roles/roles.module';
 import { WorkspaceModule } from '../workspace/workspace.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { WorkspaceService } from '../workspace/workspace.service';
 
 @Module({
   controllers: [AuthController, UserController],
   providers: [
     AuthService,
     UserService,
+    WorkspaceService,
     Logger,
     {
       provide: APP_INTERCEPTOR,
