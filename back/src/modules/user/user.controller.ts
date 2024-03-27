@@ -32,7 +32,7 @@ export class UserController {
   getAllUsersEP() {
     // return this.userService.getAllUsers();
     const users = this.userService.getAllUsers();
-    return @Mapper(users);
+    return users;
   }
 
   @ApiOperation({ summary: 'Получение текущего пользователя (id, email)' })
