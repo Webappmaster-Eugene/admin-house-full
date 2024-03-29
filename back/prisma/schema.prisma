@@ -2,37 +2,42 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider         = "zod-prisma-types"
+  output           = "../src/generated/zod"
+  createInputTypes = false
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                          Int               @id @default(autoincrement())
-  firstName                   String            @map("first_name")
-  secondName                  String?           @map("second_name")
-  phone                       String?
-  email                       String            @unique
-  password                    String
-  address                     String?
-  info                        String?
-  documents                   String?
-  // organizations               Organization[]
-  project_customer            Project[]         @relation("project_customer")
-  project_responsible_manager Project[]         @relation("project_responsible_manager")
-  created_fields_of_category  FieldOfCategory[]
-  createdAt                   DateTime          @default(now()) @map("created_at")
-  updatedAt                   DateTime          @updatedAt @map("updated_at")
-  changed_prices              PriceChanging[]
-  roleId                      Int               @map("role_id")
-  role                        Role              @relation(fields: [roleId], references: [id])
-  creatorOfWorkspaceId        Int?              @map("creator_of_workspace_id")
-  creator_of_workspace        Workspace?        @relation("creator_of_workspace")
-  memberOfWorkspaceId         Int?              @map("member_of_workspace_id")
-  member_of_workspace         Workspace?        @relation("workspace_members", fields: [memberOfWorkspaceId], references: [id])
-  memberOfOrganizationId      Int?              @map("member_of_organization_id")
-  member_of_organization      Organization?     @relation("organization_members", fields: [memberOfOrganizationId], references: [id])
-  leader_of_organization      Organization?
+  uuid                      String            @id @default(uuid()) @db.Uuid
+  firstName                 String            @map("first_name")
+  secondName                String?           @map("second_name")
+  phone                     String?
+  email                     String            @unique
+  password                  String
+  address                   String?
+  info                      String?
+  documents                 String?
+  projectCustomer           Project[]         @relation("project_customer")
+  projectResponsibleManager Project[]         @relation("project_responsible_manager")
+  createdFieldsOfCategory   FieldOfCategory[]
+  changedPrices             PriceChanging[]
+  roleId                    Int               @map("role_id")
+  role                      Role              @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  creatorOfWorkspaceUuid    String?           @map("creator_of_workspace_uuid") @db.Uuid
+  creatorOfWorkspace        Workspace?        @relation("creator_of_workspace")
+  memberOfWorkspaceUuid     String?           @map("member_of_workspace_uuid") @db.Uuid
+  memberOfWorkspace         Workspace?        @relation("workspace_members", fields: [memberOfWorkspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  memberOfOrganizationUuid  String?           @map("member_of_organization_uuid") @db.Uuid
+  memberOfOrganization      Organization?     @relation("organization_members", fields: [memberOfOrganizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  leaderOfOrganization      Organization?
+  createdAt                 DateTime          @default(now()) @map("created_at")
+  updatedAt                 DateTime          @updatedAt @map("updated_at")
 }
 
 model Role {
@@ -51,68 +56,67 @@ enum EUserTypeVariants {
 }
 
 model Workspace {
-  id                    Int            @id @default(autoincrement())
-  name                  String
-  description           String?
-  workspaceCreatorId    Int            @unique @map("workspace_creator_id")
-  workspace_creator     User?          @relation("creator_of_workspace", fields: [workspaceCreatorId], references: [id])
-  workspace_members     User[]         @relation("workspace_members")
-  organizations         Organization[]
-  handbookOfWorkspaceId Int?           @unique @map("handbook_of_workspace_id")
-  handbook_of_workspace Handbook?
-  createdAt             DateTime       @default(now()) @map("created_at")
-  updatedAt             DateTime       @updatedAt @map("updated_at")
+  uuid                    String         @id @default(uuid()) @db.Uuid
+  name                    String
+  description             String?
+  workspaceCreatorUuid    String         @unique @map("workspace_creator_uuid") @db.Uuid
+  workspaceCreator        User?          @relation("creator_of_workspace", fields: [workspaceCreatorUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  workspaceMembers        User[]         @relation("workspace_members")
+  organizations           Organization[]
+  handbookOfWorkspaceUuid String?        @unique @map("handbook_of_workspace_uuid") @db.Uuid
+  handbookOfWorkspace     Handbook?
+  createdAt               DateTime       @default(now()) @map("created_at")
+  updatedAt               DateTime       @updatedAt @map("updated_at")
 }
 
 model Organization {
-  id                   Int       @id @default(autoincrement())
-  name                 String
-  description          String?
-  workspaceId          Int       @map("workspace_id")
-  workspace            Workspace @relation(fields: [workspaceId], references: [id])
-  organizationLeaderId Int       @unique @map("organization_leader_id")
-  organization_leader  User      @relation(fields: [organizationLeaderId], references: [id])
-  organization_members User[]    @relation("organization_members")
-  projects             Project[]
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
+  uuid                   String    @id @default(uuid()) @db.Uuid
+  name                   String
+  description            String?
+  workspaceUuid          String    @map("workspace_uuid") @db.Uuid
+  workspace              Workspace @relation(fields: [workspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  organizationLeaderUuid String    @unique @map("organization_leader_uuid") @db.Uuid
+  organizationLeader     User      @relation(fields: [organizationLeaderUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  organizationMembers    User[]    @relation("organization_members")
+  projects               Project[]
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
 }
 
 model Project {
-  id                   Int          @id @default(autoincrement())
-  name                 String
-  description          String?
-  organizationId       Int          @map("organization_id")
-  organization         Organization @relation(fields: [organizationId], references: [id])
-  customer             User         @relation("project_customer", fields: [customerId], references: [id])
-  customerId           Int          @map("customer_id")
-  responsible_manager  User         @relation("project_responsible_manager", fields: [responsibleManagerId], references: [id])
-  responsibleManagerId Int          @map("responsible_manager_id")
-  // project_members User[]
-  createdAt            DateTime     @default(now()) @map("created_at")
-  updatedAt            DateTime     @updatedAt @map("updated_at")
+  uuid                   String       @id @default(uuid()) @db.Uuid
+  name                   String
+  description            String?
+  organizationUuid       String       @map("organization_uuid") @db.Uuid
+  organization           Organization @relation(fields: [organizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  customerUuid           String       @map("customer_uuid") @db.Uuid
+  customer               User         @relation("project_customer", fields: [customerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  responsibleManagerUuid String       @map("responsible_manager_uuid") @db.Uuid
+  responsibleManager     User         @relation("project_responsible_manager", fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt              DateTime     @default(now()) @map("created_at")
+  updatedAt              DateTime     @updatedAt @map("updated_at")
 }
 
 model Handbook {
-  id                  Int        @id @default(autoincrement())
-  name                String
-  description         String?
-  canCustomerView     Boolean?   @default(false) @map("can_customer_view")
-  workspace_handbook  Workspace? @relation(fields: [workspaceHandbookId], references: [id], onDelete: Cascade)
-  workspaceHandbookId Int?       @unique @map("workspace_handbook_id")
-  createdAt           DateTime   @default(now()) @map("created_at")
-  updatedAt           DateTime   @updatedAt @map("updated_at")
-  material            Material[]
+  uuid                  String     @id @default(uuid()) @db.Uuid
+  name                  String
+  description           String?
+  canCustomerView       Boolean?   @default(false) @map("can_customer_view")
+  workspaceHandbookUuid String?    @unique @map("workspace_handbook_uuid") @db.Uuid
+  workspaceHandbook     Workspace? @relation(fields: [workspaceHandbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  material              Material[]
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @updatedAt @map("updated_at")
 }
 
 model FieldType {
-  id                Int                @id @default(autoincrement())
-  name              String
-  description       String
-  jsType            EFieldTypeVariants @map("js_type")
-  field_of_category FieldOfCategory[]
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
+  uuid            String             @id @default(uuid()) @db.Uuid
+  name            String
+  description     String
+  jsType          EFieldTypeVariants @map("js_type")
+  fieldOfCategory FieldOfCategory[]
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
 }
 
 enum EFieldTypeVariants {
@@ -122,95 +126,95 @@ enum EFieldTypeVariants {
 }
 
 model FieldUnitMeasurement {
-  id                Int               @id @default(autoincrement())
-  name              String
-  comment           String?
-  field_of_category FieldOfCategory[]
-  createdAt         DateTime          @default(now()) @map("created_at")
-  updatedAt         DateTime          @updatedAt @map("updated_at")
-  material          Material[]
+  uuid            String            @id @default(uuid()) @db.Uuid
+  name            String
+  comment         String?
+  fieldOfCategory FieldOfCategory[]
+  material        Material[]
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
 }
 
 model GlobalCategory {
-  id                Int                @id @default(autoincrement())
-  name              String
-  comment           String?
-  color             String?
-  category_material CategoryMaterial[]
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
+  uuid             String             @id @default(uuid()) @db.Uuid
+  name             String
+  comment          String?
+  color            String?
+  categoryMaterial CategoryMaterial[]
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
 }
 
 model CategoryMaterial {
-  id                Int               @id @default(autoincrement())
-  name              String
-  comment           String?
-  templateName      String?           @map("template_name")
-  globalCategoryId  Int               @map("global_category_id")
-  global_category   GlobalCategory    @relation(fields: [globalCategoryId], references: [id])
-  field_of_category FieldOfCategory[]
-  createdAt         DateTime          @default(now()) @map("created_at")
-  updatedAt         DateTime          @updatedAt @map("updated_at")
-  material          Material[]
+  uuid               String            @id @default(uuid()) @db.Uuid
+  name               String
+  comment            String?
+  templateName       String?           @map("template_name")
+  globalCategoryUuid String            @map("global_category_uuid") @db.Uuid
+  globalCategory     GlobalCategory    @relation(fields: [globalCategoryUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldOfCategory    FieldOfCategory[]
+  material           Material[]
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
 }
 
 model ResponsiblePartnerProducer {
-  id        Int        @id @default(autoincrement())
+  uuid      String     @id @default(uuid()) @db.Uuid
   name      String
   comment   String?
   info      String?
   email     String?
   phone     String?
+  material  Material[]
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  material  Material[]
 }
 
 model FieldOfCategory {
-  id                  Int                  @id @default(autoincrement())
-  name                String
-  comment             String?
-  isRequired          Boolean?             @default(true) @map("is_required")
-  defaultValue        String?              @map("default_value")
-  categoryId          Int                  @map("category_id")
-  category            CategoryMaterial     @relation(fields: [categoryId], references: [id])
-  createdById         Int                  @map("created_by_id")
-  created_by          User                 @relation(fields: [createdById], references: [id])
-  unit_of_measurement FieldUnitMeasurement @relation(fields: [unitOfMeasurementId], references: [id])
-  unitOfMeasurementId Int                  @map("unit_of_measurement_id")
-  field_type          FieldType            @relation(fields: [fieldTypeId], references: [id])
-  fieldTypeId         Int                  @map("field_type_id")
-  createdAt           DateTime             @default(now()) @map("created_at")
-  updatedAt           DateTime             @updatedAt @map("updated_at")
+  uuid                  String               @id @default(uuid()) @db.Uuid
+  name                  String
+  comment               String?
+  isRequired            Boolean?             @default(true) @map("is_required")
+  defaultValue          String?              @map("default_value")
+  categoryUuid          String               @map("category_uuid") @db.Uuid
+  category              CategoryMaterial     @relation(fields: [categoryUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdByUuid         String               @map("created_by_uuid") @db.Uuid
+  createdBy             User                 @relation(fields: [createdByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  unitOfMeasurementUuid String               @map("unit_of_measurement_uuid") @db.Uuid
+  unitOfMeasurement     FieldUnitMeasurement @relation(fields: [unitOfMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldType             FieldType            @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldTypeUuid         String               @map("field_type_uuid") @db.Uuid
+  createdAt             DateTime             @default(now()) @map("created_at")
+  updatedAt             DateTime             @updatedAt @map("updated_at")
 }
 
 model Material {
-  id                   Int                        @id @default(autoincrement())
-  name                 String
-  comment              String?
-  namePublic           Boolean?                   @default(true) @map("name_public")
-  handbookId           Int                        @map("handbook_id")
-  handbook             Handbook                   @relation(fields: [handbookId], references: [id])
-  price                Float
-  unitMeasurementId    Int                        @map("unit_measurement_id")
-  unit_measurement     FieldUnitMeasurement       @relation(fields: [unitMeasurementId], references: [id])
-  categoryId           Int                        @map("category_id")
-  category             CategoryMaterial           @relation(fields: [categoryId], references: [id])
-  responsiblePartnerId Int                        @map("responsible_partner_id")
-  responsible_partner  ResponsiblePartnerProducer @relation(fields: [responsiblePartnerId], references: [id])
-  createdAt            DateTime                   @default(now()) @map("created_at")
-  updatedAt            DateTime                   @updatedAt @map("updated_at")
-  price_changes        PriceChanging[]
+  uuid                   String                     @id @default(uuid()) @db.Uuid
+  name                   String
+  comment                String?
+  namePublic             Boolean?                   @default(true) @map("name_public")
+  handbookUuid           String                     @map("handbook_uuid") @db.Uuid
+  handbook               Handbook                   @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  price                  Float
+  unitMeasurementUuid    String                     @map("unit_measurement_uuid") @db.Uuid
+  unitMeasurement        FieldUnitMeasurement       @relation(fields: [unitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  categoryUuid           String                     @map("category_uuid") @db.Uuid
+  category               CategoryMaterial           @relation(fields: [categoryUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  responsiblePartnerUuid String                     @map("responsible_partner_uuid") @db.Uuid
+  responsiblePartner     ResponsiblePartnerProducer @relation(fields: [responsiblePartnerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  priceChanges           PriceChanging[]
+  createdAt              DateTime                   @default(now()) @map("created_at")
+  updatedAt              DateTime                   @updatedAt @map("updated_at")
 }
 
 model PriceChanging {
-  id          Int      @id @default(autoincrement())
-  newPrice    Float    @map("new_price")
-  comment     String?
-  materialId  Int      @map("material_id")
-  material    Material @relation(fields: [materialId], references: [id])
-  changedById Int      @map("changed_by_id")
-  changed_by  User     @relation(fields: [changedById], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  uuid          String   @id @default(uuid()) @db.Uuid
+  newPrice      Float    @map("new_price")
+  comment       String?
+  materialUuid  String   @map("material_uuid") @db.Uuid
+  material      Material @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  changedByUuid String   @map("changed_by_uuid") @db.Uuid
+  changedBy     User     @relation(fields: [changedByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 }

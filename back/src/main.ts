@@ -25,11 +25,11 @@ async function bootstrap() {
   SwaggerModule.setup('/api/docs', app, document);
 
   app.setGlobalPrefix('api');
-  app.enableCors({
-    origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: true,
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  //   credentials: true,
+  // });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -41,7 +41,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new NotFoundExceptionFilter());
+  // app.useGlobalFilters(new NotFoundExceptionFilter());
 
   await app.listen(PORT, () =>
     console.log(`Сервер запущен успешно на порту ${PORT}`),

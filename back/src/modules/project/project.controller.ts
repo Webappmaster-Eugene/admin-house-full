@@ -14,7 +14,7 @@ import { ProjectService } from './project.service';
 import { RolesSetting } from '../../lib/decorators/roles.decorator';
 import { AuthGuard } from '../../lib/guards/auth.guard';
 import { WorkspaceManagerGuard } from '../../lib/guards/workspace.guard';
-import { User } from '../../lib/decorators/user.decorator';
+import { User } from '../../lib/decorators/auth.decorator';
 import { JWTPayload } from '../../lib/types/jwt.payload.interface';
 import { ProjectEntity } from './entities/project.entity';
 

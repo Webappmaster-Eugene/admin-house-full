@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 
-export class UserEntity implements User {
+export class UserEntity {
   id: number;
   firstName: string;
   secondName: string;
@@ -19,6 +19,8 @@ export class UserEntity implements User {
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);
+    // this.creaOfWorkspaceId: auth.creatorOfWorkspaceId;
+    // this.
     return this;
   }
 }

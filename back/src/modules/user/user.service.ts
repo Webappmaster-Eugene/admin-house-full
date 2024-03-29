@@ -23,7 +23,7 @@ export class UserService implements UserServiceInterface {
     private readonly prismaService: PrismaService,
     private readonly rolesService: RolesService,
     private readonly configService: ConfigService,
-    private readonly workspaceService: WorkspaceService,
+    private readonly workspaceService: WorkspaceServiceInter,
     private readonly logger: Logger,
   ) {}
 

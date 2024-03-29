@@ -1,3 +1,3 @@
-export const defaultWorkspaceName: string = 'Workspace of user';
+export const defaultWorkspaceName: string = 'Workspace of auth';
 export const defaultWorkspaceDescription: string =
-  'A working space to manage work of user';
+  'A working space to manage work of auth';

@@ -16,6 +16,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import { defaultRoleId } from '../auth/lib/auth.consts';
 
+import { createZodDto } from 'nestjs-zod';
+import { UserLoginCommand } from '../../../../libs/contracts/commands/auth';
+
+export class LoginRequestDto extends createZodDto(
+  UserLoginCommand.RequestSchema,
+) {}
+
+export class LoginResponseDto extends createZodDto(
+  UserLoginCommand.ResponseSchema,
+) {}
+
 class CreatorOfWorkspaceNestedResponseDto {
   @IsOptional()
   @IsNumber()

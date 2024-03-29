@@ -10,20 +10,33 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserRequestDto, UserUpdateRequestDto } from './dto/user.dto';
-import { User } from '../../lib/decorators/user.decorator';
+import { User } from '../../lib/decorators/auth.decorator';
 import { AuthGuard } from '../../lib/guards/auth.guard';
 import { RolesSetting } from '../../lib/decorators/roles.decorator';
 import { JWTPayload } from '../../lib/types/jwt.payload.interface';
 import { UserEntity } from './entities/user.entity';
 import { WorkspaceManagerGuard } from '../../lib/guards/workspace.guard';
+import { zodToOpenAPI } from 'nestjs-zod';
 
 @ApiTags('Работа с пользователями')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiBody({
+    schema: zodToOpenAPI(CreateUserSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(UserSchema),
+  })
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [UserEntity] })
   @RolesSetting('ADMIN')
@@ -56,10 +69,16 @@ export class UserController {
     return this.userService.getUserById(id);
   }
 
+  @ApiBody({
+    schema: zodToOpenAPI(UserRequestDto),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(UserRequestDto),
+  })
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 201, type: UserEntity })
   @Post()
-  async createUserEP(@Body() body: UserRequestDto) {
+  async createUserEP(@Body() body: UserRequestDto): UserResponseDto {
     return this.userService.createUser(body);
   }
 

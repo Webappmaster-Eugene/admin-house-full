@@ -5,11 +5,12 @@ import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RolesModule } from './modules/roles/roles.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { UserInterceptor } from './lib/interceptors/user.interceptor';
-import { NotFoundExceptionFilter } from './lib/exceptions/notfound.exception';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { UserInterceptor } from './common/interceptors/user.interceptor';
+//import { NotFoundExceptionFilter } from './lib/exceptions/notfound.exception';
 import { WorkspaceModule } from './modules/workspace/workspace.module';
 import { OrganizationModule } from './modules/organization/organization.module';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 @Module({
   imports: [
@@ -22,9 +23,9 @@ import { OrganizationModule } from './modules/organization/organization.module';
       isGlobal: true,
       // validate: (config) => validateConfig(config),
     }),
-    ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, './static'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: path.resolve(__dirname, './static'),
+    // }),
     RolesModule,
     WorkspaceModule,
     OrganizationModule,
@@ -37,9 +38,13 @@ import { OrganizationModule } from './modules/organization/organization.module';
       useClass: UserInterceptor,
     },
     {
-      provide: APP_FILTER,
-      useClass: NotFoundExceptionFilter,
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
     },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: NotFoundExceptionFilter,
+    // },
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
