@@ -1,7 +1,8 @@
 import { EUserTypeVariants, Role } from '@prisma/client';
 
 export class RoleEntity implements Role {
-  id: number;
+  uuid: string;
+  idRole: number;
   name: EUserTypeVariants;
   description: string;
   createdAt: Date;

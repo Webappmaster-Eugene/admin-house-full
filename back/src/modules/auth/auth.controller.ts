@@ -10,7 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { LoginRequestDto, LoginResponseDto } from './dto/login.dto';
 import { UserLoginResponse } from '../../../libs/contracts/commands/auth';
-import { ConfigServiceInterface } from '../../common/types/config.service.interface';
+import { ConfigServiceInterface } from '../../common/types/main/config.service.interface';
 import { AuthServiceInterface } from './types/auth.service.interface';
 import { IAuthController } from './types/auth.controller.interface';
 

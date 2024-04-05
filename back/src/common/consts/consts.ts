@@ -1,5 +1,6 @@
-export const enum USER_TYPE_VARIANTS {
-  CUSTOMER = 1,
-  MANAGER = 2,
-  ADMIN = 3,
+export enum USER_TYPE_VARIANTS {
+  ADMIN,
+  MANAGER,
+  WORKER,
+  CUSTOMER,
 }

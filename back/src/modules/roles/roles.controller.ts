@@ -2,29 +2,36 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
+  Inject,
   Param,
+  ParseEnumPipe,
+  ParseUUIDPipe,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
-import { RolesService } from './roles.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RolesRequestDto } from './dto/role.dto';
 import { EUserTypeVariants } from '@prisma/client';
-import { RolesSetting } from '../../lib/decorators/roles.decorator';
-import { AuthGuard } from '../../lib/guards/auth.guard';
+import { RolesSetting } from '../../common/decorators/roles.decorator';
+import { AuthGuard } from '../../common/guards/auth.guard';
 import { RoleEntity } from './entities/role.entity';
+import { RoleCreateRequestDto } from './dto/create-role.dto';
+import { IRoleController } from './types/role.controller.interface';
+import { IRoleService } from './types/role.service.interface';
+import { RoleUpdateRequestDto } from './dto/update-role.dto';
+import { USER_TYPE_VARIANTS } from '../../common/consts/consts';
+import { EntityGetCommand } from '../../../libs/contracts/commands/common/get-param.command';
 
 @Controller('roles')
-export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+export class RolesController implements IRoleController {
+  constructor(@Inject() private readonly rolesService: IRoleService) {}
 
   @ApiOperation({ summary: 'Создать новую роль для пользователя' })
   @ApiResponse({ status: 201, type: RoleEntity })
-  @HttpCode(201)
   @Post()
-  createRoleEP(@Body() body: RolesRequestDto) {
-    return this.rolesService.createRole(body);
+  createEP(@Body() dto: RoleCreateRequestDto) {
+    const responseData = this.rolesService.create(dto);
+    return { data: responseData, error: null };
   }
 
   @ApiOperation({ summary: 'Получение всех ролей пользователей' })
@@ -32,8 +39,19 @@ export class RolesController {
   @RolesSetting('ADMIN')
   @UseGuards(AuthGuard)
   @Get()
-  getAllRolesEP() {
-    return this.rolesService.getAllRoles();
+  getAllEP() {
+    const responseData = this.rolesService.getAll();
+    return { data: responseData, error: null };
+  }
+
+  @ApiOperation({ summary: 'Получить информацию о роли по ее id' })
+  @ApiResponse({ status: 200, type: RoleEntity })
+  @RolesSetting('ADMIN')
+  @UseGuards(AuthGuard)
+  @Get('/:id')
+  getByIdEP(@Param('id', ParseUUIDPipe) id: EntityGetCommand.RequestParam) {
+    const responseData = this.rolesService.getById(id);
+    return { data: responseData, error: null };
   }
 
   @ApiOperation({ summary: 'Получить информацию о роли по ее наименованию' })
@@ -41,7 +59,24 @@ export class RolesController {
   @RolesSetting('ADMIN')
   @UseGuards(AuthGuard)
   @Get('/:value')
-  getRoleByValueEP(@Param('value') value: EUserTypeVariants) {
-    return this.rolesService.getRoleByValue(value);
+  getByValueEP(
+    @Param('value', ParseEnumPipe<USER_TYPE_VARIANTS>)
+    value: USER_TYPE_VARIANTS,
+  ) {
+    const responseData = this.rolesService.getByValue(value);
+    return { data: responseData, error: null };
+  }
+
+  @ApiOperation({ summary: 'Изменить роль по ее наименованию' })
+  @ApiResponse({ status: 200, type: RoleEntity })
+  @RolesSetting('ADMIN')
+  @UseGuards(AuthGuard)
+  @Put('/:id')
+  updateByIdEP(
+    @Param('id', ParseUUIDPipe) id: EntityGetCommand.RequestParam,
+    @Body() dto: RoleUpdateRequestDto,
+  ) {
+    const responseData = this.rolesService.updateById(id, dto);
+    return { data: responseData, error: null };
   }
 }

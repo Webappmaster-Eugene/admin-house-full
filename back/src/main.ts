@@ -4,7 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
 import { instance } from '../logger/winston.logger';
-import { NotFoundExceptionFilter } from './lib/exceptions/notfound.exception';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;

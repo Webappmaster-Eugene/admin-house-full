@@ -4,6 +4,7 @@ const UserLoginRequestSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
+
 const UserLoginResponseSchema = z.object({
   email: z.string().email(),
   accessToken: z.string(),

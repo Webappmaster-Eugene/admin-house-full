@@ -19,8 +19,6 @@ export class UserEntity {
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);
-    // this.creaOfWorkspaceId: auth.creatorOfWorkspaceId;
-    // this.
     return this;
   }
 }

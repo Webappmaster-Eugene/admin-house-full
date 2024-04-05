@@ -27,8 +27,8 @@ model User {
   projectResponsibleManager Project[]         @relation("project_responsible_manager")
   createdFieldsOfCategory   FieldOfCategory[]
   changedPrices             PriceChanging[]
-  roleId                    Int               @map("role_id")
-  role                      Role              @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  roleUuid                  String            @map("role_uuid") @db.Uuid
+  role                      Role              @relation(fields: [roleUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
   creatorOfWorkspaceUuid    String?           @map("creator_of_workspace_uuid") @db.Uuid
   creatorOfWorkspace        Workspace?        @relation("creator_of_workspace")
   memberOfWorkspaceUuid     String?           @map("member_of_workspace_uuid") @db.Uuid
@@ -41,7 +41,8 @@ model User {
 }
 
 model Role {
-  id          Int               @id @default(autoincrement())
+  uuid        String            @id @default(uuid()) @db.Uuid
+  idRole      Int?              @unique @default(autoincrement()) @map("id_role")
   name        EUserTypeVariants @unique
   description String?
   createdAt   DateTime          @default(now()) @map("created_at")
@@ -52,6 +53,7 @@ model Role {
 enum EUserTypeVariants {
   ADMIN
   MANAGER
+  WORKER
   CUSTOMER
 }
 

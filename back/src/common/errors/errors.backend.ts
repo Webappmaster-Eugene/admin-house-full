@@ -1,7 +1,7 @@
 export const ERRORS = {
-  COMPANY_NOT_CREATED: {
-    code: 'C001',
-    message: 'Failed to create company',
+  USER_NOT_CREATED: {
+    code: 'U001',
+    message: 'Failed to create user',
     httpCode: 500,
   },
 };

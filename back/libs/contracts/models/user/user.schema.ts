@@ -1,11 +1,44 @@
 import { z } from 'zod';
-import { UserRole } from '../../enums';
+
 export const UserSchema = z.object({
-    uuid: z.number(),
-    email: z.string().email(),
-    name: z.string(),
-    role: UserRole,
-    passwordHash: z.string(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+  uuid: z.string().uuid(),
+  firstName: z.string(),
+  secondName: z.string().optional(),
+  phone: z
+    .string()
+    .regex(
+      /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
+      `Phone must be a valid phone number`,
+    )
+    .optional(),
+  email: z.string().email(),
+  password: z.string().regex(
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+    `Password must have:
+Minimum 8 characters in length;
+At least one uppercase English letter;
+At least one lowercase English letter;
+At least one digit;
+At least one special character`,
+  ),
+  address: z.string().optional(),
+  info: z.string().optional(),
+  documents: z.string().optional(),
+  roleId: z.number().positive().gte(1).lte(3).default(1),
+  creatorOfWorkspaceUuid: z.string().nullable(),
+  memberOfWorkspaceUuid: z.string().nullable(),
+  memberOfOrganizationUuid: z.string().nullable(),
+  workspaceData: z.object({ uuid: z.string().uuid() }),
+  //      uuid: z.string().uuid(),
+  //     name: z.string(),
+  //     description: z.string().nullable(),
+  //      workspaceCreatorUuid: z.string(),
+  //       handbookOfWorkspaceUuid: z.string().nullable(),
+  //       createdAt: z.coerce.date(),
+  //       updatedAt: z.coerce.date(),
+  //     }),
+  //  ),
+  //(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
