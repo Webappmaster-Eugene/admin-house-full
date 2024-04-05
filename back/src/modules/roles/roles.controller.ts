@@ -15,16 +15,18 @@ import { EUserTypeVariants } from '@prisma/client';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { RoleEntity } from './entities/role.entity';
-import { RoleCreateRequestDto } from './dto/create-role.dto';
+import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
 import { IRoleController } from './types/role.controller.interface';
 import { IRoleService } from './types/role.service.interface';
-import { RoleUpdateRequestDto } from './dto/update-role.dto';
+import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
 import { USER_TYPE_VARIANTS } from '../../common/consts/consts';
 import { EntityGetCommand } from '../../../libs/contracts/commands/common/get-param.command';
 
 @Controller('roles')
 export class RolesController implements IRoleController {
-  constructor(@Inject() private readonly rolesService: IRoleService) {}
+  constructor(
+    @Inject('IRoleService') private readonly rolesService: IRoleService,
+  ) {}
 
   @ApiOperation({ summary: 'Создать новую роль для пользователя' })
   @ApiResponse({ status: 201, type: RoleEntity })

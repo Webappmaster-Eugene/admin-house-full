@@ -1,9 +1,8 @@
 import { IServiceCommon } from '../../../common/types/main/slices/service.interface';
-import { RoleCreateRequestDto } from '../dto/create-role.dto';
-import { RoleUpdateRequestDto } from '../dto/update-role.dto';
+import { RoleCreateRequestDto } from '../dto/controller/create-role.dto';
+import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
 import { EUserTypeVariants, Prisma } from '@prisma/client';
-import { UniversalServiceResponse } from '../../../common/types/responses/universal-service-response.interface';
-import { USER_TYPE_VARIANTS } from '../../../common/consts/consts';
+import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { RoleEntity } from '../entities/role.entity';
 import { EntityGetCommand } from '../../../../libs/contracts/commands/common/get-param.command';
 
@@ -13,22 +12,22 @@ export interface IRoleService
     RoleUpdateRequestDto,
     RoleEntity
   > {
-  getByIdEP: (
+  getById: (
     id: EntityGetCommand.RequestParam,
-  ) => Promise<UniversalServiceResponse<RoleEntity | null>>;
+  ) => Promise<UniversalInternalResponse<RoleEntity | null>>;
   getByValue: (
     value: EUserTypeVariants,
-  ) => Promise<UniversalServiceResponse<RoleEntity | null>>;
-  getAllEP: () => Promise<UniversalServiceResponse<RoleEntity[] | null>>;
-  createEP: (
+  ) => Promise<UniversalInternalResponse<RoleEntity | null>>;
+  getAll: () => Promise<UniversalInternalResponse<RoleEntity[] | null>>;
+  create: (
     dto: RoleCreateRequestDto,
-  ) => Promise<UniversalServiceResponse<RoleEntity>>;
-  updateByIdEP: (
+  ) => Promise<UniversalInternalResponse<RoleEntity>>;
+  updateById: (
     id: EntityGetCommand.RequestParam,
     dto: RoleUpdateRequestDto,
-  ) => Promise<UniversalServiceResponse<RoleEntity>>;
-  deleteByIdsEP: (
+  ) => Promise<UniversalInternalResponse<RoleEntity>>;
+  deleteByIds: (
     ids: EntityGetCommand.RequestParam[],
-  ) => Promise<UniversalServiceResponse<Prisma.BatchPayload>>;
+  ) => Promise<UniversalInternalResponse<Prisma.BatchPayload>>;
   checkIsAdminSecretKey: (key: string) => boolean;
 }

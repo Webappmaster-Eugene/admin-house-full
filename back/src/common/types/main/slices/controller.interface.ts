@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { UniversalControllerResponse } from '../../responses/universal-controller-response.interface';
+import { UniversalControllerResponse } from '../../responses/universal-external-response.interface';
 import { EntityGetCommand } from '../../../../../libs/contracts/commands/common/get-param.command';
 
 export interface IControllerCommon<

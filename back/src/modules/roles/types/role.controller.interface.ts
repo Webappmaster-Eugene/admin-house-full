@@ -3,15 +3,14 @@ import { EUserTypeVariants, Prisma } from '@prisma/client';
 import {
   RoleCreateRequestDto,
   RoleCreateResponseDto,
-} from '../dto/create-role.dto';
+} from '../dto/controller/create-role.dto';
 import {
   RoleUpdateRequestDto,
   RoleUpdateResponseDto,
-} from '../dto/update-role.dto';
-import { RoleGetResponseDto } from '../dto/get-role.dto';
-import { RoleGetAllResponseDto } from '../dto/get-all-roles.dto';
-import { UniversalControllerResponse } from '../../../common/types/responses/universal-controller-response.interface';
-import { USER_TYPE_VARIANTS } from '../../../common/consts/consts';
+} from '../dto/controller/update-role.dto';
+import { RoleGetResponseDto } from '../dto/controller/get-role.dto';
+import { RoleGetAllResponseDto } from '../dto/controller/get-all-roles.dto';
+import { UniversalExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
 import { EntityGetCommand } from '../../../../libs/contracts/commands/common/get-param.command';
 
 export interface IRoleController
@@ -25,19 +24,19 @@ export interface IRoleController
   > {
   getByIdEP: (
     id: EntityGetCommand.RequestParam,
-  ) => UniversalControllerResponse<RoleGetResponseDto | null>;
+  ) => UniversalExternalResponse<RoleGetResponseDto | null>;
   getByValueEP: (
     value: EUserTypeVariants,
-  ) => UniversalControllerResponse<RoleGetResponseDto | null>;
-  getAllEP: () => UniversalControllerResponse<RoleGetAllResponseDto[] | null>;
+  ) => UniversalExternalResponse<RoleGetResponseDto | null>;
+  getAllEP: () => UniversalExternalResponse<RoleGetAllResponseDto[] | null>;
   createEP: (
     dto: RoleCreateRequestDto,
-  ) => UniversalControllerResponse<RoleCreateResponseDto>;
+  ) => UniversalExternalResponse<RoleCreateResponseDto>;
   updateByIdEP: (
     id: EntityGetCommand.RequestParam,
     dto: RoleUpdateRequestDto,
-  ) => UniversalControllerResponse<RoleUpdateResponseDto>;
+  ) => UniversalExternalResponse<RoleUpdateResponseDto>;
   deleteByIdsEP: (
     ids: EntityGetCommand.RequestParam[],
-  ) => UniversalControllerResponse<Prisma.BatchPayload>;
+  ) => UniversalExternalResponse<Prisma.BatchPayload>;
 }

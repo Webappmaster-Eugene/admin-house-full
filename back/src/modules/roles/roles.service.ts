@@ -8,11 +8,17 @@ import { EUserTypeVariants, Prisma } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { RoleEntity } from './entities/role.entity';
 import { IRoleService } from './types/role.service.interface';
-import { RoleCreateRequestDto } from './dto/create-role.dto';
+import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
 import { IConfigService } from '../../common/types/main/config.service.interface';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IRoleRepository } from './types/role.repository.interface';
+import {
+  InternalResponse,
+  UniversalInternalResponse,
+} from '../../common/types/responses/universal-internal-response.interface';
+import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
+import { EntityGetCommand } from '../../../libs/contracts/commands/common/get-param.command';
 
 @Injectable()
 export class RolesService implements IRoleService {
@@ -26,128 +32,70 @@ export class RolesService implements IRoleService {
     return key === this.configService.get('STRICT_ADMIN_KEY');
   }
 
-  async create(dto: RoleCreateRequestDto): Promise<RoleEntity> {
+  async create(
+    dto: RoleCreateRequestDto,
+  ): Promise<UniversalInternalResponse<RoleEntity>> {
     if (this.checkIsAdminSecretKey(dto.key)) {
       try {
         const newRole = await this.roleRepository.create(dto);
-
-        return new RoleEntity(newRole);
-      } catch (error) {
-          return null;
-    } else {
-      return new
-    }
-  }
-
-  async updateById({
-    name,
-    description,
-    key,
-  }: RolesRequestDto): Promise<RoleEntity> {
-    if (this.checkIsAdminSecretKey(key)) {
-      try {
-        const newRole = await this.prismaService.role.create({
-          data: {
-            name,
-            description,
-          },
-        });
-        this.logger.log(
-          `Role created successfully - newRoleId ${newRole.id}`,
-          RolesService.name,
-        );
-        return new RoleEntity(newRole);
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === 'P2002') {
-            this.logger.error(
-              `There is a unique constraint violation - ${name}`,
-              error.stack,
-              RolesService.name,
-            );
-            throw new HttpException(
-              'Такая роль уже существует!',
-              HttpStatus.CONFLICT,
-            );
-          }
-
-          throw new HttpException(
-            `${error.message}`,
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
+        return new InternalResponse<RoleEntity>(newRole);
+      } catch (error: unknown) {
+        return new InternalResponse<RoleEntity>(null, false, 'R001');
       }
     } else {
-      throw new UnauthorizedException(
-        'У вас нет прав доступа для создания роли',
-      );
+      return new InternalResponse<RoleEntity>(null, false, 'R001');
     }
   }
 
-  async getAll(): Promise<RoleEntity[]> {
+  async updateById(
+    id: EntityGetCommand.RequestParam,
+    dto: RoleUpdateRequestDto,
+  ): Promise<UniversalInternalResponse<RoleEntity>> {
     try {
-      const allRoles = await this.prismaService.role.findMany();
-      const rolesToView = allRoles.map((role) => new RoleEntity(role));
-      this.logger.log(`All roles successfully received`, RolesService.name);
-      return rolesToView;
+      const updatedRole = await this.roleRepository.updateById(id, dto);
+      return new InternalResponse<RoleEntity>(updatedRole);
     } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при запросе всех ролей`,
-        error.stack,
-        RolesService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      return new InternalResponse<RoleEntity>(null, false, 'R001');
     }
   }
 
-  async getById(value: EUserTypeVariants): Promise<RoleEntity> {
+  async getAll(): Promise<UniversalInternalResponse<RoleEntity[] | null>> {
     try {
-      const concreteRole = await this.prismaService.role.findUnique({
-        where: {
-          name: value,
-        },
-      });
-      const roleToView = new RoleEntity(concreteRole);
-
-      this.logger.log(`Role received successfully`, RolesService.name);
-      return roleToView;
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при получении роли ${value}`,
-        error.stack,
-        RolesService.name,
-      );
-      throw new HttpException(
-        `Произошла ошибка при получении роли ${value} - роли не существует`,
-        HttpStatus.NOT_FOUND,
-      );
+      const allRoles = await this.roleRepository.getAll();
+      return new InternalResponse<RoleEntity[]>(allRoles);
+    } catch (error: unknown) {
+      return new InternalResponse(null, false, 'R001');
     }
   }
 
-  async getByValue(value: EUserTypeVariants): Promise<RoleEntity> {
+  async deleteByIds(): Promise<UniversalInternalResponse<RoleEntity[] | null>> {
     try {
-      const concreteRole = await this.prismaService.role.findUnique({
-        where: {
-          name: value,
-        },
-      });
-      const roleToView = new RoleEntity(concreteRole);
+      const allRoles = await this.roleRepository.getAll();
+      return new InternalResponse<RoleEntity[]>(allRoles);
+    } catch (error: unknown) {
+      return new InternalResponse(null, false, 'R001');
+    }
+  }
 
-      this.logger.log(`Role received successfully`, RolesService.name);
-      return roleToView;
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при получении роли ${value}`,
-        error.stack,
-        RolesService.name,
-      );
-      throw new HttpException(
-        `Произошла ошибка при получении роли ${value} - роли не существует`,
-        HttpStatus.NOT_FOUND,
-      );
+  async getById(
+    id: EntityGetCommand.RequestParam,
+  ): Promise<UniversalInternalResponse<RoleEntity | null>> {
+    try {
+      const concreteRole = await this.roleRepository.getById(id);
+      return new InternalResponse<RoleEntity>(concreteRole);
+    } catch (error: unknown) {
+      return new InternalResponse<RoleEntity>(null, false, 'R001');
+    }
+  }
+
+  async getByValue(
+    value: EUserTypeVariants,
+  ): Promise<UniversalInternalResponse<RoleEntity | null>> {
+    try {
+      const concreteRole = await this.roleRepository.getByValue(value);
+      return new InternalResponse<RoleEntity>(concreteRole);
+    } catch (error: unknown) {
+      return new InternalResponse<RoleEntity>(null, false, 'R001');
     }
   }
 }

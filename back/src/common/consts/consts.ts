@@ -1,6 +1,0 @@
-export enum USER_TYPE_VARIANTS {
-  ADMIN,
-  MANAGER,
-  WORKER,
-  CUSTOMER,
-}

@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { UniversalServiceResponse } from '../../responses/universal-service-response.interface';
+import { UniversalServiceResponse } from '../../responses/universal-internal-response.interface';
 import { EntityGetCommand } from '../../../../../libs/contracts/commands/common/get-param.command';
 
 export interface IRepositoryDbCommon<
