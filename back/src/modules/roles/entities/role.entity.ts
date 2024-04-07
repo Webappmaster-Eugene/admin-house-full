@@ -7,10 +7,9 @@ export class RoleEntity implements Role {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-  _count?: number;
 
-  constructor(role: Partial<Role>) {
-    Object.assign(this, role);
+  constructor(project: Partial<Role>) {
+    Object.assign(this, project);
     return this;
   }
 }

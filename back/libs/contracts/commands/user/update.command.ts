@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models/user';
-import { EntityGetCommand } from '../common/get-param.command';
+import { UserSchema } from '../../models';
+import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 
 const UserUpdateRequestSchema = UserSchema.omit({
   createdAt: true,
@@ -14,7 +14,7 @@ const UserUpdateRequestSchema = UserSchema.omit({
 const UserUpdateResponseSchema = UserSchema.pick({ uuid: true });
 
 export namespace UserUpdateCommand {
-  export const RequestParamSchema = EntityGetCommand.RequestParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const RequestSchema = UserUpdateRequestSchema;

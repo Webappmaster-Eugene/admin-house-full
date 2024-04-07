@@ -1,19 +1,22 @@
 import { IServiceCommon } from '../../../common/types/main/slices/service.interface';
-import { RoleCreateRequestDto } from '../dto/controller/create-role.dto';
-import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
-import { EUserTypeVariants, Prisma } from '@prisma/client';
+import { RoleCreateRequestDto } from '../dto/controller/create-project.dto';
+import { RoleUpdateRequestDto } from '../dto/controller/update-project.dto';
+import { EUserTypeVariants } from '@prisma/client';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
-import { RoleEntity } from '../entities/role.entity';
-import { EntityGetCommand } from '../../../../libs/contracts/commands/common/get-param.command';
+import { RoleEntity } from '../entities/project.entity';
+import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 
 export interface IRoleService
   extends IServiceCommon<
     RoleCreateRequestDto,
     RoleUpdateRequestDto,
-    RoleEntity
+    RoleEntity,
+    void,
+    EntityUrlParamCommand.RequestParam,
+    EntityUrlParamCommand.RequestParamNumber
   > {
   getById: (
-    id: EntityGetCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestParamNumber,
   ) => Promise<UniversalInternalResponse<RoleEntity | null>>;
   getByValue: (
     value: EUserTypeVariants,
@@ -23,11 +26,11 @@ export interface IRoleService
     dto: RoleCreateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   updateById: (
-    id: EntityGetCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestParam,
     dto: RoleUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
-  deleteByIds: (
-    ids: EntityGetCommand.RequestParam[],
-  ) => Promise<UniversalInternalResponse<Prisma.BatchPayload>>;
+  deleteById: (
+    id: EntityUrlParamCommand.RequestParam,
+  ) => Promise<UniversalInternalResponse<RoleEntity>>;
   checkIsAdminSecretKey: (key: string) => boolean;
 }

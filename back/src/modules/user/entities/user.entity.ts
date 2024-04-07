@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
 
-export class UserEntity {
-  id: number;
+export class UserEntity implements User {
+  uuid: string;
   firstName: string;
   secondName: string;
   phone: string;
@@ -10,12 +10,12 @@ export class UserEntity {
   address: string;
   info: string;
   documents: string;
+  userUuid: string;
+  creatorOfWorkspaceUuid: string;
+  memberOfWorkspaceUuid: string;
+  memberOfOrganizationUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  roleId: number;
-  memberOfWorkspaceId: number;
-  memberOfOrganizationId: number;
-  creatorOfWorkspaceId: number;
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);

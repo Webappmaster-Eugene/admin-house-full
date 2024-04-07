@@ -1,21 +1,44 @@
-import { LoginRequestDto, LoginResponseDto } from '../dto/login.dto';
-import { RegisterRequestDto, RegisterResponseDto } from '../dto/register.dto';
 import { IControllerCommon } from '../../../common/types/main/slices/controller.interface';
-import { UserEntity } from '../entities/user.entity';
-import { Prisma } from '@prisma/client';
+import {
+  UserCreateRequestDto,
+  UserCreateResponseDto,
+} from '../dto/controller/create-user.dto';
+import {
+  UserUpdateRequestDto,
+  UserUpdateResponseDto,
+} from '../dto/controller/update-user.dto';
+import { UserGetResponseDto } from '../dto/controller/get-user.dto';
+import { UserGetAllResponseDto } from '../dto/controller/get-all-users.dto';
+import { UniversalExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
+import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { UserDeleteResponseDto } from '../dto/controller/delete-user.dto';
 
 export interface IUserController
-  extends IControllerCommon<UserEntity, RegisterRequestDto> {
-  getByIdEP: (id: string) => Promise<ResponseDto | null>;
-  createEP: (dto: RegisterRequestDto) => Promise<ResponseDto>;
-  updateByIdEP: (id: string, dto: unknown) => Promise<ResponseDto>;
-  deleteByIdsEP: (ids: string[]) => Promise<Prisma.BatchPayload>;
-  findByCriteriaEP: (
-    dto: unknown,
-    sort: Record<string, string>[],
-  ) => Promise<ResponseDto[]>;
-
-  registerEP: (dto: RegisterRequestDto) => Promise<RegisterResponseDto>;
-  loginEP: (dto: LoginRequestDto) => Promise<LoginResponseDto>;
-  generateStrictAdminKeyEP: ({ key }: { key: string }) => Promise<string>;
+  extends IControllerCommon<
+    UserCreateRequestDto,
+    UserUpdateRequestDto,
+    UserGetResponseDto,
+    UserGetAllResponseDto,
+    UserCreateResponseDto,
+    UserUpdateResponseDto,
+    void,
+    void,
+    EntityUrlParamCommand.RequestParam
+  > {
+  getByIdEP: (
+    id: EntityUrlParamCommand.RequestParam,
+  ) => Promise<UniversalExternalResponse<UserGetResponseDto | null>>;
+  getAllEP: () => Promise<
+    UniversalExternalResponse<UserGetAllResponseDto[] | null>
+  >;
+  createEP: (
+    dto: UserCreateRequestDto,
+  ) => Promise<UniversalExternalResponse<UserCreateResponseDto>>;
+  updateByIdEP: (
+    id: EntityUrlParamCommand.RequestParam,
+    dto: UserUpdateRequestDto,
+  ) => Promise<UniversalExternalResponse<UserUpdateResponseDto>>;
+  deleteByIdEP: (
+    id: EntityUrlParamCommand.RequestParam,
+  ) => Promise<UniversalExternalResponse<UserDeleteResponseDto>>;
 }

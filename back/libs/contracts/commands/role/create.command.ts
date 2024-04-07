@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { EUserTypeVariantsSchema } from '../../../../src/generated/zod';
-import { RoleSchema } from '../../models/role';
+import { RoleSchema } from '../../models';
 
 const RoleCreateRequestSchema = RoleSchema.omit({
+  idRole: true,
   uuid: true,
   createdAt: true,
   updatedAt: true,

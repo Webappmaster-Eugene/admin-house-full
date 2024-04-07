@@ -1,15 +1,14 @@
-import { User, Workspace } from '@prisma/client';
+import { EUserTypeVariants, Workspace } from '@prisma/client';
 
 export class WorkspaceEntity implements Workspace {
-  id: number;
-  name: string;
+  uuid: string;
+  idWorkspace: number;
+  name: EUserTypeVariants;
   description: string;
-  handbookOfWorkspaceId: number;
-  workspaceCreatorId: number;
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(workspace: Partial<WorkspaceEntity>) {
+  constructor(workspace: Partial<Workspace>) {
     Object.assign(this, workspace);
     return this;
   }

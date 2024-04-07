@@ -1,27 +1,30 @@
-import { RoleCreateRequestDto } from '../dto/controller/create-role.dto';
-import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
-import { EUserTypeVariants, Prisma } from '@prisma/client';
-import { IRepositoryDbCommon } from '../../../common/types/main/slices/repositorydb.interface';
-import { EntityGetCommand } from '../../../../libs/contracts/commands/common/get-param.command';
+import { RoleCreateRequestDto } from '../dto/controller/create-project.dto';
+import { RoleUpdateRequestDto } from '../dto/controller/update-project.dto';
+import { EUserTypeVariants } from '@prisma/client';
+import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
+import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
-import { RoleEntity } from '../entities/role.entity';
+import { RoleEntity } from '../entities/project.entity';
 
 export interface IRoleRepository
-  extends IRepositoryDbCommon<
+  extends IRepositoryCommon<
     RoleCreateRequestDto,
     RoleUpdateRequestDto,
-    RoleEntity
+    RoleEntity,
+    void,
+    EntityUrlParamCommand.RequestParam,
+    EntityUrlParamCommand.RequestParamNumber
   > {
-  getById: (id: EntityGetCommand.RequestParam) => Promise<RoleEntity>;
+  getById: (
+    id: EntityUrlParamCommand.RequestParamNumber,
+  ) => Promise<RoleEntity>;
   getByValue: (value: EUserTypeVariants) => Promise<RoleEntity>;
   getAllCount: () => Promise<CountData>;
   getAll: () => Promise<RoleEntity[]>;
   create: (dto: RoleCreateRequestDto) => Promise<RoleEntity>;
   updateById: (
-    id: EntityGetCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestParam,
     dto: RoleUpdateRequestDto,
   ) => Promise<RoleEntity>;
-  deleteByIds: (
-    ids: EntityGetCommand.RequestParam[],
-  ) => Promise<Prisma.BatchPayload>;
+  deleteById: (id: EntityUrlParamCommand.RequestParam) => Promise<RoleEntity>;
 }

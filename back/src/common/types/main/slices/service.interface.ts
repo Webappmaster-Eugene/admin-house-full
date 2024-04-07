@@ -1,26 +1,30 @@
 import { Prisma } from '@prisma/client';
-import { UniversalServiceResponse } from '../../responses/universal-internal-response.interface';
-import { EntityGetCommand } from '../../../../../libs/contracts/commands/common/get-param.command';
+import { UniversalInternalResponse } from '../../responses/universal-internal-response.interface';
+import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
 
 export interface IServiceCommon<
   CReqDto,
   UReqDto,
   ENTITY,
   FReqDto = void,
-  GReqParam = EntityGetCommand.RequestParam,
+  GReqParam = EntityUrlParamCommand.RequestParam,
+  GReqParamNumber = EntityUrlParamCommand.RequestParamNumber,
 > {
-  getById: (id: GReqParam) => Promise<UniversalServiceResponse<ENTITY | null>>;
-  getAll: () => Promise<UniversalServiceResponse<ENTITY[] | null>>;
-  create: (dto: CReqDto) => Promise<UniversalServiceResponse<ENTITY>>;
+  getById: (
+    id: GReqParam | GReqParamNumber,
+  ) => Promise<UniversalInternalResponse<ENTITY | null>>;
+  getAll: () => Promise<UniversalInternalResponse<ENTITY[] | null>>;
+  create: (dto: CReqDto) => Promise<UniversalInternalResponse<ENTITY>>;
   updateById: (
     id: GReqParam,
     dto: UReqDto,
-  ) => Promise<UniversalServiceResponse<ENTITY>>;
-  deleteByIds: (
+  ) => Promise<UniversalInternalResponse<ENTITY>>;
+  deleteById: (ids: GReqParam) => Promise<UniversalInternalResponse<ENTITY>>;
+  deleteByIds?: (
     ids: GReqParam[],
-  ) => Promise<UniversalServiceResponse<Prisma.BatchPayload>>;
+  ) => Promise<UniversalInternalResponse<Prisma.BatchPayload>>;
   findByCriteria?: (
     dto: FReqDto,
     sort: Record<string, string>[],
-  ) => Promise<UniversalServiceResponse<ENTITY[]>>;
+  ) => Promise<UniversalInternalResponse<ENTITY[]>>;
 }

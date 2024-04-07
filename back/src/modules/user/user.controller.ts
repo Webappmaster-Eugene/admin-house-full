@@ -20,7 +20,7 @@ import {
 import { UserRequestDto, UserUpdateRequestDto } from './dto/user.dto';
 import { User } from '../../lib/decorators/auth.decorator';
 import { AuthGuard } from '../../lib/guards/auth.guard';
-import { RolesSetting } from '../../lib/decorators/roles.decorator';
+import { UsersSetting } from '../../lib/decorators/users.decorator';
 import { JWTPayload } from '../../lib/types/jwt.payload.interface';
 import { UserEntity } from './entities/user.entity';
 import { WorkspaceManagerGuard } from '../../lib/guards/workspace.guard';
@@ -39,7 +39,7 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [UserEntity] })
-  @RolesSetting('ADMIN')
+  @UsersSetting('ADMIN')
   @UseGuards(AuthGuard)
   @Get()
   getAllUsersEP() {
@@ -97,7 +97,7 @@ export class UserController {
       'Добавление рядового пользователя в Workspace менеджера по id пользователя',
   })
   @ApiResponse({ status: 200, type: UserEntity })
-  @RolesSetting('MANAGER')
+  @UsersSetting('MANAGER')
   @UseGuards(AuthGuard, WorkspaceManagerGuard)
   @Put('/addToManagerWorkspace/:userId')
   async addUserToManagerWorkspaceEP(

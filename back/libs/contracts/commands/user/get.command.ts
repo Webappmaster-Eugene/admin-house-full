@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { UserSchema } from '../../models/user';
-import { EntityGetCommand } from '../common/get-param.command';
+import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 
 const UserGetResponseSchema = UserSchema;
 
 export namespace UserGetCommand {
-  export const RequestParamSchema = EntityGetCommand.RequestParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = UserGetResponseSchema;

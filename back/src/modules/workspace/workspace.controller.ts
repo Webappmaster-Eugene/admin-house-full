@@ -16,7 +16,7 @@ import {
 } from './dto/workspace.dto';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceEntity } from './entities/workspace.entity';
-import { RolesSetting } from '../../lib/decorators/roles.decorator';
+import { WorkspacesSetting } from '../../lib/decorators/workspaces.decorator';
 import { AuthGuard } from '../../lib/guards/auth.guard';
 import { WorkspaceManagerGuard } from '../../lib/guards/workspace.guard';
 import { User } from '../../lib/decorators/auth.decorator';
@@ -29,7 +29,7 @@ export class WorkspaceController {
 
   @ApiOperation({ summary: 'Получить все Workspace пользователей' })
   @ApiResponse({ status: 200, type: [WorkspaceEntity] })
-  @RolesSetting('MANAGER', 'ADMIN')
+  @WorkspacesSetting('MANAGER', 'ADMIN')
   @UseGuards(AuthGuard)
   @Get()
   getAllWorkspacesEP() {
@@ -46,7 +46,7 @@ export class WorkspaceController {
 
   @ApiOperation({ summary: 'Создание Workspace' })
   @ApiResponse({ status: 201, type: WorkspaceEntity })
-  @RolesSetting('MANAGER')
+  @WorkspacesSetting('MANAGER')
   @UseGuards(AuthGuard)
   @Post()
   async createWorkspaceByUserIdEP(
@@ -58,7 +58,7 @@ export class WorkspaceController {
 
   @ApiOperation({ summary: 'Изменение Workspace пользователя по id Workspace' })
   @ApiResponse({ status: 200, type: WorkspaceEntity })
-  @RolesSetting('MANAGER')
+  @WorkspacesSetting('MANAGER')
   @UseGuards(AuthGuard, WorkspaceManagerGuard)
   @Put('/:id')
   async updateWorkspaceByIdEP(

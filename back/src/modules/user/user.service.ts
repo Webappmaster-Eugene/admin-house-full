@@ -7,13 +7,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { RolesService } from '../roles/roles.service';
+import { UsersService } from '../users/users.service';
 import { UserRequestDto, UserUpdateRequestDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 import { UserServiceInterface } from './user.repository.interface';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { defaultRoleId } from './auth/lib/auth.consts';
+import { defaultUserId } from './auth/lib/auth.consts';
 import { UserEntity } from './entities/user.entity';
 import { WorkspaceEntity } from '../workspace/entities/workspace.entity';
 
@@ -21,7 +21,7 @@ import { WorkspaceEntity } from '../workspace/entities/workspace.entity';
 export class UserService implements UserServiceInterface {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly rolesService: RolesService,
+    private readonly usersService: UsersService,
     private readonly configService: ConfigService,
     private readonly workspaceService: WorkspaceServiceInter,
     private readonly logger: Logger,
@@ -146,13 +146,13 @@ export class UserService implements UserServiceInterface {
     address,
     info,
     documents,
-    roleId,
+    userId,
   }: UserRequestDto): Promise<UserEntity> {
     let userExists: boolean | unknown;
     let newUserWorkspace: null | WorkspaceEntity;
     let newUserWithWorkspace: null | UserEntity;
 
-    const userRoleId = roleId ? roleId : defaultRoleId;
+    const userUserId = userId ? userId : defaultUserId;
 
     try {
       userExists = await this.prismaService.user.findUnique({
@@ -201,12 +201,12 @@ export class UserService implements UserServiceInterface {
           address,
           info,
           documents,
-          roleId: userRoleId,
+          userId: userUserId,
           creatorOfWorkspaceId: null,
         },
       });
 
-      if (roleId === 2) {
+      if (userId === 2) {
         newUserWorkspace = await this.workspaceService.createWorkspaceByUserId(
           {},
           newUser.id,

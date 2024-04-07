@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +8,6 @@ import { jwtExtractor } from '../helpers/jwt.extractor';
 @Injectable()
 export class WorkspaceManagerGuard implements CanActivate {
   constructor(
-    private readonly reflector: Reflector,
     private configService: ConfigService,
     private readonly prismaService: PrismaService,
   ) {}
@@ -21,17 +19,21 @@ export class WorkspaceManagerGuard implements CanActivate {
       const payload = jwt.verify(token, jwtSecret) as JWTPayload;
       const user = await this.prismaService.user.findUnique({
         where: {
-          id: Number(payload.id),
+          uuid: payload.uuid,
         },
         select: {
-          id: true,
-          roleId: true,
-          creator_of_workspace: {
+          uuid: true,
+          role: {
             select: {
-              id: true,
+              idRole: true,
+            },
+          },
+          creatorOfWorkspace: {
+            select: {
+              uuid: true,
               name: true,
-              workspaceCreatorId: true,
-              workspace_members: true,
+              workspaceCreatorUuid: true,
+              workspaceMembers: true,
             },
           },
         },
@@ -41,14 +43,10 @@ export class WorkspaceManagerGuard implements CanActivate {
         return false;
       }
 
-      if (
-        user.roleId === 2 &&
-        user.id === user.creator_of_workspace.workspaceCreatorId
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+      return (
+        user.role.idRole === 2 &&
+        user.uuid === user.creatorOfWorkspace.workspaceCreatorUuid
+      );
     } catch (error) {
       console.error(error);
       return false;

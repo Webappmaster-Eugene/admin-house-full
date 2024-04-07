@@ -3,7 +3,7 @@ import { EUserTypeVariantsSchema } from '../../../../src/generated/zod';
 
 export const RoleSchema = z.object({
   uuid: z.string().uuid(),
-  id: z.number().int(),
+  idRole: z.number().int().optional(),
   name: EUserTypeVariantsSchema,
   description: z.string().nullable(),
   createdAt: z.coerce.date(),

@@ -4,13 +4,14 @@ import { AuthController } from './auth/auth.controller';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { RolesModule } from '../roles/roles.module';
+import { UsersModule } from '../users/users.module';
 import { WorkspaceModule } from '../workspace/workspace.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { WorkspaceService } from '../workspace/workspace.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  controllers: [AuthController, UserController],
+  controllers: [UserController],
   providers: [
     AuthService,
     UserService,
@@ -21,7 +22,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
       useClass: ClassSerializerInterceptor,
     },
   ],
-  imports: [PrismaModule, RolesModule, WorkspaceModule],
+  imports: [PrismaModule, AuthModule, UsersModule, WorkspaceModule],
   exports: [UserService],
 })
 export class UserModule {}

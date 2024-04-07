@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { EUserTypeVariantsSchema } from '../../../../src/generated/zod';
-import { UserSchema } from '../../models/user';
+import { UserSchema } from '../../models';
 
 const RoleGetAllResponseSchema = z.object({
   data: z.array(UserSchema),

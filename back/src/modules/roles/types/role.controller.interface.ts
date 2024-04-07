@@ -1,17 +1,18 @@
 import { IControllerCommon } from '../../../common/types/main/slices/controller.interface';
-import { EUserTypeVariants, Prisma } from '@prisma/client';
+import { EUserTypeVariants } from '@prisma/client';
 import {
   RoleCreateRequestDto,
   RoleCreateResponseDto,
-} from '../dto/controller/create-role.dto';
+} from '../dto/controller/create-project.dto';
 import {
   RoleUpdateRequestDto,
   RoleUpdateResponseDto,
-} from '../dto/controller/update-role.dto';
-import { RoleGetResponseDto } from '../dto/controller/get-role.dto';
-import { RoleGetAllResponseDto } from '../dto/controller/get-all-roles.dto';
+} from '../dto/controller/update-project.dto';
+import { RoleGetResponseDto } from '../dto/controller/get-project.dto';
+import { RoleGetAllResponseDto } from '../dto/controller/get-all-projects.dto';
 import { UniversalExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
-import { EntityGetCommand } from '../../../../libs/contracts/commands/common/get-param.command';
+import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { RoleDeleteResponseDto } from '../dto/controller/delete-project.dto';
 
 export interface IRoleController
   extends IControllerCommon<
@@ -20,23 +21,29 @@ export interface IRoleController
     RoleGetResponseDto,
     RoleGetAllResponseDto,
     RoleCreateResponseDto,
-    RoleUpdateResponseDto
+    RoleUpdateResponseDto,
+    void,
+    void,
+    EntityUrlParamCommand.RequestParam,
+    EntityUrlParamCommand.RequestParamNumber
   > {
   getByIdEP: (
-    id: EntityGetCommand.RequestParam,
-  ) => UniversalExternalResponse<RoleGetResponseDto | null>;
+    id: EntityUrlParamCommand.RequestParamNumber,
+  ) => Promise<UniversalExternalResponse<RoleGetResponseDto | null>>;
   getByValueEP: (
     value: EUserTypeVariants,
-  ) => UniversalExternalResponse<RoleGetResponseDto | null>;
-  getAllEP: () => UniversalExternalResponse<RoleGetAllResponseDto[] | null>;
+  ) => Promise<UniversalExternalResponse<RoleGetResponseDto | null>>;
+  getAllEP: () => Promise<
+    UniversalExternalResponse<RoleGetAllResponseDto[] | null>
+  >;
   createEP: (
     dto: RoleCreateRequestDto,
-  ) => UniversalExternalResponse<RoleCreateResponseDto>;
+  ) => Promise<UniversalExternalResponse<RoleCreateResponseDto>>;
   updateByIdEP: (
-    id: EntityGetCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestParam,
     dto: RoleUpdateRequestDto,
-  ) => UniversalExternalResponse<RoleUpdateResponseDto>;
-  deleteByIdsEP: (
-    ids: EntityGetCommand.RequestParam[],
-  ) => UniversalExternalResponse<Prisma.BatchPayload>;
+  ) => Promise<UniversalExternalResponse<RoleUpdateResponseDto>>;
+  deleteByIdEP: (
+    id: EntityUrlParamCommand.RequestParam,
+  ) => Promise<UniversalExternalResponse<RoleDeleteResponseDto>>;
 }

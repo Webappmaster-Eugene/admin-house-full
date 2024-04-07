@@ -13,7 +13,7 @@ import {
   AuthServiceInterface,
 } from './types/auth.service.interface';
 import { UserService } from '../auth.service';
-import { RolesService } from '../../roles/roles.service';
+import { AuthsService } from '../../roles/roles.service';
 import { AuthEntity } from './entities/auth.entity';
 import { LoginRequestDto } from './dto/login.dto';
 
@@ -23,7 +23,7 @@ export class AuthService implements AuthServiceInterface {
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
     private readonly userService: UserService,
-    private readonly rolesService: RolesService,
+    private readonly rolesService: AuthsService,
   ) {}
 
   async register({
@@ -32,10 +32,10 @@ export class AuthService implements AuthServiceInterface {
     firstName,
     secondName,
     phone,
-    secretKeyForChooseRole,
+    secretKeyForChooseAuth,
     roleId,
   }: AuthSignupRequestDto): Promise<UserEntity> {
-    if (this.rolesService.checkIsAdminSecretKey(secretKeyForChooseRole)) {
+    if (this.rolesService.checkIsAdminSecretKey(secretKeyForChooseAuth)) {
       if (!roleId) {
         throw new UnauthorizedException(
           'Не предоставлена роль для регистрации пользователя',

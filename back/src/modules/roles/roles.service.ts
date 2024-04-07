@@ -1,31 +1,28 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { EUserTypeVariants, Prisma } from '@prisma/client';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { EUserTypeVariants } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { RoleEntity } from './entities/role.entity';
-import { IRoleService } from './types/role.service.interface';
-import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
+import { RoleEntity } from './entities/project.entity';
+import { IRoleService } from './types/project.service.interface';
+import { RoleCreateRequestDto } from './dto/controller/create-project.dto';
 import { IConfigService } from '../../common/types/main/config.service.interface';
 import { ILogger } from '../../common/types/main/logger.interface';
-import { IPrismaService } from '../../common/types/main/prisma.interface';
-import { IRoleRepository } from './types/role.repository.interface';
+import { IRoleRepository } from './types/project.repository.interface';
 import {
   InternalResponse,
   UniversalInternalResponse,
 } from '../../common/types/responses/universal-internal-response.interface';
-import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
-import { EntityGetCommand } from '../../../libs/contracts/commands/common/get-param.command';
+import { RoleUpdateRequestDto } from './dto/controller/update-project.dto';
+import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 
 @Injectable()
 export class RolesService implements IRoleService {
   constructor(
-    private readonly roleRepository: IRoleRepository,
+    @Inject(KEYS_FOR_INJECTION.I_USER_REPOSITORY)
+    private readonly projectRepository: IRoleRepository,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
     private readonly configService: ConfigService<IConfigService>,
-    private readonly logger: ILogger,
   ) {}
 
   checkIsAdminSecretKey(key: string): boolean {
@@ -37,54 +34,82 @@ export class RolesService implements IRoleService {
   ): Promise<UniversalInternalResponse<RoleEntity>> {
     if (this.checkIsAdminSecretKey(dto.key)) {
       try {
-        const newRole = await this.roleRepository.create(dto);
+        const newRole = await this.projectRepository.create(dto);
         return new InternalResponse<RoleEntity>(newRole);
       } catch (error: unknown) {
-        return new InternalResponse<RoleEntity>(null, false, 'R001');
+        this.logger.error(BACKEND_ERRORS.ROLE.ROLE_NOT_CREATED.message);
+        return new InternalResponse<RoleEntity>(
+          null,
+          false,
+          BACKEND_ERRORS.ROLE.ROLE_NOT_CREATED,
+        );
       }
     } else {
-      return new InternalResponse<RoleEntity>(null, false, 'R001');
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ROLE.ROLE_NOT_CREATED,
+      );
     }
   }
 
   async updateById(
-    id: EntityGetCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestParam,
     dto: RoleUpdateRequestDto,
   ): Promise<UniversalInternalResponse<RoleEntity>> {
     try {
-      const updatedRole = await this.roleRepository.updateById(id, dto);
+      const updatedRole = await this.projectRepository.updateById(id, dto);
       return new InternalResponse<RoleEntity>(updatedRole);
     } catch (error) {
-      return new InternalResponse<RoleEntity>(null, false, 'R001');
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ROLE.ROLE_NOT_UPDATED,
+      );
     }
   }
 
   async getAll(): Promise<UniversalInternalResponse<RoleEntity[] | null>> {
     try {
-      const allRoles = await this.roleRepository.getAll();
+      const allRoles = await this.projectRepository.getAll();
+      //const allRolesCount = await this.projectRepository.getAllCount();
       return new InternalResponse<RoleEntity[]>(allRoles);
     } catch (error: unknown) {
-      return new InternalResponse(null, false, 'R001');
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ROLE.ALL_ROLES_NOT_GETTED,
+      );
     }
   }
 
-  async deleteByIds(): Promise<UniversalInternalResponse<RoleEntity[] | null>> {
+  async deleteById(
+    id: EntityUrlParamCommand.RequestParam,
+  ): Promise<UniversalInternalResponse<RoleEntity>> {
     try {
-      const allRoles = await this.roleRepository.getAll();
-      return new InternalResponse<RoleEntity[]>(allRoles);
+      const deletedRole = await this.projectRepository.deleteById(id);
+      return new InternalResponse<RoleEntity>(deletedRole);
     } catch (error: unknown) {
-      return new InternalResponse(null, false, 'R001');
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ROLE.ROLE_NOT_DELETED,
+      );
     }
   }
 
   async getById(
-    id: EntityGetCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestParamNumber,
   ): Promise<UniversalInternalResponse<RoleEntity | null>> {
     try {
-      const concreteRole = await this.roleRepository.getById(id);
+      const concreteRole = await this.projectRepository.getById(id);
       return new InternalResponse<RoleEntity>(concreteRole);
     } catch (error: unknown) {
-      return new InternalResponse<RoleEntity>(null, false, 'R001');
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ROLE.ALL_ROLES_NOT_GETTED,
+      );
     }
   }
 
@@ -92,10 +117,14 @@ export class RolesService implements IRoleService {
     value: EUserTypeVariants,
   ): Promise<UniversalInternalResponse<RoleEntity | null>> {
     try {
-      const concreteRole = await this.roleRepository.getByValue(value);
+      const concreteRole = await this.projectRepository.getByValue(value);
       return new InternalResponse<RoleEntity>(concreteRole);
     } catch (error: unknown) {
-      return new InternalResponse<RoleEntity>(null, false, 'R001');
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ROLE.ALL_ROLES_NOT_GETTED,
+      );
     }
   }
 }

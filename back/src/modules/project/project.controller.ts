@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectRequestDto } from './dto/project.request.dto';
 import { ProjectService } from './project.service';
-import { RolesSetting } from '../../lib/decorators/roles.decorator';
+import { ProjectsSetting } from '../../lib/decorators/projects.decorator';
 import { AuthGuard } from '../../lib/guards/auth.guard';
 import { WorkspaceManagerGuard } from '../../lib/guards/workspace.guard';
 import { User } from '../../lib/decorators/auth.decorator';
@@ -25,7 +25,7 @@ export class ProjectController {
 
   @ApiOperation({ summary: 'Получить все Projects' })
   @ApiResponse({ status: 200, type: [ProjectEntity] })
-  @RolesSetting('MANAGER', 'ADMIN')
+  @ProjectsSetting('MANAGER', 'ADMIN')
   @UseGuards(AuthGuard)
   @Get()
   getAllProjectsEP() {
@@ -41,7 +41,7 @@ export class ProjectController {
 
   @ApiOperation({ summary: 'Создание Project' })
   @ApiResponse({ status: 201, type: ProjectEntity })
-  @RolesSetting('MANAGER')
+  @ProjectsSetting('MANAGER')
   @UseGuards(AuthGuard, WorkspaceManagerGuard)
   @Post()
   async createProjectByOrganizationIdEP(

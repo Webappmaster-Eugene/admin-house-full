@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrganizationRequestDto } from './dto/organization.dto';
 import { OrganizationService } from './organization.service';
-import { RolesSetting } from '../../lib/decorators/roles.decorator';
+import { OrganizationsSetting } from '../../lib/decorators/organizations.decorator';
 import { AuthGuard } from '../../lib/guards/auth.guard';
 import { WorkspaceManagerGuard } from '../../lib/guards/workspace.guard';
 import { User } from '../../lib/decorators/auth.decorator';
@@ -25,7 +25,7 @@ export class OrganizationController {
 
   @ApiOperation({ summary: 'Получить все Organizations пользователей' })
   @ApiResponse({ status: 200, type: [OrganizationEntity] })
-  @RolesSetting('MANAGER', 'ADMIN')
+  @OrganizationsSetting('MANAGER', 'ADMIN')
   @UseGuards(AuthGuard)
   @Get()
   getAllOrganizationsEP() {
@@ -41,7 +41,7 @@ export class OrganizationController {
 
   @ApiOperation({ summary: 'Создание Organization' })
   @ApiResponse({ status: 201, type: OrganizationEntity })
-  @RolesSetting('MANAGER')
+  @OrganizationsSetting('MANAGER')
   @UseGuards(AuthGuard, WorkspaceManagerGuard)
   @Post()
   async createOrganizationByWorkspaceIdEP(

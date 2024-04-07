@@ -13,6 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// url      = env("DATABASE_URL")
+
 model User {
   uuid                      String            @id @default(uuid()) @db.Uuid
   firstName                 String            @map("first_name")
@@ -38,6 +40,8 @@ model User {
   leaderOfOrganization      Organization?
   createdAt                 DateTime          @default(now()) @map("created_at")
   updatedAt                 DateTime          @updatedAt @map("updated_at")
+
+  @@map("user")
 }
 
 model Role {
@@ -48,6 +52,8 @@ model Role {
   createdAt   DateTime          @default(now()) @map("created_at")
   updatedAt   DateTime          @updatedAt @map("updated_at")
   users       User[]
+
+  @@map("role")
 }
 
 enum EUserTypeVariants {
@@ -69,6 +75,8 @@ model Workspace {
   handbookOfWorkspace     Handbook?
   createdAt               DateTime       @default(now()) @map("created_at")
   updatedAt               DateTime       @updatedAt @map("updated_at")
+
+  @@map("workspace")
 }
 
 model Organization {
@@ -83,6 +91,8 @@ model Organization {
   projects               Project[]
   createdAt              DateTime  @default(now()) @map("created_at")
   updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  @@map("organization")
 }
 
 model Project {
@@ -97,6 +107,8 @@ model Project {
   responsibleManager     User         @relation("project_responsible_manager", fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt              DateTime     @default(now()) @map("created_at")
   updatedAt              DateTime     @updatedAt @map("updated_at")
+
+  @@map("project")
 }
 
 model Handbook {
@@ -109,6 +121,8 @@ model Handbook {
   material              Material[]
   createdAt             DateTime   @default(now()) @map("created_at")
   updatedAt             DateTime   @updatedAt @map("updated_at")
+
+  @@map("handbook")
 }
 
 model FieldType {
@@ -119,6 +133,8 @@ model FieldType {
   fieldOfCategory FieldOfCategory[]
   createdAt       DateTime           @default(now()) @map("created_at")
   updatedAt       DateTime           @updatedAt @map("updated_at")
+
+  @@map("field_type")
 }
 
 enum EFieldTypeVariants {
@@ -135,6 +151,8 @@ model FieldUnitMeasurement {
   material        Material[]
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@map("field_unit_measurement")
 }
 
 model GlobalCategory {
@@ -145,6 +163,8 @@ model GlobalCategory {
   categoryMaterial CategoryMaterial[]
   createdAt        DateTime           @default(now()) @map("created_at")
   updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  @@map("global_category")
 }
 
 model CategoryMaterial {
@@ -158,6 +178,8 @@ model CategoryMaterial {
   material           Material[]
   createdAt          DateTime          @default(now()) @map("created_at")
   updatedAt          DateTime          @updatedAt @map("updated_at")
+
+  @@map("category_material")
 }
 
 model ResponsiblePartnerProducer {
@@ -170,6 +192,8 @@ model ResponsiblePartnerProducer {
   material  Material[]
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("responsible_partner_producer")
 }
 
 model FieldOfCategory {
@@ -188,6 +212,8 @@ model FieldOfCategory {
   fieldTypeUuid         String               @map("field_type_uuid") @db.Uuid
   createdAt             DateTime             @default(now()) @map("created_at")
   updatedAt             DateTime             @updatedAt @map("updated_at")
+
+  @@map("field_of_category")
 }
 
 model Material {
@@ -207,6 +233,8 @@ model Material {
   priceChanges           PriceChanging[]
   createdAt              DateTime                   @default(now()) @map("created_at")
   updatedAt              DateTime                   @updatedAt @map("updated_at")
+
+  @@map("material")
 }
 
 model PriceChanging {
@@ -219,4 +247,6 @@ model PriceChanging {
   changedBy     User     @relation(fields: [changedByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("price_changing")
 }

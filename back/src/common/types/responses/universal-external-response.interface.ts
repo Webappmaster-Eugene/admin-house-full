@@ -1,6 +1,9 @@
 export interface UniversalExternalResponse<TResponseDto = null> {
   data: TResponseDto | null;
-  error?: string | null | unknown;
+  statusCode: number;
+  message: string;
+  errors?: Array<unknown> | null;
+  error?: string;
 }
 
 export class ExternalResponse<TResponseDto = null>
@@ -8,6 +11,9 @@ export class ExternalResponse<TResponseDto = null>
 {
   constructor(
     public data: TResponseDto | null = null,
-    public error: string | null | unknown = null,
+    public statusCode: number = 200,
+    public message: string = 'Success',
+    public errors?: Array<unknown> | null,
+    public error?: string,
   ) {}
 }
