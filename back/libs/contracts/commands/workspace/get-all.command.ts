@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { WorkspaceSchema } from '../../models/workspace';
+import { WorkspaceSchema } from '../../models';
 
 const WorkspaceGetAllResponseSchema = z.array(WorkspaceSchema);
 

@@ -1,14 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EUserTypeVariants } from '@prisma/client';
-import { RoleCreateRequestDto } from './dto/controller/create-project.dto';
+import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
-import { IRoleRepository } from './types/project.repository.interface';
-import { RoleUpdateRequestDto } from './dto/controller/update-project.dto';
+import { IRoleRepository } from './types/role.repository.interface';
+import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
-import { RoleEntity } from './entities/project.entity';
-import { toEntityArray } from '../../common/utils/mappers/toEntityArray';
-import { PrismaService } from '../../prisma/prisma.service';
+import { RoleEntity } from './entities/role.entity';
+import { toEntityArray } from '../../common/utils/mappers';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 
 @Injectable()
@@ -18,11 +17,47 @@ export class RolesRepository implements IRoleRepository {
     private readonly prismaService: IPrismaService,
   ) {}
 
+  async getById(
+    id: EntityUrlParamCommand.RequestNumberParam,
+  ): Promise<RoleEntity> {
+    const concreteRole = await this.prismaService.role.findUnique({
+      where: {
+        idRole: id,
+      },
+    });
+
+    return new RoleEntity(concreteRole);
+  }
+
+  async getByValue(value: EUserTypeVariants): Promise<RoleEntity> {
+    const concreteRole = await this.prismaService.role.findUnique({
+      where: {
+        name: value,
+      },
+    });
+
+    return new RoleEntity(concreteRole);
+  }
+
+  async getAll(): Promise<RoleEntity[]> {
+    const allRoles = await this.prismaService.role.findMany();
+    return toEntityArray<RoleEntity>(allRoles, RoleEntity);
+  }
+
+  async getAllCount(): Promise<CountData> {
+    const total = await this.prismaService.role.count({
+      select: {
+        _all: true, // Count all records
+      },
+    });
+    return { total: total._all };
+  }
+
   async create({
     name,
     description,
   }: RoleCreateRequestDto): Promise<RoleEntity> {
-    const newRole = await this.prismaService.project.create({
+    const newRole = await this.prismaService.role.create({
       data: {
         name,
         description,
@@ -32,10 +67,10 @@ export class RolesRepository implements IRoleRepository {
   }
 
   async updateById(
-    id: string,
+    id: EntityUrlParamCommand.RequestUuidParam,
     { description }: RoleUpdateRequestDto,
   ): Promise<RoleEntity> {
-    const updatedRole = await this.prismaService.project.update({
+    const updatedRole = await this.prismaService.role.update({
       where: {
         uuid: id,
       },
@@ -46,53 +81,14 @@ export class RolesRepository implements IRoleRepository {
     return new RoleEntity(updatedRole);
   }
 
-  async getAll(): Promise<RoleEntity[]> {
-    const allRoles = await this.prismaService.project.findMany();
-    return toEntityArray<RoleEntity>(allRoles, RoleEntity);
-  }
-
-  async getAllCount(): Promise<CountData> {
-    const total = await this.prismaService.project.count({
-      select: {
-        _all: true, // Count all records
-      },
-    });
-    return { total: total._all };
-  }
-
   async deleteById(
-    id: EntityUrlParamCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<RoleEntity> {
-    const deletedRole = await this.prismaService.project.delete({
+    const deletedRole = await this.prismaService.role.delete({
       where: {
         uuid: id,
       },
     });
     return new RoleEntity(deletedRole);
-  }
-
-  async getById(
-    id: EntityUrlParamCommand.RequestParamNumber,
-  ): Promise<RoleEntity> {
-    console.log(id);
-    console.log(typeof id);
-    const concreteRole = await this.prismaService.project.findUnique({
-      where: {
-        idRole: id,
-      },
-    });
-    console.log(concreteRole);
-
-    return new RoleEntity(concreteRole);
-  }
-
-  async getByValue(value: EUserTypeVariants): Promise<RoleEntity> {
-    const concreteRole = await this.prismaService.project.findUnique({
-      where: {
-        name: value,
-      },
-    });
-
-    return new RoleEntity(concreteRole);
   }
 }

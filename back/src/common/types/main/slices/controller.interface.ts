@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { UniversalExternalResponse } from '../../responses/universal-external-response.interface';
 import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
+import { IJWTPayload } from '../../jwt.payload.interface';
 
 export interface IControllerCommon<
   CReqDto,
@@ -9,23 +10,31 @@ export interface IControllerCommon<
   GAResDto,
   CResDto,
   UResDto,
+  DResDto,
+  CReqParamDto = EntityUrlParamCommand.RequestUuidParam,
   FReqDto = void,
   FResDto = void,
-  GReqParam = EntityUrlParamCommand.RequestParam,
-  GReqParamNumber = EntityUrlParamCommand.RequestParamNumber,
+  GReqIdParam = EntityUrlParamCommand.RequestUuidParam,
+  GReqNumberParam = EntityUrlParamCommand.RequestNumberParam,
 > {
   getByIdEP: (
-    id: GReqParam | GReqParamNumber,
+    id: GReqIdParam | GReqNumberParam,
   ) => Promise<UniversalExternalResponse<GResDto | null>>;
   getAllEP: () => Promise<UniversalExternalResponse<GAResDto[] | null>>;
-  createEP: (dto: CReqDto) => Promise<UniversalExternalResponse<CResDto>>;
+  createEP: (
+    dto: CReqDto,
+    idToIdentify?: GReqNumberParam | GReqIdParam | IJWTPayload,
+    paramDto?: GReqIdParam | CReqParamDto,
+  ) => Promise<UniversalExternalResponse<CResDto>>;
   updateByIdEP: (
-    id: GReqParam,
+    id: GReqIdParam,
     dto: UReqDto,
   ) => Promise<UniversalExternalResponse<UResDto>>;
-  deleteByIdEP: (id: GReqParam) => Promise<UniversalExternalResponse<UResDto>>;
+  deleteByIdEP: (
+    id: GReqIdParam,
+  ) => Promise<UniversalExternalResponse<DResDto>>;
   deleteByIdsEP?: (
-    ids: GReqParam[],
+    ids: GReqIdParam[],
   ) => Promise<UniversalExternalResponse<Prisma.BatchPayload>>;
   findByCriteriaEP?: (
     dto: FReqDto,

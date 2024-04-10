@@ -1,6 +1,7 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
+import { IConfigService } from '../common/types/main/config.service.interface';
 
 /**
  * Extension of the PrismaClient for use with NestJs.
@@ -10,7 +11,7 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService<IConfigService>) {
     super({
       /**
        * Get the database url from environmental variables and pass it in.

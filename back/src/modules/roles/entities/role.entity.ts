@@ -8,8 +8,8 @@ export class RoleEntity implements Role {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(project: Partial<Role>) {
-    Object.assign(this, project);
+  constructor(role: Partial<Role>) {
+    Object.assign(this, role);
     return this;
   }
 }

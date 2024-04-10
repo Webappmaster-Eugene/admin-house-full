@@ -6,13 +6,19 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { RolesModule } from './modules/roles/roles.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { UserInterceptor } from './common/interceptors/user.interceptor';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 import { AuthGuard } from './common/guards/auth.guard';
 import { validateConfig } from './common/utils/validate-config';
+import { ProjectModule } from './modules/project/project.module';
+import { UserModule } from './modules/user/user.module';
+import { HandbookModule } from './modules/handbook/handbook.module';
+import { OrganizationModule } from './modules/organization/organization.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
-    // UserModule,
+    AuthModule,
+    UserModule,
     PrismaModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
@@ -23,8 +29,9 @@ import { validateConfig } from './common/utils/validate-config';
     //   rootPath: path.resolve(__dirname, './static'),
     // }),
     RolesModule,
-    // WorkspaceModule,
-    // OrganizationModule,
+    HandbookModule,
+    ProjectModule,
+    OrganizationModule,
   ],
   controllers: [],
   providers: [
@@ -37,14 +44,15 @@ import { validateConfig } from './common/utils/validate-config';
       provide: APP_PIPE,
       useClass: ZodValidationPipe,
     },
+    { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
     // {
     //   provide: APP_FILTER,
     //   useClass: NotFoundExceptionFilter,
     // },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
   ],
 })
 export class AppModule {}

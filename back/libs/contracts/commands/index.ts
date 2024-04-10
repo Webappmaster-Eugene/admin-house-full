@@ -4,3 +4,4 @@ export * from './role';
 export * from './workspace';
 export * from './organization';
 export * from './project';
+export * from './handbook';

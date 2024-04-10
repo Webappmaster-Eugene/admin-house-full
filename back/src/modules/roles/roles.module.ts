@@ -1,15 +1,13 @@
 import { Logger, ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { RolesService } from './projects.service';
-import { RolesController } from './projects.controller';
-import { PrismaModule } from '../../prisma/prisma.module';
+import { RolesService } from './roles.service';
+import { RolesController } from './roles.controller';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { IRoleService } from './types/project.service.interface';
-import { RolesRepository } from './projects.repository';
+import { RolesRepository } from './roles.repository';
 import { PrismaService } from '../../prisma/prisma.service';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { ZodSerializerInterceptor } from 'nestjs-zod';
 
 @Module({
-  imports: [PrismaModule],
   providers: [
     {
       provide: KEYS_FOR_INJECTION.I_PRISMA_SERVICE,
@@ -27,11 +25,16 @@ import { KEYS_FOR_INJECTION } from '../../common/utils/di';
       provide: KEYS_FOR_INJECTION.I_ROLE_SERVICE,
       useClass: RolesService,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ClassSerializerInterceptor,
+    // },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ZodSerializerInterceptor,
+    // },
   ],
+  imports: [],
   controllers: [RolesController],
   exports: [KEYS_FOR_INJECTION.I_ROLE_SERVICE],
 })

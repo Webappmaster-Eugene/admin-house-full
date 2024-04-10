@@ -1,20 +1,25 @@
 import { Prisma } from '@prisma/client';
 import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
+import { IJWTPayload } from '../../jwt.payload.interface';
 
 export interface IRepositoryCommon<
   CReqDto,
   UReqDto,
   RepositoryEntity,
   FReqDto = void,
-  GReqParam = EntityUrlParamCommand.RequestParam,
-  GReqParamNumber = EntityUrlParamCommand.RequestParamNumber,
+  GReqIdParam = EntityUrlParamCommand.RequestUuidParam,
+  GReqNumberParam = EntityUrlParamCommand.RequestNumberParam,
 > {
-  getById: (id: GReqParam | GReqParamNumber) => Promise<RepositoryEntity>;
+  getById: (id: GReqIdParam | GReqNumberParam) => Promise<RepositoryEntity>;
   getAll: () => Promise<RepositoryEntity[]>;
-  create: (dto: CReqDto) => Promise<RepositoryEntity>;
-  updateById: (id: GReqParam, dto: UReqDto) => Promise<RepositoryEntity>;
-  deleteById: (id: GReqParam) => Promise<RepositoryEntity>;
-  deleteByIds?: (ids: GReqParam[]) => Promise<Prisma.BatchPayload>;
+  create: (
+    dto: CReqDto,
+    idToIdentify?: GReqNumberParam | GReqIdParam | IJWTPayload,
+    idToIdentifyEntity?: GReqIdParam,
+  ) => Promise<RepositoryEntity>;
+  updateById: (id: GReqIdParam, dto: UReqDto) => Promise<RepositoryEntity>;
+  deleteById: (id: GReqIdParam) => Promise<RepositoryEntity>;
+  deleteByIds?: (ids: GReqIdParam[]) => Promise<Prisma.BatchPayload>;
   findByCriteria?: (
     dto: FReqDto,
     sort: Record<string, string>[],

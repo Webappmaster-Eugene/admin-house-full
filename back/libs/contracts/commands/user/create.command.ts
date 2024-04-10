@@ -1,13 +1,19 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models/user';
+import { UserSchema } from '../../models';
 
 const UserCreateRequestSchema = UserSchema.omit({
+  memberOfWorkspaceUuid: true,
+  memberOfOrganizationUuid: true,
+  workspaceData: true,
+  creatorOfWorkspaceUuid: true,
   uuid: true,
   createdAt: true,
   updatedAt: true,
 });
 
-const UserCreateResponseSchema = UserSchema;
+const UserCreateResponseSchema = UserSchema.pick({
+  password: true,
+});
 
 export namespace UserCreateCommand {
   export const RequestSchema = UserCreateRequestSchema;

@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models/user';
-import { OrganizationSchema } from '../../models/organization';
+import { OrganizationSchema } from '../../models';
 
 const OrganizationCreateRequestSchema = OrganizationSchema.omit({
   uuid: true,

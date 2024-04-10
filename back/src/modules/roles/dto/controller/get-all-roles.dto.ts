@@ -4,9 +4,9 @@ import { RoleGetAllCommand } from '../../../../../libs/contracts';
 export class RoleGetAllResponseDto extends createZodDto(
   RoleGetAllCommand.ResponseSchema,
 ) {
-  constructor(project: Partial<RoleGetAllResponseDto>) {
+  constructor(role: Partial<RoleGetAllResponseDto>) {
     super();
-    Object.assign(this, project);
+    Object.assign(this, role);
     return this;
   }
 }

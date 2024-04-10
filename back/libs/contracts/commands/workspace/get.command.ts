@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models/user';
-import { WorkspaceSchema } from '../../models/workspace';
+import { WorkspaceSchema } from '../../models';
 
 const WorkspaceGetRequestSchema = WorkspaceSchema.pick({
   uuid: true,

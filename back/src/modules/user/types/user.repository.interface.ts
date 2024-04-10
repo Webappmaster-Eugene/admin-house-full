@@ -9,17 +9,27 @@ export interface IUserRepository
   extends IRepositoryCommon<
     UserCreateRequestDto,
     UserUpdateRequestDto,
-    UserEntity,
-    void,
-    EntityUrlParamCommand.RequestParam
+    UserEntity
   > {
-  getById: (id: EntityUrlParamCommand.RequestParam) => Promise<UserEntity>;
-  getAllCount: () => Promise<CountData>;
+  getById: (id: EntityUrlParamCommand.RequestUuidParam) => Promise<UserEntity>;
+  getByEmail: (
+    email: EntityUrlParamCommand.RequestEmailParam,
+  ) => Promise<UserEntity>;
   getAll: () => Promise<UserEntity[]>;
-  create: (dto: UserCreateRequestDto) => Promise<UserEntity>;
+  getAllCount: () => Promise<CountData>;
+  create: (
+    dto: UserCreateRequestDto,
+    // roleUuid: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UserEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestUuidParam,
     dto: UserUpdateRequestDto,
   ) => Promise<UserEntity>;
-  deleteById: (id: EntityUrlParamCommand.RequestParam) => Promise<UserEntity>;
+  deleteById: (
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UserEntity>;
+  addExistedWorkspaceToManager: (
+    workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UserEntity>;
 }

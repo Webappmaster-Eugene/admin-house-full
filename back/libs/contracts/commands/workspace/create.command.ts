@@ -1,22 +1,24 @@
 import { z } from 'zod';
-import { WorkspaceSchema } from '../../models/workspace';
-import { HandbookSchema } from '../../models/handbook';
-import { ProjectSchema } from '../../models/project';
-import { UserSchema } from '../../models/user';
-import { OrganizationSchema } from '../../models/organization';
+import { WorkspaceSchema } from '../../models';
+import { HandbookSchema } from '../../models';
+import { ProjectSchema } from '../../models';
+import { UserSchema } from '../../models';
+import { OrganizationSchema } from '../../models';
 
 const WorkspaceCreateRequestSchema = WorkspaceSchema.omit({
   uuid: true,
   createdAt: true,
   updatedAt: true,
+  workspaceCreatorUuid: true,
+  handbookOfWorkspaceUuid: true,
 });
 
 const WorkspaceCreateResponseSchema = WorkspaceSchema.merge(
   z.object({
     workspaceCreator: UserSchema,
-    workspaceOrganizations: z.array(OrganizationSchema),
-    workspaceProjects: z.array(ProjectSchema),
-    workspaceHandbook: HandbookSchema,
+    workspaceOrganizations: z.array(OrganizationSchema).optional(),
+    workspaceProjects: z.array(ProjectSchema).optional(),
+    workspaceHandbook: HandbookSchema.optional(),
   }),
 );
 

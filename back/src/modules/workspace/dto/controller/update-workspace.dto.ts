@@ -2,7 +2,8 @@ import { createZodDto } from 'nestjs-zod';
 import { WorkspaceUpdateCommand } from '../../../../../libs/contracts';
 import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
 
-export type WorkspaceUpdateRequestParamDto = EntityUrlParamCommand.RequestParam;
+export type WorkspaceUpdateRequestParamDto =
+  EntityUrlParamCommand.RequestUuidParam;
 
 export class WorkspaceUpdateRequestDto extends createZodDto(
   WorkspaceUpdateCommand.RequestSchema,

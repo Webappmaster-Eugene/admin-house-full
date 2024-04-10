@@ -5,7 +5,8 @@ import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 const RoleDeleteResponseSchema = UserSchema.pick({ uuid: true });
 
 export namespace RoleDeleteCommand {
-  export const RequestParamSchema = EntityUrlParamCommand.RequestParamSchema;
+  export const RequestParamSchema =
+    EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = RoleDeleteResponseSchema;

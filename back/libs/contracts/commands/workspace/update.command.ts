@@ -1,14 +1,12 @@
 import { z } from 'zod';
-import { WorkspaceCreateCommand } from './create.command';
-import { UserSchema } from '../../models/user';
-import { WorkspaceSchema } from '../../models/workspace';
-import { RoleSchema } from '../../models/role';
+import { WorkspaceSchema } from '../../models';
 
 const WorkspaceUpdateRequestSchema = WorkspaceSchema.omit({
   createdAt: true,
   updatedAt: true,
   handbookOfWorkspaceUuid: true,
   workspaceCreatorUuid: true,
+  uuid: true,
 }).partial();
 
 const WorkspaceUpdateResponseSchema = WorkspaceSchema.pick({ uuid: true });

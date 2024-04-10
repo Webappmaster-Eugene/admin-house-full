@@ -1,135 +1,188 @@
-import {
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
-import { AuthSigninRequestDto, AuthSignupRequestDto } from './dto/register.dto';
-import {
-  AuthResponseWithToken,
-  AuthServiceInterface,
-} from './types/auth.service.interface';
-import { UserService } from '../auth.service';
-import { AuthsService } from '../../roles/roles.service';
+import { IAuthService } from './types/auth.service.interface';
 import { AuthEntity } from './entities/auth.entity';
-import { LoginRequestDto } from './dto/login.dto';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import {
+  InternalResponse,
+  UniversalInternalResponse,
+} from '../../common/types/responses/universal-internal-response.interface';
+import { IUserService } from '../user/types/user.service.interface';
+import { AuthRegisterRequestDto } from './dto/controller/auth.register.dto';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { AuthGenerateKeyRequestDto } from './dto/controller/auth.generate-key.dto';
+import { IAuthRepository } from './types/auth.repository.interface';
+import { AuthLoginRequestDto } from './dto/controller/auth.login.dto';
+import { AuthRegisterWithRoleRequestParamDto } from './dto/controller/auth.register-with-role.dto';
 
 @Injectable()
-export class AuthService implements AuthServiceInterface {
+export class AuthService implements IAuthService {
   constructor(
-    private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService,
-    private readonly userService: UserService,
-    private readonly rolesService: AuthsService,
+    @Inject(KEYS_FOR_INJECTION.I_AUTH_REPOSITORY)
+    private readonly authRepository: IAuthRepository,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
+    private readonly configService: ConfigService<IConfigService>,
+    @Inject(KEYS_FOR_INJECTION.I_USER_SERVICE)
+    private readonly userService: IUserService,
   ) {}
 
-  async register({
-    email,
-    password,
-    firstName,
-    secondName,
-    phone,
-    secretKeyForChooseAuth,
-    roleId,
-  }: AuthSignupRequestDto): Promise<UserEntity> {
-    if (this.rolesService.checkIsAdminSecretKey(secretKeyForChooseAuth)) {
-      if (!roleId) {
-        throw new UnauthorizedException(
-          'Не предоставлена роль для регистрации пользователя',
+  async register(
+    dto: AuthRegisterRequestDto,
+  ): Promise<UniversalInternalResponse<AuthEntity>> {
+    try {
+      const registeredUser = await this.userService.create(dto, 4);
+      const accessTokenResponse = await this.generateJWT(
+        registeredUser.data.email,
+        registeredUser.data.uuid,
+      );
+
+      const accessToken = accessTokenResponse.data;
+      const infoRegisteredUser = registeredUser.data;
+
+      const outputEntity = { ...infoRegisteredUser, accessToken };
+      const user = new AuthEntity(outputEntity);
+      return new InternalResponse<AuthEntity>(user);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.AUTH.AUTH_NOT_REGISTERED,
+      );
+    }
+  }
+
+  async registerWithRole(
+    dto: AuthRegisterRequestDto,
+    paramDto: AuthRegisterWithRoleRequestParamDto,
+  ): Promise<UniversalInternalResponse<AuthEntity>> {
+    try {
+      const registeredUser = await this.userService.create(dto);
+      const accessTokenResponse = await this.generateJWT(
+        registeredUser.data.email,
+        registeredUser.data.uuid,
+      );
+
+      const accessToken = accessTokenResponse.data;
+      const infoRegisterdUser = registeredUser.data;
+
+      const outputEntity = { ...infoRegisterdUser, accessToken };
+
+      return new InternalResponse<AuthEntity>(outputEntity);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.AUTH.AUTH_NOT_REGISTERED,
+      );
+    }
+  }
+
+  async login(
+    dto: AuthLoginRequestDto,
+  ): Promise<UniversalInternalResponse<AuthEntity>> {
+    try {
+      const { email, password } = dto;
+      const user = await this.userService.getByEmail(email);
+      if (!user) {
+        //Invalid credentials
+        return new InternalResponse(
+          null,
+          false,
+          BACKEND_ERRORS.AUTH.AUTH_NOT_LOGINED,
         );
       }
-    } else {
-      roleId = 1;
-    }
+      const hashedPassword = user.data.password;
+      const isValidPassword = await bcrypt.compare(password, hashedPassword);
+      if (!isValidPassword) {
+        return new InternalResponse(
+          null,
+          false,
+          BACKEND_ERRORS.AUTH.AUTH_NOT_LOGINED,
+        );
+      }
 
-    try {
-      const user = await this.userService.createUser({
-        email,
-        password,
-        firstName,
-        secondName,
-        phone,
-        roleId,
-      });
-      const accessToken = await this.generateJWT(user.email, user.id);
-      const authResponse = new AuthEntity({
-        id: user.id,
-        email: user.email,
-        phone: user.phone,
-        firstName: user.firstName,
-        secondName: user.secondName,
-        roleId: user.roleId,
-        memberOfWorkspaceId: user.memberOfWorkspaceId,
-        creatorOfWorkspaceId: user.creatorOfWorkspaceId,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      });
-      return {
-        ...authResponse,
-        accessKey: accessToken,
-      };
-    } catch (error) {
-      throw error;
+      const userInfo = user.data;
+
+      const accessTokenResponse = await this.generateJWT(
+        userInfo.email,
+        userInfo.uuid,
+      );
+      const accessToken = accessTokenResponse.data;
+
+      const outputEntity = { ...userInfo, accessToken };
+
+      return new InternalResponse<AuthEntity>(outputEntity);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.AUTH.AUTH_NOT_REGISTERED,
+      );
     }
   }
 
-  async login({ email, password }: LoginRequestDto): Promise<UserEntity> {
-    const user = await this.userService.getUserByEmail(email);
-
-    if (!user) {
-      throw new HttpException('Invalid credentials', 400);
-    }
-
-    const hashedPassword = user.password;
-    const isValidPassword = await bcrypt.compare(password, hashedPassword);
-    if (!isValidPassword) {
-      throw new HttpException('Invalid credentials', 400);
-    }
-
-    const accessToken = await this.generateJWT(user.email, user.id);
-    const authResponse = new AuthEntity({
-      id: user.id,
-      email: user.email,
-      phone: user.phone,
-      firstName: user.firstName,
-      secondName: user.secondName,
-      roleId: user.roleId,
-      memberOfWorkspaceId: user.memberOfWorkspaceId,
-      creatorOfWorkspaceId: user.creatorOfWorkspaceId,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    });
-
-    return {
-      ...authResponse,
-      accessKey: accessToken,
-    };
-  }
-
-  async generateJWT(email: string, id: number): Promise<string> {
+  async generateJWT(
+    email: string,
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<string>> {
     const token = jwt.sign(
       {
         email,
-        id,
+        uuid: id,
       },
       this.configService.get('JWT_KEY'),
       {
         expiresIn: 86400,
       },
     );
-    return token;
+
+    return new InternalResponse<string>(token);
   }
 
-  async generateStrictAdminKey(key: string): Promise<string> {
+  async generateStrictAdminKey(
+    dto: AuthGenerateKeyRequestDto,
+  ): Promise<UniversalInternalResponse<{ key: string }>> {
+    const { key } = dto;
     if (key === this.configService.get('KEY_SECRET_FOR_STRICT_ADMIN_KEY')) {
-      const str = `adminHouse-${key}-strict-admin-key-for-role-creating`;
-      return bcrypt.hash(str, 10);
+      try {
+        const str = `adminHouse-${key}-strict-admin-key`;
+        const token = await bcrypt.hash(str, 10);
+        const strictKey =
+          await this.authRepository.generateStrictAdminKey(token);
+
+        return new InternalResponse<{ key: string }>(strictKey);
+      } catch (error: unknown) {
+        return new InternalResponse(
+          null,
+          false,
+          BACKEND_ERRORS.AUTH.AUTH_STRICT_KEY_NOT_GENERATED,
+        );
+      }
     } else {
-      throw new UnauthorizedException(
-        'У вас нет прав доступа для создания ключа',
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.AUTH.AUTH_STRICT_KEY_NOT_GENERATED,
+      );
+    }
+  }
+
+  async getStrictAdminKey(): Promise<
+    UniversalInternalResponse<{ key: string }>
+  > {
+    try {
+      const strictKey = await this.authRepository.getStrictAdminKey();
+      return new InternalResponse<{ key: string }>(strictKey);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.AUTH.AUTH_STRICT_KEY_NOT_GETTED,
       );
     }
   }

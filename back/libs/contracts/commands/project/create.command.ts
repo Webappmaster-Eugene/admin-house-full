@@ -1,22 +1,13 @@
 import { z } from 'zod';
+import { ProjectSchema } from '../../models';
 
-const ProjectCreateRequestSchema = z.object({
-  name: z.string(),
-  description: z.string().nullable(),
-  customerUuid: z.string(),
-  organizationUuid: z.string(),
+const ProjectCreateRequestSchema = ProjectSchema.pick({
+  name: true,
+  description: true,
+  customerMail: true,
 });
 
-const ProjectCreateResponseSchema = z.object({
-  uuid: z.string().uuid(),
-  name: z.string(),
-  description: z.string().nullable(),
-  organizationUuid: z.string(),
-  customerUuid: z.string(),
-  responsibleManagerUuid: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-});
+const ProjectCreateResponseSchema = ProjectSchema;
 
 export namespace ProjectCreateCommand {
   export const RequestSchema = ProjectCreateRequestSchema;

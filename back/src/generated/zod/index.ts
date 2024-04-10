@@ -12,7 +12,9 @@ import type { Prisma } from '@prisma/client';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['uuid','firstName','secondName','phone','email','password','address','info','documents','roleUuid','creatorOfWorkspaceUuid','memberOfWorkspaceUuid','memberOfOrganizationUuid','createdAt','updatedAt']);
+export const RegisterWithRoleKeyScalarFieldEnumSchema = z.enum(['uuid','key']);
+
+export const UserScalarFieldEnumSchema = z.enum(['uuid','firstName','secondName','avatar','phone','email','password','address','info','documents','roleUuid','creatorOfWorkspaceUuid','handbookManagerUuid','memberOfWorkspaceUuid','memberOfOrganizationUuid','createdAt','updatedAt']);
 
 export const RoleScalarFieldEnumSchema = z.enum(['uuid','idRole','name','description','createdAt','updatedAt']);
 
@@ -20,9 +22,9 @@ export const WorkspaceScalarFieldEnumSchema = z.enum(['uuid','name','description
 
 export const OrganizationScalarFieldEnumSchema = z.enum(['uuid','name','description','workspaceUuid','organizationLeaderUuid','createdAt','updatedAt']);
 
-export const ProjectScalarFieldEnumSchema = z.enum(['uuid','name','description','organizationUuid','customerUuid','responsibleManagerUuid','createdAt','updatedAt']);
+export const ProjectScalarFieldEnumSchema = z.enum(['uuid','name','description','organizationUuid','customerMail','customerUuid','responsibleManagerUuid','createdAt','updatedAt']);
 
-export const HandbookScalarFieldEnumSchema = z.enum(['uuid','name','description','canCustomerView','workspaceHandbookUuid','createdAt','updatedAt']);
+export const HandbookScalarFieldEnumSchema = z.enum(['uuid','name','description','canCustomerView','workspaceUuid','responsibleManagerUuid','createdAt','updatedAt']);
 
 export const FieldTypeScalarFieldEnumSchema = z.enum(['uuid','name','description','jsType','createdAt','updatedAt']);
 
@@ -59,6 +61,17 @@ export type EFieldTypeVariantsType = `${z.infer<typeof EFieldTypeVariantsSchema>
 /////////////////////////////////////////
 
 /////////////////////////////////////////
+// REGISTER WITH ROLE KEY SCHEMA
+/////////////////////////////////////////
+
+export const RegisterWithRoleKeySchema = z.object({
+  uuid: z.string().uuid(),
+  key: z.string(),
+})
+
+export type RegisterWithRoleKey = z.infer<typeof RegisterWithRoleKeySchema>
+
+/////////////////////////////////////////
 // USER SCHEMA
 /////////////////////////////////////////
 
@@ -66,6 +79,7 @@ export const UserSchema = z.object({
   uuid: z.string().uuid(),
   firstName: z.string(),
   secondName: z.string().nullable(),
+  avatar: z.string().nullable(),
   phone: z.string().nullable(),
   email: z.string(),
   password: z.string(),
@@ -74,6 +88,7 @@ export const UserSchema = z.object({
   documents: z.string().nullable(),
   roleUuid: z.string(),
   creatorOfWorkspaceUuid: z.string().nullable(),
+  handbookManagerUuid: z.string().nullable(),
   memberOfWorkspaceUuid: z.string().nullable(),
   memberOfOrganizationUuid: z.string().nullable(),
   createdAt: z.coerce.date(),
@@ -138,6 +153,7 @@ export const ProjectSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   organizationUuid: z.string(),
+  customerMail: z.string(),
   customerUuid: z.string(),
   responsibleManagerUuid: z.string(),
   createdAt: z.coerce.date(),
@@ -155,7 +171,8 @@ export const HandbookSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   canCustomerView: z.boolean().nullable(),
-  workspaceHandbookUuid: z.string().nullable(),
+  workspaceUuid: z.string().nullable(),
+  responsibleManagerUuid: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })

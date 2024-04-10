@@ -1,19 +1,13 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models/user';
-import { WorkspaceSchema } from '../../models/workspace';
+import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { WorkspaceSchema } from '../../models';
 
-const WorkspaceDeleteRequestSchema = WorkspaceSchema.pick({
-  uuid: true,
-});
-
-const WorkspaceDeleteResponseSchema = z.object({
-  deletedWorkspaces: z.array(WorkspaceSchema),
-  count: z.number(),
-});
+const WorkspaceDeleteResponseSchema = WorkspaceSchema.pick({ uuid: true });
 
 export namespace WorkspaceDeleteCommand {
-  export const RequestSchema = WorkspaceDeleteRequestSchema;
-  export type Request = z.infer<typeof RequestSchema>;
+  export const RequestParamSchema =
+    EntityUrlParamCommand.RequestUuidParamSchema;
+  export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = WorkspaceDeleteResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;

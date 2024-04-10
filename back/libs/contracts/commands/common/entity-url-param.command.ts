@@ -2,12 +2,17 @@ import { z } from 'zod';
 
 const EntityIdRequestParamSchema = z.string();
 
-const EntityNumberIdRequestParamSchema = z.number();
+const EntityEmailRequestParamSchema = z.string().email();
+
+const EntityNumberRequestParamSchema = z.number().nonnegative().finite();
 
 export namespace EntityUrlParamCommand {
-  export const RequestParamSchema = EntityIdRequestParamSchema;
-  export type RequestParam = z.infer<typeof RequestParamSchema>;
+  export const RequestUuidParamSchema = EntityIdRequestParamSchema;
+  export type RequestUuidParam = z.infer<typeof RequestUuidParamSchema>;
 
-  export const RequestParamNumberSchema = EntityNumberIdRequestParamSchema;
-  export type RequestParamNumber = z.infer<typeof RequestParamNumberSchema>;
+  export const RequestEmailParamSchema = EntityEmailRequestParamSchema;
+  export type RequestEmailParam = z.infer<typeof RequestEmailParamSchema>;
+
+  export const RequestNumberParamSchema = EntityNumberRequestParamSchema;
+  export type RequestNumberParam = z.infer<typeof RequestNumberParamSchema>;
 }

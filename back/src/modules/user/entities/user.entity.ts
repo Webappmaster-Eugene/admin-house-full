@@ -9,11 +9,13 @@ export class UserEntity implements User {
   password: string;
   address: string;
   info: string;
+  roleUuid: string;
+  avatar: string;
   documents: string;
-  userUuid: string;
   creatorOfWorkspaceUuid: string;
   memberOfWorkspaceUuid: string;
   memberOfOrganizationUuid: string;
+  handbookManagerUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

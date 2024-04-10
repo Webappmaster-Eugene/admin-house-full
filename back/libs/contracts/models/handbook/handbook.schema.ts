@@ -5,7 +5,8 @@ export const HandbookSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   canCustomerView: z.boolean().nullable(),
-  workspaceHandbookUuid: z.string().nullable(),
+  workspaceUuid: z.string().nullable(),
+  responsibleManagerUuid: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

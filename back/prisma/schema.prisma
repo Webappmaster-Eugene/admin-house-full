@@ -13,12 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// url      = env("DATABASE_URL")
+model RegisterWithRoleKey {
+  uuid String @id @default(uuid()) @db.Uuid
+  key  String @unique
+
+  @@map("register_with_role_key")
+}
 
 model User {
   uuid                      String            @id @default(uuid()) @db.Uuid
   firstName                 String            @map("first_name")
   secondName                String?           @map("second_name")
+  avatar                    String?
   phone                     String?
   email                     String            @unique
   password                  String
@@ -33,6 +39,8 @@ model User {
   role                      Role              @relation(fields: [roleUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
   creatorOfWorkspaceUuid    String?           @map("creator_of_workspace_uuid") @db.Uuid
   creatorOfWorkspace        Workspace?        @relation("creator_of_workspace")
+  handbookManagerUuid       String?           @map("handbook_manager_uuid") @db.Uuid
+  handbookManager           Handbook?
   memberOfWorkspaceUuid     String?           @map("member_of_workspace_uuid") @db.Uuid
   memberOfWorkspace         Workspace?        @relation("workspace_members", fields: [memberOfWorkspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   memberOfOrganizationUuid  String?           @map("member_of_organization_uuid") @db.Uuid
@@ -101,6 +109,7 @@ model Project {
   description            String?
   organizationUuid       String       @map("organization_uuid") @db.Uuid
   organization           Organization @relation(fields: [organizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  customerMail           String       @map("customer_email")
   customerUuid           String       @map("customer_uuid") @db.Uuid
   customer               User         @relation("project_customer", fields: [customerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   responsibleManagerUuid String       @map("responsible_manager_uuid") @db.Uuid
@@ -112,15 +121,17 @@ model Project {
 }
 
 model Handbook {
-  uuid                  String     @id @default(uuid()) @db.Uuid
-  name                  String
-  description           String?
-  canCustomerView       Boolean?   @default(false) @map("can_customer_view")
-  workspaceHandbookUuid String?    @unique @map("workspace_handbook_uuid") @db.Uuid
-  workspaceHandbook     Workspace? @relation(fields: [workspaceHandbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  material              Material[]
-  createdAt             DateTime   @default(now()) @map("created_at")
-  updatedAt             DateTime   @updatedAt @map("updated_at")
+  uuid                   String     @id @default(uuid()) @db.Uuid
+  name                   String
+  description            String?
+  canCustomerView        Boolean?   @default(false) @map("can_customer_view")
+  workspaceUuid          String?    @unique @map("workspace_uuid") @db.Uuid
+  workspace              Workspace? @relation(fields: [workspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  responsibleManagerUuid String     @unique @map("responsible_manager_uuid") @db.Uuid
+  responsibleManager     User?      @relation(fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  material               Material[]
+  createdAt              DateTime   @default(now()) @map("created_at")
+  updatedAt              DateTime   @updatedAt @map("updated_at")
 
   @@map("handbook")
 }

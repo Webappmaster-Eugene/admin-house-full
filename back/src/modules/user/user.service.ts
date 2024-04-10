@@ -1,460 +1,185 @@
-import {
-  ConflictException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { UsersService } from '../users/users.service';
-import { UserRequestDto, UserUpdateRequestDto } from './dto/user.dto';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
-import { UserServiceInterface } from './user.repository.interface';
-import { WorkspaceService } from '../workspace/workspace.service';
-import { defaultUserId } from './auth/lib/auth.consts';
 import { UserEntity } from './entities/user.entity';
-import { WorkspaceEntity } from '../workspace/entities/workspace.entity';
+import { IWorkspaceService } from '../workspace/types/workspace.service.interface';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { DEFAULT_ROLE_ID } from '../../common/consts/consts';
+import { IUserRepository } from './types/user.repository.interface';
+import {
+  InternalResponse,
+  UniversalInternalResponse,
+} from '../../common/types/responses/universal-internal-response.interface';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { IUserService } from './types/user.service.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import { UserCreateRequestDto } from './dto/controller/create-user.dto';
+import { UserUpdateRequestDto } from './dto/controller/update-user.dto';
+import { IRoleService } from '../roles/types/role.service.interface';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { ZodSerializerDto } from 'nestjs-zod';
+import { RoleGetResponseReturnDto } from '../roles/dto/controller/get-role.dto';
 
 @Injectable()
-export class UserService implements UserServiceInterface {
+export class UserService implements IUserService {
   constructor(
-    private readonly prismaService: PrismaService,
-    private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
-    private readonly workspaceService: WorkspaceServiceInter,
-    private readonly logger: Logger,
+    @Inject(KEYS_FOR_INJECTION.I_USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
+    private readonly configService: ConfigService<IConfigService>,
+    @Inject(KEYS_FOR_INJECTION.I_ROLE_SERVICE)
+    private readonly roleService: IRoleService,
+    @Inject(KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE)
+    private readonly workspaceService: IWorkspaceService,
   ) {}
 
-  async getUserById(id: number): Promise<UserEntity> {
+  async getById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<UserEntity | null>> {
     try {
-      const findedUser = await this.prismaService.user.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          id: true,
-          firstName: true,
-          email: true,
-          phone: true,
-          address: true,
-          updatedAt: true,
-          createdAt: true,
-          creator_of_workspace: {
-            include: { workspace_creator: true },
-          },
-        },
-      });
-
-      return new UserEntity(findedUser);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      // if() {
-      //
-      // }
-      this.logger.error(
-        `Произошла ошибка при попытке получения всех пользователей из БД!`,
-        UserService.name,
-      );
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const concreteUser = await this.userRepository.getById(id);
+      return new InternalResponse<UserEntity>(concreteUser);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_ID,
       );
     }
   }
 
-  async getUserByEmail(email: string): Promise<UserEntity> {
+  async getByEmail(
+    email: EntityUrlParamCommand.RequestEmailParam,
+  ): Promise<UniversalInternalResponse<UserEntity | null>> {
     try {
-      const findedUser = await this.prismaService.user.findUnique({
-        where: {
-          email,
-        },
-      });
-
-      return new UserEntity(findedUser);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      // if() {
-      //
-      // }
-      this.logger.error(
-        `Произошла ошибка при попытке получения всех пользователей из БД!`,
-        UserService.name,
-      );
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const concreteUser = await this.userRepository.getByEmail(email);
+      return new InternalResponse<UserEntity>(concreteUser);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_EMAIL,
       );
     }
   }
 
-  async deleteUser(id: number): Promise<UserEntity> {
+  async getAll(): Promise<UniversalInternalResponse<UserEntity[] | null>> {
     try {
-      const deletedUser = await this.prismaService.user.delete({
-        where: {
-          id,
-        },
-      });
-
-      return new UserEntity(deletedUser);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      // if() {
-      //
-      // }
-      this.logger.error(
-        `Произошла ошибка при попытке удаления пользователя с id ${id} из БД!`,
-        UserService.name,
-      );
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const allUsers = await this.userRepository.getAll();
+      return new InternalResponse<UserEntity[]>(allUsers);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.USER.ALL_USERS_NOT_GETTED,
       );
     }
   }
 
-  async getAllUsers(): Promise<UserEntity[]> {
-    try {
-      const allUsers = await this.prismaService.user.findMany();
-      return allUsers.map((user) => new UserEntity(user));
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при попытке получения всех пользователей из БД!`,
-        UserService.name,
-      );
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async createUser({
-    firstName,
-    secondName,
-    phone,
-    email,
-    password,
-    address,
-    info,
-    documents,
-    userId,
-  }: UserRequestDto): Promise<UserEntity> {
-    let userExists: boolean | unknown;
-    let newUserWorkspace: null | WorkspaceEntity;
-    let newUserWithWorkspace: null | UserEntity;
-
-    const userUserId = userId ? userId : defaultUserId;
+  async create(
+    dto: UserCreateRequestDto,
+    roleId?: EntityUrlParamCommand.RequestNumberParam,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    let newUserWithWorkspace: null | UniversalInternalResponse<UserEntity> =
+      null;
 
     try {
-      userExists = await this.prismaService.user.findUnique({
-        where: {
-          email,
-        },
-      });
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при проверке существования пользователя с email ${email}!`,
-        UserService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+      const roleNumberId = roleId ? roleId : DEFAULT_ROLE_ID;
+      const role = await this.roleService.getById(roleNumberId);
 
-    if (userExists) {
-      this.logger.error(
-        `Пользователь с таким email ${email} уже существует!`,
-        UserService.name,
-      );
+      dto.password = await bcrypt.hash(dto.password, 10);
+      dto.roleUuid = role.data.uuid;
 
-      throw new ConflictException({
-        message: 'Конфликт уникальности',
-        description: `Пользователь с таким email ${email} уже существует!`,
-      });
-    }
+      const createdUser = await this.userRepository.create(dto);
 
-    this.logger.log(
-      `Проверка пройдена успешно! Пользователя с таким email ${email} не существует, регистрация возможна.`,
-      UserService.name,
-    );
-
-    try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const newUser = await this.prismaService.user.create({
-        data: {
-          email,
-          phone,
-          firstName,
-          secondName,
-          password: hashedPassword,
-          address,
-          info,
-          documents,
-          userId: userUserId,
-          creatorOfWorkspaceId: null,
-        },
-      });
-
-      if (userId === 2) {
-        newUserWorkspace = await this.workspaceService.createWorkspaceByUserId(
-          {},
-          newUser.id,
+      if (roleNumberId === 2) {
+        const newUserWorkspace = await this.workspaceService.create(
+          { name: null, description: null },
+          createdUser.uuid,
         );
 
         newUserWithWorkspace = await this.addExistedWorkspaceToManager(
-          newUser.id,
-          newUserWorkspace.id,
+          createdUser.uuid,
+          newUserWorkspace.data.uuid,
         );
       }
 
-      return new UserEntity(newUserWithWorkspace || newUser);
-    } catch (error) {
-      throw new HttpException(
-        `Ошибка при создании и обработке пользователя в БД`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async updateUserById(
-    {
-      firstName,
-      secondName,
-      phone,
-      address,
-      info,
-      documents,
-    }: UserUpdateRequestDto,
-    id: number,
-  ): Promise<UserEntity> {
-    let userExists: unknown;
-
-    try {
-      userExists = await this.prismaService.user.findUnique({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    if (!userExists) {
-      this.logger.error(
-        `Пользователя с таким id ${id} не существует!`,
-        UserService.name,
-      );
-
-      throw new NotFoundException(Error, {
-        description: 'Такого пользователя не существует',
-      });
-    }
-
-    try {
-      const updatedUser = await this.prismaService.user.update({
-        where: {
-          id,
-        },
-        data: {
-          phone,
-          firstName,
-          secondName,
-          address,
-          info,
-          documents,
-        },
-      });
-      return new UserEntity(updatedUser);
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при обновлении пользователя`,
-        error.stack,
-        UserService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async addExistedWorkspaceToManager(
-    workspaceCreatorId: number,
-    workspaceId: number,
-  ): Promise<UserEntity> {
-    let userExists: unknown;
-
-    try {
-      userExists = await this.prismaService.user.findUnique({
-        where: {
-          id: workspaceCreatorId,
-        },
-      });
-    } catch (error) {
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    if (!userExists) {
-      this.logger.error(
-        `Пользователя с таким id ${workspaceCreatorId} не существует!`,
-        UserService.name,
-      );
-
-      throw new NotFoundException(Error, {
-        description: 'Такого пользователя не существует',
-      });
-    }
-
-    try {
-      const updatedManagerUser = await this.prismaService.user.update({
-        where: {
-          id: workspaceCreatorId,
-        },
-        data: {
-          creatorOfWorkspaceId: workspaceId,
-        },
-      });
-      return new UserEntity(updatedManagerUser);
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при добавлении Workspace ${workspaceId} менеджеру с ${workspaceCreatorId}`,
-        error.stack,
-        UserService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async addUserToManagerWorkspace(
-    userId: number,
-    managerId: number,
-  ): Promise<UserEntity> {
-    let userExists: unknown;
-
-    try {
-      userExists = await this.prismaService.user.findUnique({
-        where: {
-          id: userId,
-        },
-      });
-    } catch (error) {
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    if (!userExists) {
-      this.logger.error(
-        `Пользователя с таким id ${userId} не существует!`,
-        UserService.name,
-      );
-
-      throw new NotFoundException(Error, {
-        description: 'Такого пользователя не существует',
-      });
-    }
-
-    try {
-      const workspaceForAdding =
-        await this.workspaceService.getWorkspaceByManagerId(managerId);
-
-      if (workspaceForAdding) {
-        const updatedUser = await this.prismaService.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            memberOfWorkspaceId: workspaceForAdding?.id,
-          },
-        });
-        return new UserEntity(updatedUser);
+      if (newUserWithWorkspace) {
+        const { data } = newUserWithWorkspace;
+        return new InternalResponse<UserEntity>(data);
       } else {
-        this.logger.error(
-          `Произошла ошибка при добавлении пользователя с id ${userId} в Workspace менеджера id ${managerId}`,
-          UserService.name,
-        );
-        throw new HttpException(
-          `Произошла ошибка при добавлении пользователя с id ${userId} в Workspace менеджера id ${managerId}`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        return new InternalResponse<UserEntity>(createdUser);
       }
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при добавлении пользователя с id ${userId} в Workspace`,
-        error.stack,
-        UserService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    } catch (error: any | string) {
+      return new InternalResponse(null, false, {
+        code: 'P2002',
+        message: error.message,
+        httpCode: 500,
+      });
+      //     code: 'P2002',
+      //     message: objError.message,
+      //     httpCode: 500,
+      //   });
+      // const objError = JSON.parse(error as string);
+      // const code = objError.code;
+      // if (error instanceof HttpException && code === 'P2002') {
+      //   return new InternalResponse(null, false, {
+      //     code: 'P2002',
+      //     message: objError.message,
+      //     httpCode: 500,
+      //   });
+      // }
+    }
+  }
+
+  async updateById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+    dto: UserUpdateRequestDto,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    try {
+      const updatedUser = await this.userRepository.updateById(id, dto);
+      return new InternalResponse<UserEntity>(updatedUser);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.USER.USER_NOT_UPDATED,
       );
     }
   }
 
-  async deleteUserById(id: number): Promise<UserEntity> {
-    let userExists: boolean | unknown;
-
+  async deleteById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
     try {
-      userExists = await this.prismaService.user.findUnique({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const deletedUser = await this.userRepository.deleteById(id);
+      return new InternalResponse<UserEntity>(deletedUser);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_ID,
       );
     }
-
-    if (!userExists) {
-      this.logger.error(
-        `Пользователя с таким id ${id} не существует!`,
-        UserService.name,
-      );
-
-      throw new NotFoundException(Error, {
-        description: 'Такого пользователя не существует',
-      });
-    }
-
+  }
+  async addExistedWorkspaceToManager(
+    workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
     try {
-      const deletedUser = await this.prismaService.user.delete({
-        where: {
-          id,
-        },
-      });
-      return new UserEntity(deletedUser);
+      const updatedUserWithWorkspace =
+        await this.userRepository.addExistedWorkspaceToManager(
+          workspaceId,
+          workspaceCreatorId,
+        );
+      //return updatedUserWithWorkspace;
+      return new InternalResponse<UserEntity>(updatedUserWithWorkspace);
     } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при удалении пользователя с id ${id}`,
-        error.stack,
-        UserService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_ID,
       );
     }
   }

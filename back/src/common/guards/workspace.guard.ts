@@ -1,22 +1,29 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
-import { JWTPayload } from '../types/jwt.payload.interface';
+import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
+import { KEYS_FOR_INJECTION } from '../utils/di';
+import { IPrismaService } from '../types/main/prisma.interface';
 
 @Injectable()
 export class WorkspaceManagerGuard implements CanActivate {
   constructor(
     private configService: ConfigService,
-    private readonly prismaService: PrismaService,
+    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    private readonly prismaService: IPrismaService,
   ) {}
 
   async canActivate(context: ExecutionContext) {
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
 
     try {
-      const payload = jwt.verify(token, jwtSecret) as JWTPayload;
+      const payload = jwt.verify(token, jwtSecret) as IJWTPayload;
       const user = await this.prismaService.user.findUnique({
         where: {
           uuid: payload.uuid,

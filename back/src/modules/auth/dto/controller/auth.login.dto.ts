@@ -1,17 +1,16 @@
 import { createZodDto } from 'nestjs-zod';
-import { AuthCreateCommand } from '../../../../../libs/contracts';
-import { Auth } from '@prisma/client';
+import { AuthLoginCommand } from '../../../../../libs/contracts';
 
-export class AuthCreateRequestDto extends createZodDto(
-  AuthCreateCommand.RequestSchema,
+export class AuthLoginRequestDto extends createZodDto(
+  AuthLoginCommand.RequestSchema,
 ) {}
 
-export class AuthCreateResponseDto extends createZodDto(
-  AuthCreateCommand.ResponseSchema,
+export class AuthLoginResponseDto extends createZodDto(
+  AuthLoginCommand.ResponseSchema,
 ) {
-  constructor(role: Partial<AuthCreateResponseDto>) {
+  constructor(auth: Partial<AuthLoginResponseDto>) {
     super();
-    Object.assign(this, role);
+    Object.assign(this, auth);
     return this;
   }
 }

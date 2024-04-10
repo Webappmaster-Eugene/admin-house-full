@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreateRequestDto } from './dto/controller/create-workspace.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IWorkspaceRepository } from './types/workspace.repository.interface';
@@ -7,41 +6,45 @@ import { WorkspaceUpdateRequestDto } from './dto/controller/update-workspace.dto
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { WorkspaceEntity } from './entities/workspace.entity';
-import { toEntityArray } from '../../common/utils/mappers/toEntityArray';
-import { PrismaService } from '../../prisma/prisma.service';
+import { toEntityArray } from '../../common/utils/mappers';
+import {
+  DEFAULT_WORKSPACE_DESCRIPTION,
+  DEFAULT_WORKSPACE_NAME,
+} from './lib/consts/workspace.default-data';
+import { IJWTPayload } from '../../common/types/jwt.payload.interface';
+import { WorkspaceChangeOwnerRequestDto } from './dto/controller/change-owner-workspace.dto';
+import { WorkspaceAddUserToManagerRequestDto } from './dto/controller/add-to-manager-workspace.dto';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 
 @Injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
   constructor(
-    @Inject('IPrismaService') private readonly prismaService: IPrismaService,
+    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    private readonly prismaService: IPrismaService,
   ) {}
 
-  async create({
-    name,
-    description,
-  }: WorkspaceCreateRequestDto): Promise<WorkspaceEntity> {
-    const newWorkspace = await this.prismaService.workspace.create({
-      data: {
-        name,
-        description,
-      },
-    });
-    return new WorkspaceEntity(newWorkspace);
-  }
-
-  async updateById(
-    id: string,
-    { description }: WorkspaceUpdateRequestDto,
+  async getById(
+    id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<WorkspaceEntity> {
-    const updatedWorkspace = await this.prismaService.workspace.update({
+    const findedWorkspace = await this.prismaService.workspace.findUnique({
       where: {
         uuid: id,
       },
-      data: {
-        description,
+    });
+
+    return new WorkspaceEntity(findedWorkspace);
+  }
+
+  async getByManagerId(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<WorkspaceEntity> {
+    const findedWorkspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspaceCreatorUuid: id,
       },
     });
-    return new WorkspaceEntity(updatedWorkspace);
+
+    return new WorkspaceEntity(findedWorkspace);
   }
 
   async getAll(): Promise<WorkspaceEntity[]> {
@@ -58,8 +61,39 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return { total: total._all };
   }
 
+  async create(
+    { name, description }: WorkspaceCreateRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<WorkspaceEntity> {
+    const newWorkspace = await this.prismaService.workspace.create({
+      data: {
+        name: name || DEFAULT_WORKSPACE_NAME + ` of user #${userId}`,
+        description:
+          description || DEFAULT_WORKSPACE_DESCRIPTION + ` of user #${userId}`,
+        workspaceCreatorUuid: userId,
+      },
+    });
+    return new WorkspaceEntity(newWorkspace);
+  }
+
+  async updateById(
+    id: string,
+    { name, description }: WorkspaceUpdateRequestDto,
+  ): Promise<WorkspaceEntity> {
+    const updatedWorkspace = await this.prismaService.workspace.update({
+      where: {
+        uuid: id,
+      },
+      data: {
+        name,
+        description,
+      },
+    });
+    return new WorkspaceEntity(updatedWorkspace);
+  }
+
   async deleteById(
-    id: EntityUrlParamCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<WorkspaceEntity> {
     const deletedWorkspace = await this.prismaService.workspace.delete({
       where: {
@@ -69,28 +103,33 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return new WorkspaceEntity(deletedWorkspace);
   }
 
-  async getById(
-    id: EntityUrlParamCommand.RequestParamNumber,
+  async changeWorkspaceOwner(
+    id: EntityUrlParamCommand.RequestUuidParam,
+    dto: WorkspaceChangeOwnerRequestDto,
   ): Promise<WorkspaceEntity> {
-    console.log(id);
-    console.log(typeof id);
-    const concreteWorkspace = await this.prismaService.workspace.findUnique({
+    const changedWorkspace = await this.prismaService.workspace.update({
       where: {
-        idWorkspace: id,
+        uuid: id,
+      },
+      data: {
+        workspaceCreatorUuid: dto.workspaceCreatorUuid,
       },
     });
-    console.log(concreteWorkspace);
-
-    return new WorkspaceEntity(concreteWorkspace);
+    return new WorkspaceEntity(changedWorkspace);
   }
 
-  async getByValue(value: EUserTypeVariants): Promise<WorkspaceEntity> {
-    const concreteWorkspace = await this.prismaService.workspace.findUnique({
+  async addUserToManagerWorkspace(
+    id: EntityUrlParamCommand.RequestUuidParam,
+    dto: WorkspaceAddUserToManagerRequestDto,
+  ): Promise<WorkspaceEntity> {
+    const changedWorkspace = await this.prismaService.workspace.update({
       where: {
-        name: value,
+        uuid: id,
+      },
+      data: {
+        workspaceCreatorUuid: dto.workspaceCreatorUuid,
       },
     });
-
-    return new WorkspaceEntity(concreteWorkspace);
+    return new WorkspaceEntity(changedWorkspace);
   }
 }

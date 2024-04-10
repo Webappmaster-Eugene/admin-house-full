@@ -1,120 +1,114 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ProjectRequestDto } from './dto/project.request.dto';
-import { ProjectServiceInterface } from './project.repository.interface';
-import { JWTPayload } from '../../lib/types/jwt.payload.interface';
-import { v4 as uuidv4 } from 'uuid';
 import { ProjectEntity } from './entities/project.entity';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { IProjectService } from './types/project.service.interface';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { IOrganizationService } from '../organization/types/organization.service.interface';
+import { IProjectRepository } from './types/project.repository.interface';
+import {
+  InternalResponse,
+  UniversalInternalResponse,
+} from '../../common/types/responses/universal-internal-response.interface';
+import { ProjectCreateRequestDto } from './dto/controller/create-project.dto';
+import { IJWTPayload } from '../../common/types/jwt.payload.interface';
+import { ProjectUpdateRequestDto } from './dto/controller/update-project.dto';
 
 @Injectable()
-export class ProjectService implements ProjectServiceInterface {
+export class ProjectService implements IProjectService {
   constructor(
-    private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService,
-    private readonly logger: Logger,
+    @Inject(KEYS_FOR_INJECTION.I_PROJECT_REPOSITORY)
+    private readonly projectRepository: IProjectRepository,
+    @Inject(KEYS_FOR_INJECTION.I_ORGANIZATION_SERVICE)
+    private readonly organizationService: IOrganizationService,
+    private readonly configService: ConfigService<IConfigService>,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
-  async createProjectByOrganizationId(
-    { name, description }: ProjectRequestDto,
-    user: JWTPayload,
-  ): Promise<ProjectEntity> {
+  async getById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<ProjectEntity | null>> {
     try {
-      return new ProjectEntity({});
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      //   }
-      this.logger.error(
-        `There is an error, where Project id ${user.email}`,
-        error.stack,
-        ProjectService.name,
-      );
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const concreteOrganization = await this.projectRepository.getById(id);
+      return new InternalResponse<ProjectEntity>(concreteOrganization);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.PROJECT.PROJECT_NOT_GETTED_BY_ID,
       );
     }
   }
 
-  async updateProjectById(
-    { name, description }: ProjectRequestDto,
-    id: number,
-  ): Promise<ProjectEntity> {
+  async getAll(): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
     try {
-      const updatedWorkspace = await this.prismaService.organization.update({
-        where: {
-          id: id,
-        },
-        data: {
-          name,
-          description,
-        },
-      });
-
-      this.logger.log(
-        `Project updated successfully - projectId ${id}`,
-        ProjectService.name,
-      );
-      return new ProjectEntity(updatedWorkspace);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      //   }
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      const allOrganizations = await this.projectRepository.getAll();
+      //const allOrganizationsCount = await this.roleRepository.getAllCount();
+      return new InternalResponse<ProjectEntity[]>(allOrganizations);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.PROJECT.ALL_PROJECTS_NOT_GETTED,
       );
     }
   }
 
-  async getAllProjects(): Promise<ProjectEntity[]> {
+  async create(
+    dto: ProjectCreateRequestDto,
+    userInfo: IJWTPayload,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<ProjectEntity | null>> {
     try {
-      const allWorkspaces = await this.prismaService.organization.findMany();
-      const workspacesToView = allWorkspaces.map(
-        (workspace) => new ProjectEntity(workspace),
+      const { email } = userInfo;
+      const finalCustomerMail = dto.customerMail ? dto.customerMail : email;
+      dto.customerMail = finalCustomerMail;
+
+      const createdProject = await this.projectRepository.create(
+        dto,
+        userInfo.uuid,
+        organizationId,
       );
-      this.logger.log(
-        `All Projects successfully received`,
-        ProjectService.name,
-      );
-      return workspacesToView;
+      return new InternalResponse<ProjectEntity>(createdProject);
     } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при запросе всех Projects`,
-        error.stack,
-        ProjectService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.PROJECT.PROJECT_NOT_CREATED,
       );
     }
   }
 
-  async getProjectById(id: number): Promise<ProjectEntity> {
+  async updateById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+    dto: ProjectUpdateRequestDto,
+  ): Promise<UniversalInternalResponse<ProjectEntity | null>> {
     try {
-      const concreteWorkspace =
-        await this.prismaService.organization.findUnique({
-          where: {
-            id,
-          },
-        });
-      const workspaceToView = new ProjectEntity(concreteWorkspace);
-
-      this.logger.log(`Project received successfully`, ProjectService.name);
-      return workspaceToView;
+      const updatedProject = await this.projectRepository.updateById(id, dto);
+      return new InternalResponse<ProjectEntity>(updatedProject);
     } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при получении Project c id ${id}`,
-        error.stack,
-        ProjectService.name,
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.PROJECT.PROJECT_NOT_UPDATED,
       );
-      throw new HttpException(
-        `Произошла ошибка при получении Project c id ${id} - Project не существует`,
-        HttpStatus.NOT_FOUND,
+    }
+  }
+
+  async deleteById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<ProjectEntity | null>> {
+    try {
+      const deletedOrganization = await this.projectRepository.deleteById(id);
+      return new InternalResponse<ProjectEntity>(deletedOrganization);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.PROJECT.PROJECT_NOT_DELETED,
       );
     }
   }

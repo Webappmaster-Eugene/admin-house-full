@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { UserSchema } from '../../models/user';
 
 const UserGetAllResponseSchema = z.object({
-  data: z.array(UserSchema),
+  data: z.array(
+    UserSchema.omit({
+      password: true,
+    }),
+  ),
   count: z.number().nonnegative(),
 });
 

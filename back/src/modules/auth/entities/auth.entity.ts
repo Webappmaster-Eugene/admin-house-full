@@ -1,15 +1,13 @@
-import { EUserTypeVariants, Auth } from '@prisma/client';
+import { EUserTypeVariants } from '@prisma/client';
 
-export class AuthEntity implements Auth {
+export class AuthEntity {
   uuid: string;
-  idAuth: number;
-  name: EUserTypeVariants;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  email: string;
+  role?: EUserTypeVariants;
+  accessToken: string;
 
-  constructor(role: Partial<Auth>) {
-    Object.assign(this, role);
+  constructor(auth: Partial<AuthEntity>) {
+    Object.assign(this, auth);
     return this;
   }
 }

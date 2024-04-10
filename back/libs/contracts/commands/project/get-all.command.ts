@@ -1,19 +1,9 @@
 import { z } from 'zod';
+import { ProjectSchema } from '../../models';
 
-const ProjectGetAllResponseSchema = z.array(
-  z.object({
-    uuid: z.string().uuid(),
-    name: z.string(),
-    description: z.string().nullable(),
-    organizationUuid: z.string(),
-    customerUuid: z.string(),
-    responsibleManagerUuid: z.string(),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
-  }),
-);
+const ProjectGetAllResponseSchema = z.array(ProjectSchema);
 
 export namespace ProjectGetAllCommand {
-  export const RequestSchema = ProjectGetAllResponseSchema;
-  export type Request = z.infer<typeof RequestSchema>;
+  export const ResponseSchema = ProjectGetAllResponseSchema;
+  export type Request = z.infer<typeof ResponseSchema>;
 }

@@ -7,7 +7,8 @@ const RoleUpdateRequestSchema = RoleSchema.pick({ description: true });
 const RoleUpdateResponseSchema = RoleSchema.pick({ uuid: true });
 
 export namespace RoleUpdateCommand {
-  export const RequestParamSchema = EntityUrlParamCommand.RequestParamSchema;
+  export const RequestParamSchema =
+    EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const RequestSchema = RoleUpdateRequestSchema;

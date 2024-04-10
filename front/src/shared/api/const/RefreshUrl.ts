@@ -1,1 +1,1 @@
-export const REFRESH_URL = "/user/refresh";
+export const REFRESH_URL = "/auth/refresh";

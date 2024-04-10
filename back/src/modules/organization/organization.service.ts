@@ -1,149 +1,136 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { OrganizationRequestDto } from './dto/organization.dto';
-import { OrganizationServiceInterface } from './organization.repository.interface';
-import { JWTPayload } from '../../lib/types/jwt.payload.interface';
-import { workspaceExtractor } from './lib/workspace.extractor';
-import { Workspace } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
 import { OrganizationEntity } from './entities/organization.entity';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import {
+  InternalResponse,
+  UniversalInternalResponse,
+} from '../../common/types/responses/universal-internal-response.interface';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { IOrganizationRepository } from './types/organization.repository.interface';
+import { IOrganizationService } from './types/organization.service.interface';
+import { OrganizationCreateRequestDto } from './dto/controller/create-organization.dto';
+import { IJWTPayload } from '../../common/types/jwt.payload.interface';
+import { OrganizationUpdateRequestDto } from './dto/controller/update-organization.dto';
+import { IWorkspaceService } from '../workspace/types/workspace.service.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
 
 @Injectable()
-export class OrganizationService implements OrganizationServiceInterface {
+export class OrganizationService implements IOrganizationService {
   constructor(
-    private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService,
-    private readonly logger: Logger,
+    @Inject(KEYS_FOR_INJECTION.I_ORGANIZATION_REPOSITORY)
+    private readonly organizationRepository: IOrganizationRepository,
+    @Inject(KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE)
+    private readonly workspaceService: IWorkspaceService,
+    private readonly configService: ConfigService<IConfigService>,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
-  async createOrganizationByWorkspaceId(
-    { name, description }: OrganizationRequestDto,
-    user: JWTPayload,
-  ): Promise<OrganizationEntity> {
-    try {
-      const workspace: {
-        id: number;
-        name: string;
-      } = await workspaceExtractor(this.prismaService, user.id);
-
-      name = name || `Organization of User #${user.id} ${uuidv4()}`;
-
-      description =
-        description ||
-        `Organization of User #${user.id} in Workspace #${workspace.id}`;
-
-      const newOrganization = await this.prismaService.organization.create({
-        data: {
-          name,
-          description,
-          workspaceId: workspace.id,
-          organizationLeaderId: user.id,
-        },
-      });
-
-      this.logger.log(
-        `Organization created successfully - newOrganizarionId ${newOrganization.id}`,
-        OrganizationService.name,
-      );
-      return new OrganizationEntity(newOrganization);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      //   }
-      this.logger.error(
-        `There is an error, when Organization is creating in Workspace by user with id ${user.id}`,
-        error.stack,
-        OrganizationService.name,
-      );
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async updateOrganizationById(
-    { name, description }: OrganizationRequestDto,
-    id: number,
-  ): Promise<OrganizationEntity> {
-    try {
-      const updatedWorkspace = await this.prismaService.organization.update({
-        where: {
-          id: id,
-        },
-        data: {
-          name,
-          description,
-        },
-      });
-
-      this.logger.log(
-        `Organization updated successfully - organizationId ${id}`,
-        OrganizationService.name,
-      );
-      return new OrganizationEntity(updatedWorkspace);
-    } catch (error) {
-      // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2002') {
-      //   }
-
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async getAllOrganizations(): Promise<OrganizationEntity[]> {
-    try {
-      const allWorkspaces = await this.prismaService.organization.findMany();
-      const workspacesToView = allWorkspaces.map(
-        (workspace) => new OrganizationEntity(workspace),
-      );
-      this.logger.log(
-        `All organizations successfully received`,
-        OrganizationService.name,
-      );
-      return workspacesToView;
-    } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при запросе всех Organizations`,
-        error.stack,
-        OrganizationService.name,
-      );
-      throw new HttpException(
-        `${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async getOrganizationById(id: number): Promise<OrganizationEntity> {
+  async getById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<OrganizationEntity | null>> {
     try {
       const concreteOrganization =
-        await this.prismaService.organization.findUnique({
-          where: {
-            id,
-          },
-        });
-      const workspaceToView = new OrganizationEntity(concreteOrganization);
+        await this.organizationRepository.getById(id);
+      return new InternalResponse<OrganizationEntity>(concreteOrganization);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ORGANIZATION.ORGANIZATION_NOT_GETTED_BY_ID,
+      );
+    }
+  }
 
-      this.logger.log(
-        `Organization received successfully`,
-        OrganizationService.name,
+  async getByManagerId(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<OrganizationEntity | null>> {
+    try {
+      const concreteOrganization =
+        await this.organizationRepository.getByManagerId(id);
+      return new InternalResponse<OrganizationEntity>(concreteOrganization);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ORGANIZATION.ORGANIZATION_NOT_GETTED_BY_ID,
       );
-      return workspaceToView;
+    }
+  }
+
+  async getAll(): Promise<
+    UniversalInternalResponse<OrganizationEntity[] | null>
+  > {
+    try {
+      const allOrganizations = await this.organizationRepository.getAll();
+      //const allOrganizationsCount = await this.roleRepository.getAllCount();
+      return new InternalResponse<OrganizationEntity[]>(allOrganizations);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ORGANIZATION.ALL_ORGANIZATIONS_NOT_GETTED,
+      );
+    }
+  }
+
+  async create(
+    dto: OrganizationCreateRequestDto,
+    userInfo: IJWTPayload,
+  ): Promise<UniversalInternalResponse<OrganizationEntity | null>> {
+    try {
+      const findedWorkspace = await this.workspaceService.getByManagerId(
+        userInfo.uuid,
+      );
+      const workspaceId = findedWorkspace.data.uuid;
+      const createdOrganization = await this.organizationRepository.create(
+        dto,
+        userInfo.uuid,
+        workspaceId,
+      );
+      return new InternalResponse<OrganizationEntity>(createdOrganization);
     } catch (error) {
-      this.logger.error(
-        `Произошла ошибка при получении Organization c id ${id}`,
-        error.stack,
-        OrganizationService.name,
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ORGANIZATION.ORGANIZATION_NOT_CREATED,
       );
-      throw new HttpException(
-        `Произошла ошибка при получении Organization c id ${id} - Organization не существует`,
-        HttpStatus.NOT_FOUND,
+    }
+  }
+
+  async updateById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+    dto: OrganizationUpdateRequestDto,
+  ): Promise<UniversalInternalResponse<OrganizationEntity>> {
+    try {
+      const updatedOrganization = await this.organizationRepository.updateById(
+        id,
+        dto,
+      );
+      return new InternalResponse<OrganizationEntity>(updatedOrganization);
+    } catch (error) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ORGANIZATION.ORGANIZATION_NOT_UPDATED,
+      );
+    }
+  }
+
+  async deleteById(
+    id: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<OrganizationEntity>> {
+    try {
+      const deletedOrganization =
+        await this.organizationRepository.deleteById(id);
+      return new InternalResponse<OrganizationEntity>(deletedOrganization);
+    } catch (error: unknown) {
+      return new InternalResponse(
+        null,
+        false,
+        BACKEND_ERRORS.ORGANIZATION.ORGANIZATION_NOT_DELETED,
       );
     }
   }

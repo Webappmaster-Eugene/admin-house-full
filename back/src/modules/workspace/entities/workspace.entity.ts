@@ -2,9 +2,10 @@ import { EUserTypeVariants, Workspace } from '@prisma/client';
 
 export class WorkspaceEntity implements Workspace {
   uuid: string;
-  idWorkspace: number;
-  name: EUserTypeVariants;
+  name: string;
   description: string;
+  workspaceCreatorUuid: string;
+  handbookOfWorkspaceUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

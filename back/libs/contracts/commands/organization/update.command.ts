@@ -1,18 +1,16 @@
 import { z } from 'zod';
+import { OrganizationSchema } from '../../models';
 
-const OrganizationUpdateRequestSchema = z.object({
-  name: z.string(),
-  description: z.string().nullable(),
-});
+const OrganizationUpdateRequestSchema = OrganizationSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  uuid: true,
+  workspaceUuid: true,
+  organizationLeaderUuid: true,
+}).partial();
 
-const OrganizationUpdateResponseSchema = z.object({
-  uuid: z.string().uuid(),
-  name: z.string(),
-  description: z.string().nullable(),
-  workspaceUuid: z.string(),
-  organizationLeaderUuid: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+const OrganizationUpdateResponseSchema = OrganizationSchema.pick({
+  uuid: true,
 });
 
 export namespace OrganizationUpdateCommand {

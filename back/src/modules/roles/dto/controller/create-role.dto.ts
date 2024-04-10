@@ -1,6 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
 import { RoleCreateCommand } from '../../../../../libs/contracts';
-import { Role } from '@prisma/client';
 
 export class RoleCreateRequestDto extends createZodDto(
   RoleCreateCommand.RequestSchema,
@@ -9,9 +8,9 @@ export class RoleCreateRequestDto extends createZodDto(
 export class RoleCreateResponseDto extends createZodDto(
   RoleCreateCommand.ResponseSchema,
 ) {
-  constructor(project: Partial<RoleCreateResponseDto>) {
+  constructor(role: Partial<RoleCreateResponseDto>) {
     super();
-    Object.assign(this, project);
+    Object.assign(this, role);
     return this;
   }
 }

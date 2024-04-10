@@ -1,9 +1,9 @@
 import { IServiceCommon } from '../../../common/types/main/slices/service.interface';
-import { RoleCreateRequestDto } from '../dto/controller/create-project.dto';
-import { RoleUpdateRequestDto } from '../dto/controller/update-project.dto';
+import { RoleCreateRequestDto } from '../dto/controller/create-role.dto';
+import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
 import { EUserTypeVariants } from '@prisma/client';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
-import { RoleEntity } from '../entities/project.entity';
+import { RoleEntity } from '../entities/role.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 
 export interface IRoleService
@@ -12,11 +12,12 @@ export interface IRoleService
     RoleUpdateRequestDto,
     RoleEntity,
     void,
-    EntityUrlParamCommand.RequestParam,
-    EntityUrlParamCommand.RequestParamNumber
+    void,
+    EntityUrlParamCommand.RequestUuidParam,
+    EntityUrlParamCommand.RequestNumberParam
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestParamNumber,
+    id: EntityUrlParamCommand.RequestNumberParam,
   ) => Promise<UniversalInternalResponse<RoleEntity | null>>;
   getByValue: (
     value: EUserTypeVariants,
@@ -26,11 +27,11 @@ export interface IRoleService
     dto: RoleCreateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   updateById: (
-    id: EntityUrlParamCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestUuidParam,
     dto: RoleUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   checkIsAdminSecretKey: (key: string) => boolean;
 }

@@ -1,16 +1,16 @@
 import { z } from 'zod';
+import { OrganizationSchema } from '../../models';
 
-const OrganizationGetResponseSchema = z.object({
-  uuid: z.string().uuid(),
-  name: z.string(),
-  description: z.string().nullable(),
-  workspaceUuid: z.string(),
-  organizationLeaderUuid: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+const OrganizationSchemaGetRequestSchema = OrganizationSchema.pick({
+  uuid: true,
 });
 
+const OrganizationSchemaGetResponseSchema = OrganizationSchema;
+
 export namespace OrganizationGetCommand {
-  export const RequestSchema = OrganizationGetResponseSchema;
+  export const RequestSchema = OrganizationSchemaGetRequestSchema;
   export type Request = z.infer<typeof RequestSchema>;
+
+  export const ResponseSchema = OrganizationSchemaGetResponseSchema;
+  export type Response = z.infer<typeof ResponseSchema>;
 }

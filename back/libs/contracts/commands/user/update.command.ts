@@ -9,12 +9,17 @@ const UserUpdateRequestSchema = UserSchema.omit({
   memberOfOrganizationUuid: true,
   memberOfWorkspaceUuid: true,
   workspaceData: true,
+  uuid: true,
+  roleUuid: true,
+  email: true,
+  password: true,
 }).partial();
 
 const UserUpdateResponseSchema = UserSchema.pick({ uuid: true });
 
 export namespace UserUpdateCommand {
-  export const RequestParamSchema = EntityUrlParamCommand.RequestParamSchema;
+  export const RequestParamSchema =
+    EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const RequestSchema = UserUpdateRequestSchema;

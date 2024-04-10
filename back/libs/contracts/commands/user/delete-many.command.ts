@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models/user';
+import { UserSchema } from '../../models';
 import { ArrayIdRequestCommand } from '../common/array-delete-many.command';
 
 const UserDeleteManyResponseSchema = z.object({

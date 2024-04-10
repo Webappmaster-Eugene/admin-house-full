@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { EUserTypeVariants } from '@prisma/client';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
@@ -7,41 +6,48 @@ import { UserUpdateRequestDto } from './dto/controller/update-user.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { UserEntity } from './entities/user.entity';
-import { toEntityArray } from '../../common/utils/mappers/toEntityArray';
-import { PrismaService } from '../../prisma/prisma.service';
+import { toEntityArray } from '../../common/utils/mappers';
+import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(
-    @Inject('IPrismaService') private readonly prismaService: IPrismaService,
+    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    private readonly prismaService: IPrismaService,
   ) {}
 
-  async create({
-    name,
-    description,
-  }: UserCreateRequestDto): Promise<UserEntity> {
-    const newUser = await this.prismaService.user.create({
-      data: {
-        name,
-        description,
+  async getByEmail(
+    email: EntityUrlParamCommand.RequestEmailParam,
+  ): Promise<UserEntity> {
+    const findedUser = await this.prismaService.user.findUnique({
+      where: {
+        email,
       },
     });
-    return new UserEntity(newUser);
+
+    return new UserEntity(findedUser);
   }
 
-  async updateById(
-    id: string,
-    { description }: UserUpdateRequestDto,
+  async getById(
+    id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
-    const updatedUser = await this.prismaService.user.update({
+    const findedUser = await this.prismaService.user.findUnique({
       where: {
         uuid: id,
       },
-      data: {
-        description,
+      select: {
+        uuid: true,
+        firstName: true,
+        email: true,
+        phone: true,
+        address: true,
+        updatedAt: true,
+        createdAt: true,
       },
     });
-    return new UserEntity(updatedUser);
+
+    return new UserEntity(findedUser);
   }
 
   async getAll(): Promise<UserEntity[]> {
@@ -58,8 +64,68 @@ export class UserRepository implements IUserRepository {
     return { total: total._all };
   }
 
+  async create(dto: UserCreateRequestDto): Promise<UserEntity> {
+    const {
+      email,
+      phone,
+      firstName,
+      secondName,
+      password,
+      address,
+      info,
+      documents,
+      avatar,
+      roleUuid,
+    } = dto;
+
+    try {
+      const newUser = await this.prismaService.user.create({
+        data: {
+          email,
+          phone,
+          firstName,
+          secondName,
+          password,
+          address,
+          info,
+          documents,
+          roleUuid,
+          avatar,
+        },
+      });
+
+      return new UserEntity(newUser);
+    } catch (error: any) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new HttpException(error.message, 500);
+      }
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  async updateById(id: string, dto: UserUpdateRequestDto): Promise<UserEntity> {
+    const { phone, firstName, secondName, address, info, documents, avatar } =
+      dto;
+
+    const updatedUser = await this.prismaService.user.update({
+      where: {
+        uuid: id,
+      },
+      data: {
+        phone,
+        firstName,
+        secondName,
+        address,
+        info,
+        documents,
+        avatar,
+      },
+    });
+    return new UserEntity(updatedUser);
+  }
+
   async deleteById(
-    id: EntityUrlParamCommand.RequestParam,
+    id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
     const deletedUser = await this.prismaService.user.delete({
       where: {
@@ -69,28 +135,19 @@ export class UserRepository implements IUserRepository {
     return new UserEntity(deletedUser);
   }
 
-  async getById(
-    id: EntityUrlParamCommand.RequestParamNumber,
+  async addExistedWorkspaceToManager(
+    workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
-    console.log(id);
-    console.log(typeof id);
-    const concreteUser = await this.prismaService.user.findUnique({
+    const updatedManager = await this.prismaService.user.update({
       where: {
-        idUser: id,
+        uuid: workspaceCreatorId,
       },
-    });
-    console.log(concreteUser);
-
-    return new UserEntity(concreteUser);
-  }
-
-  async getByValue(value: EUserTypeVariants): Promise<UserEntity> {
-    const concreteUser = await this.prismaService.user.findUnique({
-      where: {
-        name: value,
+      data: {
+        creatorOfWorkspaceUuid: workspaceId,
       },
     });
 
-    return new UserEntity(concreteUser);
+    return new UserEntity(updatedManager);
   }
 }

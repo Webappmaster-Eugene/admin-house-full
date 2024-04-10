@@ -1,20 +1,15 @@
 import { z } from 'zod';
+import { ProjectSchema } from '../../models';
 
-const ProjectUpdateRequestSchema = z.object({
-  name: z.string(),
-  description: z.string().nullable(),
-});
+const ProjectUpdateRequestSchema = ProjectSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  uuid: true,
+  responsibleManagerUuid: true,
+  organizationUuid: true,
+}).partial();
 
-const ProjectUpdateResponseSchema = z.object({
-  uuid: z.string().uuid(),
-  name: z.string(),
-  description: z.string().nullable(),
-  organizationUuid: z.string(),
-  customerUuid: z.string(),
-  responsibleManagerUuid: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-});
+const ProjectUpdateResponseSchema = ProjectSchema.pick({ uuid: true });
 
 export namespace ProjectUpdateCommand {
   export const RequestSchema = ProjectUpdateRequestSchema;

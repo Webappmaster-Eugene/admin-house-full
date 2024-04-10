@@ -1,6 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
 import { WorkspaceCreateCommand } from '../../../../../libs/contracts';
-import { Workspace } from '@prisma/client';
 
 export class WorkspaceCreateRequestDto extends createZodDto(
   WorkspaceCreateCommand.RequestSchema,
