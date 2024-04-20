@@ -9,7 +9,6 @@ import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
-import { PrismaService } from '../../prisma/prisma.service';
 import { IPrismaService } from '../types/main/prisma.interface';
 import { KEYS_FOR_INJECTION } from '../utils/di';
 
@@ -32,16 +31,17 @@ export class AuthGuard implements CanActivate {
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
 
     try {
-      const payload = jwt.verify(token, jwtSecret) as IJWTPayload;
-      console.log(payload);
+      const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
+
       const user = await this.prismaService.user.findUnique({
         where: {
-          uuid: payload.uuid,
+          uuid: uuid,
         },
         select: {
           role: {
             select: {
               uuid: true,
+              idRole: true,
               name: true,
             },
           },
@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate {
         return false;
       }
 
-      if (roles?.length === 0 && user) {
+      if (roles?.length === 0) {
         return true;
       }
 

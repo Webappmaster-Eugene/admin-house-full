@@ -13,17 +13,20 @@ export interface IRoleRepository
     RoleEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestNumberParam,
+    roleId: EntityUrlParamCommand.RequestNumberParam,
   ) => Promise<RoleEntity>;
-  getByValue: (value: EUserTypeVariants) => Promise<RoleEntity>;
+  getByUuid: (
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<RoleEntity>;
+  getByValue: (roleName: EUserTypeVariants) => Promise<RoleEntity>;
   getAll: () => Promise<RoleEntity[]>;
   getAllCount: () => Promise<CountData>;
   create: (dto: RoleCreateRequestDto) => Promise<RoleEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
     dto: RoleUpdateRequestDto,
   ) => Promise<RoleEntity>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<RoleEntity>;
 }

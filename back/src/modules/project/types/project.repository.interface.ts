@@ -12,7 +12,7 @@ export interface IProjectRepository
     ProjectEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<ProjectEntity>;
   getAllCount: () => Promise<CountData>;
   getAll: () => Promise<ProjectEntity[]>;
@@ -22,10 +22,10 @@ export interface IProjectRepository
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<ProjectEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
     dto: ProjectUpdateRequestDto,
   ) => Promise<ProjectEntity>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<ProjectEntity>;
 }

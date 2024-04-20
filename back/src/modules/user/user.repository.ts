@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
@@ -9,6 +9,12 @@ import { UserEntity } from './entities/user.entity';
 import { toEntityArray } from '../../common/utils/mappers';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import {
+  BackendErrorNames,
+  InternalError,
+} from '../../common/errors/errors.backend';
+import { jsonStringify } from '../../common/helpers/stringify';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -17,68 +23,134 @@ export class UserRepository implements IUserRepository {
     private readonly prismaService: IPrismaService,
   ) {}
 
-  async getByEmail(
-    email: EntityUrlParamCommand.RequestEmailParam,
+  async getById(
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
-    const findedUser = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
-    });
+    try {
+      const findedUser = await this.prismaService.user.findUnique({
+        where: {
+          uuid: userId,
+        },
+      });
 
-    return new UserEntity(findedUser);
+      if (findedUser) {
+        return new UserEntity(findedUser);
+      } else {
+        throw new NotFoundException({
+          message: `User with id=${userId} not found`,
+          description: 'User from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
-  async getById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+  async getByEmail(
+    userEmail: EntityUrlParamCommand.RequestEmailParam,
   ): Promise<UserEntity> {
-    const findedUser = await this.prismaService.user.findUnique({
-      where: {
-        uuid: id,
-      },
-      select: {
-        uuid: true,
-        firstName: true,
-        email: true,
-        phone: true,
-        address: true,
-        updatedAt: true,
-        createdAt: true,
-      },
-    });
+    try {
+      const findedUser = await this.prismaService.user.findUnique({
+        where: {
+          email: userEmail,
+        },
+      });
 
-    return new UserEntity(findedUser);
+      if (findedUser) {
+        return new UserEntity(findedUser);
+      } else {
+        throw new NotFoundException({
+          message: `User with email=${userEmail} not found`,
+          description: 'User from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAll(): Promise<UserEntity[]> {
-    const allUsers = await this.prismaService.user.findMany();
-    return toEntityArray<UserEntity>(allUsers, UserEntity);
+    try {
+      const allUsers = await this.prismaService.user.findMany();
+      return toEntityArray<UserEntity>(allUsers, UserEntity);
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAllCount(): Promise<CountData> {
-    const total = await this.prismaService.user.count({
-      select: {
-        _all: true, // Count all records
-      },
-    });
-    return { total: total._all };
+    try {
+      const total = await this.prismaService.user.count({
+        select: {
+          _all: true, // Count all records
+        },
+      });
+      return { total: total._all };
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
-  async create(dto: UserCreateRequestDto): Promise<UserEntity> {
-    const {
-      email,
-      phone,
-      firstName,
-      secondName,
-      password,
-      address,
-      info,
-      documents,
-      avatar,
-      roleUuid,
-    } = dto;
-
+  async create(
+    dto: UserCreateRequestDto,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UserEntity> {
     try {
+      const {
+        email,
+        phone,
+        firstName,
+        secondName,
+        password,
+        address,
+        info,
+        documents,
+        avatar,
+      } = dto;
       const newUser = await this.prismaService.user.create({
         data: {
           email,
@@ -89,65 +161,188 @@ export class UserRepository implements IUserRepository {
           address,
           info,
           documents,
-          roleUuid,
           avatar,
+          roleUuid,
         },
       });
-
       return new UserEntity(newUser);
-    } catch (error: any) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        throw new HttpException(error.message, 500);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(
+            BackendErrorNames.CONFLICT_ERROR,
+            jsonStringify(error),
+          ),
+        );
       }
-      throw new HttpException(error.message, 500);
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
     }
   }
 
-  async updateById(id: string, dto: UserUpdateRequestDto): Promise<UserEntity> {
-    const { phone, firstName, secondName, address, info, documents, avatar } =
-      dto;
+  async updateById(
+    userId: EntityUrlParamCommand.RequestUuidParam,
+    dto: UserUpdateRequestDto,
+  ): Promise<UserEntity> {
+    try {
+      const { phone, firstName, secondName, address, info, documents, avatar } =
+        dto;
 
-    const updatedUser = await this.prismaService.user.update({
-      where: {
-        uuid: id,
-      },
-      data: {
-        phone,
-        firstName,
-        secondName,
-        address,
-        info,
-        documents,
-        avatar,
-      },
-    });
-    return new UserEntity(updatedUser);
+      const updatedUser = await this.prismaService.user.update({
+        where: {
+          uuid: userId,
+        },
+        data: {
+          phone,
+          firstName,
+          secondName,
+          address,
+          info,
+          documents,
+          avatar,
+        },
+      });
+      return new UserEntity(updatedUser);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async deleteById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
-    const deletedUser = await this.prismaService.user.delete({
-      where: {
-        uuid: id,
-      },
-    });
-    return new UserEntity(deletedUser);
+    try {
+      const deletedUser = await this.prismaService.user.delete({
+        where: {
+          uuid: userId,
+        },
+      });
+      return new UserEntity(deletedUser);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async addExistedWorkspaceToManager(
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
-    const updatedManager = await this.prismaService.user.update({
-      where: {
-        uuid: workspaceCreatorId,
-      },
-      data: {
-        creatorOfWorkspaceUuid: workspaceId,
-      },
-    });
+    console.log(workspaceCreatorId, workspaceId);
 
-    return new UserEntity(updatedManager);
+    try {
+      const updatedManager = await this.prismaService.user.update({
+        where: {
+          uuid: workspaceCreatorId,
+        },
+        data: {
+          creatorOfWorkspaceUuid: workspaceId,
+        },
+      });
+      return new UserEntity(updatedManager);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
+  }
+
+  async addExistedHandbookToManager(
+    handbookCreatorId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UserEntity> {
+    try {
+      const updatedManager = await this.prismaService.user.update({
+        where: {
+          uuid: handbookCreatorId,
+        },
+        data: {
+          handbookManagerUuid: handbookId,
+        },
+      });
+      return new UserEntity(updatedManager);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 }

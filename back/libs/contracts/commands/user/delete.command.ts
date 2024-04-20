@@ -1,8 +1,17 @@
-import { z } from 'zod';
+import { unknown, z } from 'zod';
 import { UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const UserDeleteResponseSchema = UserSchema.pick({ uuid: true });
+const UserDeleteResponseSchema = z
+  .object({
+    data: UserSchema.omit({
+      password: true,
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace UserDeleteCommand {
   export const RequestParamSchema =

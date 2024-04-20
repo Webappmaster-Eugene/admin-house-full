@@ -1,186 +1,152 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from './entities/user.entity';
 import { IWorkspaceService } from '../workspace/types/workspace.service.interface';
-import { ILogger } from '../../common/types/main/logger.interface';
 import { DEFAULT_ROLE_ID } from '../../common/consts/consts';
 import { IUserRepository } from './types/user.repository.interface';
 import {
   InternalResponse,
   UniversalInternalResponse,
 } from '../../common/types/responses/universal-internal-response.interface';
-import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { IUserService } from './types/user.service.interface';
-import { IConfigService } from '../../common/types/main/config.service.interface';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { UserUpdateRequestDto } from './dto/controller/update-user.dto';
 import { IRoleService } from '../roles/types/role.service.interface';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
-import { ZodSerializerDto } from 'nestjs-zod';
-import { RoleGetResponseReturnDto } from '../roles/dto/controller/get-role.dto';
+import { IHandbookService } from '../handbook/types/handbook.service.interface';
+import * as argon2 from 'argon2';
+import { AddUserToWorkspaceRequestDto } from './dto/controller/add-to-workspace.dto';
 
 @Injectable()
 export class UserService implements IUserService {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
-    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
-    private readonly configService: ConfigService<IConfigService>,
     @Inject(KEYS_FOR_INJECTION.I_ROLE_SERVICE)
     private readonly roleService: IRoleService,
     @Inject(KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE)
     private readonly workspaceService: IWorkspaceService,
+    @Inject(KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE)
+    private readonly handbookService: IHandbookService,
   ) {}
 
   async getById(
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalInternalResponse<UserEntity | null>> {
-    try {
-      const concreteUser = await this.userRepository.getById(id);
-      return new InternalResponse<UserEntity>(concreteUser);
-    } catch (error: unknown) {
-      return new InternalResponse(
-        null,
-        false,
-        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_ID,
-      );
-    }
+    userId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const concreteUser = await this.userRepository.getById(userId);
+    return new InternalResponse<UserEntity>(concreteUser);
   }
 
   async getByEmail(
-    email: EntityUrlParamCommand.RequestEmailParam,
-  ): Promise<UniversalInternalResponse<UserEntity | null>> {
-    try {
-      const concreteUser = await this.userRepository.getByEmail(email);
-      return new InternalResponse<UserEntity>(concreteUser);
-    } catch (error: unknown) {
-      return new InternalResponse(
-        null,
-        false,
-        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_EMAIL,
-      );
-    }
+    userEmail: EntityUrlParamCommand.RequestEmailParam,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const concreteUser = await this.userRepository.getByEmail(userEmail);
+    return new InternalResponse<UserEntity>(concreteUser);
   }
 
-  async getAll(): Promise<UniversalInternalResponse<UserEntity[] | null>> {
-    try {
-      const allUsers = await this.userRepository.getAll();
-      return new InternalResponse<UserEntity[]>(allUsers);
-    } catch (error: unknown) {
-      return new InternalResponse(
-        null,
-        false,
-        BACKEND_ERRORS.USER.ALL_USERS_NOT_GETTED,
-      );
-    }
+  async getAll(): Promise<UniversalInternalResponse<UserEntity[]>> {
+    const allUsers = await this.userRepository.getAll();
+    return new InternalResponse<UserEntity[]>(allUsers);
   }
 
   async create(
     dto: UserCreateRequestDto,
     roleId?: EntityUrlParamCommand.RequestNumberParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    let newUserWithWorkspace: null | UniversalInternalResponse<UserEntity> =
+    let newUserWithWorkspaceAndHandbook: UniversalInternalResponse<UserEntity> | null =
       null;
 
-    try {
-      const roleNumberId = roleId ? roleId : DEFAULT_ROLE_ID;
-      const role = await this.roleService.getById(roleNumberId);
+    const roleNumberId = roleId ? roleId : DEFAULT_ROLE_ID;
 
-      dto.password = await bcrypt.hash(dto.password, 10);
-      dto.roleUuid = role.data.uuid;
+    const role = await this.roleService.getById(roleNumberId);
 
-      const createdUser = await this.userRepository.create(dto);
+    dto.password = await argon2.hash(dto.password);
+    const roleUuid = role.data.uuid;
 
-      if (roleNumberId === 2) {
-        const newUserWorkspace = await this.workspaceService.create(
-          { name: null, description: null },
-          createdUser.uuid,
-        );
+    const createdUser = await this.userRepository.create(dto, roleUuid);
 
-        newUserWithWorkspace = await this.addExistedWorkspaceToManager(
-          createdUser.uuid,
-          newUserWorkspace.data.uuid,
-        );
-      }
+    if (roleNumberId === 2) {
+      const newManagerWorkspace = await this.workspaceService.create(
+        { name: null, description: null },
+        createdUser.uuid,
+      );
 
-      if (newUserWithWorkspace) {
-        const { data } = newUserWithWorkspace;
-        return new InternalResponse<UserEntity>(data);
-      } else {
-        return new InternalResponse<UserEntity>(createdUser);
-      }
-    } catch (error: any | string) {
-      return new InternalResponse(null, false, {
-        code: 'P2002',
-        message: error.message,
-        httpCode: 500,
-      });
-      //     code: 'P2002',
-      //     message: objError.message,
-      //     httpCode: 500,
-      //   });
-      // const objError = JSON.parse(error as string);
-      // const code = objError.code;
-      // if (error instanceof HttpException && code === 'P2002') {
-      //   return new InternalResponse(null, false, {
-      //     code: 'P2002',
-      //     message: objError.message,
-      //     httpCode: 500,
-      //   });
-      // }
+      const newWorkspaceInfo = newManagerWorkspace.data;
+
+      const newManagerHandbook = await this.handbookService.create(
+        { name: null, description: null },
+        createdUser.uuid,
+      );
+
+      const newHandbookInfo = newManagerHandbook.data;
+
+      newUserWithWorkspaceAndHandbook = await this.addExistedWorkspaceToManager(
+        createdUser.uuid,
+        newWorkspaceInfo.uuid,
+      );
+
+      newUserWithWorkspaceAndHandbook = await this.addExistedHandbookToManager(
+        createdUser.uuid,
+        newHandbookInfo.uuid,
+      );
+    }
+
+    if (newUserWithWorkspaceAndHandbook) {
+      const { data } = newUserWithWorkspaceAndHandbook;
+      return new InternalResponse<UserEntity>(data);
+    } else {
+      return new InternalResponse<UserEntity>(createdUser);
     }
   }
 
   async updateById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
     dto: UserUpdateRequestDto,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    try {
-      const updatedUser = await this.userRepository.updateById(id, dto);
-      return new InternalResponse<UserEntity>(updatedUser);
-    } catch (error: unknown) {
-      return new InternalResponse(
-        null,
-        false,
-        BACKEND_ERRORS.USER.USER_NOT_UPDATED,
-      );
-    }
+    const updatedUser = await this.userRepository.updateById(userId, dto);
+    return new InternalResponse<UserEntity>(updatedUser);
   }
 
   async deleteById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    try {
-      const deletedUser = await this.userRepository.deleteById(id);
-      return new InternalResponse<UserEntity>(deletedUser);
-    } catch (error: unknown) {
-      return new InternalResponse(
-        null,
-        false,
-        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_ID,
-      );
-    }
+    const deletedUser = await this.userRepository.deleteById(userId);
+    return new InternalResponse<UserEntity>(deletedUser);
   }
   async addExistedWorkspaceToManager(
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    try {
-      const updatedUserWithWorkspace =
-        await this.userRepository.addExistedWorkspaceToManager(
-          workspaceId,
-          workspaceCreatorId,
-        );
-      //return updatedUserWithWorkspace;
-      return new InternalResponse<UserEntity>(updatedUserWithWorkspace);
-    } catch (error) {
-      return new InternalResponse(
-        null,
-        false,
-        BACKEND_ERRORS.USER.USER_NOT_GETTED_BY_ID,
+    const updatedUserWithWorkspace =
+      await this.userRepository.addExistedWorkspaceToManager(
+        workspaceCreatorId,
+        workspaceId,
       );
-    }
+    return new InternalResponse<UserEntity>(updatedUserWithWorkspace);
+  }
+
+  async addExistedHandbookToManager(
+    handbookCreatorId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const updatedUserWithHandbook =
+      await this.userRepository.addExistedHandbookToManager(
+        handbookCreatorId,
+        handbookId,
+      );
+    return new InternalResponse<UserEntity>(updatedUserWithHandbook);
+  }
+
+  async addUserToManagerWorkspace(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToWorkspaceRequestDto,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const dtoToUpdateUser = { memberOfWorkspaceUuid: workspaceId };
+    const updatedUser = await this.userRepository.updateById(
+      dto.uuid,
+      dtoToUpdateUser,
+    );
+
+    return new InternalResponse<UserEntity>(updatedUser);
   }
 }

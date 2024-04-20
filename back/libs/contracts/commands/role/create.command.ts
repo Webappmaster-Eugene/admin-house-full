@@ -1,5 +1,6 @@
-import { z } from 'zod';
+import { unknown, z } from 'zod';
 import { RoleSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const RoleCreateRequestSchema = RoleSchema.omit({
   idRole: true,
@@ -12,7 +13,15 @@ const RoleCreateRequestSchema = RoleSchema.omit({
   }),
 );
 
-const RoleCreateResponseSchema = RoleSchema;
+const RoleCreateResponseSchema = z
+  .object({
+    data: RoleSchema.pick({
+      uuid: true,
+      idRole: true,
+      name: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace RoleCreateCommand {
   export const RequestSchema = RoleCreateRequestSchema;

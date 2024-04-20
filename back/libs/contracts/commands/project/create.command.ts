@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { ProjectSchema } from '../../models';
+import { ProjectSchema, WorkspaceSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const ProjectCreateRequestSchema = ProjectSchema.pick({
   name: true,
@@ -7,7 +8,14 @@ const ProjectCreateRequestSchema = ProjectSchema.pick({
   customerMail: true,
 });
 
-const ProjectCreateResponseSchema = ProjectSchema;
+const ProjectCreateResponseSchema = z
+  .object({
+    data: ProjectSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace ProjectCreateCommand {
   export const RequestSchema = ProjectCreateRequestSchema;

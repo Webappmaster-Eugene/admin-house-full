@@ -21,20 +21,16 @@ import {
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
-import { zodToOpenAPI } from 'nestjs-zod';
+import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
-import {
-  ExternalResponse,
-  UniversalExternalResponse,
-} from '../../common/types/responses/universal-external-response.interface';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { HandbookGetResponseDto } from './dto/controller/get-handbook.dto';
 import {
   HandbookCreateRequestDto,
   HandbookCreateResponseDto,
 } from './dto/controller/create-handbook.dto';
 import { HandbookGetAllResponseDto } from './dto/controller/get-all-handbooks.dto';
-import { toResponseClientArray } from '../../common/utils/mappers';
 import {
   HandbookUpdateRequestDto,
   HandbookUpdateResponseDto,
@@ -50,14 +46,28 @@ import {
   HandbookGetCommand,
   HandbookUpdateCommand,
 } from '../../../libs/contracts';
-import { WorkspaceManagerGuard } from '../../common/guards/workspace.guard';
+import { HandbookEntity } from './entities/handbook.entity';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { jsonStringify } from '../../common/helpers/stringify';
+import { errorExtractor } from '../../common/helpers/inner-error.extractor';
+import { EntityName } from '../../common/types/entity.enum';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { ILogger } from '../../common/types/main/logger.interface';
+import {
+  IUrlParams,
+  UrlParams,
+} from '../../common/decorators/url-params.decorator';
+import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
+import { EUserTypeVariants } from '@prisma/client';
+import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 
 @ApiTags('Работа с Handbook пользователей')
-@Controller('handbooks')
+@Controller('/workspace/:workspaceId/handbook')
 export class HandbookController implements IHandbookController {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE)
     private readonly handbookService: IHandbookService,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
   @ApiOkResponse({
@@ -65,24 +75,39 @@ export class HandbookController implements IHandbookController {
   })
   @ApiOperation({ summary: 'Получение Handbook по id' })
   @ApiResponse({ status: 200, type: HandbookGetResponseDto })
-  @UseGuards(AuthGuard)
-  @Get('/:id')
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(HandbookGetResponseDto)
+  @Get('/:handbookId')
   async getByIdEP(
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalExternalResponse<HandbookGetResponseDto | null>> {
-    const responseData = await this.handbookService.getById(id);
-    if (responseData.ok) {
-      return new ExternalResponse<HandbookGetResponseDto>(
-        new HandbookGetResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<HandbookGetResponseDto> {
+    try {
+      const responseData = await this.handbookService.getById(handbookId);
+      if (responseData.ok) {
+        return new ExternalResponse<HandbookEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.HANDBOOK,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -93,25 +118,38 @@ export class HandbookController implements IHandbookController {
     summary: 'Получить все Handbook пользователей (менеджеров Workspace)',
   })
   @ApiResponse({ status: 200, type: [HandbookGetAllResponseDto] })
-  @RolesSetting('MANAGER', 'ADMIN')
+  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
+  @ZodSerializerDto(HandbookGetAllResponseDto)
   @Get()
-  async getAllEP(): Promise<
-    UniversalExternalResponse<HandbookGetAllResponseDto[] | null>
-  > {
-    const responseData = await this.handbookService.getAll();
-    if (responseData.ok) {
-      return new ExternalResponse<HandbookGetAllResponseDto[]>(
-        toResponseClientArray(responseData.data, HandbookGetAllResponseDto),
-      );
-    } else {
-      const response = new ExternalResponse(
+  async getAllEP(
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<HandbookGetAllResponseDto> {
+    try {
+      const responseData = await this.handbookService.getAll();
+      if (responseData.ok) {
+        return new ExternalResponse<HandbookEntity[]>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.HANDBOOK,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -123,27 +161,44 @@ export class HandbookController implements IHandbookController {
   })
   @ApiOperation({ summary: 'Создание Handbook' })
   @ApiResponse({ status: 201, type: HandbookCreateResponseDto })
-  @RolesSetting('MANAGER')
+  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
+  @ZodSerializerDto(HandbookCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: HandbookCreateRequestDto,
-    @User() userInfo: IJWTPayload,
-  ): Promise<UniversalExternalResponse<HandbookCreateResponseDto>> {
+    @UrlParams() urlParams: IUrlParams,
+    @User() userInfoFromJWT: IJWTPayload,
+  ): Promise<HandbookCreateResponseDto> {
     // в create нужно передать id пользователя, для которого создается handbook
-    const responseData = await this.handbookService.create(dto, userInfo);
-    if (responseData.ok) {
-      return new ExternalResponse<HandbookCreateResponseDto>(
-        new HandbookCreateResponseDto(responseData.data),
+    try {
+      const responseData = await this.handbookService.create(
+        dto,
+        userInfoFromJWT.uuid,
       );
-    } else {
-      const response = new ExternalResponse(
+      if (responseData.ok) {
+        return new ExternalResponse<HandbookEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.HANDBOOK,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -155,52 +210,87 @@ export class HandbookController implements IHandbookController {
   })
   @ApiOperation({ summary: 'Изменение Handbook пользователя по id Handbook' })
   @ApiResponse({ status: 200, type: HandbookUpdateResponseDto })
-  @RolesSetting('MANAGER')
-  @UseGuards(AuthGuard, WorkspaceManagerGuard)
-  @Put('/:id')
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @ZodSerializerDto(HandbookUpdateResponseDto)
+  @Put('/:handbookId')
   async updateByIdEP(
-    @Param('/:id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
+    @Param('/:handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: HandbookUpdateRequestDto,
-    // @User() user: IJWTPayload,
-  ): Promise<UniversalExternalResponse<HandbookUpdateResponseDto>> {
-    const responseData = await this.handbookService.updateById(id, dto);
-    if (responseData.ok) {
-      return new ExternalResponse<HandbookUpdateResponseDto>(
-        new HandbookUpdateResponseDto(responseData.data),
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<HandbookUpdateResponseDto> {
+    try {
+      const responseData = await this.handbookService.updateById(
+        handbookId,
+        dto,
       );
-    } else {
-      const response = new ExternalResponse(
+      if (responseData.ok) {
+        return new ExternalResponse<HandbookEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.HANDBOOK,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
   @ApiOkResponse({
     schema: zodToOpenAPI(HandbookDeleteCommand.ResponseSchema),
   })
-  @ApiOperation({ summary: 'Удаление Handbook пользователя по id Handbook' })
+  @ApiOperation({
+    summary: 'Удаление Handbook внутри Workspace менеджера по id Handbook',
+  })
   @ApiResponse({ status: 200, type: HandbookDeleteResponseDto })
-  @Delete('/:id')
+  @ZodSerializerDto(HandbookDeleteResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
+  @Delete('/:handbookId')
   async deleteByIdEP(
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalExternalResponse<HandbookDeleteResponseDto>> {
-    const responseData = await this.handbookService.deleteById(id);
-    if (responseData.ok) {
-      return new ExternalResponse<HandbookDeleteResponseDto>(
-        new HandbookDeleteResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<HandbookDeleteResponseDto> {
+    try {
+      const responseData = await this.handbookService.deleteById(handbookId);
+      if (responseData.ok) {
+        return new ExternalResponse<HandbookEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.HANDBOOK,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 }

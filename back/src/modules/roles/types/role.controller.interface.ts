@@ -10,29 +10,40 @@ import {
 } from '../dto/controller/update-role.dto';
 import { RoleGetResponseDto } from '../dto/controller/get-role.dto';
 import { RoleGetAllResponseDto } from '../dto/controller/get-all-roles.dto';
-import { UniversalExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { RoleDeleteResponseDto } from '../dto/controller/delete-role.dto';
-import { RoleEntity } from '../entities/role.entity';
+import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 
-export interface IRoleController {
-  // getByIdEP: (
-  //   id: EntityUrlParamCommand.RequestNumberParam,
-  // ) => Promise<RoleEntity>;
+export interface IRoleController
+  extends IControllerCommon<
+    RoleCreateRequestDto,
+    RoleUpdateRequestDto,
+    RoleGetResponseDto,
+    RoleGetAllResponseDto,
+    RoleCreateResponseDto,
+    RoleUpdateResponseDto,
+    RoleDeleteResponseDto
+  > {
+  getByIdEP: (
+    roleId: EntityUrlParamCommand.RequestNumberParam,
+    urlParams: IUrlParams,
+  ) => Promise<RoleGetResponseDto>;
   getByValueEP: (
-    value: EUserTypeVariants,
-  ) => Promise<UniversalExternalResponse<RoleGetResponseDto | null>>;
-  getAllEP: () => Promise<
-    UniversalExternalResponse<RoleGetAllResponseDto[] | null>
-  >;
+    roleName: EUserTypeVariants,
+    urlParams: IUrlParams,
+  ) => Promise<RoleGetResponseDto>;
+  getAllEP: (urlParams?: IUrlParams) => Promise<RoleGetAllResponseDto>;
   createEP: (
     dto: RoleCreateRequestDto,
-  ) => Promise<UniversalExternalResponse<RoleCreateResponseDto>>;
+    urlParams: IUrlParams,
+  ) => Promise<RoleCreateResponseDto>;
   updateByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
     dto: RoleUpdateRequestDto,
-  ) => Promise<UniversalExternalResponse<RoleUpdateResponseDto>>;
+    urlParams: IUrlParams,
+  ) => Promise<RoleUpdateResponseDto>;
   deleteByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalExternalResponse<RoleDeleteResponseDto>>;
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
+    urlParams: IUrlParams,
+  ) => Promise<RoleDeleteResponseDto>;
 }

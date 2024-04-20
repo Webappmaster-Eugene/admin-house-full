@@ -7,10 +7,4 @@ export type OrganizationDeleteRequestParamDto =
 
 export class OrganizationDeleteResponseDto extends createZodDto(
   OrganizationDeleteCommand.ResponseSchema,
-) {
-  constructor(organization: Partial<OrganizationDeleteResponseDto>) {
-    super();
-    Object.assign(this, organization);
-    return this;
-  }
-}
+) {}

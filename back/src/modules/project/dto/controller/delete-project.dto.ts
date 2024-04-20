@@ -7,10 +7,4 @@ export type ProjectDeleteRequestParamDto =
 
 export class ProjectDeleteResponseDto extends createZodDto(
   ProjectDeleteCommand.ResponseSchema,
-) {
-  constructor(project: Partial<ProjectDeleteResponseDto>) {
-    super();
-    Object.assign(this, project);
-    return this;
-  }
-}
+) {}

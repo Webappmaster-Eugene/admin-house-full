@@ -12,22 +12,21 @@ import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/commo
 export interface IAuthService {
   register: (
     dto: AuthRegisterRequestDto,
-  ) => Promise<UniversalInternalResponse<AuthEntity | null>>;
+  ) => Promise<UniversalInternalResponse<AuthEntity>>;
   registerWithRole: (
     dto: AuthRegisterWithRoleRequestDto,
     paramDto: AuthRegisterWithRoleRequestParamDto,
-  ) => Promise<UniversalInternalResponse<AuthEntity | null>>;
+  ) => Promise<UniversalInternalResponse<AuthEntity>>;
   login: (
     dto: AuthLoginRequestDto,
-  ) => Promise<UniversalInternalResponse<AuthEntity | null>>;
+  ) => Promise<UniversalInternalResponse<AuthEntity>>;
   generateJWT: (
+    uuid: EntityUrlParamCommand.RequestUuidParam,
     email: string,
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<string | null>>;
+    workspaceUuid: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<string>>;
   generateStrictAdminKey: (
     dto: AuthGenerateKeyRequestDto,
-  ) => Promise<UniversalInternalResponse<{ key: string } | null>>;
-  getStrictAdminKey: () => Promise<
-    UniversalInternalResponse<{ key: string } | null>
-  >;
+  ) => Promise<UniversalInternalResponse<{ key: string }>>;
+  getStrictAdminKey: () => Promise<UniversalInternalResponse<{ key: string }>>;
 }

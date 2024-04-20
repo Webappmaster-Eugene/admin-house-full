@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EUserTypeVariantsSchema } from '../../../../src/generated/zod';
+import { EUserTypeVariantsSchema } from '../../../../src/common/generated/zod';
 
 export const RoleSchema = z.object({
   uuid: z.string().uuid(),

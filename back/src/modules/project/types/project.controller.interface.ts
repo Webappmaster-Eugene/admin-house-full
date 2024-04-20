@@ -9,10 +9,10 @@ import {
 } from '../dto/controller/update-project.dto';
 import { ProjectGetResponseDto } from '../dto/controller/get-project.dto';
 import { ProjectGetAllResponseDto } from '../dto/controller/get-all-projects.dto';
-import { UniversalExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { ProjectDeleteResponseDto } from '../dto/controller/delete-project.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
+import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 
 export interface IProjectController
   extends IControllerCommon<
@@ -25,21 +25,23 @@ export interface IProjectController
     ProjectDeleteResponseDto
   > {
   getByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalExternalResponse<ProjectGetResponseDto | null>>;
-  getAllEP: () => Promise<
-    UniversalExternalResponse<ProjectGetAllResponseDto[] | null>
-  >;
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    urlParams: IUrlParams,
+  ) => Promise<ProjectGetResponseDto>;
+  getAllEP: (urlParams: IUrlParams) => Promise<ProjectGetAllResponseDto>;
   createEP: (
     dto: ProjectCreateRequestDto,
-    userInfo: IJWTPayload,
+    urlParams: IUrlParams,
+    userInfoFromJWT: IJWTPayload,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalExternalResponse<ProjectCreateResponseDto>>;
+  ) => Promise<ProjectCreateResponseDto>;
   updateByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
     dto: ProjectUpdateRequestDto,
-  ) => Promise<UniversalExternalResponse<ProjectUpdateResponseDto>>;
+    urlParams: IUrlParams,
+  ) => Promise<ProjectUpdateResponseDto>;
   deleteByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalExternalResponse<ProjectDeleteResponseDto>>;
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    urlParams: IUrlParams,
+  ) => Promise<ProjectDeleteResponseDto>;
 }

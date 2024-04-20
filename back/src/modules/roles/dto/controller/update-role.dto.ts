@@ -10,10 +10,4 @@ export class RoleUpdateRequestDto extends createZodDto(
 
 export class RoleUpdateResponseDto extends createZodDto(
   RoleUpdateCommand.ResponseSchema,
-) {
-  constructor(role: Partial<RoleUpdateResponseDto>) {
-    super();
-    Object.assign(this, role);
-    return this;
-  }
-}
+) {}

@@ -1,16 +1,17 @@
 import { z } from 'zod';
 import { HandbookSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const HandbookGetRequestSchema = HandbookSchema.pick({
-  uuid: true,
-});
-
-const HandbookGetResponseSchema = HandbookSchema;
+const HandbookGetResponseSchema = z
+  .object({
+    data: HandbookSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace HandbookGetCommand {
-  export const RequestSchema = HandbookGetRequestSchema;
-  export type Request = z.infer<typeof RequestSchema>;
-
   export const ResponseSchema = HandbookGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 }

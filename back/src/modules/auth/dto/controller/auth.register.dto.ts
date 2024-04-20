@@ -7,10 +7,4 @@ export class AuthRegisterRequestDto extends createZodDto(
 
 export class AuthRegisterResponseDto extends createZodDto(
   AuthRegisterCommand.ResponseSchema,
-) {
-  constructor(auth: Partial<AuthRegisterResponseDto>) {
-    super();
-    Object.assign(this, auth);
-    return this;
-  }
-}
+) {}

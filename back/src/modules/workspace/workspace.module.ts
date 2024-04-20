@@ -1,10 +1,9 @@
-import { ClassSerializerInterceptor, Logger, Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceController } from './workspace.controller';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { WorkspaceRepository } from './workspace.repository';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../common/prisma/prisma.service';
 
 @Module({
   providers: [
@@ -23,10 +22,6 @@ import { PrismaService } from '../../prisma/prisma.service';
     {
       provide: KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE,
       useClass: WorkspaceService,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor,
     },
   ],
   controllers: [WorkspaceController],

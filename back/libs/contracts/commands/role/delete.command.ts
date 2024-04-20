@@ -1,8 +1,13 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models';
+import { RoleSchema, UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const RoleDeleteResponseSchema = UserSchema.pick({ uuid: true });
+const RoleDeleteResponseSchema = z
+  .object({
+    data: RoleSchema,
+  })
+  .merge(ResponseClientSchema);
 
 export namespace RoleDeleteCommand {
   export const RequestParamSchema =

@@ -11,24 +11,30 @@ export interface IUserRepository
     UserUpdateRequestDto,
     UserEntity
   > {
-  getById: (id: EntityUrlParamCommand.RequestUuidParam) => Promise<UserEntity>;
+  getById: (
+    userId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UserEntity>;
   getByEmail: (
-    email: EntityUrlParamCommand.RequestEmailParam,
+    userEmail: EntityUrlParamCommand.RequestEmailParam,
   ) => Promise<UserEntity>;
   getAll: () => Promise<UserEntity[]>;
   getAllCount: () => Promise<CountData>;
   create: (
     dto: UserCreateRequestDto,
-    // roleUuid: EntityUrlParamCommand.RequestUuidParam,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UserEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
     dto: UserUpdateRequestDto,
   ) => Promise<UserEntity>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UserEntity>;
   addExistedWorkspaceToManager: (
+    workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UserEntity>;
+  addExistedHandbookToManager: (
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UserEntity>;

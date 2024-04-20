@@ -27,37 +27,51 @@ import { AuthGuard } from '../../common/guards/auth.guard';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { UserEntity } from './entities/user.entity';
-import { WorkspaceManagerGuard } from '../../common/guards/workspace.guard';
-import { zodToOpenAPI } from 'nestjs-zod';
+import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { IUserService } from './types/user.service.interface';
 import { UserGetAllResponseDto } from './dto/controller/get-all-users.dto';
 import {
+  AddUserToWorkspaceCommand,
   UserCreateCommand,
   UserGetAllCommand,
   UserGetCommand,
   UserUpdateCommand,
 } from '../../../libs/contracts';
-import {
-  ExternalResponse,
-  UniversalExternalResponse,
-} from '../../common/types/responses/universal-external-response.interface';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import {
   UserCreateRequestDto,
   UserCreateResponseDto,
 } from './dto/controller/create-user.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { UserGetResponseDto } from './dto/controller/get-user.dto';
-import { RoleGetAllResponseDto } from '../roles/dto/controller/get-all-roles.dto';
-import { toResponseClientArray } from '../../common/utils/mappers';
 import { UserDeleteResponseDto } from './dto/controller/delete-user.dto';
+import {
+  IUrlParams,
+  UrlParams,
+} from '../../common/decorators/url-params.decorator';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { jsonStringify } from '../../common/helpers/stringify';
+import { errorExtractor } from '../../common/helpers/inner-error.extractor';
+import { EntityName } from '../../common/types/entity.enum';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { DEFAULT_ROLE_ID } from '../../common/consts/consts';
+import { WorkspaceAffiliationGuard } from '../../common/guards/workspace-affiliation.guard';
+import { EUserTypeVariants } from '@prisma/client';
+import {
+  AddUserToWorkspaceRequestDto,
+  AddUserToWorkspaceResponseDto,
+} from './dto/controller/add-to-workspace.dto';
+import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 
 @ApiTags('Работа с пользователями')
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_USER_SERVICE)
     private readonly userService: IUserService,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
   @ApiOkResponse({
@@ -65,24 +79,41 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Получение пользователя по id' })
   @ApiResponse({ status: 200, type: UserGetResponseDto })
-  @UseGuards(AuthGuard)
-  @Get('/byId/:id')
+  @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
+  @ZodSerializerDto(UserGetResponseDto)
+  @Get('/byId/:userId')
   async getByIdEP(
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalExternalResponse<UserGetResponseDto | null>> {
-    const responseData = await this.userService.getById(id);
-    if (responseData.ok) {
-      return new ExternalResponse<UserGetResponseDto>(
-        new UserGetResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('userId', ParseUUIDPipe)
+    userId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserGetResponseDto> {
+    try {
+      const responseData = await this.userService.getById(userId);
+      console.log(responseData);
+
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -91,24 +122,38 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Получение пользователя по email' })
   @ApiResponse({ status: 200, type: UserGetResponseDto })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
+  @ZodSerializerDto(UserGetResponseDto)
   @Get('/byEmail/:email')
   async getByEmailEP(
-    @Param('email') email: EntityUrlParamCommand.RequestEmailParam,
-  ): Promise<UniversalExternalResponse<UserGetResponseDto | null>> {
-    const responseData = await this.userService.getByEmail(email);
-    if (responseData.ok) {
-      return new ExternalResponse<UserGetResponseDto>(
-        new UserGetResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('email') userEmail: EntityUrlParamCommand.RequestEmailParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserGetResponseDto> {
+    try {
+      const responseData = await this.userService.getByEmail(userEmail);
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -117,25 +162,38 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [UserGetAllResponseDto] })
-  @RolesSetting('ADMIN')
+  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
+  @ZodSerializerDto(UserGetAllResponseDto)
   @Get()
-  async getAllEP(): Promise<
-    UniversalExternalResponse<UserGetAllResponseDto[] | null>
-  > {
-    const responseData = await this.userService.getAll();
-    if (responseData.ok) {
-      return new ExternalResponse<UserGetAllResponseDto[]>(
-        toResponseClientArray(responseData.data, UserGetAllResponseDto),
-      );
-    } else {
-      const response = new ExternalResponse(
+  async getAllEP(
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserGetAllResponseDto> {
+    try {
+      const responseData = await this.userService.getAll();
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity[]>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -147,26 +205,41 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 201, type: UserCreateResponseDto })
+  @ZodSerializerDto(UserCreateResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
   @Post()
   async createEP(
     @Body() dto: UserCreateRequestDto,
-    roleId?: EntityUrlParamCommand.RequestNumberParam,
-  ): Promise<UniversalExternalResponse<UserCreateResponseDto>> {
-    const responseData = await this.userService.create(dto, roleId);
-    if (responseData.ok) {
-      const run = new ExternalResponse<UserCreateResponseDto>(
-        new UserCreateResponseDto(responseData.data),
-      );
-      console.log(run);
-      return run;
-    } else {
-      const response = new ExternalResponse(
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserCreateResponseDto> {
+    // через эту ручку можно зарегистрировать только user с дефолтной ролью
+    try {
+      const responseData = await this.userService.create(dto, DEFAULT_ROLE_ID);
+      console.log(responseData);
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -178,25 +251,40 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Изменение пользователя по его id' })
   @ApiResponse({ status: 200, type: UserUpdateResponseDto })
-  @Put('/:id')
+  @ZodSerializerDto(UserUpdateResponseDto)
+  @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
+  @Put('/:userId')
   async updateByIdEP(
     @Body() dto: UserUpdateRequestDto,
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalExternalResponse<UserUpdateResponseDto>> {
-    const responseData = await this.userService.updateById(id, dto);
+    @Param('userId', ParseUUIDPipe)
+    userId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserUpdateResponseDto> {
+    try {
+      const responseData = await this.userService.updateById(userId, dto);
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
 
-    if (responseData.ok) {
-      return new ExternalResponse<UserUpdateResponseDto>(
-        new UserUpdateResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -205,49 +293,130 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Удаление пользователя по его id' })
   @ApiResponse({ status: 200, type: UserDeleteResponseDto })
-  @Delete('/:id')
+  @ZodSerializerDto(UserDeleteResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
+  @Delete('/:userId')
   async deleteByIdEP(
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalExternalResponse<UserDeleteResponseDto>> {
-    const responseData = await this.userService.deleteById(id);
-    if (responseData.ok) {
-      return new ExternalResponse<UserDeleteResponseDto>(
-        new UserDeleteResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('userId', ParseUUIDPipe)
+    userId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserDeleteResponseDto> {
+    try {
+      const responseData = await this.userService.deleteById(userId);
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
   @ApiOkResponse({
     schema: zodToOpenAPI(UserGetCommand.ResponseSchema),
   })
-  @ApiOperation({ summary: 'Получение текущего пользователя (id, email)' })
+  @ApiOperation({
+    summary: 'Получение текущего пользователя со всей полнотой информации',
+  })
   @ApiResponse({ status: 200, type: UserGetResponseDto })
   @UseGuards(AuthGuard)
+  @ZodSerializerDto(UserGetResponseDto)
   @Get('/me')
   async getCurrentUserEP(
     @User() userInfoFromJWT: IJWTPayload,
-  ): Promise<UniversalExternalResponse<UserGetResponseDto | null>> {
-    const responseData = await this.userService.getById(userInfoFromJWT.uuid);
-    if (responseData.ok) {
-      return new ExternalResponse<UserGetResponseDto>(
-        new UserGetResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserGetResponseDto> {
+    try {
+      const responseData = await this.userService.getById(userInfoFromJWT.uuid);
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
+    }
+  }
+
+  @ApiOkResponse({
+    schema: zodToOpenAPI(AddUserToWorkspaceCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary:
+      'Добавление обычного (WORKER, CUSTOMER) пользователя в Workspace менеджера по workspaceId',
+  })
+  @ApiResponse({ status: 200, type: AddUserToWorkspaceResponseDto })
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @Put('/add-to-workspace/:workspaceId')
+  // добавить в workspace обычного пользователя
+  async addUserToManagerWorkspaceEP(
+    @Param('workspaceId', ParseUUIDPipe)
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @Body() dto: AddUserToWorkspaceRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<AddUserToWorkspaceResponseDto> {
+    try {
+      const responseData = await this.userService.addUserToManagerWorkspace(
+        workspaceId,
+        dto,
+      );
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.WORKSPACE,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
+        null,
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
+      );
     }
   }
 }

@@ -1,6 +1,5 @@
 import { OrganizationCreateRequestDto } from '../dto/controller/create-organization.dto';
 import { OrganizationUpdateRequestDto } from '../dto/controller/update-organization.dto';
-import { EUserTypeVariants } from '@prisma/client';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
@@ -13,10 +12,10 @@ export interface IOrganizationRepository
     OrganizationEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<OrganizationEntity>;
   getByManagerId: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    managerId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<OrganizationEntity>;
   getAllCount: () => Promise<CountData>;
   getAll: () => Promise<OrganizationEntity[]>;
@@ -26,10 +25,10 @@ export interface IOrganizationRepository
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<OrganizationEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
     dto: OrganizationUpdateRequestDto,
   ) => Promise<OrganizationEntity>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<OrganizationEntity>;
 }

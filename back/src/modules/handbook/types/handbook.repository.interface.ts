@@ -13,22 +13,22 @@ export interface IHandbookRepository
     HandbookEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<HandbookEntity>;
   getByManagerId: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    managerId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<HandbookEntity>;
   getAllCount: () => Promise<CountData>;
   getAll: () => Promise<HandbookEntity[]>;
   create: (
     dto: HandbookCreateRequestDto,
-    user: EntityUrlParamCommand.RequestUuidParam,
+    managerId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<HandbookEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     dto: HandbookUpdateRequestDto,
   ) => Promise<HandbookEntity>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<HandbookEntity>;
 }

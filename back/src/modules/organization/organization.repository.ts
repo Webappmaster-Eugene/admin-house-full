@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { OrganizationCreateRequestDto } from './dto/controller/create-organization.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IOrganizationRepository } from './types/organization.repository.interface';
@@ -8,55 +8,139 @@ import { CountData } from '../../common/types/main/count.data';
 import { OrganizationEntity } from './entities/organization.entity';
 import { toEntityArray } from '../../common/utils/mappers';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import {
+  BackendErrorNames,
+  InternalError,
+} from '../../common/errors/errors.backend';
+import { jsonStringify } from '../../common/helpers/stringify';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class OrganizationRepository implements IOrganizationRepository {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
-    private readonly prismaService: IPrismaService,
+    private readonly databaseService: IPrismaService,
   ) {}
 
   async getById(
     id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationEntity> {
-    const concreteOrganization =
-      await this.prismaService.organization.findUnique({
-        where: {
-          uuid: id,
-        },
-      });
+    try {
+      const concreteOrganization =
+        await this.databaseService.organization.findUnique({
+          where: {
+            uuid: id,
+          },
+        });
 
-    return new OrganizationEntity(concreteOrganization);
+      if (concreteOrganization) {
+        return new OrganizationEntity(concreteOrganization);
+      } else {
+        throw new NotFoundException({
+          message: `Organization with id=${id} not found`,
+          description:
+            'Organization from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getByManagerId(
     id: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationEntity> {
-    const concreteOrganization =
-      await this.prismaService.organization.findUnique({
-        where: {
-          organizationLeaderUuid: id,
-        },
-      });
+    try {
+      const concreteOrganization =
+        await this.databaseService.organization.findUnique({
+          where: {
+            uuid: id,
+          },
+        });
 
-    return new OrganizationEntity(concreteOrganization);
+      if (concreteOrganization) {
+        return new OrganizationEntity(concreteOrganization);
+      } else {
+        throw new NotFoundException({
+          message: `Organization with managerId=${id} not found`,
+          description:
+            'Organization from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAll(): Promise<OrganizationEntity[]> {
-    const allOrganizations = await this.prismaService.organization.findMany();
-    return toEntityArray<OrganizationEntity>(
-      allOrganizations,
-      OrganizationEntity,
-    );
+    try {
+      const allOrganizations =
+        await this.databaseService.organization.findMany();
+      return toEntityArray<OrganizationEntity>(
+        allOrganizations,
+        OrganizationEntity,
+      );
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAllCount(): Promise<CountData> {
-    const total = await this.prismaService.organization.count({
-      select: {
-        _all: true, // Count all records
-      },
-    });
-    return { total: total._all };
+    try {
+      const total = await this.databaseService.organization.count({
+        select: {
+          _all: true, // Count all records
+        },
+      });
+      return { total: total._all };
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async create(
@@ -64,43 +148,115 @@ export class OrganizationRepository implements IOrganizationRepository {
     userId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationEntity> {
-    const { description, name } = dto;
+    try {
+      const { description, name } = dto;
 
-    const newOrganization = await this.prismaService.organization.create({
-      data: {
-        organizationLeaderUuid: userId,
-        workspaceUuid: workspaceId,
-        name,
-        description,
-      },
-    });
-    return new OrganizationEntity(newOrganization);
+      const newOrganization = await this.databaseService.organization.create({
+        data: {
+          organizationLeaderUuid: userId,
+          workspaceUuid: workspaceId,
+          name,
+          description,
+        },
+      });
+      return new OrganizationEntity(newOrganization);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(
+            BackendErrorNames.CONFLICT_ERROR,
+            jsonStringify(error),
+          ),
+        );
+      }
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async updateById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
     { description, name }: OrganizationUpdateRequestDto,
   ): Promise<OrganizationEntity> {
-    const updatedOrganization = await this.prismaService.organization.update({
-      where: {
-        uuid: id,
-      },
-      data: {
-        name,
-        description,
-      },
-    });
-    return new OrganizationEntity(updatedOrganization);
+    try {
+      const updatedOrganization =
+        await this.databaseService.organization.update({
+          where: {
+            uuid: organizationId,
+          },
+          data: {
+            name,
+            description,
+          },
+        });
+
+      return new OrganizationEntity(updatedOrganization);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async deleteById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationEntity> {
-    const deletedOrganization = await this.prismaService.organization.delete({
-      where: {
-        uuid: id,
-      },
-    });
-    return new OrganizationEntity(deletedOrganization);
+    try {
+      const deletedOrganization =
+        await this.databaseService.organization.delete({
+          where: {
+            uuid: organizationId,
+          },
+        });
+
+      return new OrganizationEntity(deletedOrganization);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 }

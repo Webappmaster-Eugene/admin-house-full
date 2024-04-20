@@ -7,10 +7,4 @@ export type WorkspaceDeleteRequestParamDto =
 
 export class WorkspaceDeleteResponseDto extends createZodDto(
   WorkspaceDeleteCommand.ResponseSchema,
-) {
-  constructor(workspace: Partial<WorkspaceDeleteResponseDto>) {
-    super();
-    Object.assign(this, workspace);
-    return this;
-  }
-}
+) {}

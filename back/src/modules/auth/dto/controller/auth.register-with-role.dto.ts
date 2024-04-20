@@ -11,10 +11,4 @@ export class AuthRegisterWithRoleRequestParamDto extends createZodDto(
 
 export class AuthRegisterWithRoleResponseDto extends createZodDto(
   AuthRegisterWithRoleCommand.ResponseSchema,
-) {
-  constructor(role: Partial<AuthRegisterWithRoleResponseDto>) {
-    super();
-    Object.assign(this, role);
-    return this;
-  }
-}
+) {}

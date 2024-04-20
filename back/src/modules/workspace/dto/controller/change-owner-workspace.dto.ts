@@ -11,10 +11,4 @@ export class WorkspaceChangeOwnerRequestDto extends createZodDto(
 
 export class WorkspaceChangeOwnerResponseDto extends createZodDto(
   WorkspaceChangeOwnerCommand.ResponseSchema,
-) {
-  constructor(workspace: Partial<WorkspaceChangeOwnerResponseDto>) {
-    super();
-    Object.assign(this, workspace);
-    return this;
-  }
-}
+) {}

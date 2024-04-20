@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ProjectCreateRequestDto } from './dto/controller/create-project.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IProjectRepository } from './types/project.repository.interface';
@@ -12,38 +12,95 @@ import {
   DEFAULT_PROJECT_DESCRIPTION,
   DEFAULT_PROJECT_NAME,
 } from './lib/consts/project.default-data';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import {
+  BackendErrorNames,
+  InternalError,
+} from '../../common/errors/errors.backend';
+import { jsonStringify } from '../../common/helpers/stringify';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ProjectsRepository implements IProjectRepository {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
-    private readonly prismaService: IPrismaService,
+    private readonly databaseService: IPrismaService,
   ) {}
 
   async getById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ProjectEntity> {
-    const concreteProject = await this.prismaService.organization.findUnique({
-      where: {
-        uuid: id,
-      },
-    });
+    try {
+      const concreteProject =
+        await this.databaseService.organization.findUnique({
+          where: {
+            uuid: projectId,
+          },
+        });
 
-    return new ProjectEntity(concreteProject);
+      if (concreteProject) {
+        return new ProjectEntity(concreteProject);
+      } else {
+        throw new NotFoundException({
+          message: `Project with id=${projectId} not found`,
+          description:
+            'Project from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAll(): Promise<ProjectEntity[]> {
-    const allProjects = await this.prismaService.project.findMany();
-    return toEntityArray<ProjectEntity>(allProjects, ProjectEntity);
+    try {
+      const allProjects = await this.databaseService.project.findMany();
+      return toEntityArray<ProjectEntity>(allProjects, ProjectEntity);
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAllCount(): Promise<CountData> {
-    const total = await this.prismaService.project.count({
-      select: {
-        _all: true, // Count all records
-      },
-    });
-    return { total: total._all };
+    try {
+      const total = await this.databaseService.project.count({
+        select: {
+          _all: true, // Count all records
+        },
+      });
+      return { total: total._all };
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async create(
@@ -51,49 +108,119 @@ export class ProjectsRepository implements IProjectRepository {
     managerId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ProjectEntity> {
-    const { name, description, customerMail } = dto;
+    try {
+      const { name, description, customerMail } = dto;
 
-    const newProject = await this.prismaService.project.create({
-      data: {
-        name: name || DEFAULT_PROJECT_NAME,
-        description: description || DEFAULT_PROJECT_DESCRIPTION,
-        customerMail,
-        organizationUuid: organizationId,
-        responsibleManagerUuid: managerId,
-        customerUuid: managerId,
-      },
-    });
-    return new ProjectEntity(newProject);
+      const newProject = await this.databaseService.project.create({
+        data: {
+          name: name || DEFAULT_PROJECT_NAME,
+          description: description || DEFAULT_PROJECT_DESCRIPTION,
+          customerMail,
+          organizationUuid: organizationId,
+          responsibleManagerUuid: managerId,
+          customerUuid: managerId,
+        },
+      });
+      return new ProjectEntity(newProject);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(
+            BackendErrorNames.CONFLICT_ERROR,
+            jsonStringify(error),
+          ),
+        );
+      }
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async updateById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
     dto: ProjectUpdateRequestDto,
   ): Promise<ProjectEntity> {
-    const { name, description, customerMail, customerUuid } = dto;
+    try {
+      const { name, description, customerMail, customerUuid } = dto;
 
-    const updatedProject = await this.prismaService.project.update({
-      where: {
-        uuid: id,
-      },
-      data: {
-        name,
-        description,
-        customerMail,
-        customerUuid,
-      },
-    });
-    return new ProjectEntity(updatedProject);
+      const updatedProject = await this.databaseService.project.update({
+        where: {
+          uuid: projectId,
+        },
+        data: {
+          name,
+          description,
+          customerMail,
+          customerUuid,
+        },
+      });
+
+      return new ProjectEntity(updatedProject);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async deleteById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ProjectEntity> {
-    const deletedProject = await this.prismaService.project.delete({
-      where: {
-        uuid: id,
-      },
-    });
-    return new ProjectEntity(deletedProject);
+    try {
+      const deletedProject = await this.databaseService.project.delete({
+        where: {
+          uuid: projectId,
+        },
+      });
+
+      return new ProjectEntity(deletedProject);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 }

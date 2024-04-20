@@ -9,10 +9,10 @@ import {
 } from '../dto/controller/update-handbook.dto';
 import { HandbookGetResponseDto } from '../dto/controller/get-handbook.dto';
 import { HandbookGetAllResponseDto } from '../dto/controller/get-all-handbooks.dto';
-import { UniversalExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { HandbookDeleteResponseDto } from '../dto/controller/delete-handbook.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
+import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 
 export interface IHandbookController
   extends IControllerCommon<
@@ -25,20 +25,22 @@ export interface IHandbookController
     HandbookDeleteResponseDto
   > {
   getByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalExternalResponse<HandbookGetResponseDto | null>>;
-  getAllEP: () => Promise<
-    UniversalExternalResponse<HandbookGetAllResponseDto[] | null>
-  >;
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    urlParams: IUrlParams,
+  ) => Promise<HandbookGetResponseDto>;
+  getAllEP: (urlParams: IUrlParams) => Promise<HandbookGetAllResponseDto>;
   createEP: (
     dto: HandbookCreateRequestDto,
-    user: IJWTPayload,
-  ) => Promise<UniversalExternalResponse<HandbookCreateResponseDto>>;
+    urlParams: IUrlParams,
+    userInfoFromJWT: IJWTPayload,
+  ) => Promise<HandbookCreateResponseDto>;
   updateByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     dto: HandbookUpdateRequestDto,
-  ) => Promise<UniversalExternalResponse<HandbookUpdateResponseDto>>;
+    urlParams: IUrlParams,
+  ) => Promise<HandbookUpdateResponseDto>;
   deleteByIdEP: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalExternalResponse<HandbookDeleteResponseDto>>;
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    urlParams: IUrlParams,
+  ) => Promise<HandbookDeleteResponseDto>;
 }

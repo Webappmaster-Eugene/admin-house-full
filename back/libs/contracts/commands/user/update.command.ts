@@ -1,21 +1,28 @@
-import { z } from 'zod';
+import { unknown, z } from 'zod';
 import { UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const UserUpdateRequestSchema = UserSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  creatorOfWorkspaceUuid: true,
-  memberOfOrganizationUuid: true,
+const UserUpdateRequestSchema = UserSchema.pick({
+  firstName: true,
+  secondName: true,
+  avatar: true,
+  phone: true,
+  info: true,
+  documents: true,
+  address: true,
   memberOfWorkspaceUuid: true,
-  workspaceData: true,
-  uuid: true,
-  roleUuid: true,
-  email: true,
-  password: true,
 }).partial();
 
-const UserUpdateResponseSchema = UserSchema.pick({ uuid: true });
+const UserUpdateResponseSchema = z
+  .object({
+    data: UserSchema.omit({
+      password: true,
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace UserUpdateCommand {
   export const RequestParamSchema =

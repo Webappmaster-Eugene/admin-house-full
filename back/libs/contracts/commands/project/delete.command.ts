@@ -1,8 +1,16 @@
 import { z } from 'zod';
 import { ProjectSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const ProjectDeleteResponseSchema = ProjectSchema.pick({ uuid: true });
+const ProjectDeleteResponseSchema = z
+  .object({
+    data: ProjectSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace ProjectDeleteCommand {
   export const RequestParamSchema =

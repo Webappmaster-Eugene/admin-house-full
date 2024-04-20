@@ -13,21 +13,22 @@ export interface IOrganizationService
     OrganizationEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<OrganizationEntity | null>>;
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
   getByManagerId: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<OrganizationEntity | null>>;
-  getAll: () => Promise<UniversalInternalResponse<OrganizationEntity[] | null>>;
+    managerId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
+  getAll: () => Promise<UniversalInternalResponse<OrganizationEntity[]>>;
   create: (
     dto: OrganizationCreateRequestDto,
     userInfo: IJWTPayload,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
     dto: OrganizationUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
 }

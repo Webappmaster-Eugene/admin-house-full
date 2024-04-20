@@ -1,10 +1,9 @@
-import { ClassSerializerInterceptor, Logger, Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { HandbookService } from './handbook.service';
 import { HandbookController } from './handbook.controller';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { HandbookRepository } from './handbook.repository';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../common/prisma/prisma.service';
 
 @Module({
   providers: [
@@ -24,13 +23,9 @@ import { PrismaService } from '../../prisma/prisma.service';
       provide: KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE,
       useClass: HandbookService,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor,
-    },
   ],
   controllers: [HandbookController],
   imports: [],
-  exports: [],
+  exports: [KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE],
 })
 export class HandbookModule {}

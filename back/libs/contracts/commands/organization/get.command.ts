@@ -1,16 +1,17 @@
 import { z } from 'zod';
 import { OrganizationSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const OrganizationSchemaGetRequestSchema = OrganizationSchema.pick({
-  uuid: true,
-});
-
-const OrganizationSchemaGetResponseSchema = OrganizationSchema;
+const OrganizationSchemaGetResponseSchema = z
+  .object({
+    data: OrganizationSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace OrganizationGetCommand {
-  export const RequestSchema = OrganizationSchemaGetRequestSchema;
-  export type Request = z.infer<typeof RequestSchema>;
-
   export const ResponseSchema = OrganizationSchemaGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 }

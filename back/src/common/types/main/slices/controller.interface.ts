@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { UniversalExternalResponse } from '../../responses/universal-external-response.interface';
 import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../jwt.payload.interface';
+import { IUrlParams } from '../../../decorators/url-params.decorator';
 
 export interface IControllerCommon<
   CReqDto,
@@ -11,7 +12,6 @@ export interface IControllerCommon<
   CResDto,
   UResDto,
   DResDto,
-  CReqParamDto = EntityUrlParamCommand.RequestUuidParam,
   FReqDto = void,
   FResDto = void,
   GReqIdParam = EntityUrlParamCommand.RequestUuidParam,
@@ -19,25 +19,38 @@ export interface IControllerCommon<
 > {
   getByIdEP: (
     id: GReqIdParam | GReqNumberParam,
-  ) => Promise<UniversalExternalResponse<GResDto | null>>;
-  getAllEP: () => Promise<UniversalExternalResponse<GAResDto[] | null>>;
+    urlParams: IUrlParams,
+    ...otherParams: unknown[]
+  ) => Promise<GResDto>;
+  getAllEP: (
+    urlParams?: IUrlParams,
+    ...otherParams: unknown[]
+  ) => Promise<GAResDto>;
   createEP: (
     dto: CReqDto,
-    idToIdentify?: GReqNumberParam | GReqIdParam | IJWTPayload,
-    paramDto?: GReqIdParam | CReqParamDto,
-  ) => Promise<UniversalExternalResponse<CResDto>>;
+    urlParams: IUrlParams,
+    ...otherParams: unknown[]
+  ) => Promise<CResDto>;
   updateByIdEP: (
     id: GReqIdParam,
     dto: UReqDto,
-  ) => Promise<UniversalExternalResponse<UResDto>>;
+    urlParams?: IUrlParams,
+    ...otherParams: unknown[]
+  ) => Promise<UResDto>;
   deleteByIdEP: (
     id: GReqIdParam,
-  ) => Promise<UniversalExternalResponse<DResDto>>;
+    urlParams?: IUrlParams,
+    ...otherParams: unknown[]
+  ) => Promise<DResDto>;
   deleteByIdsEP?: (
     ids: GReqIdParam[],
+    urlParams: IUrlParams,
+    ...otherParams: unknown[]
   ) => Promise<UniversalExternalResponse<Prisma.BatchPayload>>;
   findByCriteriaEP?: (
     dto: FReqDto,
     sort: Record<string, string>[],
+    urlParams: IUrlParams,
+    ...otherParams: unknown[]
   ) => Promise<UniversalExternalResponse<FResDto[]>>;
 }

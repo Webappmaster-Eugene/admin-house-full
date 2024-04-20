@@ -7,10 +7,4 @@ export type WorkspaceGetRequestParamDto =
 
 export class WorkspaceGetResponseDto extends createZodDto(
   WorkspaceGetCommand.ResponseSchema,
-) {
-  constructor(workspace: Partial<WorkspaceGetResponseDto>) {
-    super();
-    Object.assign(this, workspace);
-    return this;
-  }
-}
+) {}

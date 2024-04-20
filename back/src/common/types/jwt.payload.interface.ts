@@ -1,6 +1,6 @@
 export interface IJWTPayload {
-  email: string;
   uuid: string;
+  email: string;
   iat: number;
   exp: number;
 }

@@ -6,10 +6,4 @@ export type UserDeleteRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
 export class UserDeleteResponseDto extends createZodDto(
   UserDeleteCommand.ResponseSchema,
-) {
-  constructor(user: Partial<UserDeleteResponseDto>) {
-    super();
-    Object.assign(this, user);
-    return this;
-  }
-}
+) {}

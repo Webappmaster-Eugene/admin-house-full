@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const UserSchema = z.object({
   uuid: z.string().uuid(),
   firstName: z.string(),
-  secondName: z.string().optional(),
-  avatar: z.string().optional(),
+  secondName: z.string().nullable().optional(),
+  avatar: z.string().nullable().optional(),
   phone: z
     .string()
     .regex(
@@ -22,24 +22,14 @@ At least one lowercase English letter;
 At least one digit;
 At least one special character`,
   ),
-  address: z.string().optional(),
-  info: z.string().optional(),
-  documents: z.string().optional(),
-  roleUuid: z.string().uuid().optional(),
-  creatorOfWorkspaceUuid: z.string().uuid().nullable().optional(),
-  memberOfWorkspaceUuid: z.string().uuid().nullable().optional(),
-  memberOfOrganizationUuid: z.string().uuid().nullable().optional(),
-  workspaceData: z.object({ uuid: z.string().uuid().optional() }).optional(),
-  //      uuid: z.string().uuid(),
-  //     name: z.string(),
-  //     description: z.string().nullable(),
-  //      workspaceCreatorUuid: z.string(),
-  //       handbookOfWorkspaceUuid: z.string().nullable(),
-  //       createdAt: z.coerce.date(),
-  //       updatedAt: z.coerce.date(),
-  //     }),
-  //  ),
-  //(),
+  address: z.string().nullable().optional(),
+  info: z.string().nullable().optional(),
+  documents: z.string().nullable().optional(),
+  roleUuid: z.string(),
+  creatorOfWorkspaceUuid: z.string().nullable().optional(),
+  handbookManagerUuid: z.string().nullable().optional(),
+  memberOfWorkspaceUuid: z.string().nullable().optional(),
+  memberOfOrganizationUuid: z.string().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

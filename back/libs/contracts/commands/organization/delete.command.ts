@@ -1,10 +1,16 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { OrganizationSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const OrganizationDeleteResponseSchema = OrganizationSchema.pick({
-  uuid: true,
-});
+const OrganizationDeleteResponseSchema = z
+  .object({
+    data: OrganizationSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace OrganizationDeleteCommand {
   export const RequestParamSchema =

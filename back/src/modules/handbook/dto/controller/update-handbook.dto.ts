@@ -11,10 +11,4 @@ export class HandbookUpdateRequestDto extends createZodDto(
 
 export class HandbookUpdateResponseDto extends createZodDto(
   HandbookUpdateCommand.ResponseSchema,
-) {
-  constructor(handbook: Partial<HandbookUpdateResponseDto>) {
-    super();
-    Object.assign(this, handbook);
-    return this;
-  }
-}
+) {}

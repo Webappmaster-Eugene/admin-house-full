@@ -7,10 +7,4 @@ export class AuthGenerateKeyRequestDto extends createZodDto(
 
 export class AuthGenerateKeyResponseDto extends createZodDto(
   AuthGenerateKeyCommand.ResponseSchema,
-) {
-  constructor(auth: Partial<AuthGenerateKeyResponseDto>) {
-    super();
-    Object.assign(this, auth);
-    return this;
-  }
-}
+) {}

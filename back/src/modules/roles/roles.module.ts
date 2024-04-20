@@ -1,11 +1,9 @@
-import { Logger, ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesRepository } from './roles.repository';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
-import { ZodSerializerInterceptor } from 'nestjs-zod';
 
 @Module({
   providers: [

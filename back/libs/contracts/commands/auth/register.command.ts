@@ -1,5 +1,6 @@
-import { z } from 'zod';
-import { UserSchema } from '../../models';
+import { unknown, z } from 'zod';
+import { AuthSchema, UserSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const AuthRegisterRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,
@@ -9,12 +10,14 @@ const AuthRegisterRequestSchema = UserSchema.omit({
   uuid: true,
   createdAt: true,
   updatedAt: true,
+  roleUuid: true,
 });
 
-const AuthRegisterResponseSchema = UserSchema.pick({
-  email: true,
-  uuid: true,
-}).merge(z.object({ accessToken: z.string() }));
+const AuthRegisterResponseSchema = z
+  .object({
+    data: AuthSchema,
+  })
+  .merge(ResponseClientSchema);
 
 export namespace AuthRegisterCommand {
   export const RequestSchema = AuthRegisterRequestSchema;

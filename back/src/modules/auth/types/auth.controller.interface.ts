@@ -17,24 +17,29 @@ import {
   AuthLoginRequestDto,
   AuthLoginResponseDto,
 } from '../dto/controller/auth.login.dto';
+import { IUrlParams } from '../../../common/decorators/url-params.decorator';
+import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 
 export interface IAuthController {
   registerEP: (
     dto: AuthRegisterRequestDto,
-  ) => Promise<UniversalExternalResponse<AuthRegisterResponseDto | null>>;
+    urlParams: IUrlParams,
+  ) => Promise<AuthRegisterResponseDto>;
   registerWithRoleEP: (
     dto: AuthRegisterWithRoleRequestDto,
-    paramDto: AuthRegisterWithRoleRequestParamDto,
-  ) => Promise<
-    UniversalExternalResponse<AuthRegisterWithRoleResponseDto | null>
-  >;
+    roleId: EntityUrlParamCommand.RequestNumberParam,
+    registerWithRoleKey: string,
+    urlParams: IUrlParams,
+  ) => Promise<AuthRegisterWithRoleResponseDto>;
   loginEP: (
     dto: AuthLoginRequestDto,
-  ) => Promise<UniversalExternalResponse<AuthLoginResponseDto | null>>;
+    urlParams: IUrlParams,
+  ) => Promise<AuthLoginResponseDto>;
   generateStrictAdminKeyEP: (
     dto: AuthGenerateKeyRequestDto,
-  ) => Promise<UniversalExternalResponse<AuthGenerateKeyResponseDto | null>>;
-  getStrictAdminKeyEP: () => Promise<
-    UniversalExternalResponse<AuthGetKeyResponseDto | null>
-  >;
+    urlParams: IUrlParams,
+  ) => Promise<AuthGenerateKeyResponseDto>;
+  getStrictAdminKeyEP: (
+    urlParams: IUrlParams,
+  ) => Promise<AuthGetKeyResponseDto>;
 }

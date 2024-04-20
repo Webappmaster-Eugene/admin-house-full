@@ -4,9 +4,7 @@ import { WorkspaceUpdateRequestDto } from '../dto/controller/update-workspace.dt
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { WorkspaceEntity } from '../entities/workspace.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { WorkspaceChangeOwnerRequestDto } from '../dto/controller/change-owner-workspace.dto';
-import { WorkspaceAddUserToManagerRequestDto } from '../dto/controller/add-to-manager-workspace.dto';
 
 export interface IWorkspaceService
   extends IServiceCommon<
@@ -15,29 +13,25 @@ export interface IWorkspaceService
     WorkspaceEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<WorkspaceEntity | null>>;
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   getByManagerId: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<WorkspaceEntity | null>>;
-  getAll: () => Promise<UniversalInternalResponse<WorkspaceEntity[] | null>>;
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
+  getAll: () => Promise<UniversalInternalResponse<WorkspaceEntity[]>>;
   create: (
     dto: WorkspaceCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   changeWorkspaceOwner: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceChangeOwnerRequestDto,
-  ) => Promise<UniversalInternalResponse<WorkspaceEntity | null>>;
-  addUserToManagerWorkspace: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-    dto: WorkspaceAddUserToManagerRequestDto,
-  ) => Promise<UniversalInternalResponse<WorkspaceEntity | null>>;
+  ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
 }

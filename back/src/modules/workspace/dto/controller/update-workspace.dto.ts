@@ -11,10 +11,4 @@ export class WorkspaceUpdateRequestDto extends createZodDto(
 
 export class WorkspaceUpdateResponseDto extends createZodDto(
   WorkspaceUpdateCommand.ResponseSchema,
-) {
-  constructor(workspace: Partial<WorkspaceUpdateResponseDto>) {
-    super();
-    Object.assign(this, workspace);
-    return this;
-  }
-}
+) {}

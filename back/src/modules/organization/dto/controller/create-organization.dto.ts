@@ -7,10 +7,4 @@ export class OrganizationCreateRequestDto extends createZodDto(
 
 export class OrganizationCreateResponseDto extends createZodDto(
   OrganizationCreateCommand.ResponseSchema,
-) {
-  constructor(organization: Partial<OrganizationCreateResponseDto>) {
-    super();
-    Object.assign(this, organization);
-    return this;
-  }
-}
+) {}

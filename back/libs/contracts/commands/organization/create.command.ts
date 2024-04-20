@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { OrganizationSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const OrganizationCreateRequestSchema = OrganizationSchema.omit({
   uuid: true,
@@ -9,7 +10,14 @@ const OrganizationCreateRequestSchema = OrganizationSchema.omit({
   workspaceUuid: true,
 });
 
-const OrganizationCreateResponseSchema = OrganizationSchema;
+const OrganizationCreateResponseSchema = z
+  .object({
+    data: OrganizationSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace OrganizationCreateCommand {
   export const RequestSchema = OrganizationCreateRequestSchema;

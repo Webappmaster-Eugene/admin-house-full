@@ -1,5 +1,6 @@
-import { z } from 'zod';
-import { UserSchema } from '../../models';
+import { unknown, z } from 'zod';
+import { RoleSchema, UserSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const UserCreateRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,
@@ -9,11 +10,18 @@ const UserCreateRequestSchema = UserSchema.omit({
   uuid: true,
   createdAt: true,
   updatedAt: true,
+  roleUuid: true,
 });
 
-const UserCreateResponseSchema = UserSchema.pick({
-  password: true,
-});
+const UserCreateResponseSchema = z
+  .object({
+    data: UserSchema.omit({
+      password: true,
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace UserCreateCommand {
   export const RequestSchema = UserCreateRequestSchema;

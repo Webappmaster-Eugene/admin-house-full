@@ -7,10 +7,4 @@ export type OrganizationGetRequestParamDto =
 
 export class OrganizationGetResponseDto extends createZodDto(
   OrganizationGetCommand.ResponseSchema,
-) {
-  constructor(organization: Partial<OrganizationGetResponseDto>) {
-    super();
-    Object.assign(this, organization);
-    return this;
-  }
-}
+) {}

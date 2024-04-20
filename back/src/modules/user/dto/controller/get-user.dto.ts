@@ -9,10 +9,4 @@ export type UserGetEmailRequestParamDto =
 
 export class UserGetResponseDto extends createZodDto(
   UserGetCommand.ResponseSchema,
-) {
-  constructor(user: Partial<UserGetResponseDto>) {
-    super();
-    Object.assign(this, user);
-    return this;
-  }
-}
+) {}

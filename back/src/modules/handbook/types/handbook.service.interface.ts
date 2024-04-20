@@ -13,21 +13,21 @@ export interface IHandbookService
     HandbookEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<HandbookEntity | null>>;
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<HandbookEntity>>;
   getByManagerId: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<HandbookEntity | null>>;
-  getAll: () => Promise<UniversalInternalResponse<HandbookEntity[] | null>>;
+    managerId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<HandbookEntity>>;
+  getAll: () => Promise<UniversalInternalResponse<HandbookEntity[]>>;
   create: (
     dto: HandbookCreateRequestDto,
-    user: IJWTPayload,
+    managerId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<HandbookEntity>>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     dto: HandbookUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<HandbookEntity>>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<HandbookEntity>>;
 }

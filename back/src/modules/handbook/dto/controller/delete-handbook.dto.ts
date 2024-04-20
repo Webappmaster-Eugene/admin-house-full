@@ -7,10 +7,4 @@ export type HandbookDeleteRequestParamDto =
 
 export class HandbookDeleteResponseDto extends createZodDto(
   HandbookDeleteCommand.ResponseSchema,
-) {
-  constructor(handbook: Partial<HandbookDeleteResponseDto>) {
-    super();
-    Object.assign(this, handbook);
-    return this;
-  }
-}
+) {}

@@ -1,11 +1,19 @@
 import { z } from 'zod';
 import { ProjectSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const ProjectSchemaGetRequestSchema = ProjectSchema.pick({
   uuid: true,
 });
 
-const ProjectSchemaGetResponseSchema = ProjectSchema;
+const ProjectSchemaGetResponseSchema = z
+  .object({
+    data: ProjectSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace ProjectGetCommand {
   export const RequestSchema = ProjectSchemaGetRequestSchema;

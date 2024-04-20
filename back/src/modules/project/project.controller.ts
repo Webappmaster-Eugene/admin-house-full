@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
@@ -19,19 +20,13 @@ import {
 } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { WorkspaceManagerGuard } from '../../common/guards/workspace.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ProjectEntity } from './entities/project.entity';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { IProjectService } from './types/project.service.interface';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { zodToOpenAPI } from 'nestjs-zod';
-import { OrganizationDeleteResponseDto } from '../organization/dto/controller/delete-organization.dto';
-import {
-  ExternalResponse,
-  UniversalExternalResponse,
-} from '../../common/types/responses/universal-external-response.interface';
-import { toResponseClientArray } from '../../common/utils/mappers';
+import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ProjectGetAllResponseDto } from './dto/controller/get-all-projects.dto';
 import { ProjectGetResponseDto } from './dto/controller/get-project.dto';
@@ -43,110 +38,209 @@ import {
   ProjectUpdateRequestDto,
   ProjectUpdateResponseDto,
 } from './dto/controller/update-project.dto';
-import { ProjectDeleteCommand } from '../../../libs/contracts';
+import {
+  ProjectCreateCommand,
+  ProjectDeleteCommand,
+  ProjectGetAllCommand,
+  ProjectGetCommand,
+  ProjectUpdateCommand,
+} from '../../../libs/contracts';
 import { ProjectDeleteResponseDto } from './dto/controller/delete-project.dto';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { jsonStringify } from '../../common/helpers/stringify';
+import { errorExtractor } from '../../common/helpers/inner-error.extractor';
+import { EntityName } from '../../common/types/entity.enum';
+import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
+import { ILogger } from '../../common/types/main/logger.interface';
+import {
+  IUrlParams,
+  UrlParams,
+} from '../../common/decorators/url-params.decorator';
+import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
+import { EUserTypeVariants } from '@prisma/client';
+import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 
 @ApiTags('Работа с Projects')
-@Controller('projects')
+@Controller('workspace/:workspaceId/organization/:organizationId/project')
 export class ProjectController {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_PROJECT_SERVICE)
     private readonly projectService: IProjectService,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ProjectGetCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Получение Project по id' })
   @ApiResponse({ status: 200, type: ProjectEntity })
-  @Get('/:id')
-  async getByIdEP(@Param('id') id: EntityUrlParamCommand.RequestUuidParam) {
-    const responseData = await this.projectService.getById(id);
-    if (responseData.ok) {
-      return new ExternalResponse<ProjectGetResponseDto>(
-        new ProjectGetResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+  @ZodSerializerDto(ProjectGetResponseDto)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @Get('/:projectId')
+  async getByIdEP(
+    @Param('projectId') projectId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<ProjectGetResponseDto> {
+    try {
+      const responseData = await this.projectService.getById(projectId);
+      if (responseData.ok) {
+        return new ExternalResponse<ProjectEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.PROJECT,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Получить все Projects' })
   @ApiResponse({ status: 200, type: [ProjectEntity] })
-  @RolesSetting('MANAGER', 'ADMIN')
+  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
+  @ZodSerializerDto(ProjectGetAllResponseDto)
   @Get()
-  async getAllEP() {
-    const responseData = await this.projectService.getAll();
-    if (responseData.ok) {
-      return new ExternalResponse<ProjectGetAllResponseDto[]>(
-        toResponseClientArray(responseData.data, ProjectGetAllResponseDto),
-      );
-    } else {
-      const response = new ExternalResponse(
+  async getAllEP(
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<ProjectGetAllResponseDto> {
+    try {
+      const responseData = await this.projectService.getAll();
+      if (responseData.ok) {
+        return new ExternalResponse<ProjectEntity[]>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.PROJECT,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
+  @ApiBody({
+    schema: zodToOpenAPI(ProjectCreateCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ProjectCreateCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Создание Project' })
   @ApiResponse({ status: 201, type: ProjectEntity })
-  @RolesSetting('MANAGER')
-  @UseGuards(AuthGuard, WorkspaceManagerGuard)
-  @Post('/:organizationId')
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @ZodSerializerDto(ProjectCreateResponseDto)
+  @Post()
   async create(
     @Body() dto: ProjectCreateRequestDto,
-    @User() userInfo: IJWTPayload,
+    @UrlParams() urlParams: IUrlParams,
+    @User() userInfoFromJWT: IJWTPayload,
     @Param('organizationId')
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ) {
-    const responseData = await this.projectService.create(
-      dto,
-      userInfo,
-      organizationId,
-    );
-    if (responseData.ok) {
-      return new ExternalResponse<ProjectCreateResponseDto>(
-        new ProjectCreateResponseDto(responseData.data),
+  ): Promise<ProjectCreateResponseDto> {
+    try {
+      const responseData = await this.projectService.create(
+        dto,
+        userInfoFromJWT,
+        organizationId,
       );
-    } else {
-      const response = new ExternalResponse(
+      if (responseData.ok) {
+        return new ExternalResponse<ProjectEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.PROJECT,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
+  @ApiBody({
+    schema: zodToOpenAPI(ProjectUpdateCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ProjectUpdateCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Изменение Project по id Project' })
   @ApiResponse({ status: 200, type: ProjectEntity })
-  @Put('/:id')
+  @ZodSerializerDto(ProjectUpdateResponseDto)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @Put('/:projectId')
   async updateIdEP(
     @Body() dto: ProjectUpdateRequestDto,
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ) {
-    const responseData = await this.projectService.updateById(id, dto);
-    if (responseData.ok) {
-      return new ExternalResponse<ProjectUpdateResponseDto>(
-        new ProjectUpdateResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('projectId', ParseUUIDPipe)
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<ProjectUpdateResponseDto> {
+    try {
+      const responseData = await this.projectService.updateById(projectId, dto);
+      if (responseData.ok) {
+        return new ExternalResponse<ProjectEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.PROJECT,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 
@@ -157,23 +251,39 @@ export class ProjectController {
     summary: 'Удаление Project по id Project',
   })
   @ApiResponse({ status: 200, type: ProjectDeleteResponseDto })
-  @Delete('/:id')
+  @ZodSerializerDto(ProjectDeleteResponseDto)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @Delete('/:projectId')
   async deleteByIdEP(
-    @Param('id', ParseUUIDPipe) id: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalExternalResponse<OrganizationDeleteResponseDto>> {
-    const responseData = await this.projectService.deleteById(id);
-    if (responseData.ok) {
-      return new ExternalResponse<ProjectDeleteResponseDto>(
-        new ProjectDeleteResponseDto(responseData.data),
-      );
-    } else {
-      const response = new ExternalResponse(
+    @Param('projectId', ParseUUIDPipe)
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<ProjectDeleteResponseDto> {
+    try {
+      const responseData = await this.projectService.deleteById(projectId);
+      if (responseData.ok) {
+        return new ExternalResponse<ProjectEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.PROJECT,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
         null,
-        responseData.error.httpCode,
-        'Internal error',
-        [responseData.error],
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
       );
-      throw new HttpException(response, responseData.error.httpCode);
     }
   }
 }

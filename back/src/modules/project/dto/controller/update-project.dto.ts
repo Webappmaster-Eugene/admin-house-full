@@ -11,10 +11,4 @@ export class ProjectUpdateRequestDto extends createZodDto(
 
 export class ProjectUpdateResponseDto extends createZodDto(
   ProjectUpdateCommand.ResponseSchema,
-) {
-  constructor(project: Partial<ProjectUpdateResponseDto>) {
-    super();
-    Object.assign(this, project);
-    return this;
-  }
-}
+) {}

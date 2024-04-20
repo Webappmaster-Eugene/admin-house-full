@@ -1,25 +1,22 @@
 import { Logger, Module } from '@nestjs/common';
-import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
-import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RolesModule } from './modules/roles/roles.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { UserInterceptor } from './common/interceptors/user.interceptor';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
-import { AuthGuard } from './common/guards/auth.guard';
 import { validateConfig } from './common/utils/validate-config';
-import { ProjectModule } from './modules/project/project.module';
 import { UserModule } from './modules/user/user.module';
 import { HandbookModule } from './modules/handbook/handbook.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ProjectModule } from './modules/project/project.module';
+import { AppInfoModule } from './modules/app-info/app-info.module';
+import { DatabaseModule } from './modules/common/database';
+import { WorkspaceModule } from './modules/workspace/workspace.module';
 
 @Module({
   imports: [
-    AuthModule,
-    UserModule,
-    PrismaModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
@@ -28,10 +25,16 @@ import { AuthModule } from './modules/auth/auth.module';
     // ServeStaticModule.forRoot({
     //   rootPath: path.resolve(__dirname, './static'),
     // }),
+    DatabaseModule,
+    AuthModule,
+    //GlobalCategoryModule,
+    AppInfoModule,
     RolesModule,
+    UserModule,
+    WorkspaceModule,
     HandbookModule,
-    ProjectModule,
     OrganizationModule,
+    ProjectModule,
   ],
   controllers: [],
   providers: [

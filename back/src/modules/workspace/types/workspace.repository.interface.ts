@@ -4,9 +4,7 @@ import { IRepositoryCommon } from '../../../common/types/main/slices/repository.
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
 import { WorkspaceEntity } from '../entities/workspace.entity';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { WorkspaceChangeOwnerRequestDto } from '../dto/controller/change-owner-workspace.dto';
-import { WorkspaceAddUserToManagerRequestDto } from '../dto/controller/add-to-manager-workspace.dto';
 
 export interface IWorkspaceRepository
   extends IRepositoryCommon<
@@ -15,10 +13,10 @@ export interface IWorkspaceRepository
     WorkspaceEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<WorkspaceEntity>;
   getByManagerId: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    managerId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<WorkspaceEntity>;
   getAllCount: () => Promise<CountData>;
   getAll: () => Promise<WorkspaceEntity[]>;
@@ -27,18 +25,14 @@ export interface IWorkspaceRepository
     userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<WorkspaceEntity>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceUpdateRequestDto,
   ) => Promise<WorkspaceEntity>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<WorkspaceEntity>;
   changeWorkspaceOwner: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceChangeOwnerRequestDto,
-  ) => Promise<WorkspaceEntity>;
-  addUserToManagerWorkspace: (
-    id: EntityUrlParamCommand.RequestUuidParam,
-    dto: WorkspaceAddUserToManagerRequestDto,
   ) => Promise<WorkspaceEntity>;
 }

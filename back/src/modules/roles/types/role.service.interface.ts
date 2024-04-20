@@ -10,28 +10,27 @@ export interface IRoleService
   extends IServiceCommon<
     RoleCreateRequestDto,
     RoleUpdateRequestDto,
-    RoleEntity,
-    void,
-    void,
-    EntityUrlParamCommand.RequestUuidParam,
-    EntityUrlParamCommand.RequestNumberParam
+    RoleEntity
   > {
   getById: (
-    id: EntityUrlParamCommand.RequestNumberParam,
-  ) => Promise<UniversalInternalResponse<RoleEntity | null>>;
+    roleId: EntityUrlParamCommand.RequestNumberParam,
+  ) => Promise<UniversalInternalResponse<RoleEntity>>;
+  getByUuid: (
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<RoleEntity>>;
   getByValue: (
-    value: EUserTypeVariants,
-  ) => Promise<UniversalInternalResponse<RoleEntity | null>>;
-  getAll: () => Promise<UniversalInternalResponse<RoleEntity[] | null>>;
+    roleName: EUserTypeVariants,
+  ) => Promise<UniversalInternalResponse<RoleEntity>>;
+  getAll: () => Promise<UniversalInternalResponse<RoleEntity[]>>;
   create: (
     dto: RoleCreateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   updateById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
     dto: RoleUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   deleteById: (
-    id: EntityUrlParamCommand.RequestUuidParam,
+    roleUuid: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
   checkIsAdminSecretKey: (key: string) => boolean;
 }

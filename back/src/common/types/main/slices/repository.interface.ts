@@ -10,18 +10,31 @@ export interface IRepositoryCommon<
   GReqIdParam = EntityUrlParamCommand.RequestUuidParam,
   GReqNumberParam = EntityUrlParamCommand.RequestNumberParam,
 > {
-  getById: (id: GReqIdParam | GReqNumberParam) => Promise<RepositoryEntity>;
-  getAll: () => Promise<RepositoryEntity[]>;
+  getById: (
+    id: GReqIdParam | GReqNumberParam,
+    ...otherParams: unknown[]
+  ) => Promise<RepositoryEntity>;
+  getAll: (...otherParams: unknown[]) => Promise<RepositoryEntity[]>;
   create: (
     dto: CReqDto,
-    idToIdentify?: GReqNumberParam | GReqIdParam | IJWTPayload,
-    idToIdentifyEntity?: GReqIdParam,
+    ...otherParams: unknown[]
   ) => Promise<RepositoryEntity>;
-  updateById: (id: GReqIdParam, dto: UReqDto) => Promise<RepositoryEntity>;
-  deleteById: (id: GReqIdParam) => Promise<RepositoryEntity>;
-  deleteByIds?: (ids: GReqIdParam[]) => Promise<Prisma.BatchPayload>;
+  updateById: (
+    id: GReqIdParam,
+    dto: UReqDto,
+    ...otherParams: unknown[]
+  ) => Promise<RepositoryEntity>;
+  deleteById: (
+    id: GReqIdParam,
+    ...otherParams: unknown[]
+  ) => Promise<RepositoryEntity>;
+  deleteByIds?: (
+    ids: GReqIdParam[],
+    ...otherParams: unknown[]
+  ) => Promise<Prisma.BatchPayload>;
   findByCriteria?: (
     dto: FReqDto,
     sort: Record<string, string>[],
+    ...otherParams: unknown[]
   ) => Promise<RepositoryEntity>;
 }

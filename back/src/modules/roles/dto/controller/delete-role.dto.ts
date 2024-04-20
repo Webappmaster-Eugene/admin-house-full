@@ -6,10 +6,4 @@ export type RoleDeleteRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
 export class RoleDeleteResponseDto extends createZodDto(
   RoleDeleteCommand.ResponseSchema,
-) {
-  constructor(role: Partial<RoleDeleteResponseDto>) {
-    super();
-    Object.assign(this, role);
-    return this;
-  }
-}
+) {}

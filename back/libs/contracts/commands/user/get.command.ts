@@ -1,10 +1,17 @@
 import { z } from 'zod';
 import { UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { ResponseClientSchema } from '../../models/response-client';
 
-const UserGetResponseSchema = UserSchema.omit({
-  password: true,
-});
+const UserGetResponseSchema = z
+  .object({
+    data: UserSchema.omit({
+      password: true,
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace UserGetCommand {
   export const RequestParamSchema =

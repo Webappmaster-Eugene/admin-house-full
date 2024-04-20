@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { HandbookSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const HandbookCreateRequestSchema = HandbookSchema.omit({
   uuid: true,
@@ -10,7 +11,14 @@ const HandbookCreateRequestSchema = HandbookSchema.omit({
   workspaceUuid: true,
 });
 
-const HandbookCreateResponseSchema = HandbookSchema;
+const HandbookCreateResponseSchema = z
+  .object({
+    data: HandbookSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace HandbookCreateCommand {
   export const RequestSchema = HandbookCreateRequestSchema;

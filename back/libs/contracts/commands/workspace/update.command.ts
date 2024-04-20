@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const WorkspaceUpdateRequestSchema = WorkspaceSchema.omit({
   createdAt: true,
@@ -9,7 +10,14 @@ const WorkspaceUpdateRequestSchema = WorkspaceSchema.omit({
   uuid: true,
 }).partial();
 
-const WorkspaceUpdateResponseSchema = WorkspaceSchema.pick({ uuid: true });
+const WorkspaceUpdateResponseSchema = z
+  .object({
+    data: WorkspaceSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace WorkspaceUpdateCommand {
   export const RequestSchema = WorkspaceUpdateRequestSchema;

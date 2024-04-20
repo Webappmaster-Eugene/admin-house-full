@@ -4,7 +4,7 @@ export function toResponseClientArray<ResponseDto>(
   arrayFromService: Array<unknown>,
   classResponse: AbstractClassType,
 ): ResponseDto[] {
-  return arrayFromService.map((elem, index) => {
+  return arrayFromService.map((elem) => {
     return new classResponse(elem);
   });
 }

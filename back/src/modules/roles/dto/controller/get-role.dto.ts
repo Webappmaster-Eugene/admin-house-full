@@ -7,21 +7,5 @@ export type RoleGetUuidRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 export type RoleGetIdRequestParamDto = EntityUrlParamCommand.RequestNumberParam;
 
 export class RoleGetResponseDto extends createZodDto(
-  RoleGetCommand.ResponseFirstSchema,
-) {
-  constructor(role: Partial<RoleGetResponseDto>) {
-    super();
-    Object.assign(this, role);
-    return this;
-  }
-}
-
-export class RoleGetResponseReturnDto extends createZodDto(
   RoleGetCommand.ResponseSchema,
-) {
-  // constructor(role: Partial<RoleGetResponseDto>) {
-  //   super();
-  //   Object.assign(this, role);
-  //   return this;
-  // }
-}
+) {}

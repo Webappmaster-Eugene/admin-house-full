@@ -10,10 +10,4 @@ export class UserUpdateRequestDto extends createZodDto(
 
 export class UserUpdateResponseDto extends createZodDto(
   UserUpdateCommand.ResponseSchema,
-) {
-  constructor(user: Partial<UserUpdateResponseDto>) {
-    super();
-    Object.assign(this, user);
-    return this;
-  }
-}
+) {}

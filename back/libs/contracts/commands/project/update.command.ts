@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ProjectSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const ProjectUpdateRequestSchema = ProjectSchema.omit({
   createdAt: true,
@@ -9,7 +10,14 @@ const ProjectUpdateRequestSchema = ProjectSchema.omit({
   organizationUuid: true,
 }).partial();
 
-const ProjectUpdateResponseSchema = ProjectSchema.pick({ uuid: true });
+const ProjectUpdateResponseSchema = z
+  .object({
+    data: ProjectSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace ProjectUpdateCommand {
   export const RequestSchema = ProjectUpdateRequestSchema;

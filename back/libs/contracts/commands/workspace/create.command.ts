@@ -4,6 +4,7 @@ import { HandbookSchema } from '../../models';
 import { ProjectSchema } from '../../models';
 import { UserSchema } from '../../models';
 import { OrganizationSchema } from '../../models';
+import { ResponseClientSchema } from '../../models/response-client';
 
 const WorkspaceCreateRequestSchema = WorkspaceSchema.omit({
   uuid: true,
@@ -13,14 +14,14 @@ const WorkspaceCreateRequestSchema = WorkspaceSchema.omit({
   handbookOfWorkspaceUuid: true,
 });
 
-const WorkspaceCreateResponseSchema = WorkspaceSchema.merge(
-  z.object({
-    workspaceCreator: UserSchema,
-    workspaceOrganizations: z.array(OrganizationSchema).optional(),
-    workspaceProjects: z.array(ProjectSchema).optional(),
-    workspaceHandbook: HandbookSchema.optional(),
-  }),
-);
+const WorkspaceCreateResponseSchema = z
+  .object({
+    data: WorkspaceSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  })
+  .merge(ResponseClientSchema);
 
 export namespace WorkspaceCreateCommand {
   export const RequestSchema = WorkspaceCreateRequestSchema;
