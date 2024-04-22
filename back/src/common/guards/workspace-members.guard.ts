@@ -10,7 +10,9 @@ import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
 import { IPrismaService } from '../types/main/prisma.interface';
 import { KEYS_FOR_INJECTION } from '../utils/di';
-import { ADMIN_ROLE_ID, MANAGER_ROLE_ID } from '../consts/consts';
+import { ADMIN_ROLE_ID } from '../consts/consts';
+import { ILogger } from '../types/main/logger.interface';
+import { jsonStringify } from '../helpers/stringify';
 
 @Injectable()
 export class WorkspaceMembersGuard implements CanActivate {
@@ -18,6 +20,7 @@ export class WorkspaceMembersGuard implements CanActivate {
     private configService: ConfigService,
     @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
     private prismaService: IPrismaService,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -59,6 +62,8 @@ export class WorkspaceMembersGuard implements CanActivate {
         'workspaceId'
       ];
 
+      console.log(inputUuid);
+
       const selectedWorkspace = await this.prismaService.workspace.findUnique({
         where: {
           uuid: inputUuid,
@@ -69,11 +74,10 @@ export class WorkspaceMembersGuard implements CanActivate {
       // или пользователь, который входит в Workspace
       return (
         findedUser.memberOfWorkspaceUuid === selectedWorkspace.uuid ||
-        findedUser.creatorOfWorkspaceUuid ===
-          selectedWorkspace.workspaceCreatorUuid
+        findedUser.creatorOfWorkspaceUuid === selectedWorkspace.uuid
       );
     } catch (error) {
-      console.error(error);
+      this.logger.error(jsonStringify(error));
       return false;
     }
   }

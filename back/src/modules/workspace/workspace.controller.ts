@@ -65,6 +65,7 @@ import {
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
+import { IsManagerInBodyGuard } from '../../common/guards/is-manager.guard';
 
 @ApiTags('Работа с Workspace пользователей')
 @Controller('workspace')
@@ -257,6 +258,7 @@ export class WorkspaceController implements IWorkspaceController {
   @ApiResponse({ status: 200, type: WorkspaceDeleteResponseDto })
   @ZodSerializerDto(WorkspaceDeleteResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
   @Delete('/:workspaceId')
   async deleteByIdEP(
     @Param('workspaceId', ParseUUIDPipe)
@@ -303,9 +305,10 @@ export class WorkspaceController implements IWorkspaceController {
   @ApiResponse({ status: 200, type: WorkspaceChangeOwnerResponseDto })
   @ZodSerializerDto(WorkspaceGetResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, IsManagerInBodyGuard)
   @Put('/change-owner/:workspaceId')
   //изменить owner id на новый (переданный в body запроса)
+  // Этого мало, нужно еще у старого пользователя все поменять, а новому передать handbook и следить за истинностью данных. Для этого нужно будет перенести в Users данную ручку (чтобы избежать кольцевых зависимостей)
   async changeWorkspaceOwnerEP(
     @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

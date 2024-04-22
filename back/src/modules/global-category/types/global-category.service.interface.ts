@@ -1,7 +1,6 @@
 import { IServiceCommon } from '../../../common/types/main/slices/service.interface';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { GlobalCategoryCreateRequestDto } from '../dto/controller/create-global-category.dto';
 import { GlobalCategoryUpdateRequestDto } from '../dto/controller/update-global-category.dto';
 import { GlobalCategoryEntity } from '../entities/global-category.entity';

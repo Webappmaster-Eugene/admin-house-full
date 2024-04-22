@@ -3,16 +3,15 @@ import { ResponseClientSchema } from '../../models/response-client';
 import { AppInfoSchema } from '../../models';
 
 const AppInfoUpdateRequestSchema = AppInfoSchema.omit({
-  createdAt: true,
-  updatedAt: true,
   uuid: true,
-}).partial();
+})
+  .partial()
+  .strict();
 
 const AppInfoUpdateResponseSchema = z
   .object({
     data: AppInfoSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

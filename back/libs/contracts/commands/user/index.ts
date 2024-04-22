@@ -4,3 +4,5 @@ export * from './create.command';
 export * from './update.command';
 export * from './delete.command';
 export * from './add-to-workspace.command';
+export * from './add-to-organization.command';
+export * from './add-to-project.command';

@@ -11,6 +11,8 @@ import { jwtExtractor } from '../helpers/jwt.extractor';
 import { IPrismaService } from '../types/main/prisma.interface';
 import { KEYS_FOR_INJECTION } from '../utils/di';
 import { ADMIN_ROLE_ID, MANAGER_ROLE_ID } from '../consts/consts';
+import { ILogger } from '../types/main/logger.interface';
+import { jsonStringify } from '../helpers/stringify';
 
 @Injectable()
 export class WorkspaceAffiliationGuard implements CanActivate {
@@ -18,6 +20,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
     private configService: ConfigService,
     @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
     private prismaService: IPrismaService,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -71,7 +74,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
       }
       return false;
     } catch (error) {
-      console.error(error);
+      this.logger.error(jsonStringify(error));
       return false;
     }
   }

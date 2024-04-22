@@ -13,7 +13,6 @@ import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/commo
 import { OrganizationDeleteResponseDto } from '../dto/controller/delete-organization.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
-import { Param } from '@nestjs/common';
 
 export interface IOrganizationController
   extends IControllerCommon<

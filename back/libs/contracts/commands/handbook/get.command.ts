@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { HandbookSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const HandbookGetResponseSchema = z
   .object({

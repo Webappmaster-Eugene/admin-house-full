@@ -88,7 +88,7 @@ export class RolesController implements IRoleController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.PROJECT,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -111,7 +111,7 @@ export class RolesController implements IRoleController {
   })
   @ApiOperation({ summary: 'Получить информацию о роли по ее наименованию' })
   @ApiResponse({ status: 200, type: RoleGetResponseDto })
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleGetResponseDto)
   @Get('/name/:nameRole')
   async getByValueEP(
@@ -129,7 +129,7 @@ export class RolesController implements IRoleController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.PROJECT,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -152,7 +152,7 @@ export class RolesController implements IRoleController {
   })
   @ApiOperation({ summary: 'Получение всех ролей пользователей' })
   @ApiResponse({ status: 200, type: [RoleGetAllResponseDto] })
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleGetAllResponseDto)
   @Get()
   async getAllEP(
@@ -168,7 +168,7 @@ export class RolesController implements IRoleController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.PROJECT,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -194,8 +194,8 @@ export class RolesController implements IRoleController {
   })
   @ApiOperation({ summary: 'Создать новую роль для пользователя' })
   @ApiResponse({ status: 201, type: RoleCreateResponseDto })
-  // @RolesSetting(EUserTypeVariants.ADMIN)
-  // @UseGuards(AuthGuard)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleCreateResponseDto)
   @Post()
   async createEP(
@@ -212,7 +212,7 @@ export class RolesController implements IRoleController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.PROJECT,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -238,8 +238,8 @@ export class RolesController implements IRoleController {
   })
   @ApiOperation({ summary: 'Изменить роль по ее наименованию' })
   @ApiResponse({ status: 200, type: RoleUpdateResponseDto })
-  // @RolesSetting(EUserTypeVariants.ADMIN)
-  // @UseGuards(AuthGuard)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleGetResponseDto)
   @Put('/:roleUuid')
   async updateByIdEP(
@@ -258,7 +258,7 @@ export class RolesController implements IRoleController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.PROJECT,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -300,7 +300,7 @@ export class RolesController implements IRoleController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.PROJECT,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [

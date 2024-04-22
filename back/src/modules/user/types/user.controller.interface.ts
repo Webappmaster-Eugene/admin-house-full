@@ -15,6 +15,14 @@ import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { WorkspaceGetResponseDto } from '../../workspace/dto/controller/get-workspace.dto';
 import { AddUserToWorkspaceRequestDto } from '../dto/controller/add-to-workspace.dto';
+import {
+  AddUserToProjectRequestDto,
+  AddUserToProjectResponseDto,
+} from '../dto/controller/add-to-project.dto';
+import {
+  AddUserToOrganizationRequestDto,
+  AddUserToOrganizationResponseDto,
+} from '../dto/controller/add-to-organization.dto';
 
 export interface IUserController
   extends IControllerCommon<
@@ -57,5 +65,18 @@ export interface IUserController
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: AddUserToWorkspaceRequestDto,
     urlParams: IUrlParams,
-  ) => Promise<WorkspaceGetResponseDto>;
+  ) => Promise<AddUserToOrganizationResponseDto>;
+  addUserToManagerOrganizationEP: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToOrganizationRequestDto,
+    urlParams: IUrlParams,
+  ) => Promise<AddUserToOrganizationResponseDto>;
+  addUserToManagerProjectEP: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToProjectRequestDto,
+    urlParams: IUrlParams,
+  ) => Promise<AddUserToProjectResponseDto>;
 }

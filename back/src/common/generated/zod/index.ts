@@ -16,7 +16,7 @@ export const RegisterWithRoleKeyScalarFieldEnumSchema = z.enum(['uuid','key']);
 
 export const AppSettingsScalarFieldEnumSchema = z.enum(['uuid','name','description','comment','status','language','currency']);
 
-export const UserScalarFieldEnumSchema = z.enum(['uuid','firstName','secondName','avatar','phone','email','password','address','info','documents','roleUuid','creatorOfWorkspaceUuid','handbookManagerUuid','memberOfWorkspaceUuid','memberOfOrganizationUuid','createdAt','updatedAt']);
+export const UserScalarFieldEnumSchema = z.enum(['uuid','firstName','secondName','avatar','phone','email','password','address','info','documents','roleUuid','creatorOfWorkspaceUuid','handbookManagerUuid','memberOfWorkspaceUuid','memberOfOrganizationUuid','memberOfProjectUuid','createdAt','updatedAt']);
 
 export const RoleScalarFieldEnumSchema = z.enum(['uuid','idRole','name','description','createdAt','updatedAt']);
 
@@ -28,17 +28,19 @@ export const ProjectScalarFieldEnumSchema = z.enum(['uuid','name','description',
 
 export const HandbookScalarFieldEnumSchema = z.enum(['uuid','name','description','canCustomerView','workspaceUuid','responsibleManagerUuid','createdAt','updatedAt']);
 
-export const FieldTypeScalarFieldEnumSchema = z.enum(['uuid','name','description','jsType','createdAt','updatedAt']);
+export const FieldTypeScalarFieldEnumSchema = z.enum(['uuid','name','description','jsType','handbookUuid','createdAt','updatedAt']);
 
-export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','createdAt','updatedAt']);
+export const FieldVariantsForSelectorFieldTypeScalarFieldEnumSchema = z.enum(['uuid','name','description','fieldTypeUuid','handbookUuid','createdAt','updatedAt']);
 
-export const GlobalCategoryScalarFieldEnumSchema = z.enum(['uuid','name','comment','color','createdAt','updatedAt']);
+export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','handbookUuid','createdAt','updatedAt']);
 
-export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','templateName','globalCategoryUuid','createdAt','updatedAt']);
+export const GlobalCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','nameRu','comment','color','createdAt','updatedAt']);
+
+export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','templateName','globalCategoryMaterialUuid','createdAt','updatedAt']);
 
 export const ResponsiblePartnerProducerScalarFieldEnumSchema = z.enum(['uuid','name','comment','info','email','phone','createdAt','updatedAt']);
 
-export const FieldOfCategoryScalarFieldEnumSchema = z.enum(['uuid','name','comment','isRequired','defaultValue','categoryUuid','createdByUuid','unitOfMeasurementUuid','fieldTypeUuid','createdAt','updatedAt']);
+export const FieldOfMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','isRequired','defaultValue','categoryUuid','createdByUuid','unitOfMeasurementUuid','fieldTypeUuid','createdAt','updatedAt']);
 
 export const MaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','namePublic','handbookUuid','price','unitMeasurementUuid','categoryUuid','responsiblePartnerUuid','createdAt','updatedAt']);
 
@@ -69,6 +71,10 @@ export type EUserTypeVariantsType = `${z.infer<typeof EUserTypeVariantsSchema>}`
 export const EFieldTypeVariantsSchema = z.enum(['number','string','array']);
 
 export type EFieldTypeVariantsType = `${z.infer<typeof EFieldTypeVariantsSchema>}`
+
+export const EGlobalCategoryVariantsSchema = z.enum(['PEOPLE','MATERIALS','OVERHEAD','MECHANISMS']);
+
+export type EGlobalCategoryVariantsType = `${z.infer<typeof EGlobalCategoryVariantsSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -121,6 +127,7 @@ export const UserSchema = z.object({
   handbookManagerUuid: z.string().nullable(),
   memberOfWorkspaceUuid: z.string().nullable(),
   memberOfOrganizationUuid: z.string().nullable(),
+  memberOfProjectUuid: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -218,11 +225,28 @@ export const FieldTypeSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
   description: z.string(),
+  handbookUuid: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
 
 export type FieldType = z.infer<typeof FieldTypeSchema>
+
+/////////////////////////////////////////
+// FIELD VARIANTS FOR SELECTOR FIELD TYPE SCHEMA
+/////////////////////////////////////////
+
+export const FieldVariantsForSelectorFieldTypeSchema = z.object({
+  uuid: z.string().uuid(),
+  name: z.string(),
+  description: z.string(),
+  fieldTypeUuid: z.string(),
+  handbookUuid: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type FieldVariantsForSelectorFieldType = z.infer<typeof FieldVariantsForSelectorFieldTypeSchema>
 
 /////////////////////////////////////////
 // FIELD UNIT MEASUREMENT SCHEMA
@@ -232,6 +256,7 @@ export const FieldUnitMeasurementSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
   comment: z.string().nullable(),
+  handbookUuid: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -239,19 +264,20 @@ export const FieldUnitMeasurementSchema = z.object({
 export type FieldUnitMeasurement = z.infer<typeof FieldUnitMeasurementSchema>
 
 /////////////////////////////////////////
-// GLOBAL CATEGORY SCHEMA
+// GLOBAL CATEGORY MATERIAL SCHEMA
 /////////////////////////////////////////
 
-export const GlobalCategorySchema = z.object({
+export const GlobalCategoryMaterialSchema = z.object({
+  name: EGlobalCategoryVariantsSchema,
   uuid: z.string().uuid(),
-  name: z.string(),
+  nameRu: z.string(),
   comment: z.string().nullable(),
   color: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
 
-export type GlobalCategory = z.infer<typeof GlobalCategorySchema>
+export type GlobalCategoryMaterial = z.infer<typeof GlobalCategoryMaterialSchema>
 
 /////////////////////////////////////////
 // CATEGORY MATERIAL SCHEMA
@@ -262,7 +288,7 @@ export const CategoryMaterialSchema = z.object({
   name: z.string(),
   comment: z.string().nullable(),
   templateName: z.string().nullable(),
-  globalCategoryUuid: z.string(),
+  globalCategoryMaterialUuid: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -287,10 +313,10 @@ export const ResponsiblePartnerProducerSchema = z.object({
 export type ResponsiblePartnerProducer = z.infer<typeof ResponsiblePartnerProducerSchema>
 
 /////////////////////////////////////////
-// FIELD OF CATEGORY SCHEMA
+// FIELD OF MATERIAL SCHEMA
 /////////////////////////////////////////
 
-export const FieldOfCategorySchema = z.object({
+export const FieldOfMaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
   comment: z.string().nullable(),
@@ -304,7 +330,7 @@ export const FieldOfCategorySchema = z.object({
   updatedAt: z.coerce.date(),
 })
 
-export type FieldOfCategory = z.infer<typeof FieldOfCategorySchema>
+export type FieldOfMaterial = z.infer<typeof FieldOfMaterialSchema>
 
 /////////////////////////////////////////
 // MATERIAL SCHEMA

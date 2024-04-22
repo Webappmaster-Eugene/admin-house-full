@@ -5,7 +5,6 @@ import { ResponseClientSchema } from '../../models/response-client';
 const WorkspaceUpdateRequestSchema = WorkspaceSchema.omit({
   createdAt: true,
   updatedAt: true,
-  handbookOfWorkspaceUuid: true,
   workspaceCreatorUuid: true,
   uuid: true,
 }).partial();

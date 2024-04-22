@@ -11,7 +11,6 @@ import { GlobalCategoryGetResponseDto } from '../dto/controller/get-global-categ
 import { GlobalCategoryGetAllResponseDto } from '../dto/controller/get-all-global-categorys.dto';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { GlobalCategoryDeleteResponseDto } from '../dto/controller/delete-global-category.dto';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 
 export interface IGlobalCategoryController

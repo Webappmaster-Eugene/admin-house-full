@@ -16,6 +16,11 @@ import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { IHandbookService } from '../handbook/types/handbook.service.interface';
 import * as argon2 from 'argon2';
 import { AddUserToWorkspaceRequestDto } from './dto/controller/add-to-workspace.dto';
+import { IOrganizationService } from '../organization/types/organization.service.interface';
+import {
+  BackendErrorNames,
+  InternalError,
+} from '../../common/errors/errors.backend';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -26,6 +31,8 @@ export class UserService implements IUserService {
     private readonly roleService: IRoleService,
     @Inject(KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE)
     private readonly workspaceService: IWorkspaceService,
+    @Inject(KEYS_FOR_INJECTION.I_ORGANIZATION_SERVICE)
+    private readonly organizationService: IOrganizationService,
     @Inject(KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE)
     private readonly handbookService: IHandbookService,
   ) {}
@@ -74,11 +81,21 @@ export class UserService implements IUserService {
       const newWorkspaceInfo = newManagerWorkspace.data;
 
       const newManagerHandbook = await this.handbookService.create(
-        { name: null, description: null },
+        {
+          name: null,
+          description: null,
+          canCustomerView: false,
+          workspaceUuid: newWorkspaceInfo.uuid,
+        },
         createdUser.uuid,
       );
 
       const newHandbookInfo = newManagerHandbook.data;
+
+      const updatedWorkspace = await this.workspaceService.updateById(
+        newWorkspaceInfo.uuid,
+        { handbookOfWorkspaceUuid: newHandbookInfo.uuid },
+      );
 
       newUserWithWorkspaceAndHandbook = await this.addExistedWorkspaceToManager(
         createdUser.uuid,
@@ -141,12 +158,71 @@ export class UserService implements IUserService {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: AddUserToWorkspaceRequestDto,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const dtoToUpdateUser = { memberOfWorkspaceUuid: workspaceId };
-    const updatedUser = await this.userRepository.updateById(
-      dto.uuid,
-      dtoToUpdateUser,
-    );
+    const findedUser = await this.userRepository.getById(dto.uuid);
 
-    return new InternalResponse<UserEntity>(updatedUser);
+    if (!findedUser.memberOfWorkspaceUuid) {
+      const dtoToUpdateUser = { memberOfWorkspaceUuid: workspaceId };
+      const updatedUser = await this.userRepository.updateById(
+        dto.uuid,
+        dtoToUpdateUser,
+      );
+      return new InternalResponse<UserEntity>(updatedUser);
+    } else {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(BackendErrorNames.WORKSPACE_MISMATCH),
+      );
+    }
+  }
+
+  async addUserToManagerOrganization(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToWorkspaceRequestDto,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const findedUser = await this.userRepository.getById(dto.uuid);
+
+    if (findedUser.memberOfWorkspaceUuid === workspaceId) {
+      const dtoToUpdateUser = { memberOfOrganizationUuid: organizationId };
+      const updatedUser = await this.userRepository.updateById(
+        dto.uuid,
+        dtoToUpdateUser,
+      );
+      return new InternalResponse<UserEntity>(updatedUser);
+    } else {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(BackendErrorNames.WORKSPACE_MISMATCH),
+      );
+    }
+  }
+
+  async addUserToManagerProject(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToWorkspaceRequestDto,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const findedUser = await this.userRepository.getById(dto.uuid);
+
+    if (
+      findedUser.memberOfWorkspaceUuid === workspaceId &&
+      findedUser.memberOfOrganizationUuid === organizationId
+    ) {
+      const dtoToUpdateUser = { memberOfProjectUuid: projectId };
+      const updatedUser = await this.userRepository.updateById(
+        dto.uuid,
+        dtoToUpdateUser,
+      );
+      return new InternalResponse<UserEntity>(updatedUser);
+    } else {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(BackendErrorNames.WORKSPACE_MISMATCH),
+      );
+    }
   }
 }

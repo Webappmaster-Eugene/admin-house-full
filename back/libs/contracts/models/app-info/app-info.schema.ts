@@ -7,12 +7,10 @@ import {
 
 export const AppInfoSchema = z.object({
   uuid: z.string().uuid(),
-  status: EStatusAppSchema,
-  language: ELanguagesTypeVariantsSchema,
-  currency: ECurrencyTypeVariantsSchema,
   name: z.string(),
   description: z.string(),
   comment: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  status: EStatusAppSchema,
+  language: ELanguagesTypeVariantsSchema,
+  currency: ECurrencyTypeVariantsSchema,
 });

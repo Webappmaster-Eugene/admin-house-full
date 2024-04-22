@@ -159,6 +159,7 @@ export class OrganizationRepository implements IOrganizationRepository {
           description,
         },
       });
+
       return new OrganizationEntity(newOrganization);
     } catch (error: unknown) {
       if (

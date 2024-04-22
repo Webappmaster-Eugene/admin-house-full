@@ -21,7 +21,7 @@ export interface IOrganizationService
   getAll: () => Promise<UniversalInternalResponse<OrganizationEntity[]>>;
   create: (
     dto: OrganizationCreateRequestDto,
-    userInfo: IJWTPayload,
+    userId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
   updateById: (

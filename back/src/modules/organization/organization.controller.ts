@@ -167,13 +167,14 @@ export class OrganizationController {
     @Body() dto: OrganizationCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
     @User() userInfoFromJWT: IJWTPayload,
-    @Param('workspaceId') workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('workspaceId')
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationCreateResponseDto> {
     // в param create передается автоматически id Workspace, в котором создается Organization
     try {
       const responseData = await this.organizationService.create(
         dto,
-        userInfoFromJWT,
+        userInfoFromJWT.uuid,
         workspaceId,
       );
       if (responseData.ok) {
@@ -216,7 +217,7 @@ export class OrganizationController {
   async updateByIdEP(
     @Body() dto: OrganizationUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @Param('organizationId', ParseIntPipe)
+    @Param('organizationId', ParseUUIDPipe)
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationUpdateResponseDto> {
     try {
@@ -257,7 +258,6 @@ export class OrganizationController {
     summary: 'Удаление Organization по id Organization',
   })
   @ApiResponse({ status: 200, type: OrganizationDeleteResponseDto })
-  @RolesSetting('MANAGER')
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:organizationId')
   async deleteByIdEP(

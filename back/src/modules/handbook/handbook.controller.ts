@@ -214,7 +214,7 @@ export class HandbookController implements IHandbookController {
   @ZodSerializerDto(HandbookUpdateResponseDto)
   @Put('/:handbookId')
   async updateByIdEP(
-    @Param('/:handbookId', ParseUUIDPipe)
+    @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: HandbookUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,

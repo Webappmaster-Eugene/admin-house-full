@@ -1,4 +1,4 @@
-import { unknown, z } from 'zod';
+import { z } from 'zod';
 import { UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models/response-client';
@@ -12,6 +12,8 @@ const UserUpdateRequestSchema = UserSchema.pick({
   documents: true,
   address: true,
   memberOfWorkspaceUuid: true,
+  memberOfOrganizationUuid: true,
+  memberOfProjectUuid: true,
 }).partial();
 
 const UserUpdateResponseSchema = z

@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
@@ -74,9 +79,13 @@ export class UserRepository implements IUserRepository {
       if (findedUser) {
         return new UserEntity(findedUser);
       } else {
-        throw new NotFoundException({
-          message: `User with email=${userEmail} not found`,
-          description: 'User from your request did not found in the database',
+        //   throw new NotFoundException({
+        //     message: `User with email=${userEmail} not found`,
+        //     description: 'User from your request did not found in the database',
+        //   });
+        throw new UnauthorizedException({
+          message: `User credentials are wrong`,
+          description: 'Failed to get user with these credentials',
         });
       }
     } catch (error: unknown) {
@@ -85,6 +94,14 @@ export class UserRepository implements IUserRepository {
           null,
           false,
           new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      if (error instanceof UnauthorizedException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.INVALID_CREDENTIALS),
         );
       }
 

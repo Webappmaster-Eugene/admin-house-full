@@ -184,7 +184,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
 
   async updateById(
     workspaceId: string,
-    { name, description }: WorkspaceUpdateRequestDto,
+    { name, description, handbookOfWorkspaceUuid }: WorkspaceUpdateRequestDto,
   ): Promise<WorkspaceEntity> {
     try {
       const updatedWorkspace = await this.databaseService.workspace.update({
@@ -194,6 +194,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         data: {
           name,
           description,
+          handbookOfWorkspaceUuid,
         },
       });
 

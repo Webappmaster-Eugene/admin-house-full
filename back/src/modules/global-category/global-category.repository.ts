@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GlobalCategoryCreateRequestDto } from './dto/controller/create-global-category.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IGlobalCategoryRepository } from './types/global-category.repository.interface';
@@ -8,6 +8,13 @@ import { CountData } from '../../common/types/main/count.data';
 import { GlobalCategoryEntity } from './entities/global-category.entity';
 import { toEntityArray } from '../../common/utils/mappers';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import {
+  BackendErrorNames,
+  InternalError,
+} from '../../common/errors/errors.backend';
+import { jsonStringify } from '../../common/helpers/stringify';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class GlobalCategoryRepository implements IGlobalCategoryRepository {
@@ -19,77 +26,197 @@ export class GlobalCategoryRepository implements IGlobalCategoryRepository {
   async getById(
     globalCategoryId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<GlobalCategoryEntity> {
-    const findedGlobalCategory =
-      await this.databaseService.globalCategory.findUnique({
-        where: {
-          uuid: globalCategoryId,
-        },
-      });
+    try {
+      const findedGlobalCategory =
+        await this.databaseService.globalCategory.findUnique({
+          where: {
+            uuid: globalCategoryId,
+          },
+        });
 
-    return new GlobalCategoryEntity(findedGlobalCategory);
+      if (findedGlobalCategory) {
+        return new GlobalCategoryEntity(findedGlobalCategory);
+      } else {
+        throw new NotFoundException({
+          message: `GlobalCategory not found`,
+          description:
+            'GlobalCategory from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAll(): Promise<GlobalCategoryEntity[]> {
-    const allGlobalCategories =
-      await this.databaseService.globalCategory.findMany();
-    return toEntityArray<GlobalCategoryEntity>(
-      allGlobalCategories,
-      GlobalCategoryEntity,
-    );
+    try {
+      const allGlobalCategories =
+        await this.databaseService.globalCategory.findMany();
+      return toEntityArray<GlobalCategoryEntity>(
+        allGlobalCategories,
+        GlobalCategoryEntity,
+      );
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async getAllCount(): Promise<CountData> {
-    const total = await this.databaseService.globalCategory.count({
-      select: {
-        _all: true, // Count all records
-      },
-    });
-    return { total: total._all };
+    try {
+      const total = await this.databaseService.globalCategory.count({
+        select: {
+          _all: true, // Count all records
+        },
+      });
+      return { total: total._all };
+    } catch (error: unknown) {
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async create(
     dto: GlobalCategoryCreateRequestDto,
   ): Promise<GlobalCategoryEntity> {
-    const { name, comment, color } = dto;
-    const newGlobalCategory = await this.databaseService.globalCategory.create({
-      data: {
-        name,
-        comment,
-        color,
-      },
-    });
-    return new GlobalCategoryEntity(newGlobalCategory);
+    try {
+      const { name, comment, color, nameRu } = dto;
+      const newGlobalCategory =
+        await this.databaseService.globalCategory.create({
+          data: {
+            name,
+            comment,
+            color,
+            nameRu,
+          },
+        });
+      return new GlobalCategoryEntity(newGlobalCategory);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(
+            BackendErrorNames.CONFLICT_ERROR,
+            jsonStringify(error),
+          ),
+        );
+      }
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async updateById(
     globalCategoryId: EntityUrlParamCommand.RequestUuidParam,
     dto: GlobalCategoryUpdateRequestDto,
   ): Promise<GlobalCategoryEntity> {
-    const { name, comment, color } = dto;
+    try {
+      const { name, comment, color, nameRu } = dto;
 
-    const updatedGlobalCategory =
-      await this.databaseService.globalCategory.update({
-        where: {
-          uuid: globalCategoryId,
-        },
-        data: {
-          name,
-          comment,
-          color,
-        },
-      });
-    return new GlobalCategoryEntity(updatedGlobalCategory);
+      const updatedGlobalCategory =
+        await this.databaseService.globalCategory.update({
+          where: {
+            uuid: globalCategoryId,
+          },
+          data: {
+            name,
+            comment,
+            color,
+            nameRu,
+          },
+        });
+      return new GlobalCategoryEntity(updatedGlobalCategory);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 
   async deleteById(
     globalCategoryId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<GlobalCategoryEntity> {
-    const deletedGlobalCategory =
-      await this.databaseService.globalCategory.delete({
-        where: {
-          uuid: globalCategoryId,
-        },
-      });
-    return new GlobalCategoryEntity(deletedGlobalCategory);
+    try {
+      const deletedGlobalCategory =
+        await this.databaseService.globalCategory.delete({
+          where: {
+            uuid: globalCategoryId,
+          },
+        });
+      return new GlobalCategoryEntity(deletedGlobalCategory);
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new InternalResponse(
+          null,
+          false,
+          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
+        );
+      }
+
+      throw new InternalResponse(
+        null,
+        false,
+        new InternalError(
+          BackendErrorNames.INTERNAL_ERROR,
+          jsonStringify(error),
+        ),
+      );
+    }
   }
 }

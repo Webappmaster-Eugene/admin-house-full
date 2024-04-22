@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { HandbookSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const HandbookDeleteResponseSchema = z
   .object({

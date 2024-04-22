@@ -31,12 +31,11 @@ export class ProjectsRepository implements IProjectRepository {
     projectId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ProjectEntity> {
     try {
-      const concreteProject =
-        await this.databaseService.organization.findUnique({
-          where: {
-            uuid: projectId,
-          },
-        });
+      const concreteProject = await this.databaseService.project.findUnique({
+        where: {
+          uuid: projectId,
+        },
+      });
 
       if (concreteProject) {
         return new ProjectEntity(concreteProject);

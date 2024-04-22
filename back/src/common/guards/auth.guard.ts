@@ -11,6 +11,8 @@ import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
 import { IPrismaService } from '../types/main/prisma.interface';
 import { KEYS_FOR_INJECTION } from '../utils/di';
+import { ILogger } from '../types/main/logger.interface';
+import { jsonStringify } from '../helpers/stringify';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -19,6 +21,7 @@ export class AuthGuard implements CanActivate {
     private configService: ConfigService,
     @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
     private prismaService: IPrismaService,
+    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -58,7 +61,7 @@ export class AuthGuard implements CanActivate {
 
       return !!roles.includes(user.role.name);
     } catch (error) {
-      console.error(error);
+      this.logger.error(jsonStringify(error));
       return false;
     }
   }

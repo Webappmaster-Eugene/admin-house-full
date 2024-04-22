@@ -15,6 +15,7 @@ export class UserEntity implements User {
   creatorOfWorkspaceUuid: string;
   memberOfWorkspaceUuid: string;
   memberOfOrganizationUuid: string;
+  memberOfProjectUuid: string;
   handbookManagerUuid: string;
   createdAt: Date;
   updatedAt: Date;

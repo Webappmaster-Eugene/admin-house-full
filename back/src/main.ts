@@ -1,10 +1,14 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
 import { instance } from '../logger/winston.logger';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { ConfigService } from '@nestjs/config';
+import { HttpExceptionFilter } from './common/exceptions/old/http-exception.filter';
+import { ZodValidationExceptionFilter } from './common/exceptions/old/zod-validation-exception-filter';
+import { AllExceptionsFilter } from './common/exceptions/old/all-exceptions-filter';
+import { CustomExceptionFilter } from './common/exceptions/custom-exception-filter';
 
 async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
@@ -44,7 +48,11 @@ async function bootstrap() {
   // );
   app.useGlobalPipes(new ZodValidationPipe());
 
-  // app.useGlobalFilters(new NotFoundExceptionFilter());
+  // const { httpAdapter } = app.get(HttpAdapterHost);
+  // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  // app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.useGlobalFilters(new CustomExceptionFilter());
 
   const PORT = Number(config.get<string>('APP_PORT')) || 3001;
 

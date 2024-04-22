@@ -73,7 +73,7 @@ export class AppInfoController implements IAppInfoController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.APP_INFO,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -119,7 +119,7 @@ export class AppInfoController implements IAppInfoController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.APP_INFO,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [

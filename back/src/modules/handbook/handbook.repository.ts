@@ -146,7 +146,7 @@ export class HandbookRepository implements IHandbookRepository {
     managerId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<HandbookEntity> {
     try {
-      const { name, description, canCustomerView } = dto;
+      const { name, description, canCustomerView, workspaceUuid } = dto;
       const newHandbook = await this.databaseService.handbook.create({
         data: {
           name: name || DEFAULT_HANDBOOK_NAME + ` of user #${managerId}`,
@@ -155,6 +155,7 @@ export class HandbookRepository implements IHandbookRepository {
             DEFAULT_HANDBOOK_DESCRIPTION + ` of user #${managerId}`,
           canCustomerView: canCustomerView || false,
           responsibleManagerUuid: managerId,
+          workspaceUuid,
         },
       });
       return new HandbookEntity(newHandbook);
@@ -223,12 +224,12 @@ export class HandbookRepository implements IHandbookRepository {
   }
 
   async deleteById(
-    id: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<HandbookEntity> {
     try {
       const deletedHandbook = await this.databaseService.handbook.delete({
         where: {
-          uuid: id,
+          uuid: handbookId,
         },
       });
 

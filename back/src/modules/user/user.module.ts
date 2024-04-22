@@ -7,6 +7,7 @@ import { PrismaService } from '../common/prisma/prisma.service';
 import { UserRepository } from './user.repository';
 import { RolesModule } from '../roles/roles.module';
 import { HandbookModule } from '../handbook/handbook.module';
+import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
   providers: [
@@ -28,7 +29,7 @@ import { HandbookModule } from '../handbook/handbook.module';
     },
   ],
   controllers: [UserController],
-  imports: [RolesModule, WorkspaceModule, HandbookModule],
+  imports: [RolesModule, WorkspaceModule, OrganizationModule, HandbookModule],
   exports: [KEYS_FOR_INJECTION.I_USER_SERVICE],
 })
 export class UserModule {}

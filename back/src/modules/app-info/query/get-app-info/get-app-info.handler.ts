@@ -12,7 +12,6 @@ export class GetAppInfoHandler implements IQueryHandler<GetAppInfoQuery> {
     private readonly appInfoRepository: IAppInfoRepository,
   ) {}
   async execute({}: GetAppInfoQuery): Promise<AppInfoEntity> {
-    const appInfo = await this.appInfoRepository.get();
-    return appInfo;
+    return await this.appInfoRepository.get();
   }
 }

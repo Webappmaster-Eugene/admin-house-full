@@ -1,14 +1,12 @@
 import { z } from 'zod';
-import { HandbookSchema } from '../../models';
+import { HandbookSchema, TypeFieldSchema } from '../../models';
 import { ResponseClientSchema } from '../../models/response-client';
 
 const HandbookCreateRequestSchema = HandbookSchema.omit({
   uuid: true,
   createdAt: true,
   updatedAt: true,
-  workspaceHandbookUuid: true,
   responsibleManagerUuid: true,
-  workspaceUuid: true,
 });
 
 const HandbookCreateResponseSchema = z

@@ -11,16 +11,18 @@ export const enum BackendErrorNames {
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
   BAD_REQUEST = 'BAD_REQUEST',
   INTERNAL_ERROR = 'INTERNAL_ERROR',
+  WORKSPACE_MISMATCH = 'WORKSPACE_MISMATCH',
 }
 
 export type BackendArrayErrors = {
   STANDARD: {
-    NOT_FOUND: BackendError;
-    CONFLICT_ERROR: BackendError;
-    UNAUTHORIZED_ACCESS: BackendError;
-    INVALID_CREDENTIALS: BackendError;
-    BAD_REQUEST: BackendError;
-    INTERNAL_ERROR: BackendError;
+    [BackendErrorNames.NOT_FOUND]: BackendError;
+    [BackendErrorNames.CONFLICT_ERROR]: BackendError;
+    [BackendErrorNames.UNAUTHORIZED_ACCESS]: BackendError;
+    [BackendErrorNames.INVALID_CREDENTIALS]: BackendError;
+    [BackendErrorNames.BAD_REQUEST]: BackendError;
+    [BackendErrorNames.INTERNAL_ERROR]: BackendError;
+    [BackendErrorNames.WORKSPACE_MISMATCH]: BackendError;
   };
 };
 
@@ -62,7 +64,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       httpCode: 401,
     },
     [BackendErrorNames.BAD_REQUEST]: {
-      innerCode: 'S004',
+      innerCode: 'S005',
       error: {
         name: 'Сlient error',
         description: 'Failed to get info due to an client-side error',
@@ -70,12 +72,21 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       httpCode: 400,
     },
     [BackendErrorNames.INTERNAL_ERROR]: {
-      innerCode: 'S005',
+      innerCode: 'S006',
       error: {
         name: 'Internal error',
         description: 'Failed to get info due to an internal server error',
       },
       httpCode: 500,
+    },
+    [BackendErrorNames.WORKSPACE_MISMATCH]: {
+      innerCode: 'S007',
+      error: {
+        name: 'Workspace mismatch error',
+        description:
+          'Failed to resolve action due to an mismatch of workspaces. Watch carefully to matching your info with permissions of workspace and matching rights',
+      },
+      httpCode: 400,
     },
   },
 };

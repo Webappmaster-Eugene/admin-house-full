@@ -32,6 +32,8 @@ import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { IUserService } from './types/user.service.interface';
 import { UserGetAllResponseDto } from './dto/controller/get-all-users.dto';
 import {
+  AddUserToOrganizationCommand,
+  AddUserToProjectCommand,
   AddUserToWorkspaceCommand,
   UserCreateCommand,
   UserGetAllCommand,
@@ -64,6 +66,14 @@ import {
   AddUserToWorkspaceResponseDto,
 } from './dto/controller/add-to-workspace.dto';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
+import {
+  AddUserToProjectRequestDto,
+  AddUserToProjectResponseDto,
+} from './dto/controller/add-to-project.dto';
+import {
+  AddUserToOrganizationRequestDto,
+  AddUserToOrganizationResponseDto,
+} from './dto/controller/add-to-organization.dto';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')
@@ -381,7 +391,7 @@ export class UserController {
   })
   @ApiResponse({ status: 200, type: AddUserToWorkspaceResponseDto })
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Put('/add-to-workspace/:workspaceId')
+  @Put('/add-to-workspace/workspace/:workspaceId')
   // добавить в workspace обычного пользователя
   async addUserToManagerWorkspaceEP(
     @Param('workspaceId', ParseUUIDPipe)
@@ -402,7 +412,116 @@ export class UserController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.WORKSPACE,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
+        null,
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
+      );
+    }
+  }
+
+  @ApiOkResponse({
+    schema: zodToOpenAPI(AddUserToOrganizationCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary:
+      'Добавление обычного (WORKER, CUSTOMER) пользователя в Organization менеджера по organizationId',
+  })
+  @ApiResponse({ status: 200, type: AddUserToOrganizationResponseDto })
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @Put(
+    '/add-to-organization/workspace/:workspaceId/organization/:organizationId',
+  )
+  // добавить в organization обычного пользователя
+  async addUserToManagerOrganizationEP(
+    @Param('workspace', ParseUUIDPipe)
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('organization', ParseUUIDPipe)
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    @Body() dto: AddUserToOrganizationRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<AddUserToOrganizationResponseDto> {
+    try {
+      const responseData = await this.userService.addUserToManagerOrganization(
+        workspaceId,
+        organizationId,
+        dto,
+      );
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
+          urlParams,
+        );
+        const response = new ExternalResponse(null, statusCode, message, [
+          fullError,
+        ]);
+        throw new HttpException(response, response.statusCode);
+      }
+
+      return new ExternalResponse(
+        null,
+        error.httpCode,
+        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
+        [error],
+      );
+    }
+  }
+
+  @ApiOkResponse({
+    schema: zodToOpenAPI(AddUserToProjectCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary:
+      'Добавление обычного (WORKER, CUSTOMER) пользователя в Project менеджера по projectId',
+  })
+  @ApiResponse({ status: 200, type: AddUserToProjectResponseDto })
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @Put(
+    '/add-to-project/workspace/:workspaceId/organization/:organizationId/project/:projectId',
+  )
+  // добавить в project обычного пользователя
+  async addUserToManagerProjectEP(
+    @Param('workspace', ParseUUIDPipe)
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('organization', ParseUUIDPipe)
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('project', ParseUUIDPipe)
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    @Body() dto: AddUserToProjectRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<AddUserToProjectResponseDto> {
+    try {
+      const responseData = await this.userService.addUserToManagerProject(
+        workspaceId,
+        organizationId,
+        projectId,
+        dto,
+      );
+      if (responseData.ok) {
+        return new ExternalResponse<UserEntity>(responseData.data);
+      }
+    } catch (error) {
+      if (error instanceof InternalResponse) {
+        this.logger.error(jsonStringify(error.error));
+        const { statusCode, fullError, message } = errorExtractor(
+          error,
+          EntityName.USER,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [

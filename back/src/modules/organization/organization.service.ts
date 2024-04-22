@@ -46,12 +46,13 @@ export class OrganizationService implements IOrganizationService {
 
   async create(
     dto: OrganizationCreateRequestDto,
-    userInfoFromJWT: IJWTPayload,
+    userId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<OrganizationEntity>> {
+    console.log(dto, userId, workspaceId);
     const createdOrganization = await this.organizationRepository.create(
       dto,
-      userInfoFromJWT.uuid,
+      userId,
       workspaceId,
     );
     return new InternalResponse<OrganizationEntity>(createdOrganization);

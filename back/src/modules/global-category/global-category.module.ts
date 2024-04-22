@@ -4,8 +4,8 @@ import { GlobalCategoryController } from './global-category.controller';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { GlobalCategoryRepository } from './global-category.repository';
 import { CqrsModule } from '@nestjs/cqrs';
-import { QUERIES } from '../app-info/query';
-import { COMMANDS } from '../app-info/command';
+import { QUERIES } from '../global-category/query';
+import { COMMANDS } from '../global-category/command';
 import { PrismaService } from '../common/prisma/prisma.service';
 
 @Module({
@@ -31,6 +31,6 @@ import { PrismaService } from '../common/prisma/prisma.service';
   ],
   controllers: [GlobalCategoryController],
   imports: [CqrsModule],
-  exports: [],
+  exports: [KEYS_FOR_INJECTION.I_GLOBAL_CATEGORY_SERVICE],
 })
 export class GlobalCategoryModule {}

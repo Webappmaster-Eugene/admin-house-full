@@ -20,10 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { User } from '../../common/decorators/user.decorator';
-import { zodToOpenAPI } from 'nestjs-zod';
+import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { GlobalCategoryGetResponseDto } from './dto/controller/get-global-category.dto';
 import {
@@ -64,7 +62,7 @@ import { EUserTypeVariants } from '@prisma/client';
 export class GlobalCategoryController implements IGlobalCategoryController {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_GLOBAL_CATEGORY_SERVICE)
-    private readonly appInfoService: IGlobalCategoryService,
+    private readonly globalCategoryService: IGlobalCategoryService,
     @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
   ) {}
 
@@ -73,6 +71,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
   })
   @ApiOperation({ summary: 'Получение GlobalCategory по id' })
   @ApiResponse({ status: 200, type: GlobalCategoryGetResponseDto })
+  @ZodSerializerDto(GlobalCategoryGetResponseDto)
   @UseGuards(AuthGuard)
   @Get('/:globalCategoryId')
   async getByIdEP(
@@ -80,8 +79,11 @@ export class GlobalCategoryController implements IGlobalCategoryController {
     globalCategoryId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<GlobalCategoryGetResponseDto> {
+    console.log(1);
     try {
-      const responseData = await this.appInfoService.getById(globalCategoryId);
+      const responseData =
+        await this.globalCategoryService.getById(globalCategoryId);
+      console.log(responseData);
       if (responseData.ok) {
         return new ExternalResponse<GlobalCategoryEntity>(responseData.data);
       }
@@ -90,7 +92,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.GLOBAL_CATEGORY,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -115,14 +117,14 @@ export class GlobalCategoryController implements IGlobalCategoryController {
     summary: 'Получить все GlobalCategory приложения',
   })
   @ApiResponse({ status: 200, type: [GlobalCategoryGetAllResponseDto] })
-  @RolesSetting(EUserTypeVariants.ADMIN)
+  @ZodSerializerDto(GlobalCategoryGetAllResponseDto)
   @UseGuards(AuthGuard)
   @Get()
   async getAllEP(
     @UrlParams() urlParams: IUrlParams,
   ): Promise<GlobalCategoryGetAllResponseDto> {
     try {
-      const responseData = await this.appInfoService.getAll();
+      const responseData = await this.globalCategoryService.getAll();
       if (responseData.ok) {
         return new ExternalResponse<GlobalCategoryEntity[]>(responseData.data);
       }
@@ -131,7 +133,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.GLOBAL_CATEGORY,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -157,6 +159,8 @@ export class GlobalCategoryController implements IGlobalCategoryController {
   })
   @ApiOperation({ summary: 'Создание GlobalCategory' })
   @ApiResponse({ status: 201, type: GlobalCategoryCreateResponseDto })
+  @ZodSerializerDto(GlobalCategoryCreateResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @Post()
   async createEP(
@@ -164,7 +168,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<GlobalCategoryCreateResponseDto> {
     try {
-      const responseData = await this.appInfoService.create(dto);
+      const responseData = await this.globalCategoryService.create(dto);
       if (responseData.ok) {
         return new ExternalResponse<GlobalCategoryEntity>(responseData.data);
       }
@@ -173,7 +177,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.GLOBAL_CATEGORY,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -201,7 +205,8 @@ export class GlobalCategoryController implements IGlobalCategoryController {
     summary: 'Изменение GlobalCategory пользователя по id GlobalCategory',
   })
   @ApiResponse({ status: 200, type: GlobalCategoryUpdateResponseDto })
-  @RolesSetting('MANAGER')
+  @ZodSerializerDto(GlobalCategoryUpdateResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @Put('/:globalCategoryId')
   async updateByIdEP(
@@ -211,7 +216,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<GlobalCategoryUpdateResponseDto> {
     try {
-      const responseData = await this.appInfoService.updateById(
+      const responseData = await this.globalCategoryService.updateById(
         globalCategoryId,
         dto,
       );
@@ -223,7 +228,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.GLOBAL_CATEGORY,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [
@@ -248,6 +253,9 @@ export class GlobalCategoryController implements IGlobalCategoryController {
     summary: 'Удаление GlobalCategory пользователя по id GlobalCategory',
   })
   @ApiResponse({ status: 200, type: GlobalCategoryDeleteResponseDto })
+  @ZodSerializerDto(GlobalCategoryDeleteResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
   @Delete('/:globalCategoryId')
   async deleteByIdEP(
     @Param('globalCategoryId', ParseUUIDPipe)
@@ -256,7 +264,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
   ): Promise<GlobalCategoryDeleteResponseDto> {
     try {
       const responseData =
-        await this.appInfoService.deleteById(globalCategoryId);
+        await this.globalCategoryService.deleteById(globalCategoryId);
       if (responseData.ok) {
         return new ExternalResponse<GlobalCategoryEntity>(responseData.data);
       }
@@ -265,7 +273,7 @@ export class GlobalCategoryController implements IGlobalCategoryController {
         this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
-          EntityName.ROLE,
+          EntityName.GLOBAL_CATEGORY,
           urlParams,
         );
         const response = new ExternalResponse(null, statusCode, message, [

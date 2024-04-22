@@ -185,12 +185,14 @@ export class AuthController implements IAuthController {
       }
     } catch (error) {
       if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
+        // this.logger.error(jsonStringify(error.error));
         const { statusCode, fullError, message } = errorExtractor(
           error,
           EntityName.AUTH,
           urlParams,
         );
+        console.log(statusCode, fullError, message);
+
         const response = new ExternalResponse(null, statusCode, message, [
           fullError,
         ]);

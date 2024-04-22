@@ -30,6 +30,7 @@ At least one special character`,
   handbookManagerUuid: z.string().nullable().optional(),
   memberOfWorkspaceUuid: z.string().nullable().optional(),
   memberOfOrganizationUuid: z.string().nullable().optional(),
+  memberOfProjectUuid: z.string().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

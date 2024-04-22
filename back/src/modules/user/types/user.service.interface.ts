@@ -5,6 +5,8 @@ import { UniversalInternalResponse } from '../../../common/types/responses/unive
 import { UserEntity } from '../entities/user.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { AddUserToWorkspaceRequestDto } from '../dto/controller/add-to-workspace.dto';
+import { AddUserToOrganizationRequestDto } from '../dto/controller/add-to-organization.dto';
+import { AddUserToProjectRequestDto } from '../dto/controller/add-to-project.dto';
 
 export interface IUserService
   extends IServiceCommon<
@@ -41,5 +43,16 @@ export interface IUserService
   addUserToManagerWorkspace: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: AddUserToWorkspaceRequestDto,
+  ) => Promise<UniversalInternalResponse<UserEntity>>;
+  addUserToManagerOrganization: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToOrganizationRequestDto,
+  ) => Promise<UniversalInternalResponse<UserEntity>>;
+  addUserToManagerProject: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    projectId: EntityUrlParamCommand.RequestUuidParam,
+    dto: AddUserToProjectRequestDto,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
 }
