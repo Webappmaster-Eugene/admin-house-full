@@ -1,5 +1,5 @@
 import { unknown, z } from 'zod';
-import { TypeFieldSchema, RoleSchema, StrictKeySchema } from '../../models';
+import { FieldTypeSchema, RoleSchema, StrictKeySchema } from '../../models';
 import { ResponseClientSchema } from '../../models/response-client';
 
 const AuthGenerateKeyRequestSchema = z.object({

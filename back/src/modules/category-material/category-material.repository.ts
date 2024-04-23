@@ -7,10 +7,6 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { CategoryMaterialEntity } from './entities/category-material.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import {
-  DEFAULT_HANDBOOK_DESCRIPTION,
-  DEFAULT_HANDBOOK_NAME,
-} from './lib/consts/category-material.default-data';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import {
@@ -112,18 +108,10 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     managerId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<CategoryMaterialEntity> {
     try {
-      const { name, description, canCustomerView, workspaceUuid } = dto;
+      const {} = dto;
       const newCategoryMaterial =
         await this.databaseService.categoryMaterial.create({
-          data: {
-            name: name || DEFAULT_HANDBOOK_NAME + ` of user #${managerId}`,
-            description:
-              description ||
-              DEFAULT_HANDBOOK_DESCRIPTION + ` of user #${managerId}`,
-            canCustomerView: canCustomerView || false,
-            responsibleManagerUuid: managerId,
-            workspaceUuid,
-          },
+          data: {},
         });
       return new CategoryMaterialEntity(newCategoryMaterial);
     } catch (error: unknown) {

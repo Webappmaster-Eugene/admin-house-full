@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FieldUnitMeasurementSchema, TypeFieldSchema } from '../../models';
+import { FieldUnitMeasurementSchema, FieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models/response-client';
 
 const FieldUnitMeasurementUpdateRequestSchema = FieldUnitMeasurementSchema.omit(

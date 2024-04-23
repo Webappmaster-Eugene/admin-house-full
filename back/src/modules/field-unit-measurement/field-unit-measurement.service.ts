@@ -22,6 +22,7 @@ export class FieldUnitMeasurementService
 
   async getById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
     const findedFieldUnitMeasurement =
       await this.fieldUnitMeasurementRepository.getById(fieldUnitMeasurementId);
@@ -30,9 +31,9 @@ export class FieldUnitMeasurementService
     );
   }
 
-  async getAll(): Promise<
-    UniversalInternalResponse<FieldUnitMeasurementEntity[]>
-  > {
+  async getAll(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>> {
     const allFieldUnitMeasurements =
       await this.fieldUnitMeasurementRepository.getAll();
     return new InternalResponse<FieldUnitMeasurementEntity[]>(
@@ -55,10 +56,11 @@ export class FieldUnitMeasurementService
   async updateById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldUnitMeasurementUpdateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
     const updatedFieldUnitMeasurement =
       await this.fieldUnitMeasurementRepository.updateById(
-        field - unit - measurementId,
+        fieldUnitMeasurementId,
         dto,
       );
     return new InternalResponse<FieldUnitMeasurementEntity>(
@@ -68,6 +70,7 @@ export class FieldUnitMeasurementService
 
   async deleteById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
     const deletedFieldUnitMeasurement =
       await this.fieldUnitMeasurementRepository.deleteById(

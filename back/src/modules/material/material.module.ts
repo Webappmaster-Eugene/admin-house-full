@@ -16,16 +16,16 @@ import { PrismaService } from '../common/prisma/prisma.service';
       useClass: Logger,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_HANDBOOK_REPOSITORY,
+      provide: KEYS_FOR_INJECTION.I_MATERIAL_REPOSITORY,
       useClass: MaterialRepository,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE,
+      provide: KEYS_FOR_INJECTION.I_MATERIAL_SERVICE,
       useClass: MaterialService,
     },
   ],
   controllers: [MaterialController],
   imports: [],
-  exports: [KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE],
+  exports: [KEYS_FOR_INJECTION.I_MATERIAL_SERVICE],
 })
 export class MaterialModule {}

@@ -61,7 +61,7 @@ import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.gua
 import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 
-@ApiTags('Работа с Handbook пользователей')
+@ApiTags('Работа с Handbook')
 @Controller('/workspace/:workspaceId/handbook')
 export class HandbookController implements IHandbookController {
   constructor(
@@ -115,7 +115,7 @@ export class HandbookController implements IHandbookController {
     schema: zodToOpenAPI(HandbookGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все Handbook пользователей (менеджеров Workspace)',
+    summary: 'Получить все Handbook',
   })
   @ApiResponse({ status: 200, type: [HandbookGetAllResponseDto] })
   @RolesSetting(EUserTypeVariants.ADMIN)
@@ -208,7 +208,7 @@ export class HandbookController implements IHandbookController {
   @ApiOkResponse({
     schema: zodToOpenAPI(HandbookUpdateCommand.ResponseSchema),
   })
-  @ApiOperation({ summary: 'Изменение Handbook пользователя по id Handbook' })
+  @ApiOperation({ summary: 'Изменение Handbook по id Handbook' })
   @ApiResponse({ status: 200, type: HandbookUpdateResponseDto })
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(HandbookUpdateResponseDto)

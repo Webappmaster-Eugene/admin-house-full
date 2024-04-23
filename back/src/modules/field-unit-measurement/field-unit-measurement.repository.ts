@@ -4,13 +4,8 @@ import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldUnitMeasurementRepository } from './types/field-unit-measurement.repository.interface';
 import { FieldUnitMeasurementUpdateRequestDto } from './dto/controller/update-field-unit-measurement.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { CountData } from '../../common/types/main/count.data';
 import { FieldUnitMeasurementEntity } from './entities/field-unit-measurement.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import {
-  DEFAULT_HANDBOOK_DESCRIPTION,
-  DEFAULT_HANDBOOK_NAME,
-} from './lib/consts/field-unit-measurement.default-data';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import {
@@ -92,18 +87,10 @@ export class FieldUnitMeasurementRepository
     managerId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementEntity> {
     try {
-      const { name, description, canCustomerView, workspaceUuid } = dto;
+      const {} = dto;
       const newFieldUnitMeasurement =
         await this.databaseService.fieldUnitMeasurement.create({
-          data: {
-            name: name || DEFAULT_HANDBOOK_NAME + ` of user #${managerId}`,
-            description:
-              description ||
-              DEFAULT_HANDBOOK_DESCRIPTION + ` of user #${managerId}`,
-            canCustomerView: canCustomerView || false,
-            responsibleManagerUuid: managerId,
-            workspaceUuid,
-          },
+          data: {},
         });
       return new FieldUnitMeasurementEntity(newFieldUnitMeasurement);
     } catch (error: unknown) {
@@ -133,13 +120,13 @@ export class FieldUnitMeasurementRepository
 
   async updateById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: FieldUnitMeasurementUpdateRequestDto,
+    {}: FieldUnitMeasurementUpdateRequestDto,
   ): Promise<FieldUnitMeasurementEntity> {
     try {
       const updatedFieldUnitMeasurement =
         await this.databaseService.fieldUnitMeasurement.update({
           where: {
-            uuid: fieldUnitMeasurement,
+            uuid: fieldUnitMeasurementId,
           },
           data: {
             name,

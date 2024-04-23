@@ -20,10 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { FieldUnitMeasurementGetResponseDto } from './dto/controller/get-field-unit-measurement.dto';
 import {
@@ -57,12 +55,14 @@ import {
   IUrlParams,
   UrlParams,
 } from '../../common/decorators/url-params.decorator';
-import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
+import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 
 @ApiTags('Работа с FieldUnitMeasurement')
-@Controller('/field-unit-measurement')
+@Controller(
+  '/workspace/:workspaceId/handbook/:handbookId/field-unit-measurement',
+)
 export class FieldUnitMeasurementController
   implements IFieldUnitMeasurementController
 {
@@ -77,17 +77,20 @@ export class FieldUnitMeasurementController
   })
   @ApiOperation({ summary: 'Получение FieldUnitMeasurement по id' })
   @ApiResponse({ status: 200, type: FieldUnitMeasurementGetResponseDto })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetResponseDto)
   @Get('/:fieldUnitMeasurementId')
   async getByIdEP(
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementGetResponseDto> {
     try {
       const responseData = await this.fieldUnitMeasurementService.getById(
         fieldUnitMeasurementId,
+        handbookId,
       );
       if (responseData.ok) {
         return new ExternalResponse<FieldUnitMeasurementEntity>(
@@ -121,19 +124,21 @@ export class FieldUnitMeasurementController
     schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary:
-      'Получить все FieldUnitMeasurement пользователей (менеджеров Workspace)',
+    summary: 'Получить все FieldUnitMeasurement в Workspace',
   })
   @ApiResponse({ status: 200, type: [FieldUnitMeasurementGetAllResponseDto] })
   @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetAllResponseDto)
   @Get()
   async getAllEP(
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementGetAllResponseDto> {
     try {
-      const responseData = await this.fieldUnitMeasurementService.getAll();
+      const responseData =
+        await this.fieldUnitMeasurementService.getAll(handbookId);
       if (responseData.ok) {
         return new ExternalResponse<FieldUnitMeasurementEntity[]>(
           responseData.data,
@@ -170,20 +175,20 @@ export class FieldUnitMeasurementController
   })
   @ApiOperation({ summary: 'Создание FieldUnitMeasurement' })
   @ApiResponse({ status: 201, type: FieldUnitMeasurementCreateResponseDto })
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldUnitMeasurementCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: FieldUnitMeasurementCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @User() userInfoFromJWT: IJWTPayload,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementCreateResponseDto> {
     // в create нужно передать id пользователя, для которого создается field-unit-measurement
     try {
       const responseData = await this.fieldUnitMeasurementService.create(
         dto,
-        userInfoFromJWT.uuid,
+        handbookId,
       );
       if (responseData.ok) {
         return new ExternalResponse<FieldUnitMeasurementEntity>(
@@ -232,11 +237,14 @@ export class FieldUnitMeasurementController
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: FieldUnitMeasurementUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementUpdateResponseDto> {
     try {
       const responseData = await this.fieldUnitMeasurementService.updateById(
         fieldUnitMeasurementId,
         dto,
+        handbookId,
       );
       if (responseData.ok) {
         return new ExternalResponse<FieldUnitMeasurementEntity>(
@@ -275,17 +283,19 @@ export class FieldUnitMeasurementController
   })
   @ApiResponse({ status: 200, type: FieldUnitMeasurementDeleteResponseDto })
   @ZodSerializerDto(FieldUnitMeasurementDeleteResponseDto)
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:fieldUnitMeasurementId')
   async deleteByIdEP(
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementDeleteResponseDto> {
     try {
       const responseData = await this.fieldUnitMeasurementService.deleteById(
         fieldUnitMeasurementId,
+        handbookId,
       );
       if (responseData.ok) {
         return new ExternalResponse<FieldUnitMeasurementEntity>(

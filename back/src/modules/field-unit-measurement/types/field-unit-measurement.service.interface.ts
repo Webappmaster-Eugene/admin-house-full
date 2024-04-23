@@ -13,19 +13,22 @@ export interface IFieldUnitMeasurementService
   > {
   getById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
-  getAll: () => Promise<
-    UniversalInternalResponse<FieldUnitMeasurementEntity[]>
-  >;
+  getAll: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>>;
   create: (
     dto: FieldUnitMeasurementCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
   updateById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldUnitMeasurementUpdateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
   deleteById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
 }

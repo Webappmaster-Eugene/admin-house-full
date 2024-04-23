@@ -92,7 +92,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     managerId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<PriceChangingEntity> {
     try {
-      const { name, description, canCustomerView, workspaceUuid } = dto;
+      const { } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
         data: {},
       });
@@ -124,7 +124,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
 
   async updateById(
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: PriceChangingUpdateRequestDto,
+    {}: PriceChangingUpdateRequestDto,
   ): Promise<PriceChangingEntity> {
     try {
       const updatedPriceChanging =

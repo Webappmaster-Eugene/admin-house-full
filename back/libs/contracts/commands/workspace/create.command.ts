@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
-import { TypeFieldSchema } from '../../models';
+import { FieldTypeSchema } from '../../models';
 import { ProjectSchema } from '../../models';
 import { UserSchema } from '../../models';
 import { OrganizationSchema } from '../../models';

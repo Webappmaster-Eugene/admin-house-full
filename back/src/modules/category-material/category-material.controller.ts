@@ -62,7 +62,9 @@ import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 
 @ApiTags('Работа с CategoryMaterial')
-@Controller('/global-category/:globalCategoryId/category-material')
+@Controller(
+  '/global-category-material-material/:globalCategoryId/category-material',
+)
 export class CategoryMaterialController implements ICategoryMaterialController {
   constructor(
     @Inject(KEYS_FOR_INJECTION.I_HANDBOOK_SERVICE)

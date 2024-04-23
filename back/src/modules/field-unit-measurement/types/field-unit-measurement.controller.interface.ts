@@ -13,6 +13,7 @@ import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/commo
 import { FieldUnitMeasurementDeleteResponseDto } from '../dto/controller/delete-field-unit-measurement.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
+import { Param, ParseUUIDPipe } from '@nestjs/common';
 
 export interface IFieldUnitMeasurementController
   extends IControllerCommon<
@@ -27,22 +28,26 @@ export interface IFieldUnitMeasurementController
   getByIdEP: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementGetResponseDto>;
   getAllEP: (
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementGetAllResponseDto>;
   createEP: (
     dto: FieldUnitMeasurementCreateRequestDto,
     urlParams: IUrlParams,
-    userInfoFromJWT: IJWTPayload,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementCreateResponseDto>;
   updateByIdEP: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldUnitMeasurementUpdateRequestDto,
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementUpdateResponseDto>;
   deleteByIdEP: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementDeleteResponseDto>;
 }

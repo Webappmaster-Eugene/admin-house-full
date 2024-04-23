@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { HandbookSchema, TypeFieldSchema } from '../../models';
+import { HandbookSchema, FieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models/response-client';
 
 const HandbookCreateRequestSchema = HandbookSchema.omit({

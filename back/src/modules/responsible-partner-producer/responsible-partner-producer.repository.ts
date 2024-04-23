@@ -4,13 +4,8 @@ import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IResponsiblePartnerProducerRepository } from './types/responsible-partner-producer.repository.interface';
 import { ResponsiblePartnerProducerUpdateRequestDto } from './dto/controller/update-responsible-partner-producer.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { CountData } from '../../common/types/main/count.data';
 import { ResponsiblePartnerProducerEntity } from './entities/responsible-partner-producer.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import {
-  DEFAULT_HANDBOOK_DESCRIPTION,
-  DEFAULT_HANDBOOK_NAME,
-} from './lib/consts/responsible-partner-producer.default-data';
 import { KEYS_FOR_INJECTION } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import {
@@ -95,7 +90,7 @@ export class ResponsiblePartnerProducerRepository
     managerId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ResponsiblePartnerProducerEntity> {
     try {
-      const { name, description, canCustomerView, workspaceUuid } = dto;
+      const {} = dto;
       const newResponsiblePartnerProducer =
         await this.databaseService.responsiblePartnerProducer.create({
           data: {},
@@ -130,7 +125,7 @@ export class ResponsiblePartnerProducerRepository
 
   async updateById(
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: ResponsiblePartnerProducerUpdateRequestDto,
+    {}: ResponsiblePartnerProducerUpdateRequestDto,
   ): Promise<ResponsiblePartnerProducerEntity> {
     try {
       const updatedResponsiblePartnerProducer =
