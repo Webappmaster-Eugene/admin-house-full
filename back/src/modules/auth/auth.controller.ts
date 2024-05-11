@@ -1,48 +1,15 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpException,
-  Inject,
-  Param,
-  ParseIntPipe,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, HttpException, Inject, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IAuthController } from './types/auth.controller.interface';
-import {
-  AuthLoginRequestDto,
-  AuthLoginResponseDto,
-} from './dto/controller/auth.login.dto';
+import { AuthLoginRequestDto, AuthLoginResponseDto } from './dto/controller/auth.login.dto';
 import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
-import {
-  AuthRegisterRequestDto,
-  AuthRegisterResponseDto,
-} from './dto/controller/auth.register.dto';
+import { AuthRegisterRequestDto, AuthRegisterResponseDto } from './dto/controller/auth.register.dto';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IAuthService } from './types/auth.service.interface';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
-import {
-  AuthLoginCommand,
-  AuthRegisterCommand,
-  AuthRegisterWithRoleCommand,
-} from '../../../libs/contracts';
-import {
-  AuthRegisterWithRoleRequestDto,
-  AuthRegisterWithRoleResponseDto,
-} from './dto/controller/auth.register-with-role.dto';
-import {
-  AuthGenerateKeyRequestDto,
-  AuthGenerateKeyResponseDto,
-} from './dto/controller/auth.generate-key.dto';
+import { KFI } from '../../common/utils/di';
+import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from '../../../libs/contracts';
+import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleResponseDto } from './dto/controller/auth.register-with-role.dto';
+import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from './dto/controller/auth.generate-key.dto';
 import { AuthGetKeyResponseDto } from './dto/controller/auth.get-key.dto';
 import { AuthEntity } from './entities/auth.entity';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
@@ -51,10 +18,7 @@ import { errorExtractor } from '../../common/helpers/inner-error.extractor';
 import { EntityName } from '../../common/types/entity.enum';
 import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
 import { ILogger } from '../../common/types/main/logger.interface';
-import {
-  IUrlParams,
-  UrlParams,
-} from '../../common/decorators/url-params.decorator';
+import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { EUserTypeVariants } from '@prisma/client';
@@ -63,11 +27,12 @@ import { EUserTypeVariants } from '@prisma/client';
 @Controller('auth')
 export class AuthController implements IAuthController {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_AUTH_SERVICE)
+    @Inject(KFI.AUTH_SERVICE)
     private readonly authService: IAuthService,
-    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
+    @Inject(KFI.LOGGER) private readonly logger: ILogger,
   ) {}
 
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(AuthRegisterCommand.RequestSchema),
   })
@@ -76,13 +41,11 @@ export class AuthController implements IAuthController {
   })
   @ApiOperation({ summary: 'Зарегистрировать обычного пользователя' })
   @ApiResponse({ status: 200, type: AuthRegisterResponseDto })
+  //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthRegisterResponseDto)
   @Post('/register')
-  async registerEP(
-    @Body() dto: AuthRegisterRequestDto,
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<AuthRegisterResponseDto> {
+  async registerEP(@Body() dto: AuthRegisterRequestDto, @UrlParams() urlParams: IUrlParams): Promise<AuthRegisterResponseDto> {
     try {
       const responseData = await this.authService.register(dto);
       if (responseData.ok) {
@@ -91,26 +54,16 @@ export class AuthController implements IAuthController {
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.AUTH,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.AUTH, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(AuthRegisterWithRoleCommand.RequestSchema),
   })
@@ -121,6 +74,7 @@ export class AuthController implements IAuthController {
     summary: 'Зарегистрировать пользователя c ролью ADMIN, MANAGER или WORKER',
   })
   @ApiResponse({ status: 200, type: AuthRegisterWithRoleResponseDto })
+  //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthRegisterWithRoleResponseDto)
   @Post('/register/with-role/:roleId/:registerWithRoleKey')
@@ -143,26 +97,16 @@ export class AuthController implements IAuthController {
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.AUTH,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.AUTH, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(AuthLoginCommand.RequestSchema),
   })
@@ -171,13 +115,11 @@ export class AuthController implements IAuthController {
   })
   @ApiOperation({ summary: 'Войти в систему под любым пользователем' })
   @ApiResponse({ status: 200, type: AuthLoginResponseDto })
+  //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthLoginResponseDto)
   @Post('/login')
-  async loginEP(
-    @Body() dto: AuthLoginRequestDto,
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<AuthLoginResponseDto> {
+  async loginEP(@Body() dto: AuthLoginRequestDto, @UrlParams() urlParams: IUrlParams): Promise<AuthLoginResponseDto> {
     try {
       const responseData = await this.authService.login(dto);
       if (responseData.ok) {
@@ -186,28 +128,18 @@ export class AuthController implements IAuthController {
     } catch (error) {
       if (error instanceof InternalResponse) {
         // this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.AUTH,
-          urlParams,
-        );
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.AUTH, urlParams);
         console.log(statusCode, fullError, message);
 
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(AuthRegisterCommand.RequestSchema),
   })
@@ -216,6 +148,8 @@ export class AuthController implements IAuthController {
   })
   @ApiOperation({ summary: 'Сгенерировать секретный ключ' })
   @ApiResponse({ status: 200, type: AuthGenerateKeyResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
   @HttpCode(200)
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -235,39 +169,29 @@ export class AuthController implements IAuthController {
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.AUTH,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.AUTH, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiOkResponse({
     schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
   })
   @ApiOperation({ summary: 'Получить секретный ключ' })
   @ApiResponse({ status: 200, type: AuthGetKeyResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
   @HttpCode(200)
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(AuthGetKeyResponseDto)
   @Get('/strict-admin-key')
-  async getStrictAdminKeyEP(
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<AuthGetKeyResponseDto> {
+  async getStrictAdminKeyEP(@UrlParams() urlParams: IUrlParams): Promise<AuthGetKeyResponseDto> {
     // получение ключа для регистрации с ролью
     // каждый раз при вызове запись берется из БД таблицы registerWithRoleKey
     try {
@@ -279,23 +203,12 @@ export class AuthController implements IAuthController {
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.AUTH,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.AUTH, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 }

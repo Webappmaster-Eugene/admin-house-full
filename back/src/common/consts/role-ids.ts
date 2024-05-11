@@ -1,0 +1,6 @@
+export const enum ROLE_IDS {
+  ADMIN_ROLE_ID = 1,
+  MANAGER_ROLE_ID = 2,
+  WORKER_ROLE_ID = 3,
+  CUSTOMER_ROLE_ID = 4,
+}

@@ -7,29 +7,21 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { HandbookEntity } from './entities/handbook.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import {
-  DEFAULT_HANDBOOK_DESCRIPTION,
-  DEFAULT_HANDBOOK_NAME,
-} from './lib/consts/handbook.default-data';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { DEFAULT_HANDBOOK_DESCRIPTION, DEFAULT_HANDBOOK_NAME } from './lib/consts/handbook.default-data';
+import { KFI } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import {
-  BackendErrorNames,
-  InternalError,
-} from '../../common/errors/errors.backend';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { jsonStringify } from '../../common/helpers/stringify';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class HandbookRepository implements IHandbookRepository {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    @Inject(KFI.PRISMA_SERVICE)
     private readonly databaseService: IPrismaService,
   ) {}
 
-  async getById(
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<HandbookEntity> {
+  async getById(handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<HandbookEntity> {
     try {
       const findedHandbook = await this.databaseService.handbook.findUnique({
         where: {
@@ -42,33 +34,19 @@ export class HandbookRepository implements IHandbookRepository {
       } else {
         throw new NotFoundException({
           message: `Handbook with id=${handbookId} not found`,
-          description:
-            'Handbook from your request did not found in the database',
+          description: 'Handbook from your request did not found in the database',
         });
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async getByManagerId(
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<HandbookEntity> {
+  async getByManagerId(managerId: EntityUrlParamCommand.RequestUuidParam): Promise<HandbookEntity> {
     try {
       const findedHandbook = await this.databaseService.handbook.findUnique({
         where: {
@@ -81,27 +59,15 @@ export class HandbookRepository implements IHandbookRepository {
       } else {
         throw new NotFoundException({
           message: `Handbook with managerId=${managerId} not found`,
-          description:
-            'Handbook from your request did not found in the database',
+          description: 'Handbook from your request did not found in the database',
         });
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -110,14 +76,7 @@ export class HandbookRepository implements IHandbookRepository {
       const allHandbooks = await this.databaseService.handbook.findMany();
       return toEntityArray<HandbookEntity>(allHandbooks, HandbookEntity);
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -130,29 +89,17 @@ export class HandbookRepository implements IHandbookRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async create(
-    dto: HandbookCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<HandbookEntity> {
+  async create(dto: HandbookCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam): Promise<HandbookEntity> {
     try {
       const { name, description, canCustomerView, workspaceUuid } = dto;
       const newHandbook = await this.databaseService.handbook.create({
         data: {
           name: name || DEFAULT_HANDBOOK_NAME + ` of user #${managerId}`,
-          description:
-            description ||
-            DEFAULT_HANDBOOK_DESCRIPTION + ` of user #${managerId}`,
+          description: description || DEFAULT_HANDBOOK_DESCRIPTION + ` of user #${managerId}`,
           canCustomerView: canCustomerView || false,
           responsibleManagerUuid: managerId,
           workspaceUuid,
@@ -160,27 +107,10 @@ export class HandbookRepository implements IHandbookRepository {
       });
       return new HandbookEntity(newHandbook);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(
-            BackendErrorNames.CONFLICT_ERROR,
-            jsonStringify(error),
-          ),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
       }
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -201,31 +131,15 @@ export class HandbookRepository implements IHandbookRepository {
 
       return new HandbookEntity(updatedHandbook);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async deleteById(
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<HandbookEntity> {
+  async deleteById(handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<HandbookEntity> {
     try {
       const deletedHandbook = await this.databaseService.handbook.delete({
         where: {
@@ -235,25 +149,11 @@ export class HandbookRepository implements IHandbookRepository {
 
       return new HandbookEntity(deletedHandbook);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 }

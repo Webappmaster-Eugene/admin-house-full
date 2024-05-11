@@ -1,17 +1,23 @@
 import { InternalError } from '../../errors/errors.backend';
 
-export interface UniversalInternalResponse<TResponseDto = null> {
-  data: TResponseDto | null;
+export interface UniversalInternalResponse<TResponseDto> {
   ok: boolean;
-  error?: InternalError | undefined;
+  data: TResponseDto | InternalError;
 }
 
-export class InternalResponse<TResponseDto = null>
-  implements UniversalInternalResponse<TResponseDto>
-{
-  constructor(
-    public data: TResponseDto | null = null,
-    public ok: boolean = true,
-    public error?: InternalError | undefined,
-  ) {}
+// const isNotOk = (data: unknown | InternalError): data is InternalError => {
+//   return data instanceof InternalError;
+// };
+
+const isOk = <TResponseDto>(data: TResponseDto | InternalError): data is TResponseDto => {
+  return !(data instanceof InternalError);
+};
+
+export class InternalResponse<TResponseDto> implements UniversalInternalResponse<TResponseDto> {
+  public ok: boolean;
+
+  constructor(public data: TResponseDto | InternalError) {
+    this.ok = !!isOk<TResponseDto>(this.data);
+    return this;
+  }
 }

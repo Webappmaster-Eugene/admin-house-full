@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 import { AppInfoSchema } from '../../models';
 
 const AppInfoUpdateRequestSchema = AppInfoSchema.omit({

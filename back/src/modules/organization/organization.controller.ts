@@ -12,13 +12,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrganizationEntity } from './entities/organization.entity';
 import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
@@ -29,19 +23,13 @@ import {
   OrganizationUpdateCommand,
 } from '../../../libs/contracts';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { IOrganizationService } from './types/organization.service.interface';
 import { OrganizationGetAllResponseDto } from './dto/controller/get-all-organizations.dto';
 import { OrganizationGetResponseDto } from './dto/controller/get-organization.dto';
 import { OrganizationDeleteResponseDto } from './dto/controller/delete-organization.dto';
-import {
-  OrganizationUpdateRequestDto,
-  OrganizationUpdateResponseDto,
-} from './dto/controller/update-organization.dto';
-import {
-  OrganizationCreateRequestDto,
-  OrganizationCreateResponseDto,
-} from './dto/controller/create-organization.dto';
+import { OrganizationUpdateRequestDto, OrganizationUpdateResponseDto } from './dto/controller/update-organization.dto';
+import { OrganizationCreateRequestDto, OrganizationCreateResponseDto } from './dto/controller/create-organization.dto';
 import { OrganizationDeleteCommand } from '../../../libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
@@ -53,28 +41,29 @@ import { errorExtractor } from '../../common/helpers/inner-error.extractor';
 import { EntityName } from '../../common/types/entity.enum';
 import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
 import { ILogger } from '../../common/types/main/logger.interface';
-import {
-  IUrlParams,
-  UrlParams,
-} from '../../common/decorators/url-params.decorator';
+import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @ApiTags('Работа с Organization пользователей')
 @Controller('workspace/:workspaceId/organization')
 export class OrganizationController {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_ORGANIZATION_SERVICE)
+    @Inject(KFI.ORGANIZATION_SERVICE)
     private readonly organizationService: IOrganizationService,
-    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}
 
+  //region SWAGGER
   @ApiOkResponse({
     schema: zodToOpenAPI(OrganizationGetCommand.ResponseSchema),
   })
   @ApiOperation({ summary: 'Получение Organization по id' })
   @ApiResponse({ status: 200, type: OrganizationGetResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(OrganizationGetResponseDto)
   @Get('/:organizationId')
@@ -84,46 +73,35 @@ export class OrganizationController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<OrganizationGetResponseDto> {
     try {
-      const responseData =
-        await this.organizationService.getById(organizationId);
+      const responseData = await this.organizationService.getById(organizationId);
       if (responseData.ok) {
         return new ExternalResponse<OrganizationEntity>(responseData.data);
       }
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.ROLE,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ROLE, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiOkResponse({
     schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
   })
   @ApiOperation({ summary: 'Получить все Organizations пользователей' })
   @ApiResponse({ status: 200, type: [OrganizationGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(OrganizationGetAllResponseDto)
   @Get()
-  async getAllEP(
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<OrganizationGetAllResponseDto> {
+  async getAllEP(@UrlParams() urlParams: IUrlParams): Promise<OrganizationGetAllResponseDto> {
     try {
       const responseData = await this.organizationService.getAll();
       if (responseData.ok) {
@@ -132,26 +110,16 @@ export class OrganizationController {
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.ORGANIZATION,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(OrganizationCreateCommand.RequestSchema),
   })
@@ -160,6 +128,8 @@ export class OrganizationController {
   })
   @ApiOperation({ summary: 'Создание Organization' })
   @ApiResponse({ status: 201, type: OrganizationEntity })
+  @ApiBearerAuth('access-token')
+  //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(OrganizationCreateResponseDto)
   @Post()
@@ -172,37 +142,23 @@ export class OrganizationController {
   ): Promise<OrganizationCreateResponseDto> {
     // в param create передается автоматически id Workspace, в котором создается Organization
     try {
-      const responseData = await this.organizationService.create(
-        dto,
-        userInfoFromJWT.uuid,
-        workspaceId,
-      );
+      const responseData = await this.organizationService.create(dto, userInfoFromJWT.uuid, workspaceId);
       if (responseData.ok) {
         return new ExternalResponse<OrganizationEntity>(responseData.data);
       }
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.ORGANIZATION,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(OrganizationUpdateCommand.RequestSchema),
   })
@@ -211,6 +167,8 @@ export class OrganizationController {
   })
   @ApiOperation({ summary: 'Изменение Organization по id Organization' })
   @ApiResponse({ status: 200, type: OrganizationUpdateResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(OrganizationUpdateResponseDto)
   @Put('/:organizationId')
@@ -221,36 +179,23 @@ export class OrganizationController {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationUpdateResponseDto> {
     try {
-      const responseData = await this.organizationService.updateById(
-        organizationId,
-        dto,
-      );
+      const responseData = await this.organizationService.updateById(organizationId, dto);
       if (responseData.ok) {
         return new ExternalResponse<OrganizationEntity>(responseData.data);
       }
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.ORGANIZATION,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 
+  //region SWAGGER
   @ApiOkResponse({
     schema: zodToOpenAPI(OrganizationDeleteCommand.ResponseSchema),
   })
@@ -258,6 +203,8 @@ export class OrganizationController {
     summary: 'Удаление Organization по id Organization',
   })
   @ApiResponse({ status: 200, type: OrganizationDeleteResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:organizationId')
   async deleteByIdEP(
@@ -266,31 +213,19 @@ export class OrganizationController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<OrganizationDeleteResponseDto> {
     try {
-      const responseData =
-        await this.organizationService.deleteById(organizationId);
+      const responseData = await this.organizationService.deleteById(organizationId);
       if (responseData.ok) {
         return new ExternalResponse<OrganizationEntity>(responseData.data);
       }
     } catch (error) {
       if (error instanceof InternalResponse) {
         this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(
-          error,
-          EntityName.ORGANIZATION,
-          urlParams,
-        );
-        const response = new ExternalResponse(null, statusCode, message, [
-          fullError,
-        ]);
+        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
+        const response = new ExternalResponse(null, statusCode, message, [fullError]);
         throw new HttpException(response, response.statusCode);
       }
 
-      return new ExternalResponse(
-        null,
-        error.httpCode,
-        BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description,
-        [error],
-      );
+      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
     }
   }
 }

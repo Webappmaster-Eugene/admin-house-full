@@ -1,19 +1,15 @@
-export interface UniversalExternalResponse<TResponseDto = null> {
+export interface UniversalExternalResponse<TResponseDto> {
   data: TResponseDto | null;
   statusCode: number;
   message: string;
-  errors?: Array<unknown> | null;
-  error?: string;
+  errors?: Array<unknown>;
 }
 
-export class ExternalResponse<TResponseDto = null>
-  implements UniversalExternalResponse<TResponseDto>
-{
+export class ExternalResponse<TResponseDto> implements UniversalExternalResponse<TResponseDto> {
   constructor(
     public data: TResponseDto | null = null,
     public statusCode: number = 200,
     public message: string = 'Success',
-    public errors?: Array<unknown> | null,
-    public error?: string,
+    public errors?: Array<unknown>,
   ) {}
 }

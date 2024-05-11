@@ -1,5 +1,6 @@
 export * from './get.command';
 export * from './get-all.command';
+export * from './get-all-info.command';
 export * from './create.command';
 export * from './update.command';
 export * from './delete.command';

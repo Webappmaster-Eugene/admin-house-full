@@ -7,30 +7,23 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { WorkspaceEntity } from './entities/workspace.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import {
-  DEFAULT_WORKSPACE_DESCRIPTION,
-  DEFAULT_WORKSPACE_NAME,
-} from './lib/consts/workspace.default-data';
+import { DEFAULT_WORKSPACE_DESCRIPTION, DEFAULT_WORKSPACE_NAME } from './lib/consts/workspace.default-data';
 import { WorkspaceChangeOwnerRequestDto } from './dto/controller/change-owner-workspace.dto';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import {
-  BackendErrorNames,
-  InternalError,
-} from '../../common/errors/errors.backend';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { jsonStringify } from '../../common/helpers/stringify';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
 
 @Injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    @Inject(KFI.PRISMA_SERVICE)
     private readonly databaseService: IPrismaService,
   ) {}
 
-  async getById(
-    workspaceId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<WorkspaceEntity> {
+  async getById(workspaceId: EntityUrlParamCommand.RequestUuidParam): Promise<WorkspaceEntity> {
     try {
       const findedWorkspace = await this.databaseService.workspace.findUnique({
         where: {
@@ -43,33 +36,19 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       } else {
         throw new NotFoundException({
           message: `Workspace with id=${workspaceId} not found`,
-          description:
-            'Workspace from your request did not found in the database',
+          description: 'Workspace from your request did not found in the database',
         });
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async getByManagerId(
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<WorkspaceEntity> {
+  async getByManagerId(managerId: EntityUrlParamCommand.RequestUuidParam): Promise<WorkspaceEntity> {
     try {
       const findedWorkspace = await this.databaseService.workspace.findUnique({
         where: {
@@ -82,27 +61,15 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       } else {
         throw new NotFoundException({
           message: `Workspace with managerId=${managerId} not found`,
-          description:
-            'Workspace from your request did not found in the database',
+          description: 'Workspace from your request did not found in the database',
         });
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -111,14 +78,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       const allWorkspaces = await this.databaseService.workspace.findMany();
       return toEntityArray<WorkspaceEntity>(allWorkspaces, WorkspaceEntity);
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -131,54 +91,29 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
   async create(
     { name, description }: WorkspaceCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient: TransactionDbClient = this.databaseService,
   ): Promise<WorkspaceEntity> {
     try {
-      const newWorkspace = await this.databaseService.workspace.create({
+      const newWorkspace = await transactionDbClient.workspace.create({
         data: {
           name: name || DEFAULT_WORKSPACE_NAME + ` of user #${userId}`,
-          description:
-            description ||
-            DEFAULT_WORKSPACE_DESCRIPTION + ` of user #${userId}`,
+          description: description || DEFAULT_WORKSPACE_DESCRIPTION + ` of user #${userId}`,
           workspaceCreatorUuid: userId,
         },
       });
       return new WorkspaceEntity(newWorkspace);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(
-            BackendErrorNames.CONFLICT_ERROR,
-            jsonStringify(error),
-          ),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
       }
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -200,31 +135,15 @@ export class WorkspaceRepository implements IWorkspaceRepository {
 
       return new WorkspaceEntity(updatedWorkspace);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async deleteById(
-    workspaceId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<WorkspaceEntity> {
+  async deleteById(workspaceId: EntityUrlParamCommand.RequestUuidParam): Promise<WorkspaceEntity> {
     try {
       const deletedWorkspace = await this.databaseService.workspace.delete({
         where: {
@@ -234,25 +153,11 @@ export class WorkspaceRepository implements IWorkspaceRepository {
 
       return new WorkspaceEntity(deletedWorkspace);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -271,25 +176,11 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       });
       return new WorkspaceEntity(changedWorkspace);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 }

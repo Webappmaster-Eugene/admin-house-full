@@ -7,29 +7,21 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { ProjectEntity } from './entities/project.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
-import {
-  DEFAULT_PROJECT_DESCRIPTION,
-  DEFAULT_PROJECT_NAME,
-} from './lib/consts/project.default-data';
+import { KFI } from '../../common/utils/di';
+import { DEFAULT_PROJECT_DESCRIPTION, DEFAULT_PROJECT_NAME } from './lib/consts/project.default-data';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import {
-  BackendErrorNames,
-  InternalError,
-} from '../../common/errors/errors.backend';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { jsonStringify } from '../../common/helpers/stringify';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ProjectsRepository implements IProjectRepository {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    @Inject(KFI.PRISMA_SERVICE)
     private readonly databaseService: IPrismaService,
   ) {}
 
-  async getById(
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<ProjectEntity> {
+  async getById(projectId: EntityUrlParamCommand.RequestUuidParam): Promise<ProjectEntity> {
     try {
       const concreteProject = await this.databaseService.project.findUnique({
         where: {
@@ -42,27 +34,15 @@ export class ProjectsRepository implements IProjectRepository {
       } else {
         throw new NotFoundException({
           message: `Project with id=${projectId} not found`,
-          description:
-            'Project from your request did not found in the database',
+          description: 'Project from your request did not found in the database',
         });
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -71,14 +51,7 @@ export class ProjectsRepository implements IProjectRepository {
       const allProjects = await this.databaseService.project.findMany();
       return toEntityArray<ProjectEntity>(allProjects, ProjectEntity);
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -91,14 +64,7 @@ export class ProjectsRepository implements IProjectRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
@@ -122,34 +88,14 @@ export class ProjectsRepository implements IProjectRepository {
       });
       return new ProjectEntity(newProject);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(
-            BackendErrorNames.CONFLICT_ERROR,
-            jsonStringify(error),
-          ),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
       }
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async updateById(
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-    dto: ProjectUpdateRequestDto,
-  ): Promise<ProjectEntity> {
+  async updateById(projectId: EntityUrlParamCommand.RequestUuidParam, dto: ProjectUpdateRequestDto): Promise<ProjectEntity> {
     try {
       const { name, description, customerMail, customerUuid } = dto;
 
@@ -167,31 +113,15 @@ export class ProjectsRepository implements IProjectRepository {
 
       return new ProjectEntity(updatedProject);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 
-  async deleteById(
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<ProjectEntity> {
+  async deleteById(projectId: EntityUrlParamCommand.RequestUuidParam): Promise<ProjectEntity> {
     try {
       const deletedProject = await this.databaseService.project.delete({
         where: {
@@ -201,25 +131,11 @@ export class ProjectsRepository implements IProjectRepository {
 
       return new ProjectEntity(deletedProject);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
     }
   }
 }

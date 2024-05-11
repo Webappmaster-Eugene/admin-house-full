@@ -1,26 +1,22 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
 import { IPrismaService } from '../types/main/prisma.interface';
-import { KEYS_FOR_INJECTION } from '../utils/di';
-import { ADMIN_ROLE_ID, MANAGER_ROLE_ID } from '../consts/consts';
+import { KFI } from '../utils/di';
+import { ROLE_IDS } from '../consts/role-ids';
 import { ILogger } from '../types/main/logger.interface';
 import { jsonStringify } from '../helpers/stringify';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { IUserService } from '../../modules/user/types/user.service.interface';
 
 @Injectable()
 export class WorkspaceAffiliationGuard implements CanActivate {
   constructor(
     private configService: ConfigService,
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
-    private prismaService: IPrismaService,
-    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
+    @Inject(KFI.USER_SERVICE) private userService: IUserService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -30,22 +26,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
       // достаем uuid from токен
       const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
 
-      const findedUser = await this.prismaService.user.findUnique({
-        where: {
-          uuid: uuid,
-        },
-        select: {
-          role: {
-            select: {
-              uuid: true,
-              idRole: true,
-              name: true,
-            },
-          },
-          memberOfWorkspaceUuid: true,
-          creatorOfWorkspaceUuid: true,
-        },
-      });
+      const findedUser = await this.userService.getAllInfoById(uuid);
 
       if (!findedUser) {
         return false;
@@ -56,21 +37,15 @@ export class WorkspaceAffiliationGuard implements CanActivate {
 
       // или действие совершает ADMIN
       // или пользователь сам себя редактирует/смотрит
-      if (findedUser.role.idRole === ADMIN_ROLE_ID || inputUuid === uuid) {
+      if (findedUser.data.role['idRole'] === ROLE_IDS.ADMIN_ROLE_ID || inputUuid === uuid) {
         return true;
       }
 
       // или действие совершает менеджер Workspace, в котором находится пользователь
-      if (findedUser.role.idRole === MANAGER_ROLE_ID) {
+      if (findedUser.data.role['idRole'] === ROLE_IDS.MANAGER_ROLE_ID) {
         const manager = findedUser;
-        const selectedUser = await this.prismaService.user.findUnique({
-          where: {
-            uuid: inputUuid,
-          },
-        });
-        return (
-          selectedUser.memberOfWorkspaceUuid === manager.creatorOfWorkspaceUuid
-        );
+        const selectedUser = await this.userService.getAllInfoById(inputUuid);
+        return selectedUser.data.memberOfWorkspaceUuid === manager.data.creatorOfWorkspaceUuid;
       }
       return false;
     } catch (error) {

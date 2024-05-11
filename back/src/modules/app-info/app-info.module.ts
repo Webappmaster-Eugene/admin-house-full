@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { AppInfoRepository } from './app-info.repository';
 import { AppInfoService } from './app-info.service';
@@ -13,19 +13,19 @@ import { CqrsModule } from '@nestjs/cqrs';
     ...QUERIES,
     ...COMMANDS,
     {
-      provide: KEYS_FOR_INJECTION.I_PRISMA_SERVICE,
+      provide: KFI.PRISMA_SERVICE,
       useClass: PrismaService,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_LOGGER,
+      provide: KFI.LOGGER,
       useClass: Logger,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_APP_INFO_REPOSITORY,
+      provide: KFI.APP_INFO_REPOSITORY,
       useClass: AppInfoRepository,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_APP_INFO_SERVICE,
+      provide: KFI.APP_INFO_SERVICE,
       useClass: AppInfoService,
     },
   ],

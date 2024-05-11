@@ -17,31 +17,11 @@ export interface IControllerCommon<
   GReqIdParam = EntityUrlParamCommand.RequestUuidParam,
   GReqNumberParam = EntityUrlParamCommand.RequestNumberParam,
 > {
-  getByIdEP: (
-    id: GReqIdParam | GReqNumberParam,
-    urlParams: IUrlParams,
-    ...otherParams: unknown[]
-  ) => Promise<GResDto>;
-  getAllEP: (
-    urlParams?: IUrlParams,
-    ...otherParams: unknown[]
-  ) => Promise<GAResDto>;
-  createEP: (
-    dto: CReqDto,
-    urlParams: IUrlParams,
-    ...otherParams: unknown[]
-  ) => Promise<CResDto>;
-  updateByIdEP: (
-    id: GReqIdParam,
-    dto: UReqDto,
-    urlParams?: IUrlParams,
-    ...otherParams: unknown[]
-  ) => Promise<UResDto>;
-  deleteByIdEP: (
-    id: GReqIdParam,
-    urlParams?: IUrlParams,
-    ...otherParams: unknown[]
-  ) => Promise<DResDto>;
+  getByIdEP: (id: GReqIdParam | GReqNumberParam, urlParams: IUrlParams, ...otherParams: unknown[]) => Promise<GResDto>;
+  getAllEP: (urlParams?: IUrlParams, ...otherParams: unknown[]) => Promise<GAResDto>;
+  createEP: (dto: CReqDto, urlParams: IUrlParams, ...otherParams: unknown[]) => Promise<CResDto>;
+  updateByIdEP: (id: GReqIdParam, dto: UReqDto, urlParams?: IUrlParams, ...otherParams: unknown[]) => Promise<UResDto>;
+  deleteByIdEP: (id: GReqIdParam, urlParams?: IUrlParams, ...otherParams: unknown[]) => Promise<DResDto>;
   deleteByIdsEP?: (
     ids: GReqIdParam[],
     urlParams: IUrlParams,

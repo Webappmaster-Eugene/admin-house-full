@@ -40,8 +40,7 @@ async function main() {
   const ADMIN_USER = await prisma?.user?.create({
     data: {
       email: 'admin@mail.ru',
-      password:
-        '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roleUuid: ADMIN.uuid,
       firstName: 'Admin',
       secondName: 'Starter',
@@ -53,8 +52,7 @@ async function main() {
   const WORKER_USER = await prisma?.user?.create({
     data: {
       email: 'worker@mail.ru',
-      password:
-        '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roleUuid: WORKER.uuid,
       firstName: 'Worker',
       secondName: 'Starter',
@@ -66,8 +64,7 @@ async function main() {
   const CUSTOMER_USER = await prisma?.user?.create({
     data: {
       email: 'customer@mail.ru',
-      password:
-        '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roleUuid: CUSTOMER.uuid,
       firstName: 'Customer',
       secondName: 'Starter',
@@ -79,8 +76,7 @@ async function main() {
   const MANAGER_USER = await prisma?.user?.create({
     data: {
       email: 'manager@mail.ru',
-      password:
-        '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roleUuid: MANAGER.uuid,
       firstName: 'Manager',
       secondName: 'Starter',
@@ -92,8 +88,7 @@ async function main() {
   const MANAGER_WORKSPACE = await prisma?.workspace?.create({
     data: {
       name: 'Admin House Workspace',
-      description:
-        'Admin House Workspace - SaaS для эффективного контроля и составления сметной документации',
+      description: 'Admin House Workspace - SaaS для эффективного контроля и составления сметной документации',
       workspaceCreatorUuid: MANAGER_USER.uuid,
     },
   });
@@ -101,8 +96,7 @@ async function main() {
   const MANAGER_HANDBOOK = await prisma?.handbook?.create({
     data: {
       name: 'Admin House Handbook',
-      description:
-        'Admin House Handbook - справочник ресурсов для эффективного контроля и составления сметной документации',
+      description: 'Admin House Handbook - справочник ресурсов для эффективного контроля и составления сметной документации',
       responsibleManagerUuid: MANAGER_USER.uuid,
       workspaceUuid: MANAGER_WORKSPACE.uuid,
     },
@@ -111,8 +105,7 @@ async function main() {
   const MANAGER_ORGANIZATION = await prisma?.organization?.create({
     data: {
       name: 'Admin House Organization',
-      description:
-        'Admin House Organization - организация, занимающаяся постройкой домов',
+      description: 'Admin House Organization - организация, занимающаяся постройкой домов',
       workspaceUuid: MANAGER_WORKSPACE.uuid,
       organizationLeaderUuid: MANAGER_USER.uuid,
     },
@@ -121,8 +114,7 @@ async function main() {
   const MANAGER_PROJECT = await prisma?.project?.create({
     data: {
       name: 'Admin House Project - дом №1',
-      description:
-        'Admin House Project - постройка частного дома 100м2 в Санкт-Петербурге',
+      description: 'Admin House Project - постройка частного дома 100м2 в Санкт-Петербурге',
       responsibleManagerUuid: MANAGER_USER.uuid,
       customerUuid: CUSTOMER_USER.uuid,
       customerMail: CUSTOMER_USER.email,
@@ -182,7 +174,7 @@ async function main() {
     },
   });
 
-  const GLOBAL_CATEGORY_PEOPLE = await prisma?.globalCategory?.create({
+  const GLOBAL_CATEGORY_PEOPLE = await prisma?.globalCategoryMaterial?.create({
     data: {
       name: 'PEOPLE',
       nameRu: 'Люди',
@@ -191,7 +183,7 @@ async function main() {
     },
   });
 
-  const GLOBAL_CATEGORY_MATERIALS = await prisma?.globalCategory?.create({
+  const GLOBAL_CATEGORY_MATERIALS = await prisma?.globalCategoryMaterial?.create({
     data: {
       name: 'MATERIALS',
       nameRu: 'Материалы',
@@ -200,7 +192,7 @@ async function main() {
     },
   });
 
-  const GLOBAL_CATEGORY_OVERHEAD = await prisma?.globalCategory?.create({
+  const GLOBAL_CATEGORY_OVERHEAD = await prisma?.globalCategoryMaterial?.create({
     data: {
       name: 'OVERHEAD',
       nameRu: 'Накладные',
@@ -209,7 +201,7 @@ async function main() {
     },
   });
 
-  const GLOBAL_CATEGORY_MECHANISMS = await prisma?.globalCategory?.create({
+  const GLOBAL_CATEGORY_MECHANISMS = await prisma?.globalCategoryMaterial?.create({
     data: {
       name: 'MECHANISMS',
       nameRu: 'Механизмы',
@@ -229,7 +221,7 @@ main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);

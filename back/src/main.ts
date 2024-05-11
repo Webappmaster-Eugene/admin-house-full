@@ -1,31 +1,18 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
-import { instance } from '../logger/winston.logger';
+import { instanceWinstonLogger } from '../logger/winston.logger';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { ConfigService } from '@nestjs/config';
-import { HttpExceptionFilter } from './common/exceptions/old/http-exception.filter';
-import { ZodValidationExceptionFilter } from './common/exceptions/old/zod-validation-exception-filter';
-import { AllExceptionsFilter } from './common/exceptions/old/all-exceptions-filter';
 import { CustomExceptionFilter } from './common/exceptions/custom-exception-filter';
 
 async function bootstrap() {
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Документация для проекта Admin House Андрея Завьялова')
-    .setDescription('Документация REST API')
-    .setVersion('1.1.0')
-    .addTag('current version')
-    .build();
-
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger({
-      instance: instance,
-    }),
+    // logger: WinstonModule.createLogger({
+    //   instance: instanceWinstonLogger,
+    // }),
   });
-
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('/api/docs', app, document);
 
   const config = app.get(ConfigService);
 
@@ -37,28 +24,22 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     transform: true,
-  //     transformOptions: {
-  //       enableImplicitConversion: true,
-  //     },
-  //   }),
-  // );
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Документация для проекта Admin House Андрея Завьялова')
+    .setDescription('Документация REST API')
+    .setVersion('1.1.0')
+    .addTag('current version')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' }, 'access-token')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('/api/docs', app, document);
+
   app.useGlobalPipes(new ZodValidationPipe());
-
-  // const { httpAdapter } = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  // app.useGlobalFilters(new HttpExceptionFilter());
-
   app.useGlobalFilters(new CustomExceptionFilter());
 
   const PORT = Number(config.get<string>('APP_PORT')) || 3001;
 
-  await app.listen(PORT, () =>
-    console.log(`Сервер запущен успешно на порту ${PORT}`),
-  );
+  await app.listen(PORT, () => console.log(`Сервер запущен успешно на порту ${PORT}`));
 }
 
 bootstrap();

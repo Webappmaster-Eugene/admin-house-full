@@ -8,25 +8,21 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { RoleEntity } from './entities/role.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import {
-  BackendErrorNames,
-  InternalError,
-} from '../../common/errors/errors.backend';
+import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { jsonStringify } from '../../common/helpers/stringify';
+import { USER_TAKE_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class RolesRepository implements IRoleRepository {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
+    @Inject(KFI.PRISMA_SERVICE)
     private readonly databaseService: IPrismaService,
   ) {}
 
-  async getById(
-    roleId: EntityUrlParamCommand.RequestNumberParam,
-  ): Promise<RoleEntity> {
+  async getById(roleId: EntityUrlParamCommand.RequestNumberParam): Promise<RoleEntity> {
     try {
       const concreteRole = await this.databaseService.role.findUnique({
         where: {
@@ -43,27 +39,14 @@ export class RolesRepository implements IRoleRepository {
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async getByUuid(
-    roleUuid: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<RoleEntity> {
+  async getByUuid(roleUuid: EntityUrlParamCommand.RequestUuidParam): Promise<RoleEntity> {
     try {
       const concreteRole = await this.databaseService.role.findUnique({
         where: {
@@ -80,21 +63,10 @@ export class RolesRepository implements IRoleRepository {
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
@@ -115,37 +87,19 @@ export class RolesRepository implements IRoleRepository {
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async getAll(): Promise<RoleEntity[]> {
+  async getAll(skip: number = 0, take: number = 4): Promise<RoleEntity[]> {
     try {
-      const allRoles = await this.databaseService.role.findMany();
+      const allRoles = await this.databaseService.role.findMany({ take, skip });
       return toEntityArray<RoleEntity>(allRoles, RoleEntity);
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
@@ -158,21 +112,11 @@ export class RolesRepository implements IRoleRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async create({
-    name,
-    description,
-  }: RoleCreateRequestDto): Promise<RoleEntity> {
+  async create({ name, description }: RoleCreateRequestDto): Promise<RoleEntity> {
     try {
       const newRole = await this.databaseService.role.create({
         data: {
@@ -182,34 +126,14 @@ export class RolesRepository implements IRoleRepository {
       });
       return new RoleEntity(newRole);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(
-            BackendErrorNames.CONFLICT_ERROR,
-            jsonStringify(error),
-          ),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_CONFLICT_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.CONFLICT_ERROR, error));
       }
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async updateById(
-    roleUuid: EntityUrlParamCommand.RequestUuidParam,
-    { description }: RoleUpdateRequestDto,
-  ): Promise<RoleEntity> {
+  async updateById(roleUuid: EntityUrlParamCommand.RequestUuidParam, { description }: RoleUpdateRequestDto): Promise<RoleEntity> {
     try {
       const updatedRole = await this.databaseService.role.update({
         where: {
@@ -221,31 +145,15 @@ export class RolesRepository implements IRoleRepository {
       });
       return new RoleEntity(updatedRole);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async deleteById(
-    roleUuid: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<RoleEntity> {
+  async deleteById(roleUuid: EntityUrlParamCommand.RequestUuidParam): Promise<RoleEntity> {
     try {
       const deletedRole = await this.databaseService.role.delete({
         where: {
@@ -254,25 +162,11 @@ export class RolesRepository implements IRoleRepository {
       });
       return new RoleEntity(deletedRole);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 }

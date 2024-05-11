@@ -1,11 +1,8 @@
 import { Inject, Injectable, Param } from '@nestjs/common';
 import { OrganizationEntity } from './entities/organization.entity';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import {
-  InternalResponse,
-  UniversalInternalResponse,
-} from '../../common/types/responses/universal-internal-response.interface';
+import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { IOrganizationRepository } from './types/organization.repository.interface';
 import { IOrganizationService } from './types/organization.service.interface';
 import { OrganizationCreateRequestDto } from './dto/controller/create-organization.dto';
@@ -16,25 +13,19 @@ import { IWorkspaceService } from '../workspace/types/workspace.service.interfac
 @Injectable()
 export class OrganizationService implements IOrganizationService {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_ORGANIZATION_REPOSITORY)
+    @Inject(KFI.ORGANIZATION_REPOSITORY)
     private readonly organizationRepository: IOrganizationRepository,
-    @Inject(KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE)
+    @Inject(KFI.WORKSPACE_SERVICE)
     private readonly workspaceService: IWorkspaceService,
   ) {}
 
-  async getById(
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalInternalResponse<OrganizationEntity>> {
-    const concreteOrganization =
-      await this.organizationRepository.getById(organizationId);
+  async getById(organizationId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {
+    const concreteOrganization = await this.organizationRepository.getById(organizationId);
     return new InternalResponse<OrganizationEntity>(concreteOrganization);
   }
 
-  async getByManagerId(
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalInternalResponse<OrganizationEntity>> {
-    const concreteOrganization =
-      await this.organizationRepository.getByManagerId(managerId);
+  async getByManagerId(managerId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {
+    const concreteOrganization = await this.organizationRepository.getByManagerId(managerId);
     return new InternalResponse<OrganizationEntity>(concreteOrganization);
   }
 
@@ -50,11 +41,7 @@ export class OrganizationService implements IOrganizationService {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<OrganizationEntity>> {
     console.log(dto, userId, workspaceId);
-    const createdOrganization = await this.organizationRepository.create(
-      dto,
-      userId,
-      workspaceId,
-    );
+    const createdOrganization = await this.organizationRepository.create(dto, userId, workspaceId);
     return new InternalResponse<OrganizationEntity>(createdOrganization);
   }
 
@@ -62,18 +49,12 @@ export class OrganizationService implements IOrganizationService {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     dto: OrganizationUpdateRequestDto,
   ): Promise<UniversalInternalResponse<OrganizationEntity>> {
-    const updatedOrganization = await this.organizationRepository.updateById(
-      organizationId,
-      dto,
-    );
+    const updatedOrganization = await this.organizationRepository.updateById(organizationId, dto);
     return new InternalResponse<OrganizationEntity>(updatedOrganization);
   }
 
-  async deleteById(
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalInternalResponse<OrganizationEntity>> {
-    const deletedOrganization =
-      await this.organizationRepository.deleteById(organizationId);
+  async deleteById(organizationId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {
+    const deletedOrganization = await this.organizationRepository.deleteById(organizationId);
     return new InternalResponse<OrganizationEntity>(deletedOrganization);
   }
 }

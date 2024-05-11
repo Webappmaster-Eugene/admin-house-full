@@ -5,32 +5,18 @@ import { EUserTypeVariants } from '@prisma/client';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { RoleEntity } from '../entities/role.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
-export interface IRoleService
-  extends IServiceCommon<
-    RoleCreateRequestDto,
-    RoleUpdateRequestDto,
-    RoleEntity
-  > {
-  getById: (
-    roleId: EntityUrlParamCommand.RequestNumberParam,
-  ) => Promise<UniversalInternalResponse<RoleEntity>>;
-  getByUuid: (
-    roleUuid: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<RoleEntity>>;
-  getByValue: (
-    roleName: EUserTypeVariants,
-  ) => Promise<UniversalInternalResponse<RoleEntity>>;
-  getAll: () => Promise<UniversalInternalResponse<RoleEntity[]>>;
-  create: (
-    dto: RoleCreateRequestDto,
-  ) => Promise<UniversalInternalResponse<RoleEntity>>;
+export interface IRoleService extends IServiceCommon<RoleCreateRequestDto, RoleUpdateRequestDto, RoleEntity> {
+  getById: (roleId: EntityUrlParamCommand.RequestNumberParam) => Promise<UniversalInternalResponse<RoleEntity>>;
+  getByUuid: (roleUuid: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<RoleEntity>>;
+  getByValue: (roleName: EUserTypeVariants) => Promise<UniversalInternalResponse<RoleEntity>>;
+  getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<RoleEntity[]>>;
+  create: (dto: RoleCreateRequestDto) => Promise<UniversalInternalResponse<RoleEntity>>;
   updateById: (
     roleUuid: EntityUrlParamCommand.RequestUuidParam,
     dto: RoleUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<RoleEntity>>;
-  deleteById: (
-    roleUuid: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<RoleEntity>>;
+  deleteById: (roleUuid: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<RoleEntity>>;
   checkIsAdminSecretKey: (key: string) => boolean;
 }

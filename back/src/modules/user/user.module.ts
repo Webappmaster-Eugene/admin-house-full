@@ -1,35 +1,28 @@
-import { Logger, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { WorkspaceModule } from '../workspace/workspace.module';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
-import { PrismaService } from '../common/prisma/prisma.service';
+import { KFI } from '../../common/utils/di';
 import { UserRepository } from './user.repository';
 import { RolesModule } from '../roles/roles.module';
 import { HandbookModule } from '../handbook/handbook.module';
 import { OrganizationModule } from '../organization/organization.module';
 
+// да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить UserService
+@Global()
 @Module({
   providers: [
     {
-      provide: KEYS_FOR_INJECTION.I_PRISMA_SERVICE,
-      useClass: PrismaService,
-    },
-    {
-      provide: KEYS_FOR_INJECTION.I_LOGGER,
-      useClass: Logger,
-    },
-    {
-      provide: KEYS_FOR_INJECTION.I_USER_REPOSITORY,
+      provide: KFI.USER_REPOSITORY,
       useClass: UserRepository,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_USER_SERVICE,
+      provide: KFI.USER_SERVICE,
       useClass: UserService,
     },
   ],
   controllers: [UserController],
   imports: [RolesModule, WorkspaceModule, OrganizationModule, HandbookModule],
-  exports: [KEYS_FOR_INJECTION.I_USER_SERVICE],
+  exports: [KFI.USER_SERVICE],
 })
 export class UserModule {}

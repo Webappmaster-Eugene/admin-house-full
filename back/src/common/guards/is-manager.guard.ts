@@ -1,23 +1,19 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IPrismaService } from '../types/main/prisma.interface';
-import { KEYS_FOR_INJECTION } from '../utils/di';
-import { MANAGER_ROLE_ID } from '../consts/consts';
+import { KFI } from '../utils/di';
+import { ROLE_IDS } from '../consts/role-ids';
 import { ILogger } from '../types/main/logger.interface';
 import { jsonStringify } from '../helpers/stringify';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { IUserService } from '../../modules/user/types/user.service.interface';
 
 @Injectable()
 export class IsManagerInBodyGuard implements CanActivate {
   constructor(
     private configService: ConfigService,
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
-    private prismaService: IPrismaService,
-    @Inject(KEYS_FOR_INJECTION.I_LOGGER) private readonly logger: ILogger,
+    @Inject(KFI.USER_SERVICE) private userService: IUserService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -25,21 +21,10 @@ export class IsManagerInBodyGuard implements CanActivate {
       // достаем uuid нового потенциального владельца workspace
       const bodyUuid = context.switchToHttp().getRequest().body['uuid'];
 
-      const newOwner = await this.prismaService.user.findUnique({
-        where: {
-          uuid: bodyUuid,
-        },
-        select: {
-          role: {
-            select: {
-              idRole: true,
-            },
-          },
-        },
-      });
+      const { data } = await this.userService.getAllInfoById(bodyUuid);
 
       // новый владелец менеджер?
-      return newOwner.role.idRole === MANAGER_ROLE_ID;
+      return data.role['idRole'] === ROLE_IDS.MANAGER_ROLE_ID;
     } catch (error) {
       this.logger.error(jsonStringify(error));
       return false;

@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import {
-  ECurrencyTypeVariantsSchema,
-  ELanguagesTypeVariantsSchema,
-  EStatusAppSchema,
-} from '../../../../src/common/generated/zod';
+import { ECurrencyTypeVariantsSchema, ELanguagesTypeVariantsSchema, EStatusAppSchema } from '../../../../src/common/generated/zod';
 
 export const AppInfoSchema = z.object({
   uuid: z.string().uuid(),

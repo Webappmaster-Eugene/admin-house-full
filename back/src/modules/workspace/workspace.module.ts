@@ -1,31 +1,25 @@
-import { Logger, Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceController } from './workspace.controller';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { WorkspaceRepository } from './workspace.repository';
 import { PrismaService } from '../common/prisma/prisma.service';
 
+// да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить WorkspaceService
+@Global()
 @Module({
   providers: [
     {
-      provide: KEYS_FOR_INJECTION.I_PRISMA_SERVICE,
-      useClass: PrismaService,
-    },
-    {
-      provide: KEYS_FOR_INJECTION.I_LOGGER,
-      useClass: Logger,
-    },
-    {
-      provide: KEYS_FOR_INJECTION.I_WORKSPACE_REPOSITORY,
+      provide: KFI.WORKSPACE_REPOSITORY,
       useClass: WorkspaceRepository,
     },
     {
-      provide: KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE,
+      provide: KFI.WORKSPACE_SERVICE,
       useClass: WorkspaceService,
     },
   ],
   controllers: [WorkspaceController],
   imports: [],
-  exports: [KEYS_FOR_INJECTION.I_WORKSPACE_SERVICE],
+  exports: [KFI.WORKSPACE_SERVICE],
 })
 export class WorkspaceModule {}

@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
@@ -12,27 +7,24 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { UserEntity } from './entities/user.entity';
 import { toEntityArray } from '../../common/utils/mappers';
-import { KEYS_FOR_INJECTION } from '../../common/utils/di';
+import { KFI } from '../../common/utils/di';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import {
-  BackendErrorNames,
-  InternalError,
-} from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
+import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
+import { UserAllInfoEntity } from './entities/user-all-info.entity';
+import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
+import { USER_TAKE_LIMIT } from '../../common/consts/take-quantity.limitation';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(
-    @Inject(KEYS_FOR_INJECTION.I_PRISMA_SERVICE)
-    private readonly prismaService: IPrismaService,
+    @Inject(KFI.PRISMA_SERVICE)
+    private readonly databaseService: IPrismaService,
   ) {}
 
-  async getById(
-    userId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UserEntity> {
+  async getById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UserEntity> {
     try {
-      const findedUser = await this.prismaService.user.findUnique({
+      const findedUser = await this.databaseService.user.findUnique({
         where: {
           uuid: userId,
         },
@@ -48,29 +40,46 @@ export class UserRepository implements IUserRepository {
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async getByEmail(
-    userEmail: EntityUrlParamCommand.RequestEmailParam,
-  ): Promise<UserEntity> {
+  async getAllInfoById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UserAllInfoEntity> {
     try {
-      const findedUser = await this.prismaService.user.findUnique({
+      const findedUser = await this.databaseService.user.findUnique({
+        where: {
+          uuid: userId,
+        },
+        include: {
+          role: true,
+          creatorOfWorkspace: true,
+          memberOfWorkspace: true,
+        },
+      });
+
+      if (findedUser) {
+        return new UserAllInfoEntity(findedUser);
+      } else {
+        throw new NotFoundException({
+          message: `User with id=${userId} not found`,
+          description: 'User from your request did not found in the database',
+        });
+      }
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
+      }
+
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+    }
+  }
+
+  async getByEmail(userEmail: EntityUrlParamCommand.RequestEmailParam): Promise<UserEntity> {
+    try {
+      const findedUser = await this.databaseService.user.findUnique({
         where: {
           email: userEmail,
         },
@@ -79,10 +88,6 @@ export class UserRepository implements IUserRepository {
       if (findedUser) {
         return new UserEntity(findedUser);
       } else {
-        //   throw new NotFoundException({
-        //     message: `User with email=${userEmail} not found`,
-        //     description: 'User from your request did not found in the database',
-        //   });
         throw new UnauthorizedException({
           message: `User credentials are wrong`,
           description: 'Failed to get user with these credentials',
@@ -90,91 +95,58 @@ export class UserRepository implements IUserRepository {
       }
     } catch (error: unknown) {
       if (error instanceof NotFoundException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
       if (error instanceof UnauthorizedException) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.INVALID_CREDENTIALS),
-        );
+        throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async getAll(): Promise<UserEntity[]> {
+  async getAll(skip = 0, take = 3): Promise<UserEntity[]> {
+    if (take > USER_TAKE_LIMIT) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR));
+    }
+
     try {
-      const allUsers = await this.prismaService.user.findMany();
-      return toEntityArray<UserEntity>(allUsers, UserEntity);
+      const allUsers = await this.databaseService.user.findMany({ take, skip });
+      return toEntityArray(allUsers, UserEntity);
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
   async getAllCount(): Promise<CountData> {
     try {
-      const total = await this.prismaService.user.count({
+      const total = await this.databaseService.user.count({
         select: {
           _all: true, // Count all records
         },
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
   async create(
     dto: UserCreateRequestDto,
     roleUuid: EntityUrlParamCommand.RequestUuidParam,
+    hashedPassword: string,
+    transactionDbClient: TransactionDbClient = this.databaseService,
   ): Promise<UserEntity> {
     try {
-      const {
-        email,
-        phone,
-        firstName,
-        secondName,
-        password,
-        address,
-        info,
-        documents,
-        avatar,
-      } = dto;
-      const newUser = await this.prismaService.user.create({
+      const { email, phone, firstName, secondName, address, info, documents, avatar } = dto;
+      const newUser = await transactionDbClient.user.create({
         data: {
           email,
           phone,
           firstName,
           secondName,
-          password,
+          password: hashedPassword,
           address,
           info,
           documents,
@@ -184,39 +156,18 @@ export class UserRepository implements IUserRepository {
       });
       return new UserEntity(newUser);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(
-            BackendErrorNames.CONFLICT_ERROR,
-            jsonStringify(error),
-          ),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_CONFLICT_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.PRISMA_CONFLICT_ERROR, error));
       }
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async updateById(
-    userId: EntityUrlParamCommand.RequestUuidParam,
-    dto: UserUpdateRequestDto,
-  ): Promise<UserEntity> {
+  async updateById(userId: EntityUrlParamCommand.RequestUuidParam, dto: UserUpdateRequestDto): Promise<UserEntity> {
     try {
-      const { phone, firstName, secondName, address, info, documents, avatar } =
-        dto;
+      const { phone, firstName, secondName, address, info, documents, avatar } = dto;
 
-      const updatedUser = await this.prismaService.user.update({
+      const updatedUser = await this.databaseService.user.update({
         where: {
           uuid: userId,
         },
@@ -232,58 +183,28 @@ export class UserRepository implements IUserRepository {
       });
       return new UserEntity(updatedUser);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async deleteById(
-    userId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UserEntity> {
+  async deleteById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UserEntity> {
     try {
-      const deletedUser = await this.prismaService.user.delete({
+      const deletedUser = await this.databaseService.user.delete({
         where: {
           uuid: userId,
         },
       });
       return new UserEntity(deletedUser);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
@@ -294,7 +215,7 @@ export class UserRepository implements IUserRepository {
     console.log(workspaceCreatorId, workspaceId);
 
     try {
-      const updatedManager = await this.prismaService.user.update({
+      const updatedManager = await this.databaseService.user.update({
         where: {
           uuid: workspaceCreatorId,
         },
@@ -304,25 +225,11 @@ export class UserRepository implements IUserRepository {
       });
       return new UserEntity(updatedManager);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
@@ -331,7 +238,7 @@ export class UserRepository implements IUserRepository {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UserEntity> {
     try {
-      const updatedManager = await this.prismaService.user.update({
+      const updatedManager = await this.databaseService.user.update({
         where: {
           uuid: handbookCreatorId,
         },
@@ -341,25 +248,11 @@ export class UserRepository implements IUserRepository {
       });
       return new UserEntity(updatedManager);
     } catch (error: unknown) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new InternalResponse(
-          null,
-          false,
-          new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)),
-        );
+      if (error instanceof PrismaClientKnownRequestError && BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
       }
 
-      throw new InternalResponse(
-        null,
-        false,
-        new InternalError(
-          BackendErrorNames.INTERNAL_ERROR,
-          jsonStringify(error),
-        ),
-      );
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 }

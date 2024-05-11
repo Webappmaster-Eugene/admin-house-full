@@ -10,7 +10,6 @@ import {
 import { Request, Response } from 'express';
 import { ZodValidationException } from 'nestjs-zod';
 import { ZodError } from 'zod';
-import { ExternalResponse } from '../types/responses/universal-external-response.interface';
 
 @Catch(HttpException)
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -34,10 +33,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         message: exception.message,
         errors: [exception.getZodError()],
       });
-    } else if (
-      exception instanceof InternalServerErrorException &&
-      exception['error'] instanceof ZodError
-    ) {
+    } else if (exception instanceof InternalServerErrorException && exception['error'] instanceof ZodError) {
       return response.status(status).json({
         data: null,
         statusCode: status,

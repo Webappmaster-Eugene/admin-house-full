@@ -5,6 +5,7 @@ export * from './project';
 export * from './workspace';
 export * from './organization';
 export * from './handbook';
+export * from './app-info';
 export * from './global-category-material';
 export * from './category-material';
 export * from './responsible-partner-producer';
