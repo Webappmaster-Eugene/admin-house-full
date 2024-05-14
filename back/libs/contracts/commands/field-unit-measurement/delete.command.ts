@@ -13,8 +13,7 @@ const FieldUnitMeasurementDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace FieldUnitMeasurementDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = FieldUnitMeasurementDeleteResponseSchema;

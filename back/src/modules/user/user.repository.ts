@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
@@ -6,14 +6,15 @@ import { UserUpdateRequestDto } from './dto/controller/update-user.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { UserEntity } from './entities/user.entity';
-import { toEntityArray } from '../../common/utils/mappers';
 import { KFI } from '../../common/utils/di';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
 import { UserAllInfoEntity } from './entities/user-all-info.entity';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
-import { USER_TAKE_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { existenceUserEntityHandler } from './lib/user-entity-existance.handler';
+import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -30,24 +31,13 @@ export class UserRepository implements IUserRepository {
         },
       });
 
-      if (findedUser) {
-        return new UserEntity(findedUser);
-      } else {
-        throw new NotFoundException({
-          message: `User with id=${userId} not found`,
-          description: 'User from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAllInfoById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UserAllInfoEntity> {
+  async getFullInfoById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UserAllInfoEntity> {
     try {
       const findedUser = await this.databaseService.user.findUnique({
         where: {
@@ -60,20 +50,9 @@ export class UserRepository implements IUserRepository {
         },
       });
 
-      if (findedUser) {
-        return new UserAllInfoEntity(findedUser);
-      } else {
-        throw new NotFoundException({
-          message: `User with id=${userId} not found`,
-          description: 'User from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedUser, UserAllInfoEntity, EntityName.USER) as UserAllInfoEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -85,37 +64,20 @@ export class UserRepository implements IUserRepository {
         },
       });
 
-      if (findedUser) {
-        return new UserEntity(findedUser);
-      } else {
-        throw new UnauthorizedException({
-          message: `User credentials are wrong`,
-          description: 'Failed to get user with these credentials',
-        });
-      }
+      return existenceUserEntityHandler(findedUser);
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      if (error instanceof UnauthorizedException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAll(skip = 0, take = 3): Promise<UserEntity[]> {
-    if (take > USER_TAKE_LIMIT) {
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR));
-    }
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<UserEntity[]> {
+    limitTakeHandler(take);
 
     try {
       const allUsers = await this.databaseService.user.findMany({ take, skip });
-      return toEntityArray(allUsers, UserEntity);
+      return existenceEntityHandler(allUsers, UserEntity, EntityName.USER) as UserEntity[];
     } catch (error: unknown) {
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -128,7 +90,7 @@ export class UserRepository implements IUserRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -154,12 +116,9 @@ export class UserRepository implements IUserRepository {
           roleUuid,
         },
       });
-      return new UserEntity(newUser);
+      return existenceEntityHandler(newUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_CONFLICT_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.PRISMA_CONFLICT_ERROR, error));
-      }
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -181,13 +140,9 @@ export class UserRepository implements IUserRepository {
           avatar,
         },
       });
-      return new UserEntity(updatedUser);
+      return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -198,24 +153,19 @@ export class UserRepository implements IUserRepository {
           uuid: userId,
         },
       });
-      return new UserEntity(deletedUser);
+      return existenceEntityHandler(deletedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
   async addExistedWorkspaceToManager(
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient: TransactionDbClient = this.databaseService,
   ): Promise<UserEntity> {
-    console.log(workspaceCreatorId, workspaceId);
-
     try {
-      const updatedManager = await this.databaseService.user.update({
+      const updatedManager = await transactionDbClient.user.update({
         where: {
           uuid: workspaceCreatorId,
         },
@@ -223,22 +173,19 @@ export class UserRepository implements IUserRepository {
           creatorOfWorkspaceUuid: workspaceId,
         },
       });
-      return new UserEntity(updatedManager);
+      return existenceEntityHandler(updatedManager, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
   async addExistedHandbookToManager(
     handbookCreatorId: EntityUrlParamCommand.RequestUuidParam,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient: TransactionDbClient = this.databaseService,
   ): Promise<UserEntity> {
     try {
-      const updatedManager = await this.databaseService.user.update({
+      const updatedManager = await transactionDbClient.user.update({
         where: {
           uuid: handbookCreatorId,
         },
@@ -246,13 +193,9 @@ export class UserRepository implements IUserRepository {
           handbookManagerUuid: handbookId,
         },
       });
-      return new UserEntity(updatedManager);
+      return existenceEntityHandler(updatedManager, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 }

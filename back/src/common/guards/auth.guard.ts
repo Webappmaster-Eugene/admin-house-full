@@ -5,10 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
 import { ILogger } from '../types/main/logger.interface';
-import { jsonStringify } from '../helpers/stringify';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { KFI } from '../utils/di';
 import { IUserService } from '../../modules/user/types/user.service.interface';
+import { dataInternalExtractor } from '../helpers/data-internal.extractor';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     try {
       const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
 
-      const user = await this.userService.getAllInfoById(uuid);
+      const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
 
       if (!user) {
         return false;
@@ -37,9 +37,9 @@ export class AuthGuard implements CanActivate {
         return true;
       }
 
-      return !!roles.includes(user.data.role['roleId']);
+      return !!roles.includes(user.role['roleId']);
     } catch (error) {
-      this.logger.error(jsonStringify(error));
+      this.logger.error(JSON.stringify(error));
       return false;
     }
   }

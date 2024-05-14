@@ -9,7 +9,7 @@ import type { TransactionDbClient } from '../../../common/types/transaction-pris
 
 export interface IUserRepository extends IRepositoryCommon<UserCreateRequestDto, UserUpdateRequestDto, UserEntity> {
   getById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UserEntity>;
-  getAllInfoById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UserAllInfoEntity>;
+  getFullInfoById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UserAllInfoEntity>;
   getByEmail: (userEmail: EntityUrlParamCommand.RequestEmailParam) => Promise<UserEntity>;
   getAll: (skip?: number, take?: number) => Promise<UserEntity[]>;
   getAllCount: () => Promise<CountData>;
@@ -24,9 +24,11 @@ export interface IUserRepository extends IRepositoryCommon<UserCreateRequestDto,
   addExistedWorkspaceToManager: (
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
   ) => Promise<UserEntity>;
   addExistedHandbookToManager: (
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
   ) => Promise<UserEntity>;
 }

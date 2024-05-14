@@ -1,20 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  Inject,
-  Param,
-  ParseIntPipe,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrganizationEntity } from './entities/organization.entity';
-import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import {
   OrganizationCreateCommand,
@@ -35,17 +21,16 @@ import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { jsonStringify } from '../../common/helpers/stringify';
-import { errorExtractor } from '../../common/helpers/inner-error.extractor';
 import { EntityName } from '../../common/types/entity.enum';
-import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { okResponseHandler } from '../../common/helpers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/error-response.handler';
+import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Organization пользователей')
 @Controller('workspace/:workspaceId/organization')
@@ -73,23 +58,17 @@ export class OrganizationController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<OrganizationGetResponseDto> {
     try {
-      const responseData = await this.organizationService.getById(organizationId);
-      if (responseData.ok) {
-        return new ExternalResponse<OrganizationEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ROLE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.organizationService.getById(organizationId);
+      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(OrganizationGetAllCommand.RequestQuerySchema),
+  })
   @ApiOkResponse({
     schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
   })
@@ -101,21 +80,12 @@ export class OrganizationController {
   @UseGuards(AuthGuard)
   @ZodSerializerDto(OrganizationGetAllResponseDto)
   @Get()
-  async getAllEP(@UrlParams() urlParams: IUrlParams): Promise<OrganizationGetAllResponseDto> {
+  async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<OrganizationGetAllResponseDto> {
     try {
-      const responseData = await this.organizationService.getAll();
-      if (responseData.ok) {
-        return new ExternalResponse<OrganizationEntity[]>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.organizationService.getAll(queryParams);
+      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
   }
 
@@ -142,19 +112,10 @@ export class OrganizationController {
   ): Promise<OrganizationCreateResponseDto> {
     // в param create передается автоматически id Workspace, в котором создается Organization
     try {
-      const responseData = await this.organizationService.create(dto, userInfoFromJWT.uuid, workspaceId);
-      if (responseData.ok) {
-        return new ExternalResponse<OrganizationEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.organizationService.create(dto, userInfoFromJWT.uuid, workspaceId);
+      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
   }
 
@@ -179,19 +140,10 @@ export class OrganizationController {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationUpdateResponseDto> {
     try {
-      const responseData = await this.organizationService.updateById(organizationId, dto);
-      if (responseData.ok) {
-        return new ExternalResponse<OrganizationEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.organizationService.updateById(organizationId, dto);
+      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
   }
 
@@ -213,19 +165,10 @@ export class OrganizationController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<OrganizationDeleteResponseDto> {
     try {
-      const responseData = await this.organizationService.deleteById(organizationId);
-      if (responseData.ok) {
-        return new ExternalResponse<OrganizationEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.ORGANIZATION, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.organizationService.deleteById(organizationId);
+      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
   }
 }

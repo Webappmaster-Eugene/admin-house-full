@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models';
-import { FieldVariantsForSelectorFieldTypeSchema } from '../../models/field-variants-for-selector-field-type';
+import { RequestGetAllQuerySchema, ResponseClientSchema } from '../../models';
+import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
 const FieldVariantsForSelectorFieldTypeGetAllResponseSchema = z
   .object({
@@ -14,7 +14,9 @@ const FieldVariantsForSelectorFieldTypeGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace FieldVariantsForSelectorFieldTypeGetAllCommand {
-  export const ResponseSchema =
-    FieldVariantsForSelectorFieldTypeGetAllResponseSchema;
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
+  export const ResponseSchema = FieldVariantsForSelectorFieldTypeGetAllResponseSchema;
   export type Request = z.infer<typeof ResponseSchema>;
 }

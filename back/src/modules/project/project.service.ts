@@ -9,6 +9,7 @@ import { InternalResponse, UniversalInternalResponse } from '../../common/types/
 import { ProjectCreateRequestDto } from './dto/controller/create-project.dto';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ProjectUpdateRequestDto } from './dto/controller/update-project.dto';
+import { IQueryParams } from '../../common/decorators/query-params.decorator';
 
 @Injectable()
 export class ProjectService implements IProjectService {
@@ -24,8 +25,9 @@ export class ProjectService implements IProjectService {
     return new InternalResponse<ProjectEntity>(concreteOrganization);
   }
 
-  async getAll(): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
-    const allOrganizations = await this.projectRepository.getAll();
+  async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
+    const { skip, take } = queryParams;
+    const allOrganizations = await this.projectRepository.getAll(skip, take);
     return new InternalResponse<ProjectEntity[]>(allOrganizations);
   }
 

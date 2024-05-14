@@ -1,7 +1,6 @@
-import { unknown, z } from 'zod';
-import { RoleSchema, UserSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
-import { Res } from '@nestjs/common';
+import { z } from 'zod';
+import { RequestGetAllQuerySchema, RoleSchema } from '../../models';
+import { ResponseClientSchema } from '../../models';
 
 const RoleGetAllResponseSchema = z
   .object({
@@ -16,6 +15,9 @@ const RoleGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace RoleGetAllCommand {
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
   export const ResponseSchema = RoleGetAllResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 }

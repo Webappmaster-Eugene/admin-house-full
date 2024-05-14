@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PriceChangingSchema } from '../../models';
+import { PriceChangingSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const PriceChangingGetAllResponseSchema = z
@@ -14,6 +14,9 @@ const PriceChangingGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace PriceChangingGetAllCommand {
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
   export const ResponseSchema = PriceChangingGetAllResponseSchema;
   export type Request = z.infer<typeof ResponseSchema>;
 }

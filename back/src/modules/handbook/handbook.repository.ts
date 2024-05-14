@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { HandbookCreateRequestDto } from './dto/controller/create-handbook.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IHandbookRepository } from './types/handbook.repository.interface';
@@ -6,13 +6,15 @@ import { HandbookUpdateRequestDto } from './dto/controller/update-handbook.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { HandbookEntity } from './entities/handbook.entity';
-import { toEntityArray } from '../../common/utils/mappers';
 import { DEFAULT_HANDBOOK_DESCRIPTION, DEFAULT_HANDBOOK_NAME } from './lib/consts/handbook.default-data';
 import { KFI } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
 
 @Injectable()
 export class HandbookRepository implements IHandbookRepository {
@@ -29,20 +31,9 @@ export class HandbookRepository implements IHandbookRepository {
         },
       });
 
-      if (findedHandbook) {
-        return new HandbookEntity(findedHandbook);
-      } else {
-        throw new NotFoundException({
-          message: `Handbook with id=${handbookId} not found`,
-          description: 'Handbook from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -54,29 +45,23 @@ export class HandbookRepository implements IHandbookRepository {
         },
       });
 
-      if (findedHandbook) {
-        return new HandbookEntity(findedHandbook);
-      } else {
-        throw new NotFoundException({
-          message: `Handbook with managerId=${managerId} not found`,
-          description: 'Handbook from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedHandbook, HandbookEntity, EntityName.HANDBOOK, {
+        message: `Handbook with managerId=${managerId} not found`,
+        description: 'Handbook from your request did not found in the database',
+      }) as HandbookEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAll(): Promise<HandbookEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<HandbookEntity[]> {
+    limitTakeHandler(take);
+
     try {
-      const allHandbooks = await this.databaseService.handbook.findMany();
-      return toEntityArray<HandbookEntity>(allHandbooks, HandbookEntity);
+      const allHandbooks = await this.databaseService.handbook.findMany({ skip, take });
+      return existenceEntityHandler(allHandbooks, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity[];
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -89,14 +74,18 @@ export class HandbookRepository implements IHandbookRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
     }
   }
 
-  async create(dto: HandbookCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam): Promise<HandbookEntity> {
+  async create(
+    dto: HandbookCreateRequestDto,
+    managerId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient = this.databaseService,
+  ): Promise<HandbookEntity> {
     try {
       const { name, description, canCustomerView, workspaceUuid } = dto;
-      const newHandbook = await this.databaseService.handbook.create({
+      const newHandbook = await transactionDbClient.handbook.create({
         data: {
           name: name || DEFAULT_HANDBOOK_NAME + ` of user #${managerId}`,
           description: description || DEFAULT_HANDBOOK_DESCRIPTION + ` of user #${managerId}`,
@@ -105,12 +94,9 @@ export class HandbookRepository implements IHandbookRepository {
           workspaceUuid,
         },
       });
-      return new HandbookEntity(newHandbook);
+      return existenceEntityHandler(newHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
-      }
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -129,13 +115,9 @@ export class HandbookRepository implements IHandbookRepository {
         },
       });
 
-      return new HandbookEntity(updatedHandbook);
+      return existenceEntityHandler(updatedHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -147,13 +129,9 @@ export class HandbookRepository implements IHandbookRepository {
         },
       });
 
-      return new HandbookEntity(deletedHandbook);
+      return existenceEntityHandler(deletedHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models';
+import { RequestGetAllQuerySchema, ResponseClientSchema } from '../../models';
 import { GlobalCategoryMaterialSchema } from '../../models';
 
 const GlobalCategoryMaterialGetAllResponseSchema = z
@@ -14,6 +14,9 @@ const GlobalCategoryMaterialGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace GlobalCategoryMaterialGetAllCommand {
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
   export const ResponseSchema = GlobalCategoryMaterialGetAllResponseSchema;
   export type Request = z.infer<typeof ResponseSchema>;
 }

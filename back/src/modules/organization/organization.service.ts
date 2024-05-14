@@ -1,4 +1,4 @@
-import { Inject, Injectable, Param } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationEntity } from './entities/organization.entity';
 import { KFI } from '../../common/utils/di';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
@@ -6,9 +6,9 @@ import { InternalResponse, UniversalInternalResponse } from '../../common/types/
 import { IOrganizationRepository } from './types/organization.repository.interface';
 import { IOrganizationService } from './types/organization.service.interface';
 import { OrganizationCreateRequestDto } from './dto/controller/create-organization.dto';
-import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { OrganizationUpdateRequestDto } from './dto/controller/update-organization.dto';
 import { IWorkspaceService } from '../workspace/types/workspace.service.interface';
+import { IQueryParams } from '../../common/decorators/query-params.decorator';
 
 @Injectable()
 export class OrganizationService implements IOrganizationService {
@@ -21,18 +21,19 @@ export class OrganizationService implements IOrganizationService {
 
   async getById(organizationId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {
     const concreteOrganization = await this.organizationRepository.getById(organizationId);
-    return new InternalResponse<OrganizationEntity>(concreteOrganization);
+    return new InternalResponse(concreteOrganization);
   }
 
   async getByManagerId(managerId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {
     const concreteOrganization = await this.organizationRepository.getByManagerId(managerId);
-    return new InternalResponse<OrganizationEntity>(concreteOrganization);
+    return new InternalResponse(concreteOrganization);
   }
 
-  async getAll(): Promise<UniversalInternalResponse<OrganizationEntity[]>> {
-    const allOrganizations = await this.organizationRepository.getAll();
+  async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<OrganizationEntity[]>> {
+    const { skip, take } = queryParams;
+    const allOrganizations = await this.organizationRepository.getAll(skip, take);
     //const allOrganizationsCount = await this.roleRepository.getAllCount();
-    return new InternalResponse<OrganizationEntity[]>(allOrganizations);
+    return new InternalResponse(allOrganizations);
   }
 
   async create(
@@ -40,9 +41,8 @@ export class OrganizationService implements IOrganizationService {
     userId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<OrganizationEntity>> {
-    console.log(dto, userId, workspaceId);
     const createdOrganization = await this.organizationRepository.create(dto, userId, workspaceId);
-    return new InternalResponse<OrganizationEntity>(createdOrganization);
+    return new InternalResponse(createdOrganization);
   }
 
   async updateById(
@@ -50,11 +50,11 @@ export class OrganizationService implements IOrganizationService {
     dto: OrganizationUpdateRequestDto,
   ): Promise<UniversalInternalResponse<OrganizationEntity>> {
     const updatedOrganization = await this.organizationRepository.updateById(organizationId, dto);
-    return new InternalResponse<OrganizationEntity>(updatedOrganization);
+    return new InternalResponse(updatedOrganization);
   }
 
   async deleteById(organizationId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {
     const deletedOrganization = await this.organizationRepository.deleteById(organizationId);
-    return new InternalResponse<OrganizationEntity>(deletedOrganization);
+    return new InternalResponse(deletedOrganization);
   }
 }

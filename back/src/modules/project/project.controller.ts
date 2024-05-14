@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpException, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -8,7 +8,6 @@ import { KFI } from '../../common/utils/di';
 import { IProjectService } from './types/project.service.interface';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ProjectGetAllResponseDto } from './dto/controller/get-all-projects.dto';
 import { ProjectGetResponseDto } from './dto/controller/get-project.dto';
@@ -22,17 +21,16 @@ import {
   ProjectUpdateCommand,
 } from '../../../libs/contracts';
 import { ProjectDeleteResponseDto } from './dto/controller/delete-project.dto';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { jsonStringify } from '../../common/helpers/stringify';
-import { errorExtractor } from '../../common/helpers/inner-error.extractor';
 import { EntityName } from '../../common/types/entity.enum';
-import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { okResponseHandler } from '../../common/helpers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/error-response.handler';
+import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Projects')
 @Controller('workspace/:workspaceId/organization/:organizationId/project')
@@ -59,23 +57,17 @@ export class ProjectController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<ProjectGetResponseDto> {
     try {
-      const responseData = await this.projectService.getById(projectId);
-      if (responseData.ok) {
-        return new ExternalResponse<ProjectEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.PROJECT, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.projectService.getById(projectId);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
+  })
   @ApiOkResponse({
     schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
   })
@@ -87,21 +79,12 @@ export class ProjectController {
   @UseGuards(AuthGuard)
   @ZodSerializerDto(ProjectGetAllResponseDto)
   @Get()
-  async getAllEP(@UrlParams() urlParams: IUrlParams): Promise<ProjectGetAllResponseDto> {
+  async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<ProjectGetAllResponseDto> {
     try {
-      const responseData = await this.projectService.getAll();
-      if (responseData.ok) {
-        return new ExternalResponse<ProjectEntity[]>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.PROJECT, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.projectService.getAll(queryParams);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
   }
 
@@ -127,19 +110,10 @@ export class ProjectController {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ProjectCreateResponseDto> {
     try {
-      const responseData = await this.projectService.create(dto, userInfoFromJWT, organizationId);
-      if (responseData.ok) {
-        return new ExternalResponse<ProjectEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.PROJECT, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.projectService.create(dto, userInfoFromJWT, organizationId);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
   }
 
@@ -164,19 +138,10 @@ export class ProjectController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<ProjectUpdateResponseDto> {
     try {
-      const responseData = await this.projectService.updateById(projectId, dto);
-      if (responseData.ok) {
-        return new ExternalResponse<ProjectEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.PROJECT, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.projectService.updateById(projectId, dto);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
   }
 
@@ -199,19 +164,10 @@ export class ProjectController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<ProjectDeleteResponseDto> {
     try {
-      const responseData = await this.projectService.deleteById(projectId);
-      if (responseData.ok) {
-        return new ExternalResponse<ProjectEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.PROJECT, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.projectService.deleteById(projectId);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
   }
 }

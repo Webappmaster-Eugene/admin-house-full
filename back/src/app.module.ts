@@ -16,7 +16,7 @@ import { AppInfoModule } from './modules/app-info/app-info.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
-// import { GlobalCategoryMaterialModule } from './modules/global-category-material/global-category-material.module';
+import { GlobalCategoryMaterialModule } from './modules/global-category-material/global-category-material.module';
 import { WinstonModule } from 'nest-winston/dist/winston.module';
 import { LoggerConfig } from '../logger/logger-config';
 
@@ -45,15 +45,15 @@ const logger: LoggerConfig = new LoggerConfig();
     // ServeStaticModule.forRoot({
     //   rootPath: path.resolve(__dirname, './static'),
     // }),
-    RolesModule,
-    UserModule,
-    //GlobalCategoryMaterialModule,
     AuthModule,
     AppInfoModule,
+    RolesModule,
+    UserModule,
     WorkspaceModule,
     HandbookModule,
     OrganizationModule,
     ProjectModule,
+    GlobalCategoryMaterialModule,
   ],
   controllers: [],
   providers: [

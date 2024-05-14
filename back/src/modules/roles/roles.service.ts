@@ -12,9 +12,7 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { KFI } from '../../common/utils/di';
 import { CACHE_KEYS } from '../../common/consts/cache-keys';
-import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { IQueryParams } from '../../common/decorators/query-params.decorator';
 
 @Injectable()
 export class RolesService implements IRoleService {
@@ -44,13 +42,12 @@ export class RolesService implements IRoleService {
     return new InternalResponse(concreteRole);
   }
 
-  async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<RoleEntity[]>> {
-    const { skip, take } = queryParams;
+  async getAll(): Promise<UniversalInternalResponse<RoleEntity[]>> {
     const cachedData: RoleEntity[] = await this.cacheManager.get(CACHE_KEYS.ROLE_ALL);
     if (cachedData) {
       return new InternalResponse(cachedData);
     }
-    const allRoles = await this.roleRepository.getAll(skip, take);
+    const allRoles = await this.roleRepository.getAll();
     await this.cacheManager.set(CACHE_KEYS.ROLE_ALL, allRoles);
     //const allRolesCount = await this.roleRepository.getAllCount();
     return new InternalResponse(allRoles);

@@ -10,9 +10,14 @@ import { toEntityArray } from '../../common/utils/mappers';
 import { KFI } from '../../common/utils/di';
 import { DEFAULT_PROJECT_DESCRIPTION, DEFAULT_PROJECT_NAME } from './lib/consts/project.default-data';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
+import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { ResponsiblePartnerProducerEntity } from '../responsible-partner-producer/entities/responsible-partner-producer.entity';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
 
 @Injectable()
 export class ProjectsRepository implements IProjectRepository {
@@ -29,29 +34,20 @@ export class ProjectsRepository implements IProjectRepository {
         },
       });
 
-      if (concreteProject) {
-        return new ProjectEntity(concreteProject);
-      } else {
-        throw new NotFoundException({
-          message: `Project with id=${projectId} not found`,
-          description: 'Project from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(concreteProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAll(): Promise<ProjectEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<ProjectEntity[]> {
+    limitTakeHandler(take);
+
     try {
-      const allProjects = await this.databaseService.project.findMany();
-      return toEntityArray<ProjectEntity>(allProjects, ProjectEntity);
+      const allProjects = await this.databaseService.project.findMany({ take, skip });
+      return existenceEntityHandler(allProjects, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -64,7 +60,7 @@ export class ProjectsRepository implements IProjectRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -86,12 +82,9 @@ export class ProjectsRepository implements IProjectRepository {
           customerUuid: managerId,
         },
       });
-      return new ProjectEntity(newProject);
+      return existenceEntityHandler(newProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
-      }
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -111,13 +104,9 @@ export class ProjectsRepository implements IProjectRepository {
         },
       });
 
-      return new ProjectEntity(updatedProject);
+      return existenceEntityHandler(updatedProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -129,13 +118,9 @@ export class ProjectsRepository implements IProjectRepository {
         },
       });
 
-      return new ProjectEntity(deletedProject);
+      return existenceEntityHandler(deletedProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 }

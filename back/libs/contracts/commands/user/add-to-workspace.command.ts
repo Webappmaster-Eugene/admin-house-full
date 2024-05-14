@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema, UserSchema } from '../../models';
 
 const AddUserToWorkspaceRequestSchema = UserSchema.pick({
   uuid: true,

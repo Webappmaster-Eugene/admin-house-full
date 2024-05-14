@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { HandbookSchema, FieldTypeSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { HandbookSchema } from '../../models';
+import { ResponseClientSchema } from '../../models';
 
 const HandbookCreateRequestSchema = HandbookSchema.omit({
   uuid: true,

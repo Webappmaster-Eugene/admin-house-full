@@ -1,14 +1,13 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IAppInfoRepository } from './types/app-info.repository.interface';
 import { AppInfoUpdateRequestDto } from './dto/controller/update-app-info.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { AppInfoEntity } from './entities/app-info.entity';
 import { KFI } from '../../common/utils/di';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
 
 @Injectable()
 export class AppInfoRepository implements IAppInfoRepository {
@@ -20,20 +19,9 @@ export class AppInfoRepository implements IAppInfoRepository {
   async get(): Promise<AppInfoEntity> {
     try {
       const findedAppInfo = await this.databaseService.appSettings.findFirst();
-      if (findedAppInfo) {
-        return new AppInfoEntity(findedAppInfo);
-      } else {
-        throw new NotFoundException({
-          message: `AppInfo not found`,
-          description: 'AppInfo from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedAppInfo, AppInfoEntity, EntityName.APP_INFO) as AppInfoEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -54,13 +42,9 @@ export class AppInfoRepository implements IAppInfoRepository {
           comment,
         },
       });
-      return new AppInfoEntity(updatedAppInfo);
+      return existenceEntityHandler(updatedAppInfo, AppInfoEntity, EntityName.APP_INFO) as AppInfoEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 }

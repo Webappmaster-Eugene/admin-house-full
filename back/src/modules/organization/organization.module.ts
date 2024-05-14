@@ -1,8 +1,7 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { OrganizationController } from './organization.controller';
 import { KFI } from '../../common/utils/di';
-import { PrismaService } from '../common/prisma/prisma.service';
 import { OrganizationRepository } from './organization.repository';
 import { WorkspaceModule } from '../workspace/workspace.module';
 

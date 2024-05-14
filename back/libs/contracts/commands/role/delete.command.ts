@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { RoleSchema, UserSchema } from '../../models';
+import { RoleSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const RoleDeleteResponseSchema = z
   .object({
@@ -10,8 +10,7 @@ const RoleDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace RoleDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = RoleDeleteResponseSchema;

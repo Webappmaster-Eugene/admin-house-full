@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EUserTypeVariants } from '@prisma/client';
 import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
@@ -7,13 +7,10 @@ import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { RoleEntity } from './entities/role.entity';
-import { toEntityArray } from '../../common/utils/mappers';
 import { KFI } from '../../common/utils/di';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { USER_TAKE_LIMIT } from '../../common/consts/take-quantity.limitation';
-import { UserEntity } from '../user/entities/user.entity';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
 
 @Injectable()
 export class RolesRepository implements IRoleRepository {
@@ -29,20 +26,12 @@ export class RolesRepository implements IRoleRepository {
           idRole: roleId,
         },
       });
-      if (concreteRole) {
-        return new RoleEntity(concreteRole);
-      } else {
-        throw new NotFoundException({
-          message: `Role with id=${roleId} not found`,
-          description: 'Role from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(concreteRole, RoleEntity, EntityName.ROLE, {
+        message: `${EntityName.ROLE} with this id ${roleId} not found`,
+        description: `${EntityName.ROLE} from your request did not found in the database. Please, check that the entered roleId is correct!`,
+      }) as RoleEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -53,20 +42,9 @@ export class RolesRepository implements IRoleRepository {
           uuid: roleUuid,
         },
       });
-      if (concreteRole) {
-        return new RoleEntity(concreteRole);
-      } else {
-        throw new NotFoundException({
-          message: `Role with uuid=${roleUuid} not found`,
-          description: 'Role from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(concreteRole, RoleEntity, EntityName.ROLE) as RoleEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -77,29 +55,21 @@ export class RolesRepository implements IRoleRepository {
           name: roleName,
         },
       });
-      if (concreteRole) {
-        return new RoleEntity(concreteRole);
-      } else {
-        throw new NotFoundException({
-          message: `Role with name=${roleName} not found`,
-          description: 'Role from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(concreteRole, RoleEntity, EntityName.ROLE, {
+        message: `${EntityName.ROLE} with this roleName ${roleName} not found`,
+        description: `${EntityName.ROLE} from your request did not found in the database. Please, check that the entered roleName is correct!`,
+      }) as RoleEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAll(skip: number = 0, take: number = 4): Promise<RoleEntity[]> {
+  async getAll(): Promise<RoleEntity[]> {
     try {
-      const allRoles = await this.databaseService.role.findMany({ take, skip });
-      return toEntityArray<RoleEntity>(allRoles, RoleEntity);
+      const allRoles = await this.databaseService.role.findMany();
+      return existenceEntityHandler(allRoles, RoleEntity, EntityName.ROLE) as RoleEntity[];
     } catch (error: unknown) {
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -112,7 +82,7 @@ export class RolesRepository implements IRoleRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -124,12 +94,9 @@ export class RolesRepository implements IRoleRepository {
           description,
         },
       });
-      return new RoleEntity(newRole);
+      return existenceEntityHandler(newRole, RoleEntity, EntityName.ROLE) as RoleEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_CONFLICT_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.CONFLICT_ERROR, error));
-      }
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -143,13 +110,9 @@ export class RolesRepository implements IRoleRepository {
           description,
         },
       });
-      return new RoleEntity(updatedRole);
+      return existenceEntityHandler(updatedRole, RoleEntity, EntityName.ROLE) as RoleEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -160,13 +123,9 @@ export class RolesRepository implements IRoleRepository {
           uuid: roleUuid,
         },
       });
-      return new RoleEntity(deletedRole);
+      return existenceEntityHandler(deletedRole, RoleEntity, EntityName.ROLE) as RoleEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_NOT_FOUND_ERROR) {
-        throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
-      }
-
-      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR, error));
+      errorRepositoryHandler(error);
     }
   }
 }

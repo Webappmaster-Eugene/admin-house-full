@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const UserUpdateRequestSchema = UserSchema.pick({
   firstName: true,
@@ -27,8 +27,7 @@ const UserUpdateResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace UserUpdateCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const RequestSchema = UserUpdateRequestSchema;

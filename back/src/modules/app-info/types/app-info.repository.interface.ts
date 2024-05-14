@@ -4,8 +4,5 @@ import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/commo
 
 export interface IAppInfoRepository {
   get: () => Promise<AppInfoEntity>;
-  update: (
-    appInfoId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AppInfoUpdateRequestDto,
-  ) => Promise<AppInfoEntity>;
+  update: (appInfoId: EntityUrlParamCommand.RequestUuidParam, dto: AppInfoUpdateRequestDto) => Promise<AppInfoEntity>;
 }

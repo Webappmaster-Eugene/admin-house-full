@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserUpdateRequestDto, UserUpdateResponseDto } from './dto/controller/update-user.dto';
 import { User } from '../../common/decorators/user.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
@@ -36,7 +36,7 @@ import { AddUserToOrganizationRequestDto, AddUserToOrganizationResponseDto } fro
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 import { errorResponseHandler } from '../../common/helpers/error-response.handler';
-import { okResponseHandler } from '../../common/type-guards/ok-response.handler';
+import { okResponseHandler } from '../../common/helpers/ok-response.handler';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')
@@ -66,7 +66,7 @@ export class UserController {
     try {
       const { ok, data } = await this.userService.getById(userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);
-    } catch (error) {
+    } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
   }
@@ -77,6 +77,7 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Получение пользователя по email' })
   @ApiResponse({ status: 200, type: UserGetResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
   @ZodSerializerDto(UserGetResponseDto)
@@ -94,11 +95,15 @@ export class UserController {
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(UserGetAllCommand.RequestQuerySchema),
+  })
   @ApiOkResponse({
     schema: zodToOpenAPI(UserGetAllCommand.ResponseSchema),
   })
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [UserGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -122,6 +127,7 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 201, type: UserCreateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(UserCreateResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
@@ -146,6 +152,7 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Изменение пользователя по его id' })
   @ApiResponse({ status: 200, type: UserUpdateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(UserUpdateResponseDto)
   @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
@@ -170,6 +177,7 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Удаление пользователя по его id' })
   @ApiResponse({ status: 200, type: UserDeleteResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(UserDeleteResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
@@ -218,7 +226,6 @@ export class UserController {
     summary: 'Добавление обычного (WORKER, CUSTOMER) пользователя в Workspace менеджера по workspaceId',
   })
   @ApiResponse({ status: 200, type: AddUserToWorkspaceResponseDto })
-  @ApiBearerAuth('access-token')
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)

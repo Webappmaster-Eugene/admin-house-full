@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema } from '../../models/response-client';
-import { GlobalCategoryMaterialSchema } from '../../models/global-category-material';
+import { ResponseClientSchema } from '../../models';
+import { GlobalCategoryMaterialSchema } from '../../models';
 
 const GlobalCategoryMaterialDeleteResponseSchema = z
   .object({
@@ -13,8 +13,7 @@ const GlobalCategoryMaterialDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace GlobalCategoryMaterialDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = GlobalCategoryMaterialDeleteResponseSchema;

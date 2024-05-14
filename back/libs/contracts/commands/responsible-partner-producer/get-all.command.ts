@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ResponsiblePartnerProducerSchema } from '../../models';
+import { RequestGetAllQuerySchema, ResponsiblePartnerProducerSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const ResponsiblePartnerProducerGetAllResponseSchema = z
@@ -14,6 +14,9 @@ const ResponsiblePartnerProducerGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace ResponsiblePartnerProducerGetAllCommand {
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
   export const ResponseSchema = ResponsiblePartnerProducerGetAllResponseSchema;
   export type Request = z.infer<typeof ResponseSchema>;
 }

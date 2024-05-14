@@ -17,6 +17,7 @@ import { AuthLoginRequestDto } from './dto/controller/auth.login.dto';
 import { AuthRegisterWithRoleRequestParamDto } from './dto/controller/auth.register-with-role.dto';
 import { IRoleService } from '../roles/types/role.service.interface';
 import { ROLE_IDS } from '../../common/consts/role-ids';
+import { tokenRegex } from '../../common/regex/token.regex';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -45,7 +46,7 @@ export class AuthService implements IAuthService {
       roleName: newUserRole.data.name,
     };
     const user = new AuthEntity(outputEntity);
-    return new InternalResponse<AuthEntity>(user);
+    return new InternalResponse(user);
   }
 
   async registerWithRole(
@@ -79,9 +80,9 @@ export class AuthService implements IAuthService {
 
       const user = new AuthEntity(outputEntity);
 
-      return new InternalResponse<AuthEntity>(user);
+      return new InternalResponse(user);
     } else {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.UNAUTHORIZED_ACCESS));
+      throw new InternalResponse(new InternalError(BackendErrorNames.UNAUTHORIZED_ACCESS));
     }
   }
 
@@ -89,12 +90,12 @@ export class AuthService implements IAuthService {
     const { email, password } = dto;
     const user = await this.userService.getByEmail(email);
     if (!user) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
+      throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
     const hashedPassword = user.data.password;
     const isValidPassword = await argon2.verify(hashedPassword, password);
     if (!isValidPassword) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
+      throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
 
     const userInfo = user.data;
@@ -108,7 +109,7 @@ export class AuthService implements IAuthService {
       roleName: newUserRole.data.name,
     };
 
-    return new InternalResponse<AuthEntity>(outputEntity);
+    return new InternalResponse(outputEntity);
   }
 
   async generateJWT(uuid: EntityUrlParamCommand.RequestUuidParam, email: string): Promise<UniversalInternalResponse<string>> {
@@ -123,7 +124,7 @@ export class AuthService implements IAuthService {
       },
     );
 
-    return new InternalResponse<string>(token);
+    return new InternalResponse(token);
   }
 
   async generateStrictAdminKey(dto: AuthGenerateKeyRequestDto): Promise<UniversalInternalResponse<{ key: string }>> {
@@ -131,19 +132,19 @@ export class AuthService implements IAuthService {
     if (key === this.configService.get('KEY_SECRET_FOR_STRICT_ADMIN_KEY')) {
       const str = `adminHouse-${key}-strict-admin-key`;
       const token = await argon2.hash(str);
-      const finalToken = token.replace(/\$|\,|=|\+|\//gm, '');
+      const finalToken = token.replace(tokenRegex, '');
 
       const bdIdKey = await this.authRepository.getStrictAdminKey();
       const strictKey = await this.authRepository.generateStrictAdminKey(bdIdKey.key, finalToken);
 
-      return new InternalResponse<{ key: string }>(strictKey);
+      return new InternalResponse(strictKey);
     } else {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR));
+      throw new InternalResponse(new InternalError(BackendErrorNames.INTERNAL_ERROR));
     }
   }
 
   async getStrictAdminKey(): Promise<UniversalInternalResponse<{ key: string }>> {
     const strictKey = await this.authRepository.getStrictAdminKey();
-    return new InternalResponse<{ key: string }>(strictKey);
+    return new InternalResponse(strictKey);
   }
 }

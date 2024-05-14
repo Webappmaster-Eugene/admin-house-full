@@ -1,6 +1,6 @@
-import { unknown, z } from 'zod';
+import { z } from 'zod';
 import { RoleSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const RoleCreateRequestSchema = RoleSchema.omit({
   idRole: true,

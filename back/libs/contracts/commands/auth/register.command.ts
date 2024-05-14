@@ -1,6 +1,7 @@
-import { unknown, z } from 'zod';
+import { z } from 'zod';
 import { AuthSchema, UserSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
+import { ConfirmPasswordSchema } from '../../models';
 
 const AuthRegisterRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,
@@ -11,7 +12,17 @@ const AuthRegisterRequestSchema = UserSchema.omit({
   createdAt: true,
   updatedAt: true,
   roleUuid: true,
-});
+})
+  .merge(ConfirmPasswordSchema)
+  .refine(
+    data => {
+      return data.password === data.confirmPassword;
+    },
+    {
+      message: "Passwords don't match",
+      path: ['confirm'], // path of error
+    },
+  );
 
 const AuthRegisterResponseSchema = z
   .object({

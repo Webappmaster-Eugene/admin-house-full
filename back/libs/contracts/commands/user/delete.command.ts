@@ -1,7 +1,6 @@
-import { unknown, z } from 'zod';
-import { UserSchema } from '../../models';
+import { z } from 'zod';
+import { ResponseClientSchema, UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema } from '../../models/response-client';
 
 const UserDeleteResponseSchema = z
   .object({
@@ -14,8 +13,7 @@ const UserDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace UserDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = UserDeleteResponseSchema;

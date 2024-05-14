@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { WorkspaceCreateRequestDto } from './dto/controller/create-workspace.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IWorkspaceRepository } from './types/workspace.repository.interface';
@@ -6,15 +6,15 @@ import { WorkspaceUpdateRequestDto } from './dto/controller/update-workspace.dto
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { WorkspaceEntity } from './entities/workspace.entity';
-import { toEntityArray } from '../../common/utils/mappers';
 import { DEFAULT_WORKSPACE_DESCRIPTION, DEFAULT_WORKSPACE_NAME } from './lib/consts/workspace.default-data';
 import { WorkspaceChangeOwnerRequestDto } from './dto/controller/change-owner-workspace.dto';
 import { KFI } from '../../common/utils/di';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
+import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
 
 @Injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
@@ -31,20 +31,9 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         },
       });
 
-      if (findedWorkspace) {
-        return new WorkspaceEntity(findedWorkspace);
-      } else {
-        throw new NotFoundException({
-          message: `Workspace with id=${workspaceId} not found`,
-          description: 'Workspace from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -56,29 +45,20 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         },
       });
 
-      if (findedWorkspace) {
-        return new WorkspaceEntity(findedWorkspace);
-      } else {
-        throw new NotFoundException({
-          message: `Workspace with managerId=${managerId} not found`,
-          description: 'Workspace from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(findedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAll(): Promise<WorkspaceEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<WorkspaceEntity[]> {
+    limitTakeHandler(take);
+
     try {
-      const allWorkspaces = await this.databaseService.workspace.findMany();
-      return toEntityArray<WorkspaceEntity>(allWorkspaces, WorkspaceEntity);
+      const allWorkspaces = await this.databaseService.workspace.findMany({ take, skip });
+      return existenceEntityHandler(allWorkspaces, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity[];
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -91,7 +71,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -108,21 +88,19 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           workspaceCreatorUuid: userId,
         },
       });
-      return new WorkspaceEntity(newWorkspace);
+      return existenceEntityHandler(newWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
-      }
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
   async updateById(
     workspaceId: string,
     { name, description, handbookOfWorkspaceUuid }: WorkspaceUpdateRequestDto,
+    transactionDbClient: TransactionDbClient = this.databaseService,
   ): Promise<WorkspaceEntity> {
     try {
-      const updatedWorkspace = await this.databaseService.workspace.update({
+      const updatedWorkspace = await transactionDbClient.workspace.update({
         where: {
           uuid: workspaceId,
         },
@@ -133,13 +111,9 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         },
       });
 
-      return new WorkspaceEntity(updatedWorkspace);
+      return existenceEntityHandler(updatedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -151,13 +125,9 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         },
       });
 
-      return new WorkspaceEntity(deletedWorkspace);
+      return existenceEntityHandler(deletedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -174,13 +144,10 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           workspaceCreatorUuid: dto.uuid,
         },
       });
-      return new WorkspaceEntity(changedWorkspace);
-    } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
 
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      return existenceEntityHandler(changedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
     }
   }
 }

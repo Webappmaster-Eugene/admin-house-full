@@ -24,6 +24,7 @@ import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { dataInternalExtractor } from '../../common/helpers/data-internal.extractor';
 import { cacheRemoverBatch } from '../../common/helpers/cache-remover.batch';
+import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -142,6 +143,7 @@ export class UserService implements IUserService {
       }
       return new InternalResponse(createdUser);
     });
+    // проверить, в каких случаях отрабатывает это исключение
     throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
   }
 
@@ -162,8 +164,13 @@ export class UserService implements IUserService {
   async addExistedWorkspaceToManager(
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const updatedUserWithWorkspace = await this.userRepository.addExistedWorkspaceToManager(workspaceCreatorId, workspaceId);
+    const updatedUserWithWorkspace = await this.userRepository.addExistedWorkspaceToManager(
+      workspaceCreatorId,
+      workspaceId,
+      transactionDbClient,
+    );
     await cacheRemoverBatch(this.cacheManager, [
       workspaceCreatorId,
       `${CACHE_KEYS.USER_FULL_INFO}userId${workspaceCreatorId}`,
@@ -175,8 +182,13 @@ export class UserService implements IUserService {
   async addExistedHandbookToManager(
     handbookCreatorId: EntityUrlParamCommand.RequestUuidParam,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const updatedUserWithHandbook = await this.userRepository.addExistedHandbookToManager(handbookCreatorId, handbookId);
+    const updatedUserWithHandbook = await this.userRepository.addExistedHandbookToManager(
+      handbookCreatorId,
+      handbookId,
+      transactionDbClient,
+    );
     await cacheRemoverBatch(this.cacheManager, [
       handbookCreatorId,
       `${CACHE_KEYS.USER_FULL_INFO}userId${handbookCreatorId}`,

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationCreateRequestDto } from './dto/controller/create-organization.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IOrganizationRepository } from './types/organization.repository.interface';
@@ -6,12 +6,12 @@ import { OrganizationUpdateRequestDto } from './dto/controller/update-organizati
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { OrganizationEntity } from './entities/organization.entity';
-import { toEntityArray } from '../../common/utils/mappers';
 import { KFI } from '../../common/utils/di';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
+import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
 
 @Injectable()
 export class OrganizationRepository implements IOrganizationRepository {
@@ -28,20 +28,9 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      if (concreteOrganization) {
-        return new OrganizationEntity(concreteOrganization);
-      } else {
-        throw new NotFoundException({
-          message: `Organization with id=${id} not found`,
-          description: 'Organization from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(concreteOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -53,29 +42,23 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      if (concreteOrganization) {
-        return new OrganizationEntity(concreteOrganization);
-      } else {
-        throw new NotFoundException({
-          message: `Organization with managerId=${id} not found`,
-          description: 'Organization from your request did not found in the database',
-        });
-      }
+      return existenceEntityHandler(concreteOrganization, OrganizationEntity, EntityName.ORGANIZATION, {
+        message: `Organization with managerId=${id} not found`,
+        description: 'Organization from your request did not found in the database',
+      }) as OrganizationEntity;
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
-  async getAll(): Promise<OrganizationEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<OrganizationEntity[]> {
+    limitTakeHandler(take);
+
     try {
-      const allOrganizations = await this.databaseService.organization.findMany();
-      return toEntityArray<OrganizationEntity>(allOrganizations, OrganizationEntity);
+      const allOrganizations = await this.databaseService.organization.findMany({ take, skip });
+      return existenceEntityHandler(allOrganizations, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity[];
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -88,7 +71,7 @@ export class OrganizationRepository implements IOrganizationRepository {
       });
       return { total: total._all };
     } catch (error: unknown) {
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -109,12 +92,9 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return new OrganizationEntity(newOrganization);
+      return existenceEntityHandler(newOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.CONFLICT_ERROR, jsonStringify(error)));
-      }
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -133,13 +113,9 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return new OrganizationEntity(updatedOrganization);
+      return existenceEntityHandler(updatedOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 
@@ -151,13 +127,9 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
       });
 
-      return new OrganizationEntity(deletedOrganization);
+      return existenceEntityHandler(deletedOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
     } catch (error: unknown) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 }

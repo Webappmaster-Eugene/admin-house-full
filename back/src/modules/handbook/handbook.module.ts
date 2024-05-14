@@ -1,9 +1,8 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { HandbookService } from './handbook.service';
 import { HandbookController } from './handbook.controller';
 import { KFI } from '../../common/utils/di';
 import { HandbookRepository } from './handbook.repository';
-import { PrismaService } from '../common/prisma/prisma.service';
 
 @Module({
   providers: [

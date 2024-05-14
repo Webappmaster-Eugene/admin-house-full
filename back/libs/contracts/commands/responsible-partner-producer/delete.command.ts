@@ -13,8 +13,7 @@ const ResponsiblePartnerProducerDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace ResponsiblePartnerProducerDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = ResponsiblePartnerProducerDeleteResponseSchema;

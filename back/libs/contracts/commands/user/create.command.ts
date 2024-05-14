@@ -1,6 +1,5 @@
-import { unknown, z } from 'zod';
-import { RoleSchema, UserSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { z } from 'zod';
+import { ResponseClientSchema, UserSchema } from '../../models';
 
 const UserCreateRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,

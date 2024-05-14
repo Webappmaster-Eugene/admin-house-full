@@ -1,13 +1,12 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models/response-client';
-import { GlobalCategoryMaterialSchema } from '../../models/global-category-material';
+import { ResponseClientSchema } from '../../models';
+import { GlobalCategoryMaterialSchema } from '../../models';
 
-const GlobalCategoryMaterialCreateRequestSchema =
-  GlobalCategoryMaterialSchema.omit({
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-  });
+const GlobalCategoryMaterialCreateRequestSchema = GlobalCategoryMaterialSchema.omit({
+  uuid: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 const GlobalCategoryMaterialCreateResponseSchema = z
   .object({

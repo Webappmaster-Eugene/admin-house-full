@@ -12,14 +12,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { RoleCreateRequestDto, RoleCreateResponseDto } from './dto/controller/create-role.dto';
 import { IRoleService } from './types/role.service.interface';
 import { RoleUpdateRequestDto, RoleUpdateResponseDto } from './dto/controller/update-role.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { RoleGetResponseDto } from './dto/controller/get-role.dto';
 import { RoleGetAllResponseDto } from './dto/controller/get-all-roles.dto';
 import { RoleDeleteResponseDto } from './dto/controller/delete-role.dto';
@@ -33,11 +32,9 @@ import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decora
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IRoleController } from './types/role.controller.interface';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { CACHE_KEYS } from '../../common/consts/cache-keys';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { errorResponseHandler } from '../../common/helpers/error-response.handler';
-import { okResponseHandler } from '../../common/type-guards/ok-response.handler';
-import { UserEntity } from '../user/entities/user.entity';
+import { okResponseHandler } from '../../common/helpers/ok-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с ролями')
@@ -96,6 +93,9 @@ export class RolesController implements IRoleController {
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(RoleGetAllCommand.RequestQuerySchema),
+  })
   @ApiOkResponse({
     schema: zodToOpenAPI(RoleGetAllCommand.ResponseSchema),
   })

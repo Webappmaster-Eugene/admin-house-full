@@ -1,6 +1,7 @@
-import { unknown, z } from 'zod';
-import { UserSchema } from '../../models/user';
-import { ResponseClientSchema } from '../../models/response-client';
+import { z } from 'zod';
+import { UserSchema } from '../../models';
+import { ResponseClientSchema } from '../../models';
+import { RequestGetAllQuerySchema } from '../../models';
 
 const UserGetAllResponseSchema = z
   .object({
@@ -15,6 +16,9 @@ const UserGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace UserGetAllCommand {
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
   export const ResponseSchema = UserGetAllResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 }

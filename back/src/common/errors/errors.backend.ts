@@ -1,5 +1,3 @@
-import { jsonStringify } from '../helpers/stringify';
-
 export type BackendError = {
   innerCode: string;
   error: { name: string; description: string };
@@ -134,7 +132,7 @@ export class InternalError implements IInternalError {
       this.innerError.error.description = errorDescription;
     }
 
-    this.innerError.error.description = errorDescription ? jsonStringify(errorDescription) : this.innerError.error.description;
+    this.innerError.error.description = errorDescription ? JSON.stringify(errorDescription) : this.innerError.error.description;
 
     return this;
   }

@@ -3,14 +3,13 @@ import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/jwt.extractor';
-import { IPrismaService } from '../types/main/prisma.interface';
 import { KFI } from '../utils/di';
 import { ROLE_IDS } from '../consts/role-ids';
 import { ILogger } from '../types/main/logger.interface';
-import { jsonStringify } from '../helpers/stringify';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
 import { IWorkspaceService } from '../../modules/workspace/types/workspace.service.interface';
+import { dataInternalExtractor } from '../helpers/data-internal.extractor';
 
 @Injectable()
 export class WorkspaceCreatorGuard implements CanActivate {
@@ -29,26 +28,26 @@ export class WorkspaceCreatorGuard implements CanActivate {
       const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
 
       // кто совершает действие
-      const findedUser = await this.userService.getAllInfoById(uuid);
+      const findedUser = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
 
       if (!findedUser) {
         return false;
       }
 
       // или действие совершает ADMIN
-      if (findedUser.data.role['idRole'] === ROLE_IDS.CUSTOMER_ROLE_ID) {
+      if (findedUser.role['idRole'] === ROLE_IDS.CUSTOMER_ROLE_ID) {
         return true;
       }
 
       // какой id у рассматриваемого workspace
       const inputWorkspaceUuid = context.switchToHttp().getRequest().params['workspaceId'];
 
-      const selectedWorkspace = await this.workspaceService.getById(inputWorkspaceUuid);
+      const selectedWorkspace = dataInternalExtractor(await this.workspaceService.getById(inputWorkspaceUuid));
 
       // или действие совершает менеджер самого Workspace
-      return findedUser.data.creatorOfWorkspaceUuid === selectedWorkspace.data.uuid;
+      return findedUser.creatorOfWorkspaceUuid === selectedWorkspace.uuid;
     } catch (error) {
-      this.logger.error(jsonStringify(error));
+      this.logger.error(JSON.stringify(error));
       return false;
     }
   }

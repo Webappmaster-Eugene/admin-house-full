@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpException, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -13,7 +13,6 @@ import {
 } from '../../../libs/contracts';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
-import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { WorkspaceGetResponseDto } from './dto/controller/get-workspace.dto';
 import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from './dto/controller/create-workspace.dto';
 import { WorkspaceGetAllResponseDto } from './dto/controller/get-all-workspaces.dto';
@@ -25,11 +24,7 @@ import { IWorkspaceService } from './types/workspace.service.interface';
 import { KFI } from '../../common/utils/di';
 import { WorkspaceChangeOwnerCommand } from '../../../libs/contracts';
 import { WorkspaceEntity } from './entities/workspace.entity';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { jsonStringify } from '../../common/helpers/stringify';
-import { errorExtractor } from '../../common/helpers/inner-error.extractor';
 import { EntityName } from '../../common/types/entity.enum';
-import { BACKEND_ERRORS } from '../../common/errors/errors.backend';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
@@ -37,6 +32,9 @@ import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { IsManagerInBodyGuard } from '../../common/guards/is-manager.guard';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { okResponseHandler } from '../../common/helpers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/error-response.handler';
+import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Workspace пользователей')
 @Controller('workspace')
@@ -64,23 +62,17 @@ export class WorkspaceController implements IWorkspaceController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<WorkspaceGetResponseDto> {
     try {
-      const responseData = await this.workspaceService.getById(id);
-      if (responseData.ok) {
-        return new ExternalResponse<WorkspaceEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.WORKSPACE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.workspaceService.getById(id);
+      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(WorkspaceGetAllCommand.RequestQuerySchema),
+  })
   @ApiOkResponse({
     schema: zodToOpenAPI(WorkspaceGetAllCommand.ResponseSchema),
   })
@@ -92,21 +84,12 @@ export class WorkspaceController implements IWorkspaceController {
   @UseGuards(AuthGuard)
   @ZodSerializerDto(WorkspaceGetAllResponseDto)
   @Get()
-  async getAllEP(@UrlParams() urlParams: IUrlParams): Promise<WorkspaceGetAllResponseDto> {
+  async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<WorkspaceGetAllResponseDto> {
     try {
-      const responseData = await this.workspaceService.getAll();
-      if (responseData.ok) {
-        return new ExternalResponse<WorkspaceEntity[]>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.WORKSPACE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.workspaceService.getAll(queryParams);
+      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
   }
 
@@ -132,20 +115,10 @@ export class WorkspaceController implements IWorkspaceController {
   ): Promise<WorkspaceCreateResponseDto> {
     // в create нужно передать id пользователя, для которого создается workspace
     try {
-      const userId = userInfo.uuid;
-      const responseData = await this.workspaceService.create(dto, userId);
-      if (responseData.ok) {
-        return new ExternalResponse<WorkspaceEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.WORKSPACE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.workspaceService.create(dto, userInfo.uuid);
+      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
   }
 
@@ -170,21 +143,11 @@ export class WorkspaceController implements IWorkspaceController {
     @UrlParams() urlParams: IUrlParams,
     // @User() user: IJWTPayload,
   ): Promise<WorkspaceUpdateResponseDto> {
-    console.log(1);
     try {
-      const responseData = await this.workspaceService.updateById(id, dto);
-      if (responseData.ok) {
-        return new ExternalResponse<WorkspaceEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.WORKSPACE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.workspaceService.updateById(id, dto);
+      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
   }
 
@@ -206,19 +169,10 @@ export class WorkspaceController implements IWorkspaceController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<WorkspaceDeleteResponseDto> {
     try {
-      const responseData = await this.workspaceService.deleteById(id);
-      if (responseData.ok) {
-        return new ExternalResponse<WorkspaceEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.WORKSPACE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.workspaceService.deleteById(id);
+      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
   }
 
@@ -248,19 +202,10 @@ export class WorkspaceController implements IWorkspaceController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<WorkspaceChangeOwnerResponseDto> {
     try {
-      const responseData = await this.workspaceService.changeWorkspaceOwner(workspaceId, dto);
-      if (responseData.ok) {
-        return new ExternalResponse<WorkspaceEntity>(responseData.data);
-      }
-    } catch (error) {
-      if (error instanceof InternalResponse) {
-        this.logger.error(jsonStringify(error.error));
-        const { statusCode, fullError, message } = errorExtractor(error, EntityName.WORKSPACE, urlParams);
-        const response = new ExternalResponse(null, statusCode, message, [fullError]);
-        throw new HttpException(response, response.statusCode);
-      }
-
-      return new ExternalResponse(null, error.httpCode, BACKEND_ERRORS.STANDARD.INTERNAL_ERROR.error.description, [error]);
+      const { ok, data } = await this.workspaceService.changeWorkspaceOwner(workspaceId, dto);
+      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
   }
 }

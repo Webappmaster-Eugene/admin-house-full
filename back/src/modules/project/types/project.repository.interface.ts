@@ -5,27 +5,15 @@ import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/commo
 import { CountData } from '../../../common/types/main/count.data';
 import { ProjectEntity } from '../entities/project.entity';
 
-export interface IProjectRepository
-  extends IRepositoryCommon<
-    ProjectCreateRequestDto,
-    ProjectUpdateRequestDto,
-    ProjectEntity
-  > {
-  getById: (
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<ProjectEntity>;
+export interface IProjectRepository extends IRepositoryCommon<ProjectCreateRequestDto, ProjectUpdateRequestDto, ProjectEntity> {
+  getById: (projectId: EntityUrlParamCommand.RequestUuidParam) => Promise<ProjectEntity>;
   getAllCount: () => Promise<CountData>;
-  getAll: () => Promise<ProjectEntity[]>;
+  getAll: (skip: number, take: number) => Promise<ProjectEntity[]>;
   create: (
     dto: ProjectCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<ProjectEntity>;
-  updateById: (
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-    dto: ProjectUpdateRequestDto,
-  ) => Promise<ProjectEntity>;
-  deleteById: (
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<ProjectEntity>;
+  updateById: (projectId: EntityUrlParamCommand.RequestUuidParam, dto: ProjectUpdateRequestDto) => Promise<ProjectEntity>;
+  deleteById: (projectId: EntityUrlParamCommand.RequestUuidParam) => Promise<ProjectEntity>;
 }

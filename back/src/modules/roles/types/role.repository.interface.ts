@@ -10,7 +10,7 @@ export interface IRoleRepository extends IRepositoryCommon<RoleCreateRequestDto,
   getById: (roleId: EntityUrlParamCommand.RequestNumberParam) => Promise<RoleEntity>;
   getByUuid: (roleUuid: EntityUrlParamCommand.RequestUuidParam) => Promise<RoleEntity>;
   getByValue: (roleName: EUserTypeVariants) => Promise<RoleEntity>;
-  getAll: (skip: number, take: number) => Promise<RoleEntity[]>;
+  getAll: () => Promise<RoleEntity[]>;
   getAllCount: () => Promise<CountData>;
   create: (dto: RoleCreateRequestDto) => Promise<RoleEntity>;
   updateById: (roleUuid: EntityUrlParamCommand.RequestUuidParam, dto: RoleUpdateRequestDto) => Promise<RoleEntity>;

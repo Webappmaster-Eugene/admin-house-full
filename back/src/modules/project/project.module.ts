@@ -1,8 +1,7 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { ProjectController } from './project.controller';
 import { KFI } from '../../common/utils/di';
-import { PrismaService } from '../common/prisma/prisma.service';
 import { ProjectsRepository } from './project.repository';
 import { OrganizationModule } from '../organization/organization.module';
 

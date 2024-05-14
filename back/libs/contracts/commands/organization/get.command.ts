@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { OrganizationSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const OrganizationSchemaGetResponseSchema = z
   .object({

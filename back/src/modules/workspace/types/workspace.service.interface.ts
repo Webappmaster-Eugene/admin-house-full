@@ -6,11 +6,12 @@ import { WorkspaceEntity } from '../entities/workspace.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { WorkspaceChangeOwnerRequestDto } from '../dto/controller/change-owner-workspace.dto';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
+import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
 export interface IWorkspaceService extends IServiceCommon<WorkspaceCreateRequestDto, WorkspaceUpdateRequestDto, WorkspaceEntity> {
   getById: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   getByManagerId: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
-  getAll: () => Promise<UniversalInternalResponse<WorkspaceEntity[]>>;
+  getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<WorkspaceEntity[]>>;
   create: (
     dto: WorkspaceCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
@@ -19,6 +20,7 @@ export interface IWorkspaceService extends IServiceCommon<WorkspaceCreateRequest
   updateById: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceUpdateRequestDto,
+    transactionDbClient?: TransactionDbClient,
   ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   deleteById: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   changeWorkspaceOwner: (

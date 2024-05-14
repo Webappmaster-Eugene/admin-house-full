@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ProjectSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const ProjectSchemaGetRequestSchema = ProjectSchema.pick({
   uuid: true,

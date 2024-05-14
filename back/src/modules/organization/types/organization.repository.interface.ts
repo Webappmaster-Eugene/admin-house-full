@@ -6,29 +6,16 @@ import { CountData } from '../../../common/types/main/count.data';
 import { OrganizationEntity } from '../entities/organization.entity';
 
 export interface IOrganizationRepository
-  extends IRepositoryCommon<
-    OrganizationCreateRequestDto,
-    OrganizationUpdateRequestDto,
-    OrganizationEntity
-  > {
-  getById: (
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<OrganizationEntity>;
-  getByManagerId: (
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<OrganizationEntity>;
+  extends IRepositoryCommon<OrganizationCreateRequestDto, OrganizationUpdateRequestDto, OrganizationEntity> {
+  getById: (organizationId: EntityUrlParamCommand.RequestUuidParam) => Promise<OrganizationEntity>;
+  getByManagerId: (managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<OrganizationEntity>;
   getAllCount: () => Promise<CountData>;
-  getAll: () => Promise<OrganizationEntity[]>;
+  getAll: (skip: number, take: number) => Promise<OrganizationEntity[]>;
   create: (
     dto: OrganizationCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<OrganizationEntity>;
-  updateById: (
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-    dto: OrganizationUpdateRequestDto,
-  ) => Promise<OrganizationEntity>;
-  deleteById: (
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<OrganizationEntity>;
+  updateById: (organizationId: EntityUrlParamCommand.RequestUuidParam, dto: OrganizationUpdateRequestDto) => Promise<OrganizationEntity>;
+  deleteById: (organizationId: EntityUrlParamCommand.RequestUuidParam) => Promise<OrganizationEntity>;
 }

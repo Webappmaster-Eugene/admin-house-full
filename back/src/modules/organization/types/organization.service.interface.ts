@@ -4,21 +4,13 @@ import { OrganizationUpdateRequestDto } from '../dto/controller/update-organizat
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { OrganizationEntity } from '../entities/organization.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
+import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
 export interface IOrganizationService
-  extends IServiceCommon<
-    OrganizationCreateRequestDto,
-    OrganizationUpdateRequestDto,
-    OrganizationEntity
-  > {
-  getById: (
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
-  getByManagerId: (
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
-  getAll: () => Promise<UniversalInternalResponse<OrganizationEntity[]>>;
+  extends IServiceCommon<OrganizationCreateRequestDto, OrganizationUpdateRequestDto, OrganizationEntity> {
+  getById: (organizationId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<OrganizationEntity>>;
+  getByManagerId: (managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<OrganizationEntity>>;
+  getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<OrganizationEntity[]>>;
   create: (
     dto: OrganizationCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
@@ -28,7 +20,5 @@ export interface IOrganizationService
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     dto: OrganizationUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
-  deleteById: (
-    organizationId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<OrganizationEntity>>;
+  deleteById: (organizationId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<OrganizationEntity>>;
 }

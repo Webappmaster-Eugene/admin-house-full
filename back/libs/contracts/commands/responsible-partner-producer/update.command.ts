@@ -2,12 +2,11 @@ import { z } from 'zod';
 import { ResponsiblePartnerProducerSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ResponsiblePartnerProducerUpdateRequestSchema =
-  ResponsiblePartnerProducerSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
-  }).partial();
+const ResponsiblePartnerProducerUpdateRequestSchema = ResponsiblePartnerProducerSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  uuid: true,
+}).partial();
 
 const ResponsiblePartnerProducerUpdateResponseSchema = z
   .object({

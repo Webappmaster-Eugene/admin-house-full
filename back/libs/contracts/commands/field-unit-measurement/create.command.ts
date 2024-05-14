@@ -2,13 +2,11 @@ import { z } from 'zod';
 import { FieldUnitMeasurementSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldUnitMeasurementCreateRequestSchema = FieldUnitMeasurementSchema.omit(
-  {
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-  },
-);
+const FieldUnitMeasurementCreateRequestSchema = FieldUnitMeasurementSchema.omit({
+  uuid: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 const FieldUnitMeasurementCreateResponseSchema = z
   .object({

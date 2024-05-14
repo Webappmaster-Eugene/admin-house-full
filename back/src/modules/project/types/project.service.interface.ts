@@ -5,16 +5,11 @@ import { UniversalInternalResponse } from '../../../common/types/responses/unive
 import { ProjectEntity } from '../entities/project.entity';
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
+import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
-export interface IProjectService
-  extends IServiceCommon<
-    ProjectCreateRequestDto,
-    ProjectUpdateRequestDto,
-    ProjectEntity
-  > {
-  getById: (
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<ProjectEntity>>;
+export interface IProjectService extends IServiceCommon<ProjectCreateRequestDto, ProjectUpdateRequestDto, ProjectEntity> {
+  getById: (projectId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<ProjectEntity>>;
+  getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<ProjectEntity[]>>;
   create: (
     dto: ProjectCreateRequestDto,
     userInfo: IJWTPayload,
@@ -24,7 +19,5 @@ export interface IProjectService
     projectId: EntityUrlParamCommand.RequestUuidParam,
     dto: ProjectUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<ProjectEntity>>;
-  deleteById: (
-    projectId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<ProjectEntity>>;
+  deleteById: (projectId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<ProjectEntity>>;
 }

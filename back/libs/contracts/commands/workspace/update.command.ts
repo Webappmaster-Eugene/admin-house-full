@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const WorkspaceUpdateRequestSchema = WorkspaceSchema.omit({
   createdAt: true,

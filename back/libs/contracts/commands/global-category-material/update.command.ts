@@ -2,15 +2,14 @@ import { z } from 'zod';
 import { ResponseClientSchema } from '../../models';
 import { GlobalCategoryMaterialSchema } from '../../models';
 
-const GlobalCategoryMaterialUpdateRequestSchema =
-  GlobalCategoryMaterialSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
-    workspaceHandbookUuid: true,
-    responsibleManagerUuid: true,
-    workspaceUuid: true,
-  }).partial();
+const GlobalCategoryMaterialUpdateRequestSchema = GlobalCategoryMaterialSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  uuid: true,
+  workspaceHandbookUuid: true,
+  responsibleManagerUuid: true,
+  workspaceUuid: true,
+}).partial();
 
 const GlobalCategoryMaterialUpdateResponseSchema = z
   .object({

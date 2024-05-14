@@ -14,3 +14,4 @@ export * from './field-type';
 export * from './responsible-partner-producer';
 export * from './material';
 export * from './field-variants-for-selector-field-type';
+export * from './status-resource';

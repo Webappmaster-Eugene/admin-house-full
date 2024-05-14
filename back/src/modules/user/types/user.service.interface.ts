@@ -9,6 +9,7 @@ import { AddUserToOrganizationRequestDto } from '../dto/controller/add-to-organi
 import { AddUserToProjectRequestDto } from '../dto/controller/add-to-project.dto';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
 
 export interface IUserService extends IServiceCommon<UserCreateRequestDto, UserUpdateRequestDto, UserEntity> {
   getById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<UserEntity>>;
@@ -21,10 +22,12 @@ export interface IUserService extends IServiceCommon<UserCreateRequestDto, UserU
   addExistedWorkspaceToManager: (
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
   addExistedHandbookToManager: (
     workspaceCreatorId: EntityUrlParamCommand.RequestUuidParam,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
   addUserToManagerWorkspace: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

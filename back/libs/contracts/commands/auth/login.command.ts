@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { AuthSchema, UserSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const AuthLoginRequestSchema = UserSchema.pick({
   email: true,

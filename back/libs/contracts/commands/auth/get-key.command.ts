@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models/response-client';
-import { StrictKeySchema } from '../../models';
+import { ResponseClientSchema } from '../../models';
+import { AuthStrictKeySchema } from '../../models';
 
 const AuthGetKeyResponseSchema = z
   .object({
-    data: StrictKeySchema,
+    data: AuthStrictKeySchema,
   })
   .merge(ResponseClientSchema);
 

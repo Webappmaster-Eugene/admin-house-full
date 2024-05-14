@@ -1,13 +1,12 @@
 import { z } from 'zod';
 import { ResponseClientSchema } from '../../models';
-import { FieldVariantsForSelectorFieldTypeSchema } from '../../models/field-variants-for-selector-field-type';
+import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
-const FieldVariantsForSelectorFieldTypeCreateRequestSchema =
-  FieldVariantsForSelectorFieldTypeSchema.omit({
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-  });
+const FieldVariantsForSelectorFieldTypeCreateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.omit({
+  uuid: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 const FieldVariantsForSelectorFieldTypeCreateResponseSchema = z
   .object({
@@ -19,11 +18,9 @@ const FieldVariantsForSelectorFieldTypeCreateResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace FieldVariantsForSelectorFieldTypeCreateCommand {
-  export const RequestSchema =
-    FieldVariantsForSelectorFieldTypeCreateRequestSchema;
+  export const RequestSchema = FieldVariantsForSelectorFieldTypeCreateRequestSchema;
   export type Request = z.infer<typeof RequestSchema>;
 
-  export const ResponseSchema =
-    FieldVariantsForSelectorFieldTypeCreateResponseSchema;
+  export const ResponseSchema = FieldVariantsForSelectorFieldTypeCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 }

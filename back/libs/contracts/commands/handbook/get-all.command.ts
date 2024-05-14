@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { HandbookSchema } from '../../models';
+import { HandbookSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const HandbookGetAllResponseSchema = z
@@ -14,6 +14,9 @@ const HandbookGetAllResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace HandbookGetAllCommand {
+  export const RequestQuerySchema = RequestGetAllQuerySchema;
+  export type RequestQuery = z.infer<typeof RequestQuerySchema>;
+
   export const ResponseSchema = HandbookGetAllResponseSchema;
   export type Request = z.infer<typeof ResponseSchema>;
 }

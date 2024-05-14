@@ -9,6 +9,7 @@ import { WorkspaceChangeOwnerRequestDto } from './dto/controller/change-owner-wo
 import { IWorkspaceService } from './types/workspace.service.interface';
 import { WorkspaceCreateRequestDto } from './dto/controller/create-workspace.dto';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
+import { IQueryParams } from '../../common/decorators/query-params.decorator';
 
 @Injectable()
 export class WorkspaceService implements IWorkspaceService {
@@ -19,17 +20,18 @@ export class WorkspaceService implements IWorkspaceService {
 
   async getById(workspaceId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<WorkspaceEntity>> {
     const findedWorkspace = await this.workspaceRepository.getById(workspaceId);
-    return new InternalResponse<WorkspaceEntity>(findedWorkspace);
+    return new InternalResponse(findedWorkspace);
   }
 
   async getByManagerId(managerId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<WorkspaceEntity>> {
     const findedWorkspace = await this.workspaceRepository.getByManagerId(managerId);
-    return new InternalResponse<WorkspaceEntity>(findedWorkspace);
+    return new InternalResponse(findedWorkspace);
   }
 
-  async getAll(): Promise<UniversalInternalResponse<WorkspaceEntity[]>> {
-    const allWorkspaces = await this.workspaceRepository.getAll();
-    return new InternalResponse<WorkspaceEntity[]>(allWorkspaces);
+  async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<WorkspaceEntity[]>> {
+    const { skip, take } = queryParams;
+    const allWorkspaces = await this.workspaceRepository.getAll(skip, take);
+    return new InternalResponse(allWorkspaces);
   }
 
   // для создания Workspace нужно указать id пользователя (менеджера), для которого создается Workspace
@@ -39,20 +41,21 @@ export class WorkspaceService implements IWorkspaceService {
     transactionDbClient?: TransactionDbClient,
   ): Promise<UniversalInternalResponse<WorkspaceEntity>> {
     const createdWorkspace = await this.workspaceRepository.create(dto, userId, transactionDbClient);
-    return new InternalResponse<WorkspaceEntity>(createdWorkspace);
+    return new InternalResponse(createdWorkspace);
   }
 
   async updateById(
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceUpdateRequestDto,
+    transactionDbClient?: TransactionDbClient,
   ): Promise<UniversalInternalResponse<WorkspaceEntity>> {
-    const updatedWorkspace = await this.workspaceRepository.updateById(workspaceId, dto);
-    return new InternalResponse<WorkspaceEntity>(updatedWorkspace);
+    const updatedWorkspace = await this.workspaceRepository.updateById(workspaceId, dto, transactionDbClient);
+    return new InternalResponse(updatedWorkspace);
   }
 
   async deleteById(workspaceId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<WorkspaceEntity>> {
     const deletedWorkspace = await this.workspaceRepository.deleteById(workspaceId);
-    return new InternalResponse<WorkspaceEntity>(deletedWorkspace);
+    return new InternalResponse(deletedWorkspace);
   }
 
   async changeWorkspaceOwner(
@@ -61,6 +64,6 @@ export class WorkspaceService implements IWorkspaceService {
   ): Promise<UniversalInternalResponse<WorkspaceEntity>> {
     // Этого мало, нужно еще у старого пользователя все поменять, а новому передать handbook и следить за истинностью данных. Для этого нужно будет перенести в Users данную ручку (чтобы избежать кольцевых зависимостей)
     const updatedWorkspace = await this.workspaceRepository.changeWorkspaceOwner(workspaceId, dto);
-    return new InternalResponse<WorkspaceEntity>(updatedWorkspace);
+    return new InternalResponse(updatedWorkspace);
   }
 }

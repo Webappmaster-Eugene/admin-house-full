@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { UserSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const AddUserToOrganizationRequestSchema = UserSchema.pick({
   uuid: true,

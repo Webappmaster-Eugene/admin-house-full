@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "nestjs-zod": "^3.0.0",
-    "oxide.ts": "^1.1.0"
-  }
-}

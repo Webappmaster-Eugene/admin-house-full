@@ -2,9 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IAuthRepository } from './types/auth.repository.interface';
 import { KFI } from '../../common/utils/di';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { jsonStringify } from '../../common/helpers/stringify';
+import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
 
 @Injectable()
 export class AuthRepository implements IAuthRepository {
@@ -28,7 +26,6 @@ export class AuthRepository implements IAuthRepository {
   async getStrictAdminKey(): Promise<{ key: string }> {
     try {
       const { key } = await this.databaseService.registerWithRoleKey.findFirst();
-
       if (key) {
         return { key };
       } else {
@@ -38,11 +35,7 @@ export class AuthRepository implements IAuthRepository {
         });
       }
     } catch (error: unknown) {
-      if (error instanceof NotFoundException) {
-        throw new InternalResponse(null, false, new InternalError(BackendErrorNames.NOT_FOUND, jsonStringify(error)));
-      }
-
-      throw new InternalResponse(null, false, new InternalError(BackendErrorNames.INTERNAL_ERROR, jsonStringify(error)));
+      errorRepositoryHandler(error);
     }
   }
 }

@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { EUserTypeVariantsSchema } from '../../../../src/common/generated/zod';
+import { EUserVariants } from '../../enums';
 
 export const RoleSchema = z.object({
   uuid: z.string().uuid(),
   idRole: z.number().int().optional(),
-  name: EUserTypeVariantsSchema,
+  name: EUserVariants,
   description: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

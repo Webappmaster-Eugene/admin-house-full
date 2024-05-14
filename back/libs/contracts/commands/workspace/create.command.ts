@@ -1,10 +1,6 @@
 import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
-import { FieldTypeSchema } from '../../models';
-import { ProjectSchema } from '../../models';
-import { UserSchema } from '../../models';
-import { OrganizationSchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { ResponseClientSchema } from '../../models';
 
 const WorkspaceCreateRequestSchema = WorkspaceSchema.omit({
   uuid: true,

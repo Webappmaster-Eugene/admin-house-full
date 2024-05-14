@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models/response-client';
-import { GlobalCategoryMaterialSchema } from '../../models/global-category-material';
+import { ResponseClientSchema } from '../../models';
+import { GlobalCategoryMaterialSchema } from '../../models';
 
 const GlobalCategoryMaterialGetResponseSchema = z
   .object({

@@ -11,13 +11,17 @@ export interface IWorkspaceRepository extends IRepositoryCommon<WorkspaceCreateR
   getById: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<WorkspaceEntity>;
   getByManagerId: (managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<WorkspaceEntity>;
   getAllCount: () => Promise<CountData>;
-  getAll: () => Promise<WorkspaceEntity[]>;
+  getAll: (skip: number, take: number) => Promise<WorkspaceEntity[]>;
   create: (
     dto: WorkspaceCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
     transactionDbClient?: TransactionDbClient,
   ) => Promise<WorkspaceEntity>;
-  updateById: (workspaceId: EntityUrlParamCommand.RequestUuidParam, dto: WorkspaceUpdateRequestDto) => Promise<WorkspaceEntity>;
+  updateById: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    dto: WorkspaceUpdateRequestDto,
+    transactionDbClient?: TransactionDbClient,
+  ) => Promise<WorkspaceEntity>;
   deleteById: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<WorkspaceEntity>;
   changeWorkspaceOwner: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

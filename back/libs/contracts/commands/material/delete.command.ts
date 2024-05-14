@@ -13,8 +13,7 @@ const MaterialDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace MaterialDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = MaterialDeleteResponseSchema;

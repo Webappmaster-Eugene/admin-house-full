@@ -1,6 +1,6 @@
-import { unknown, z } from 'zod';
-import { FieldTypeSchema, RoleSchema, StrictKeySchema } from '../../models';
-import { ResponseClientSchema } from '../../models/response-client';
+import { z } from 'zod';
+import { AuthStrictKeySchema } from '../../models';
+import { ResponseClientSchema } from '../../models';
 
 const AuthGenerateKeyRequestSchema = z.object({
   key: z.string(),
@@ -8,7 +8,7 @@ const AuthGenerateKeyRequestSchema = z.object({
 
 const AuthGenerateKeyResponseSchema = z
   .object({
-    data: StrictKeySchema,
+    data: AuthStrictKeySchema,
   })
   .merge(ResponseClientSchema);
 
