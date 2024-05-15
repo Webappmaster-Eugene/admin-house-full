@@ -18,8 +18,8 @@ import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decora
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { EUserTypeVariants } from '@prisma/client';
-import { okResponseHandler } from '../../common/helpers/ok-response.handler';
-import { errorResponseHandler } from '../../common/helpers/error-response.handler';
+import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @ApiTags('Работа с аутентификацией пользователя')
@@ -74,8 +74,8 @@ export class AuthController implements IAuthController {
     @Param('registerWithRoleKey') registerWithRoleKey: string,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<AuthRegisterWithRoleResponseDto> {
-    // каждый раз при вызове идет запись в БД в таблицу registerWithRoleKey (то есть обновление) - при успешной регистрации пользователя с ролью НЕ customer
-    // иначе вызов данной ручки не происходит
+    // DOC каждый раз при вызове идет запись в БД в таблицу registerWithRoleKey (то есть обновление) - при успешной регистрации пользователя с ролью НЕ customer
+    // DOC иначе вызов данной ручки не происходит
     try {
       const { ok, data } = await this.authService.registerWithRole(dto, {
         roleId,
@@ -129,8 +129,8 @@ export class AuthController implements IAuthController {
     @Body() dto: AuthGenerateKeyRequestDto,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<AuthGenerateKeyResponseDto> {
-    // генерация ключа для регистрации с ролью
-    // каждый раз при вызове идет запись в БД в таблицу registerWithRoleKey (то есть обновление) - при успешной регистрации пользователя с ролью НЕ customer
+    // DOC генерация ключа для регистрации с ролью
+    // DOC каждый раз при вызове идет запись в БД в таблицу registerWithRoleKey (то есть обновление) - при успешной регистрации пользователя с ролью НЕ customer
     try {
       const { ok, data } = await this.authService.generateStrictAdminKey(dto);
       if (ok) {
@@ -155,8 +155,8 @@ export class AuthController implements IAuthController {
   @ZodSerializerDto(AuthGetKeyResponseDto)
   @Get('/strict-admin-key')
   async getStrictAdminKeyEP(@UrlParams() urlParams: IUrlParams): Promise<AuthGetKeyResponseDto> {
-    // получение ключа для регистрации с ролью
-    // каждый раз при вызове запись берется из БД таблицы registerWithRoleKey
+    // DOC получение ключа для регистрации с ролью
+    // DOC каждый раз при вызове запись берется из БД таблицы registerWithRoleKey
     try {
       const { ok, data } = await this.authService.getStrictAdminKey();
       if (ok) {

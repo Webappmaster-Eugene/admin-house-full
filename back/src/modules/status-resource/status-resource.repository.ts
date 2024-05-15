@@ -7,10 +7,10 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { StatusResourceEntity } from './entities/status-resource.entity';
 import { KFI } from '../../common/utils/di';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
-import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
-import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
+import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 
 @Injectable()
 export class StatusResourceRepository implements IStatusResourceRepository {

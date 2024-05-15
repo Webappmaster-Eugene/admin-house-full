@@ -5,6 +5,7 @@ export class CategoryMaterialEntity implements CategoryMaterial {
   name: string;
   comment: string;
   globalCategoryMaterialUuid: string;
+  handbookUuid: string;
   templateName: string;
   createdAt: Date;
   updatedAt: Date;

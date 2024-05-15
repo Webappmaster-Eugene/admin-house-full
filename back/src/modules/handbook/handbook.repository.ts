@@ -10,11 +10,11 @@ import { DEFAULT_HANDBOOK_DESCRIPTION, DEFAULT_HANDBOOK_NAME } from './lib/const
 import { KFI } from '../../common/utils/di';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
-import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
+import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 
 @Injectable()
 export class HandbookRepository implements IHandbookRepository {

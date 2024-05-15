@@ -1,12 +1,12 @@
-import { errorExtractor } from './error.extractor';
-import { EntityName } from '../types/entity.enum';
-import { ExternalResponse } from '../types/responses/universal-external-response.interface';
+import { errorExtractor } from '../extractors/error.extractor';
+import { EntityName } from '../../types/entity.enum';
+import { ExternalResponse } from '../../types/responses/universal-external-response.interface';
 import { HttpException } from '@nestjs/common';
-import { BACKEND_ERRORS, BackendErrorNames } from '../errors/errors.backend';
-import { IUrlParams } from '../decorators/url-params.decorator';
-import { ILogger } from '../types/main/logger.interface';
-import { loggerError } from '../utils/logger/logger.error';
-import { InternalResponse } from '../types/responses/universal-internal-response.interface';
+import { BACKEND_ERRORS, BackendErrorNames } from '../../errors/errors.backend';
+import { IUrlParams } from '../../decorators/url-params.decorator';
+import { ILogger } from '../../types/main/logger.interface';
+import { loggerError } from '../../utils/logger/logger.error';
+import { InternalResponse } from '../../types/responses/universal-internal-response.interface';
 
 export function errorResponseHandler(instanceLogger: ILogger, error: unknown, entityName?: EntityName, urlParams?: IUrlParams) {
   if (error instanceof InternalResponse) {

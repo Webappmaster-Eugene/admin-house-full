@@ -5,7 +5,7 @@ import { ROLE_IDS } from '../consts/role-ids';
 import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
-import { dataInternalExtractor } from '../helpers/data-internal.extractor';
+import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class IsManagerInBodyGuard implements CanActivate {

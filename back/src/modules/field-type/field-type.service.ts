@@ -13,17 +13,17 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 export class FieldTypeService implements IFieldTypeService {
   constructor(
     @Inject(KFI.FIELD_TYPE_REPOSITORY)
-    private readonly fieldOfMaterialRepository: IFieldTypeRepository,
+    private readonly fieldTypeRepository: IFieldTypeRepository,
   ) {}
 
   async getById(fieldTypeId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const findedFieldType = await this.fieldOfMaterialRepository.getById(fieldTypeId);
+    const findedFieldType = await this.fieldTypeRepository.getById(fieldTypeId);
     return new InternalResponse(findedFieldType);
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldTypeEntity[]>> {
     const { skip, take } = queryParams;
-    const allFieldTypes = await this.fieldOfMaterialRepository.getAll(skip, take);
+    const allFieldTypes = await this.fieldTypeRepository.getAll(skip, take);
     return new InternalResponse(allFieldTypes);
   }
 
@@ -31,7 +31,7 @@ export class FieldTypeService implements IFieldTypeService {
     dto: FieldTypeCreateRequestDto,
     fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const createdFieldType = await this.fieldOfMaterialRepository.create(dto, fieldTypeId);
+    const createdFieldType = await this.fieldTypeRepository.create(dto, fieldTypeId);
     return new InternalResponse(createdFieldType);
   }
 
@@ -39,12 +39,12 @@ export class FieldTypeService implements IFieldTypeService {
     fieldTypeIdId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldTypeUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const updatedFieldType = await this.fieldOfMaterialRepository.updateById(fieldTypeIdId, dto);
+    const updatedFieldType = await this.fieldTypeRepository.updateById(fieldTypeIdId, dto);
     return new InternalResponse(updatedFieldType);
   }
 
   async deleteById(fieldTypeIdId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const deletedFieldType = await this.fieldOfMaterialRepository.deleteById(fieldTypeIdId);
+    const deletedFieldType = await this.fieldTypeRepository.deleteById(fieldTypeIdId);
     return new InternalResponse(deletedFieldType);
   }
 }

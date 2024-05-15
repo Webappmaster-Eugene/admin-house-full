@@ -1,4 +1,4 @@
-import { UniversalInternalResponse } from '../types/responses/universal-internal-response.interface';
+import { UniversalInternalResponse } from '../../types/responses/universal-internal-response.interface';
 
 export function dataInternalExtractor<TEntity>(dataInternalResponse: UniversalInternalResponse<TEntity>): TEntity {
   const { ok, data } = dataInternalResponse;

@@ -3,12 +3,12 @@ import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
-import { jwtExtractor } from '../helpers/jwt.extractor';
+import { jwtExtractor } from '../helpers/extractors/jwt.extractor';
 import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { KFI } from '../utils/di';
 import { IUserService } from '../../modules/user/types/user.service.interface';
-import { dataInternalExtractor } from '../helpers/data-internal.extractor';
+import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -1,6 +1,6 @@
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InternalResponse } from '../types/responses/universal-internal-response.interface';
-import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../errors/errors.backend';
+import { InternalResponse } from '../../types/responses/universal-internal-response.interface';
+import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../errors/errors.backend';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 export function errorRepositoryHandler(error: unknown): void {

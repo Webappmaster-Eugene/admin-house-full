@@ -15,8 +15,8 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { EUserTypeVariants } from '@prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { okResponseHandler } from '../../common/helpers/ok-response.handler';
-import { errorResponseHandler } from '../../common/helpers/error-response.handler';
+import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 
 @ApiTags('Работа с AppInfo')
 @Controller('app-info')

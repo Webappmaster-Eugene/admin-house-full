@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
-import { EntityName } from '../types/entity.enum';
-import { toEntityArray } from '../utils/mappers';
-import { TemplateEntityClass } from '../types/template.entity-class';
-import { isArrayEntityHandler } from '../type-guards/is-array-entity.handler';
+import { EntityName } from '../../types/entity.enum';
+import { toEntityArray } from '../../utils/mappers';
+import { TemplateEntityClass } from '../../types/template.entity-class';
+import { isArrayEntityHandler } from '../../type-guards/is-array-entity.handler';
 
 export function existenceEntityHandler<TEntity>(
   entityFromDb: unknown,

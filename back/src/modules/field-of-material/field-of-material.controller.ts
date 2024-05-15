@@ -29,15 +29,15 @@ import { FieldOfMaterialUpdateRequestDto, FieldOfMaterialUpdateResponseDto } fro
 import { IFieldOfMaterialController } from './types/field-of-material.controller.interface';
 import { IFieldOfMaterialService } from './types/field-of-material.service.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { okResponseHandler } from '../../common/helpers/ok-response.handler';
-import { errorResponseHandler } from '../../common/helpers/error-response.handler';
+import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldOfMaterial')
 @Controller('workspace/:workspaceId/handbook/:handbookId/field-of-material')
 export class FieldOfMaterialController implements IFieldOfMaterialController {
   constructor(
-    @Inject(KFI.FIELD_TYPE_SERVICE)
+    @Inject(KFI.FIELD_OF_MATERIAL_SERVICE)
     private readonly fieldOfMaterialService: IFieldOfMaterialService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}

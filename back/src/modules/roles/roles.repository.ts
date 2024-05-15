@@ -8,9 +8,9 @@ import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/e
 import { CountData } from '../../common/types/main/count.data';
 import { RoleEntity } from './entities/role.entity';
 import { KFI } from '../../common/utils/di';
-import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 
 @Injectable()
 export class RolesRepository implements IRoleRepository {

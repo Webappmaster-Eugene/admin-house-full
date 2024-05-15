@@ -5,9 +5,9 @@ import { AppInfoUpdateRequestDto } from './dto/controller/update-app-info.dto';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { AppInfoEntity } from './entities/app-info.entity';
 import { KFI } from '../../common/utils/di';
-import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 
 @Injectable()
 export class AppInfoRepository implements IAppInfoRepository {

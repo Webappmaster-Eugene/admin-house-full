@@ -6,9 +6,9 @@ import { GlobalCategoryMaterialUpdateRequestDto } from './dto/controller/update-
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
 import { GlobalCategoryMaterialEntity } from './entities/global-category-material.entity';
 import { KFI } from '../../common/utils/di';
-import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 
 @Injectable()
 export class GlobalCategoryMaterialRepository implements IGlobalCategoryMaterialRepository {

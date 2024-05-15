@@ -2,14 +2,14 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/commo
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
-import { jwtExtractor } from '../helpers/jwt.extractor';
+import { jwtExtractor } from '../helpers/extractors/jwt.extractor';
 import { KFI } from '../utils/di';
 import { ROLE_IDS } from '../consts/role-ids';
 import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
 import { IWorkspaceService } from '../../modules/workspace/types/workspace.service.interface';
-import { dataInternalExtractor } from '../helpers/data-internal.extractor';
+import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class WorkspaceMembersGuard implements CanActivate {

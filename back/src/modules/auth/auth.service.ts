@@ -18,7 +18,7 @@ import { AuthRegisterWithRoleRequestParamDto } from './dto/controller/auth.regis
 import { IRoleService } from '../roles/types/role.service.interface';
 import { ROLE_IDS } from '../../common/consts/role-ids';
 import { tokenRegex } from '../../common/regex/token.regex';
-import { dataInternalExtractor } from '../../common/helpers/data-internal.extractor';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -36,14 +36,12 @@ export class AuthService implements IAuthService {
     const registeredUser = dataInternalExtractor(await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID));
     const newUserRole = dataInternalExtractor(await this.roleService.getById(ROLE_IDS.CUSTOMER_ROLE_ID));
 
-    const accessTokenResponse = await this.generateJWT(registeredUser.uuid, registeredUser.email);
-
-    const accessToken = accessTokenResponse.data;
+    const accessTokenResponse = dataInternalExtractor(await this.generateJWT(registeredUser.uuid, registeredUser.email));
 
     const outputEntity = {
       ...registeredUser,
-      accessToken,
       roleName: newUserRole.name,
+      accessToken: accessTokenResponse,
     };
     const user = new AuthEntity(outputEntity);
     return new InternalResponse(user);
@@ -56,19 +54,18 @@ export class AuthService implements IAuthService {
     const { roleId, registerWithRoleKey } = paramDto;
 
     const { data } = await this.getStrictAdminKey();
+    const key = 'key' in data ? data.key : 'wrong key';
 
-    if (registerWithRoleKey === data.key) {
+    if (registerWithRoleKey === key) {
       const registeredUser = dataInternalExtractor(await this.userService.create(dto, roleId));
       const newUserRole = dataInternalExtractor(await this.roleService.getById(roleId));
 
       const accessTokenResponse = await this.generateJWT(registeredUser.uuid, registeredUser.email);
 
-      const accessToken = accessTokenResponse.data;
-
       const outputEntity = {
         ...registeredUser,
-        accessToken,
         roleName: newUserRole.name,
+        accessToken: accessTokenResponse.data as string,
       };
 
       const generateKeyDto = {
@@ -102,8 +99,8 @@ export class AuthService implements IAuthService {
 
     const outputEntity = {
       ...user,
-      accessTokenResponse,
       roleName: newUserRole.name,
+      accessToken: accessTokenResponse,
     };
 
     return new InternalResponse(outputEntity);

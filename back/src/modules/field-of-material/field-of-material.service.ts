@@ -12,28 +12,27 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 @Injectable()
 export class FieldOfMaterialService implements IFieldOfMaterialService {
   constructor(
-    @Inject(KFI.FIELD_TYPE_REPOSITORY)
-    private readonly fieldTypeRepository: IFieldOfMaterialRepository,
+    @Inject(KFI.FIELD_OF_MATERIAL_REPOSITORY)
+    private readonly fieldOfMaterialRepository: IFieldOfMaterialRepository,
   ) {}
 
   async getById(fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<FieldOfMaterialEntity>> {
-    const findedFieldOfMaterial = await this.fieldTypeRepository.getById(fieldOfMaterialId);
+    const findedFieldOfMaterial = await this.fieldOfMaterialRepository.getById(fieldOfMaterialId);
     return new InternalResponse(findedFieldOfMaterial);
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldOfMaterialEntity[]>> {
     const { skip, take } = queryParams;
-    const allFieldOfMaterials = await this.fieldTypeRepository.getAll(skip, take);
+    const allFieldOfMaterials = await this.fieldOfMaterialRepository.getAll(skip, take);
     return new InternalResponse(allFieldOfMaterials);
   }
 
-  // для создания FieldOfMaterial нужно указать id пользователя (менеджера), для которого создается FieldOfMaterial
   async create(
     dto: FieldOfMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldOfMaterialEntity>> {
-    const createdFieldOfMaterial = await this.fieldTypeRepository.create(dto, handbookId, userId);
+    const createdFieldOfMaterial = await this.fieldOfMaterialRepository.create(dto, handbookId, userId);
     return new InternalResponse(createdFieldOfMaterial);
   }
 
@@ -41,12 +40,12 @@ export class FieldOfMaterialService implements IFieldOfMaterialService {
     fieldOfMaterialIdId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldOfMaterialEntity>> {
-    const updatedFieldOfMaterial = await this.fieldTypeRepository.updateById(fieldOfMaterialIdId, dto);
+    const updatedFieldOfMaterial = await this.fieldOfMaterialRepository.updateById(fieldOfMaterialIdId, dto);
     return new InternalResponse(updatedFieldOfMaterial);
   }
 
   async deleteById(fieldOfMaterialIdId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<FieldOfMaterialEntity>> {
-    const deletedFieldOfMaterial = await this.fieldTypeRepository.deleteById(fieldOfMaterialIdId);
+    const deletedFieldOfMaterial = await this.fieldOfMaterialRepository.deleteById(fieldOfMaterialIdId);
     return new InternalResponse(deletedFieldOfMaterial);
   }
 }

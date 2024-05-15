@@ -19,6 +19,16 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { GlobalCategoryMaterialModule } from './modules/global-category-material/global-category-material.module';
 import { WinstonModule } from 'nest-winston/dist/winston.module';
 import { LoggerConfig } from '../logger/logger-config';
+import { CategoryMaterialModule } from './modules/category-material/category-material.module';
+import { ResponsiblePartnerProducerController } from './modules/responsible-partner-producer/responsible-partner-producer.controller';
+import { StatusResourceModule } from './modules/status-resource/status-resource.module';
+import { MaterialModule } from './modules/material/material.module';
+import { FieldVariantsForSelectorFieldTypeModule } from './modules/field-variants-for-selector-field-type/field-variants-for-selector-field-type.module';
+import { FieldUnitMeasurementModule } from './modules/field-unit-measurement/field-unit-measurement.module';
+import { FieldTypeModule } from './modules/field-type/field-type.module';
+import { FieldOfMaterialModule } from './modules/field-of-material/field-of-material.module';
+import { PriceChangingModule } from './modules/price-changing/price-changing.module';
+import { ResponsiblePartnerProducerModule } from './modules/responsible-partner-producer/responsible-partner-producer.module';
 
 const logger: LoggerConfig = new LoggerConfig();
 
@@ -54,6 +64,15 @@ const logger: LoggerConfig = new LoggerConfig();
     OrganizationModule,
     ProjectModule,
     GlobalCategoryMaterialModule,
+    CategoryMaterialModule,
+    PriceChangingModule,
+    MaterialModule,
+    FieldVariantsForSelectorFieldTypeModule,
+    FieldUnitMeasurementModule,
+    FieldTypeModule,
+    FieldOfMaterialModule,
+    ResponsiblePartnerProducerModule,
+    StatusResourceModule,
   ],
   controllers: [],
   providers: [

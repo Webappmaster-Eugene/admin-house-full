@@ -11,10 +11,10 @@ import { WorkspaceChangeOwnerRequestDto } from './dto/controller/change-owner-wo
 import { KFI } from '../../common/utils/di';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { EntityName } from '../../common/types/entity.enum';
-import { existenceEntityHandler } from '../../common/helpers/existance-entity-handler';
-import { limitTakeHandler } from '../../common/helpers/take-limit.handler';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
+import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 
 @Injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {

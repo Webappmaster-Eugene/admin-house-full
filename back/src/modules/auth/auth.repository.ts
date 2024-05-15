@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IAuthRepository } from './types/auth.repository.interface';
 import { KFI } from '../../common/utils/di';
-import { errorRepositoryHandler } from '../../common/helpers/error-repository.handler';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 
 @Injectable()
 export class AuthRepository implements IAuthRepository {

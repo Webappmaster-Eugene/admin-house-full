@@ -16,14 +16,14 @@ import { AddUserToWorkspaceRequestDto } from './dto/controller/add-to-workspace.
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { CACHE_KEYS } from '../../common/consts/cache-keys';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { cacheGetter } from '../../common/helpers/cache-getter';
-import { cacheSetter } from '../../common/helpers/cache-setter';
-import { cacheRemover } from '../../common/helpers/cache-remover';
+import { cacheGetter } from '../../common/helpers/cashe/cache-getter';
+import { cacheSetter } from '../../common/helpers/cashe/cache-setter';
+import { cacheRemover } from '../../common/helpers/cashe/cache-remover';
 import { UserAllInfoEntity } from './entities/user-all-info.entity';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
-import { dataInternalExtractor } from '../../common/helpers/data-internal.extractor';
-import { cacheRemoverBatch } from '../../common/helpers/cache-remover.batch';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
+import { cacheRemoverBatch } from '../../common/helpers/cashe/cache-remover.batch';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
 
 @Injectable()
