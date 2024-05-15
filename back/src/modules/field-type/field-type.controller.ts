@@ -13,16 +13,12 @@ import {
   FieldTypeGetAllCommand,
   FieldTypeGetCommand,
   FieldTypeUpdateCommand,
-  FieldVariantsForSelectorFieldTypeGetAllCommand,
 } from '../../../libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
-import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
-import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { FieldTypeDeleteResponseDto } from './dto/controller/delete-field-type.dto';
-import { FieldVariantsForSelectorFieldTypeCreateResponseDto } from '../field-variants-for-selector-field-type/dto/controller/create-field-variants-for-selector-field-type.dto';
 import { FieldTypeGetResponseDto } from './dto/controller/get-field-type.dto';
 import { FieldTypeEntity } from './entities/field-type.entity';
 import { FieldTypeGetAllResponseDto } from './dto/controller/get-all-field-types.dto';
@@ -70,7 +66,7 @@ export class FieldTypeController implements IFieldTypeController {
 
   //region SWAGGER
   @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+    schema: zodToOpenAPI(FieldTypeGetAllCommand.RequestQuerySchema),
   })
   @ApiOkResponse({
     schema: zodToOpenAPI(FieldTypeGetAllCommand.ResponseSchema),
@@ -112,7 +108,7 @@ export class FieldTypeController implements IFieldTypeController {
     @Body() dto: FieldTypeCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
     @User() userInfoFromJWT: IJWTPayload,
-  ): Promise<FieldVariantsForSelectorFieldTypeCreateResponseDto> {
+  ): Promise<FieldTypeCreateResponseDto> {
     // в create нужно передать id пользователя, для которого создается field-type
     try {
       const { ok, data } = await this.fieldTypeService.create(dto, userInfoFromJWT.uuid);

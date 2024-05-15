@@ -20,13 +20,13 @@ export class FieldOfMaterialRepository implements IFieldOfMaterialRepository {
 
   async getById(fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<FieldOfMaterialEntity> {
     try {
-      const findedFieldOfMaterial = await this.databaseService.fieldType.findUnique({
+      const findedFieldOfMaterial = await this.databaseService.fieldOfMaterial.findUnique({
         where: {
           uuid: fieldOfMaterialId,
         },
       });
 
-      return existenceEntityHandler(findedFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_TYPE) as FieldOfMaterialEntity;
+      return existenceEntityHandler(findedFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_OF_MATERIAL) as FieldOfMaterialEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -35,8 +35,8 @@ export class FieldOfMaterialRepository implements IFieldOfMaterialRepository {
     limitTakeHandler(take);
 
     try {
-      const allFieldOfMaterials = await this.databaseService.fieldType.findMany({ take, skip });
-      return existenceEntityHandler(allFieldOfMaterials, FieldOfMaterialEntity, EntityName.FIELD_TYPE) as FieldOfMaterialEntity[];
+      const allFieldOfMaterials = await this.databaseService.fieldOfMaterial.findMany({ take, skip });
+      return existenceEntityHandler(allFieldOfMaterials, FieldOfMaterialEntity, EntityName.FIELD_OF_MATERIAL) as FieldOfMaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -44,35 +44,52 @@ export class FieldOfMaterialRepository implements IFieldOfMaterialRepository {
 
   async create(
     dto: FieldOfMaterialCreateRequestDto,
-    fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldOfMaterialEntity> {
     try {
-      const { description, name } = dto;
-      const newFieldOfMaterial = await this.databaseService.fieldType.create({
-        data: {},
+      const { name, comment, defaultValue, fieldTypeUuid, isRequired, categoryMaterialUuid, unitOfMeasurementUuid } = dto;
+      const newFieldOfMaterial = await this.databaseService.fieldOfMaterial.create({
+        data: {
+          name,
+          comment,
+          defaultValue,
+          fieldTypeUuid,
+          isRequired,
+          categoryMaterialUuid,
+          unitOfMeasurementUuid,
+          handbookUuid: handbookId,
+          createdByUuid: userId,
+        },
       });
-      return existenceEntityHandler(newFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_TYPE) as FieldOfMaterialEntity;
+      return existenceEntityHandler(newFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_OF_MATERIAL) as FieldOfMaterialEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
   }
 
   async updateById(
-    typeFieldId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: FieldOfMaterialCreateRequestDto,
+    fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: FieldOfMaterialCreateRequestDto,
   ): Promise<FieldOfMaterialEntity> {
     try {
-      const updatedFieldOfMaterial = await this.databaseService.fieldType.update({
+      const { name, comment, defaultValue, fieldTypeUuid, isRequired, categoryMaterialUuid, unitOfMeasurementUuid } = dto;
+      const updatedFieldOfMaterial = await this.databaseService.fieldOfMaterial.update({
         where: {
-          uuid: typeFieldId,
+          uuid: fieldOfMaterialId,
         },
         data: {
           name,
-          description,
+          comment,
+          defaultValue,
+          fieldTypeUuid,
+          isRequired,
+          categoryMaterialUuid,
+          unitOfMeasurementUuid,
         },
       });
 
-      return existenceEntityHandler(updatedFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_TYPE) as FieldOfMaterialEntity;
+      return existenceEntityHandler(updatedFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_OF_MATERIAL) as FieldOfMaterialEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -80,13 +97,13 @@ export class FieldOfMaterialRepository implements IFieldOfMaterialRepository {
 
   async deleteById(fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<FieldOfMaterialEntity> {
     try {
-      const deletedFieldOfMaterial = await this.databaseService.fieldType.delete({
+      const deletedFieldOfMaterial = await this.databaseService.fieldOfMaterial.delete({
         where: {
           uuid: fieldOfMaterialId,
         },
       });
 
-      return existenceEntityHandler(deletedFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_TYPE) as FieldOfMaterialEntity;
+      return existenceEntityHandler(deletedFieldOfMaterial, FieldOfMaterialEntity, EntityName.FIELD_OF_MATERIAL) as FieldOfMaterialEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }

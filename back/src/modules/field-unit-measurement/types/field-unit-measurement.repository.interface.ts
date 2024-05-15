@@ -10,7 +10,7 @@ export interface IFieldUnitMeasurementRepository
   getAll: (skip?: number, take?: number) => Promise<FieldUnitMeasurementEntity[]>;
   create: (
     dto: FieldUnitMeasurementCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementEntity>;
   updateById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,

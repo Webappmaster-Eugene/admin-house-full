@@ -2,13 +2,8 @@ import { createZodDto } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
 import { WorkspaceChangeOwnerCommand } from '../../../../../libs/contracts/commands/workspace/change-owner.command';
 
-export type WorkspaceChangeOwnerRequestParamDto =
-  EntityUrlParamCommand.RequestUuidParam;
+export type WorkspaceChangeOwnerRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
-export class WorkspaceChangeOwnerRequestDto extends createZodDto(
-  WorkspaceChangeOwnerCommand.RequestSchema,
-) {}
+export class WorkspaceChangeOwnerRequestDto extends createZodDto(WorkspaceChangeOwnerCommand.RequestSchema) {}
 
-export class WorkspaceChangeOwnerResponseDto extends createZodDto(
-  WorkspaceChangeOwnerCommand.ResponseSchema,
-) {}
+export class WorkspaceChangeOwnerResponseDto extends createZodDto(WorkspaceChangeOwnerCommand.ResponseSchema) {}

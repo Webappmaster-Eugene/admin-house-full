@@ -6,6 +6,4 @@ export type RoleGetUuidRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
 export type RoleGetIdRequestParamDto = EntityUrlParamCommand.RequestNumberParam;
 
-export class RoleGetResponseDto extends createZodDto(
-  RoleGetCommand.ResponseSchema,
-) {}
+export class RoleGetResponseDto extends createZodDto(RoleGetCommand.ResponseSchema) {}

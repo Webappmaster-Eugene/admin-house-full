@@ -2,7 +2,5 @@ import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/co
 import { IQuery } from '@nestjs/cqrs';
 
 export class GetGlobalCategoryMaterialByIdQuery implements IQuery {
-  constructor(
-    public readonly globalCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-  ) {}
+  constructor(public readonly globalCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam) {}
 }

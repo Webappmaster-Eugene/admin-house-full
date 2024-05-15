@@ -5,7 +5,6 @@ import { ResponseClientSchema } from '../../models';
 const FieldOfMaterialCreateRequestSchema = FieldOfMaterialSchema.omit({
   uuid: true,
   createdByUuid: true,
-
   createdAt: true,
   updatedAt: true,
 });

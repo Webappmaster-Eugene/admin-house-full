@@ -8,7 +8,11 @@ export interface IFieldOfMaterialRepository
   extends IRepositoryCommon<FieldOfMaterialCreateRequestDto, FieldOfMaterialUpdateRequestDto, FieldOfMaterialEntity> {
   getById: (fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldOfMaterialEntity>;
   getAll: (skip?: number, take?: number) => Promise<FieldOfMaterialEntity[]>;
-  create: (dto: FieldOfMaterialCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldOfMaterialEntity>;
+  create: (
+    dto: FieldOfMaterialCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<FieldOfMaterialEntity>;
   updateById: (
     fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfMaterialUpdateRequestDto,

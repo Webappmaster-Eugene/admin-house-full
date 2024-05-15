@@ -10,12 +10,8 @@ export interface IFieldUnitMeasurementService
   extends IServiceCommon<FieldUnitMeasurementCreateRequestDto, FieldUnitMeasurementUpdateRequestDto, FieldUnitMeasurementEntity> {
   getById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
-  getAll: (
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
-    queryParams?: IQueryParams,
-  ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>>;
+  getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>>;
   create: (
     dto: FieldUnitMeasurementCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -23,10 +19,8 @@ export interface IFieldUnitMeasurementService
   updateById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldUnitMeasurementUpdateRequestDto,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
   deleteById: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
 }

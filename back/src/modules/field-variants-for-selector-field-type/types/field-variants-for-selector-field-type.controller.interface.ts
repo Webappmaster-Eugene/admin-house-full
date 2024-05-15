@@ -34,6 +34,7 @@ export interface IFieldVariantsForSelectorFieldTypeController
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     urlParams: IUrlParams,
     userInfoFromJWT: IJWTPayload,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldVariantsForSelectorFieldTypeCreateResponseDto>;
   updateByIdEP: (
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,

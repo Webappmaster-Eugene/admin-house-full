@@ -1,8 +1,6 @@
 import { FieldVariantsForSelectorFieldType } from '@prisma/client';
 
-export class FieldVariantsForSelectorFieldTypeEntity
-  implements FieldVariantsForSelectorFieldType
-{
+export class FieldVariantsForSelectorFieldTypeEntity implements FieldVariantsForSelectorFieldType {
   uuid: string;
   name: string;
   description: string;
@@ -11,9 +9,7 @@ export class FieldVariantsForSelectorFieldTypeEntity
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(
-    fieldVariantsForSelectorFieldType: Partial<FieldVariantsForSelectorFieldType>,
-  ) {
+  constructor(fieldVariantsForSelectorFieldType: Partial<FieldVariantsForSelectorFieldType>) {
     Object.assign(this, fieldVariantsForSelectorFieldType);
     return this;
   }

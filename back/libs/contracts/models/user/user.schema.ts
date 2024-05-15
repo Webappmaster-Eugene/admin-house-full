@@ -7,10 +7,7 @@ export const UserSchema = z.object({
   avatar: z.string().nullable().optional(),
   phone: z
     .string()
-    .regex(
-      /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
-      `Phone must be a valid phone number`,
-    )
+    .regex(/^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/, `Phone must be a valid phone number`)
     .optional(),
   email: z.string().email(),
   password: z.string().regex(

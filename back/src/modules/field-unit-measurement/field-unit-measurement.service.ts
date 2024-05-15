@@ -18,34 +18,28 @@ export class FieldUnitMeasurementService implements IFieldUnitMeasurementService
 
   async getById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
     const findedFieldUnitMeasurement = await this.fieldUnitMeasurementRepository.getById(fieldUnitMeasurementId);
     return new InternalResponse(findedFieldUnitMeasurement);
   }
 
-  async getAll(
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
-    queryParams?: IQueryParams,
-  ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>> {
+  async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>> {
     const { skip, take } = queryParams;
     const allFieldUnitMeasurements = await this.fieldUnitMeasurementRepository.getAll(skip, take);
     return new InternalResponse(allFieldUnitMeasurements);
   }
 
-  // для создания FieldUnitMeasurement нужно указать id пользователя (менеджера), для которого создается FieldUnitMeasurement
   async create(
     dto: FieldUnitMeasurementCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
-    const createdFieldUnitMeasurement = await this.fieldUnitMeasurementRepository.create(dto, managerId);
+    const createdFieldUnitMeasurement = await this.fieldUnitMeasurementRepository.create(dto, handbookId);
     return new InternalResponse(createdFieldUnitMeasurement);
   }
 
   async updateById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldUnitMeasurementUpdateRequestDto,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
     const updatedFieldUnitMeasurement = await this.fieldUnitMeasurementRepository.updateById(fieldUnitMeasurementId, dto);
     return new InternalResponse(updatedFieldUnitMeasurement);
@@ -53,7 +47,6 @@ export class FieldUnitMeasurementService implements IFieldUnitMeasurementService
 
   async deleteById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>> {
     const deletedFieldUnitMeasurement = await this.fieldUnitMeasurementRepository.deleteById(fieldUnitMeasurementId);
     return new InternalResponse(deletedFieldUnitMeasurement);

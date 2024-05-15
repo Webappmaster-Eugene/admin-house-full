@@ -4,6 +4,4 @@ import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/co
 
 export type HandbookGetRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
-export class HandbookGetResponseDto extends createZodDto(
-  HandbookGetCommand.ResponseSchema,
-) {}
+export class HandbookGetResponseDto extends createZodDto(HandbookGetCommand.ResponseSchema) {}

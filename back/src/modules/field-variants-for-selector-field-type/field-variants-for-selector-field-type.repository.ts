@@ -56,12 +56,13 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
 
   async create(
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookUuid: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity> {
     try {
-      const {} = dto;
+      // FIXME делать проверку если fieldTypeUuid не спиок/селектор, то отмена
+      const { name, fieldTypeUuid, description } = dto;
       const newFieldVariantsForSelectorFieldType = await this.databaseService.fieldVariantsForSelectorFieldType.create({
-        data: {},
+        data: { name, fieldTypeUuid, handbookUuid, description },
       });
       return existenceEntityHandler(
         newFieldVariantsForSelectorFieldType,
@@ -75,14 +76,14 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
 
   async updateById(
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
-    {}: FieldVariantsForSelectorFieldTypeUpdateRequestDto,
+    { name, description }: FieldVariantsForSelectorFieldTypeUpdateRequestDto,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity> {
     try {
       const updatedFieldVariantsForSelectorFieldType = await this.databaseService.fieldVariantsForSelectorFieldType.update({
         where: {
           uuid: fieldVariantsForSelectorFieldTypeId,
         },
-        data: {},
+        data: { name, description },
       });
 
       return existenceEntityHandler(

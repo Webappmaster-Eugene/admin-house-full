@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -40,7 +40,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldVariantsForSelectorFieldType')
-@Controller('/workspace/:workspaceId/handbook/:handbookId/field-type/:fieldTypeId/field-variants-for-selector-field-type')
+@Controller('/workspace/:workspaceId/handbook/:handbookId/field-of-material/:fieldOfMaterialId/field-variants')
 export class FieldVariantsForSelectorFieldTypeController implements IFieldVariantsForSelectorFieldTypeController {
   constructor(
     @Inject(KFI.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_SERVICE)
@@ -59,6 +59,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     status: 200,
     type: FieldVariantsForSelectorFieldTypeGetResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetResponseDto)
@@ -90,6 +91,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     status: 200,
     type: [FieldVariantsForSelectorFieldTypeGetAllResponseDto],
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -119,18 +121,20 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     status: 201,
     type: FieldVariantsForSelectorFieldTypeCreateResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
     @User() userInfoFromJWT: IJWTPayload,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldVariantsForSelectorFieldTypeCreateResponseDto> {
     try {
-      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.create(dto, userInfoFromJWT.uuid);
+      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.create(dto, handbookId);
       return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
@@ -145,12 +149,13 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeUpdateCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Изменение FieldVariantsForSelectorFieldType пользователя по id FieldVariantsForSelectorFieldType',
+    summary: 'Изменение FieldVariantsForSelectorFieldType по id FieldVariantsForSelectorFieldType',
   })
   @ApiResponse({
     status: 200,
     type: FieldVariantsForSelectorFieldTypeUpdateResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeUpdateResponseDto)
@@ -180,10 +185,10 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     status: 200,
     type: FieldVariantsForSelectorFieldTypeDeleteResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeDeleteResponseDto)
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:fieldVariantsForSelectorFieldTypeId')
   async deleteByIdEP(
     @Param('fieldVariantsForSelectorFieldTypeId', ParseUUIDPipe)

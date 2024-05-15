@@ -18,7 +18,7 @@ export interface IFieldVariantsForSelectorFieldTypeService
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>>;
   create: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity>>;
   updateById: (
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,

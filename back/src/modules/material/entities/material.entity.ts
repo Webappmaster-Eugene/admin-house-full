@@ -2,8 +2,10 @@ import { Material } from '@prisma/client';
 
 export class MaterialEntity implements Material {
   uuid: string;
+  name: string;
   namePublic: string;
   comment: string;
+  price: number;
   handbookUuid: string;
   categoryUuid: string;
   unitMeasurementUuid: string;

@@ -4,10 +4,6 @@ import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/co
 
 export type UserUpdateRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
-export class UserUpdateRequestDto extends createZodDto(
-  UserUpdateCommand.RequestSchema,
-) {}
+export class UserUpdateRequestDto extends createZodDto(UserUpdateCommand.RequestSchema) {}
 
-export class UserUpdateResponseDto extends createZodDto(
-  UserUpdateCommand.ResponseSchema,
-) {}
+export class UserUpdateResponseDto extends createZodDto(UserUpdateCommand.ResponseSchema) {}

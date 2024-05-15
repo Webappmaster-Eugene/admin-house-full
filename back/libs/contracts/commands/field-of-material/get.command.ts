@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FieldTypeSchema } from '../../models';
+import { FieldOfMaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const FieldOfMaterialGetResponseSchema = z

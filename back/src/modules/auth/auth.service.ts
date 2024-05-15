@@ -18,6 +18,7 @@ import { AuthRegisterWithRoleRequestParamDto } from './dto/controller/auth.regis
 import { IRoleService } from '../roles/types/role.service.interface';
 import { ROLE_IDS } from '../../common/consts/role-ids';
 import { tokenRegex } from '../../common/regex/token.regex';
+import { dataInternalExtractor } from '../../common/helpers/data-internal.extractor';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -32,18 +33,17 @@ export class AuthService implements IAuthService {
   ) {}
 
   async register(dto: AuthRegisterRequestDto): Promise<UniversalInternalResponse<AuthEntity>> {
-    const registeredUser = await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID);
-    const newUserRole = await this.roleService.getById(ROLE_IDS.CUSTOMER_ROLE_ID);
+    const registeredUser = dataInternalExtractor(await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID));
+    const newUserRole = dataInternalExtractor(await this.roleService.getById(ROLE_IDS.CUSTOMER_ROLE_ID));
 
-    const accessTokenResponse = await this.generateJWT(registeredUser.data.uuid, registeredUser.data.email);
+    const accessTokenResponse = await this.generateJWT(registeredUser.uuid, registeredUser.email);
 
     const accessToken = accessTokenResponse.data;
-    const infoRegisteredUser = registeredUser.data;
 
     const outputEntity = {
-      ...infoRegisteredUser,
+      ...registeredUser,
       accessToken,
-      roleName: newUserRole.data.name,
+      roleName: newUserRole.name,
     };
     const user = new AuthEntity(outputEntity);
     return new InternalResponse(user);
@@ -58,18 +58,17 @@ export class AuthService implements IAuthService {
     const { data } = await this.getStrictAdminKey();
 
     if (registerWithRoleKey === data.key) {
-      const registeredUser = await this.userService.create(dto, roleId);
-      const newUserRole = await this.roleService.getById(roleId);
+      const registeredUser = dataInternalExtractor(await this.userService.create(dto, roleId));
+      const newUserRole = dataInternalExtractor(await this.roleService.getById(roleId));
 
-      const accessTokenResponse = await this.generateJWT(registeredUser.data.uuid, registeredUser.data.email);
+      const accessTokenResponse = await this.generateJWT(registeredUser.uuid, registeredUser.email);
 
       const accessToken = accessTokenResponse.data;
-      const infoRegisteredUser = registeredUser.data;
 
       const outputEntity = {
-        ...infoRegisteredUser,
+        ...registeredUser,
         accessToken,
-        roleName: newUserRole.data.name,
+        roleName: newUserRole.name,
       };
 
       const generateKeyDto = {
@@ -88,25 +87,23 @@ export class AuthService implements IAuthService {
 
   async login(dto: AuthLoginRequestDto): Promise<UniversalInternalResponse<AuthEntity>> {
     const { email, password } = dto;
-    const user = await this.userService.getByEmail(email);
+    const user = dataInternalExtractor(await this.userService.getByEmail(email));
     if (!user) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
-    const hashedPassword = user.data.password;
+    const hashedPassword = user.password;
     const isValidPassword = await argon2.verify(hashedPassword, password);
     if (!isValidPassword) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
 
-    const userInfo = user.data;
-    const newUserRole = await this.roleService.getByUuid(userInfo.roleUuid);
-    const accessTokenResponse = await this.generateJWT(userInfo.uuid, userInfo.email);
-    const accessToken = accessTokenResponse.data;
+    const newUserRole = dataInternalExtractor(await this.roleService.getByUuid(user.roleUuid));
+    const accessTokenResponse = dataInternalExtractor(await this.generateJWT(user.uuid, user.email));
 
     const outputEntity = {
-      ...userInfo,
-      accessToken,
-      roleName: newUserRole.data.name,
+      ...user,
+      accessTokenResponse,
+      roleName: newUserRole.name,
     };
 
     return new InternalResponse(outputEntity);

@@ -30,7 +30,6 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
   }
 
-  // для создания FieldVariantsForSelectorFieldType нужно указать id пользователя (менеджера), для которого создается FieldVariantsForSelectorFieldType
   async create(
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     managerId: EntityUrlParamCommand.RequestUuidParam,

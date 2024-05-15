@@ -11,30 +11,12 @@ export interface IServiceCommon<
   GReqIdParam = EntityUrlParamCommand.RequestUuidParam,
   GReqNumberParam = EntityUrlParamCommand.RequestNumberParam,
 > {
-  getById: (
-    id: GReqIdParam | GReqNumberParam,
-    ...otherParams: unknown[]
-  ) => Promise<UniversalInternalResponse<ENTITY | null>>;
-  getAll: (
-    ...otherParams: unknown[]
-  ) => Promise<UniversalInternalResponse<ENTITY[] | null>>;
-  create: (
-    dto: CReqDto,
-    ...otherParams: unknown[]
-  ) => Promise<UniversalInternalResponse<ENTITY>>;
-  updateById: (
-    id: GReqIdParam,
-    dto: UReqDto,
-    ...otherParams: unknown[]
-  ) => Promise<UniversalInternalResponse<ENTITY>>;
-  deleteById: (
-    ids: GReqIdParam,
-    ...otherParams: unknown[]
-  ) => Promise<UniversalInternalResponse<ENTITY>>;
-  deleteByIds?: (
-    ids: GReqIdParam[],
-    ...otherParams: unknown[]
-  ) => Promise<UniversalInternalResponse<Prisma.BatchPayload>>;
+  getById: (id: GReqIdParam | GReqNumberParam, ...otherParams: unknown[]) => Promise<UniversalInternalResponse<ENTITY | null>>;
+  getAll: (...otherParams: unknown[]) => Promise<UniversalInternalResponse<ENTITY[] | null>>;
+  create: (dto: CReqDto, ...otherParams: unknown[]) => Promise<UniversalInternalResponse<ENTITY>>;
+  updateById: (id: GReqIdParam, dto: UReqDto, ...otherParams: unknown[]) => Promise<UniversalInternalResponse<ENTITY>>;
+  deleteById: (ids: GReqIdParam, ...otherParams: unknown[]) => Promise<UniversalInternalResponse<ENTITY>>;
+  deleteByIds?: (ids: GReqIdParam[], ...otherParams: unknown[]) => Promise<UniversalInternalResponse<Prisma.BatchPayload>>;
   findByCriteria?: (
     dto: FReqDto,
     sort: Record<string, string>[],

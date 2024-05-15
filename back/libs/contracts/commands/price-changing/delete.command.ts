@@ -13,8 +13,7 @@ const PriceChangingDeleteResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace PriceChangingDeleteCommand {
-  export const RequestParamSchema =
-    EntityUrlParamCommand.RequestUuidParamSchema;
+  export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
   export const ResponseSchema = PriceChangingDeleteResponseSchema;

@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { KFI } from '../../common/utils/di';
-import { FieldVariantsForSelectorFieldTypeRepository } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type.repository';
-import { FieldVariantsForSelectorFieldTypeService } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type.service';
-import { FieldVariantsForSelectorFieldTypeController } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type.controller';
+import { FieldTypeService } from './field-type.service';
+import { FieldTypeRepository } from './field-type.repository';
+import { FieldTypeController } from './field-type.controller';
 
 @Module({
   providers: [
     {
       provide: KFI.FIELD_TYPE_REPOSITORY,
-      useClass: FieldVariantsForSelectorFieldTypeRepository,
+      useClass: FieldTypeRepository,
     },
     {
       provide: KFI.FIELD_TYPE_SERVICE,
-      useClass: FieldVariantsForSelectorFieldTypeService,
+      useClass: FieldTypeService,
     },
   ],
-  controllers: [FieldVariantsForSelectorFieldTypeController],
+  controllers: [FieldTypeController],
   imports: [],
   exports: [KFI.FIELD_TYPE_SERVICE],
 })

@@ -33,7 +33,6 @@ export class GlobalCategoryMaterialService implements IGlobalCategoryMaterialSer
     return new InternalResponse(globalCategoryMaterials);
   }
 
-  // для создания GlobalCategory нужно указать id пользователя (менеджера), для которого создается GlobalCategory
   async create(dto: GlobalCategoryMaterialCreateRequestDto): Promise<UniversalInternalResponse<GlobalCategoryMaterialEntity>> {
     const createdGlobalCategoryMaterial: GlobalCategoryMaterialEntity = await this.commandBus.execute<
       CreateGlobalCategoryMaterialCommand,

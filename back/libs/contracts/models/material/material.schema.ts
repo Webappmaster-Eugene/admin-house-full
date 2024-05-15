@@ -4,7 +4,7 @@ export const MaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
   comment: z.string().nullable().optional(),
-  namePublic: z.boolean().nullable().optional(),
+  namePublic: z.string().nullable().optional(),
   handbookUuid: z.string().uuid(),
   price: z.number(),
   unitMeasurementUuid: z.string().uuid(),

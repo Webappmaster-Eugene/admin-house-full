@@ -29,7 +29,6 @@ export class ResponsiblePartnerProducerService implements IResponsiblePartnerPro
     return new InternalResponse(allResponsiblePartnerProducers);
   }
 
-  // для создания ResponsiblePartnerProducer нужно указать id пользователя (менеджера), для которого создается ResponsiblePartnerProducer
   async create(dto: ResponsiblePartnerProducerCreateRequestDto): Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity>> {
     const createdResponsiblePartnerProducer = await this.responsiblePartnerProducerRepository.create(dto);
     return new InternalResponse(createdResponsiblePartnerProducer);

@@ -30,9 +30,10 @@ export class FieldOfMaterialService implements IFieldOfMaterialService {
   // для создания FieldOfMaterial нужно указать id пользователя (менеджера), для которого создается FieldOfMaterial
   async create(
     dto: FieldOfMaterialCreateRequestDto,
-    fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldOfMaterialEntity>> {
-    const createdFieldOfMaterial = await this.fieldTypeRepository.create(dto, fieldOfMaterialId);
+    const createdFieldOfMaterial = await this.fieldTypeRepository.create(dto, handbookId, userId);
     return new InternalResponse(createdFieldOfMaterial);
   }
 

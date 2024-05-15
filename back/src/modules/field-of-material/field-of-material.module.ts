@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { KFI } from '../../common/utils/di';
-import { FieldVariantsForSelectorFieldOfMaterialRepository } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type.repository';
-import { FieldVariantsForSelectorFieldOfMaterialService } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type.service';
-import { FieldVariantsForSelectorFieldOfMaterialController } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type.controller';
+import { FieldOfMaterialService } from './field-of-material.service';
+import { FieldOfMaterialRepository } from './field-of-material.repository';
+import { FieldOfMaterialController } from './field-of-material.controller';
 
 @Module({
   providers: [
     {
-      provide: KFI.FIELD_TYPE_REPOSITORY,
-      useClass: FieldVariantsForSelectorFieldOfMaterialRepository,
+      provide: KFI.FIELD_OF_MATERIAL_REPOSITORY,
+      useClass: FieldOfMaterialRepository,
     },
     {
-      provide: KFI.FIELD_TYPE_SERVICE,
-      useClass: FieldVariantsForSelectorFieldOfMaterialService,
+      provide: KFI.FIELD_OF_MATERIAL_SERVICE,
+      useClass: FieldOfMaterialService,
     },
   ],
-  controllers: [FieldVariantsForSelectorFieldOfMaterialController],
+  controllers: [FieldOfMaterialController],
   imports: [],
-  exports: [KFI.FIELD_TYPE_SERVICE],
+  exports: [KFI.FIELD_OF_MATERIAL_SERVICE],
 })
 export class FieldOfMaterialModule {}

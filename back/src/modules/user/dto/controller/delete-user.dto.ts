@@ -4,6 +4,4 @@ import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/co
 
 export type UserDeleteRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 
-export class UserDeleteResponseDto extends createZodDto(
-  UserDeleteCommand.ResponseSchema,
-) {}
+export class UserDeleteResponseDto extends createZodDto(UserDeleteCommand.ResponseSchema) {}

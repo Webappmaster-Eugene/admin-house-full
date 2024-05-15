@@ -27,7 +27,6 @@ export class FieldTypeService implements IFieldTypeService {
     return new InternalResponse(allFieldTypes);
   }
 
-  // для создания FieldType нужно указать id пользователя (менеджера), для которого создается FieldType
   async create(
     dto: FieldTypeCreateRequestDto,
     fieldTypeId: EntityUrlParamCommand.RequestUuidParam,

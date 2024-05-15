@@ -27,7 +27,6 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     return new InternalResponse(allCategoryMaterials);
   }
 
-  // для создания CategoryMaterial нужно указать id пользователя (менеджера), для которого создается CategoryMaterial
   async create(
     dto: CategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

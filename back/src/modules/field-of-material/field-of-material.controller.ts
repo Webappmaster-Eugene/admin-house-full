@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -13,7 +13,6 @@ import {
   FieldOfMaterialGetAllCommand,
   FieldOfMaterialGetCommand,
   FieldOfMaterialUpdateCommand,
-  FieldVariantsForSelectorFieldOfMaterialGetAllCommand,
 } from '../../../libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -22,7 +21,6 @@ import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.gua
 import { EUserTypeVariants } from '@prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { FieldOfMaterialDeleteResponseDto } from './dto/controller/delete-field-of-material.dto';
-import { FieldVariantsForSelectorFieldOfMaterialCreateResponseDto } from '../field-variants-for-selector-field-type/dto/controller/create-field-variants-for-selector-field-type.dto';
 import { FieldOfMaterialGetResponseDto } from './dto/controller/get-field-of-material.dto';
 import { FieldOfMaterialEntity } from './entities/field-of-material.entity';
 import { FieldOfMaterialGetAllResponseDto } from './dto/controller/get-all-field-of-materials.dto';
@@ -36,11 +34,11 @@ import { errorResponseHandler } from '../../common/helpers/error-response.handle
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldOfMaterial')
-@Controller('workspace/:workspaceId/handbook/:handbookId/:category-material/:categoryMaterialId/material/:materialId/field-of-material')
+@Controller('workspace/:workspaceId/handbook/:handbookId/field-of-material')
 export class FieldOfMaterialController implements IFieldOfMaterialController {
   constructor(
     @Inject(KFI.FIELD_TYPE_SERVICE)
-    private readonly fieldTypeService: IFieldOfMaterialService,
+    private readonly fieldOfMaterialService: IFieldOfMaterialService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}
 
@@ -50,6 +48,7 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
   })
   @ApiOperation({ summary: 'Получение FieldOfMaterial по id' })
   @ApiResponse({ status: 200, type: FieldOfMaterialGetResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfMaterialGetResponseDto)
@@ -60,16 +59,16 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<FieldOfMaterialGetResponseDto> {
     try {
-      const { ok, data } = await this.fieldTypeService.getById(fieldOfMaterialId);
+      const { ok, data } = await this.fieldOfMaterialService.getById(fieldOfMaterialId);
       return okResponseHandler(ok, data, FieldOfMaterialEntity, this.logger);
     } catch (error: unknown) {
-      errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_MATERIAL, urlParams);
     }
   }
 
   //region SWAGGER
   @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldOfMaterialGetAllCommand.RequestQuerySchema),
+    schema: zodToOpenAPI(FieldOfMaterialGetAllCommand.RequestQuerySchema),
   })
   @ApiOkResponse({
     schema: zodToOpenAPI(FieldOfMaterialGetAllCommand.ResponseSchema),
@@ -78,6 +77,7 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
     summary: 'Получить все FieldOfMaterial',
   })
   @ApiResponse({ status: 200, type: [FieldOfMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -85,10 +85,10 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
   @Get()
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<FieldOfMaterialGetAllResponseDto> {
     try {
-      const { ok, data } = await this.fieldTypeService.getAll(queryParams);
+      const { ok, data } = await this.fieldOfMaterialService.getAll(queryParams);
       return okResponseHandler(ok, data, FieldOfMaterialEntity, this.logger);
     } catch (error: unknown) {
-      errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_MATERIAL, urlParams);
     }
   }
 
@@ -100,23 +100,24 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
     schema: zodToOpenAPI(FieldOfMaterialCreateCommand.ResponseSchema),
   })
   @ApiOperation({ summary: 'Создание FieldOfMaterial' })
+  @ApiBearerAuth('access-token')
   //endregion
   @ApiResponse({ status: 201, type: FieldOfMaterialCreateResponseDto })
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfMaterialCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: FieldOfMaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     @User() userInfoFromJWT: IJWTPayload,
-  ): Promise<FieldVariantsForSelectorFieldOfMaterialCreateResponseDto> {
-    // в create нужно передать id пользователя, для которого создается field-type
+  ): Promise<FieldOfMaterialCreateResponseDto> {
     try {
-      const { ok, data } = await this.fieldTypeService.create(dto, userInfoFromJWT.uuid);
+      const { ok, data } = await this.fieldOfMaterialService.create(dto, handbookId, userInfoFromJWT.uuid);
       return okResponseHandler(ok, data, FieldOfMaterialEntity, this.logger);
     } catch (error: unknown) {
-      errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_MATERIAL, urlParams);
     }
   }
 
@@ -129,6 +130,7 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
   })
   @ApiOperation({ summary: 'Изменение FieldOfMaterial по id FieldOfMaterial' })
   @ApiResponse({ status: 200, type: FieldOfMaterialUpdateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldOfMaterialUpdateResponseDto)
@@ -140,10 +142,10 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<FieldOfMaterialUpdateResponseDto> {
     try {
-      const { ok, data } = await this.fieldTypeService.updateById(fieldOfMaterialId, dto);
+      const { ok, data } = await this.fieldOfMaterialService.updateById(fieldOfMaterialId, dto);
       return okResponseHandler(ok, data, FieldOfMaterialEntity, this.logger);
     } catch (error: unknown) {
-      errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_MATERIAL, urlParams);
     }
   }
 
@@ -155,6 +157,7 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
     summary: 'Удаление FieldOfMaterial по id FieldOfMaterial',
   })
   @ApiResponse({ status: 200, type: FieldOfMaterialDeleteResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(FieldOfMaterialDeleteResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
@@ -166,10 +169,10 @@ export class FieldOfMaterialController implements IFieldOfMaterialController {
     @UrlParams() urlParams: IUrlParams,
   ): Promise<FieldOfMaterialDeleteResponseDto> {
     try {
-      const { ok, data } = await this.fieldTypeService.deleteById(fieldOfMaterialId);
+      const { ok, data } = await this.fieldOfMaterialService.deleteById(fieldOfMaterialId);
       return okResponseHandler(ok, data, FieldOfMaterialEntity, this.logger);
     } catch (error: unknown) {
-      errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_MATERIAL, urlParams);
     }
   }
 }

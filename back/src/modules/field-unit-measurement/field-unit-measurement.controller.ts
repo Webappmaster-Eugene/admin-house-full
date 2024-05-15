@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
@@ -53,6 +53,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   })
   @ApiOperation({ summary: 'Получение FieldUnitMeasurement по id' })
   @ApiResponse({ status: 200, type: FieldUnitMeasurementGetResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetResponseDto)
@@ -61,11 +62,9 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
-    @Param('handbookId', ParseUUIDPipe)
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementGetResponseDto> {
     try {
-      const { ok, data } = await this.fieldUnitMeasurementService.getById(fieldUnitMeasurementId, handbookId);
+      const { ok, data } = await this.fieldUnitMeasurementService.getById(fieldUnitMeasurementId);
       return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
@@ -83,19 +82,18 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     summary: 'Получить все FieldUnitMeasurement в Workspace',
   })
   @ApiResponse({ status: 200, type: [FieldUnitMeasurementGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetAllResponseDto)
   @Get()
   async getAllEP(
     @UrlParams() urlParams: IUrlParams,
-    @Param('handbookId', ParseUUIDPipe)
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
     @QueryParams() queryParams?: IQueryParams,
   ): Promise<FieldUnitMeasurementGetAllResponseDto> {
     try {
-      const { ok, data } = await this.fieldUnitMeasurementService.getAll(handbookId, queryParams);
+      const { ok, data } = await this.fieldUnitMeasurementService.getAll(queryParams);
       return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
@@ -111,6 +109,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   })
   @ApiOperation({ summary: 'Создание FieldUnitMeasurement' })
   @ApiResponse({ status: 201, type: FieldUnitMeasurementCreateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldUnitMeasurementCreateResponseDto)
@@ -138,23 +137,22 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     schema: zodToOpenAPI(FieldUnitMeasurementUpdateCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Изменение FieldUnitMeasurement пользователя по id FieldUnitMeasurement',
+    summary: 'Изменение FieldUnitMeasurement по id FieldUnitMeasurement',
   })
   @ApiResponse({ status: 200, type: FieldUnitMeasurementUpdateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldUnitMeasurementUpdateResponseDto)
-  @Put('/:field-unit-measurementId')
+  @Put('/:fieldUnitMeasurementId')
   async updateByIdEP(
-    @Param('field-unit-measurementId', ParseUUIDPipe)
+    @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: FieldUnitMeasurementUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @Param('handbookId', ParseUUIDPipe)
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementUpdateResponseDto> {
     try {
-      const { ok, data } = await this.fieldUnitMeasurementService.updateById(fieldUnitMeasurementId, dto, handbookId);
+      const { ok, data } = await this.fieldUnitMeasurementService.updateById(fieldUnitMeasurementId, dto);
       return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
@@ -169,6 +167,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     summary: 'Удаление FieldUnitMeasurement внутри Workspace менеджера по id FieldUnitMeasurement',
   })
   @ApiResponse({ status: 200, type: FieldUnitMeasurementDeleteResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(FieldUnitMeasurementDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
@@ -177,11 +176,9 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
-    @Param('handbookId', ParseUUIDPipe)
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementDeleteResponseDto> {
     try {
-      const { ok, data } = await this.fieldUnitMeasurementService.deleteById(fieldUnitMeasurementId, handbookId);
+      const { ok, data } = await this.fieldUnitMeasurementService.deleteById(fieldUnitMeasurementId);
       return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);

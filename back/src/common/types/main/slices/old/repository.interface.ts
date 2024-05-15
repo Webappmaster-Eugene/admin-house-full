@@ -20,8 +20,5 @@ export interface IRepositoryCommon<
   updateById: (id: GReqIdParam, dto: UReqDto) => Promise<RepositoryEntity>;
   deleteById: (id: GReqIdParam) => Promise<RepositoryEntity>;
   deleteByIds?: (ids: GReqIdParam[]) => Promise<Prisma.BatchPayload>;
-  findByCriteria?: (
-    dto: FReqDto,
-    sort: Record<string, string>[],
-  ) => Promise<RepositoryEntity>;
+  findByCriteria?: (dto: FReqDto, sort: Record<string, string>[]) => Promise<RepositoryEntity>;
 }

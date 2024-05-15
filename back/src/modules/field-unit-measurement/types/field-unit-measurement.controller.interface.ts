@@ -27,13 +27,8 @@ export interface IFieldUnitMeasurementController
   getByIdEP: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementGetResponseDto>;
-  getAllEP: (
-    urlParams: IUrlParams,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
-    queryParams?: IQueryParams,
-  ) => Promise<FieldUnitMeasurementGetAllResponseDto>;
+  getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<FieldUnitMeasurementGetAllResponseDto>;
   createEP: (
     dto: FieldUnitMeasurementCreateRequestDto,
     urlParams: IUrlParams,
@@ -43,11 +38,9 @@ export interface IFieldUnitMeasurementController
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldUnitMeasurementUpdateRequestDto,
     urlParams: IUrlParams,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementUpdateResponseDto>;
   deleteByIdEP: (
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
-    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldUnitMeasurementDeleteResponseDto>;
 }

@@ -2,16 +2,14 @@ import { FieldUnitMeasurement } from '@prisma/client';
 
 export class FieldUnitMeasurementEntity implements FieldUnitMeasurement {
   uuid: string;
-  description: string;
+  comment: string;
   name: string;
-  canCustomerView: boolean;
-  responsibleManagerUuid: string;
-  workspaceUuid: string;
+  handbookUuid: string;
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(field-unit-measurement: Partial<FieldUnitMeasurement>) {
-    Object.assign(this, field-unit-measurement);
+  constructor(fieldUnitMeasurement: Partial<FieldUnitMeasurement>) {
+    Object.assign(this, fieldUnitMeasurement);
     return this;
   }
 }

@@ -54,12 +54,12 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
 
   async create(
     dto: FieldUnitMeasurementCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementEntity> {
     try {
-      const {} = dto;
+      const { name, comment } = dto;
       const newFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.create({
-        data: {},
+        data: { name, comment, handbookUuid: handbookId },
       });
       return existenceEntityHandler(
         newFieldUnitMeasurement,
@@ -73,7 +73,7 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
 
   async updateById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    {}: FieldUnitMeasurementUpdateRequestDto,
+    { name, comment }: FieldUnitMeasurementUpdateRequestDto,
   ): Promise<FieldUnitMeasurementEntity> {
     try {
       const updatedFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.update({
@@ -82,7 +82,7 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
         },
         data: {
           name,
-          description,
+          comment,
         },
       });
 

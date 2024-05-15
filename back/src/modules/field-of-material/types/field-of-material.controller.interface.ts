@@ -24,6 +24,7 @@ export interface IFieldOfMaterialController
   createEP: (
     dto: FieldOfMaterialCreateRequestDto,
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     userInfoFromJWT: IJWTPayload,
   ) => Promise<FieldOfMaterialCreateResponseDto>;
   updateByIdEP: (

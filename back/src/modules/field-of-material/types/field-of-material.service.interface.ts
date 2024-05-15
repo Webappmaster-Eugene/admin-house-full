@@ -12,7 +12,8 @@ export interface IFieldOfMaterialService
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<FieldOfMaterialEntity[]>>;
   create: (
     dto: FieldOfMaterialCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldOfMaterialEntity>>;
   updateById: (
     fieldOfMaterialId: EntityUrlParamCommand.RequestUuidParam,

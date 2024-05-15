@@ -1,11 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  InternalServerErrorException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, InternalServerErrorException, ForbiddenException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ZodValidationException } from 'nestjs-zod';
 import { ZodError } from 'zod';
@@ -24,10 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
 
-    if (
-      exception instanceof InternalServerErrorException &&
-      exception['error'] instanceof ZodError
-    ) {
+    if (exception instanceof InternalServerErrorException && exception['error'] instanceof ZodError) {
       response.status(status).json({
         message: exception.message,
       });

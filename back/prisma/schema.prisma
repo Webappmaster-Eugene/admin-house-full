@@ -212,9 +212,9 @@ model FieldUnitMeasurement {
   uuid             String            @id @default(uuid()) @db.Uuid
   name             String
   comment          String?
-  fieldOfMaterials FieldOfMaterial[]
   handbookUuid     String            @map("handbook_uuid") @db.Uuid
   handbook         Handbook          @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  fieldOfMaterials FieldOfMaterial[]
   materials        Material[]
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")

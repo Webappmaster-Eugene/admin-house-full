@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { FieldTypeSchema } from '../../models';
+import { FieldOfMaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const FieldOfMaterialDeleteResponseSchema = z

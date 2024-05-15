@@ -16,7 +16,7 @@ export interface IFieldVariantsForSelectorFieldTypeRepository
   getAll: (skip?: number, take?: number) => Promise<FieldVariantsForSelectorFieldTypeEntity[]>;
   create: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
-    fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldVariantsForSelectorFieldTypeEntity>;
   updateById: (
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
