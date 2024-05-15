@@ -44,11 +44,15 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     }
   }
 
-  async create(dto: PriceChangingCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam): Promise<PriceChangingEntity> {
+  async create(
+    dto: PriceChangingCreateRequestDto,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    changedById: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<PriceChangingEntity> {
     try {
-      const {} = dto;
+      const { newPrice, comment } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
-        data: {},
+        data: { newPrice, comment, changedByUuid: changedById, materialUuid: materialId },
       });
       return existenceEntityHandler(newPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
     } catch (error: unknown) {
@@ -58,7 +62,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
 
   async updateById(
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,
-    {}: PriceChangingUpdateRequestDto,
+    { newPrice, comment }: PriceChangingUpdateRequestDto,
   ): Promise<PriceChangingEntity> {
     try {
       const updatedPriceChanging = await this.databaseService.priceChanging.update({
@@ -66,8 +70,8 @@ export class PriceChangingRepository implements IPriceChangingRepository {
           uuid: priceChangingId,
         },
         data: {
-          name,
-          description,
+          newPrice,
+          comment,
         },
       });
 

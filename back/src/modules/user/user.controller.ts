@@ -230,7 +230,7 @@ export class UserController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Put('/add-to-workspace/workspace/:workspaceId')
-  // добавить в workspace обычного пользователя
+  // DOC добавить в workspace обычного пользователя
   async addUserToManagerWorkspaceEP(
     @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
@@ -257,7 +257,7 @@ export class UserController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Put('/add-to-organization/workspace/:workspaceId/organization/:organizationId')
-  // добавить в organization обычного пользователя
+  // DOC добавить в organization обычного пользователя
   async addUserToManagerOrganizationEP(
     @Param('workspace', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
@@ -286,7 +286,7 @@ export class UserController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Put('/add-to-project/workspace/:workspaceId/organization/:organizationId/project/:projectId')
-  // добавить в project обычного пользователя
+  // DOC добавить в project обычного пользователя
   async addUserToManagerProjectEP(
     @Param('workspace', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

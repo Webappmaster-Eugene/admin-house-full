@@ -13,39 +13,39 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 export class FieldTypeService implements IFieldTypeService {
   constructor(
     @Inject(KFI.FIELD_TYPE_REPOSITORY)
-    private readonly fieldTypeRepository: IFieldTypeRepository,
+    private readonly fieldOfMaterialRepository: IFieldTypeRepository,
   ) {}
 
   async getById(fieldTypeId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const findedTypeField = await this.fieldTypeRepository.getById(fieldTypeId);
-    return new InternalResponse(findedTypeField);
+    const findedFieldType = await this.fieldOfMaterialRepository.getById(fieldTypeId);
+    return new InternalResponse(findedFieldType);
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldTypeEntity[]>> {
     const { skip, take } = queryParams;
-    const allTypeFields = await this.fieldTypeRepository.getAll(skip, take);
-    return new InternalResponse(allTypeFields);
+    const allFieldTypes = await this.fieldOfMaterialRepository.getAll(skip, take);
+    return new InternalResponse(allFieldTypes);
   }
 
-  // для создания TypeField нужно указать id пользователя (менеджера), для которого создается TypeField
+  // для создания FieldType нужно указать id пользователя (менеджера), для которого создается FieldType
   async create(
     dto: FieldTypeCreateRequestDto,
     fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const createdTypeField = await this.fieldTypeRepository.create(dto, fieldTypeId);
-    return new InternalResponse(createdTypeField);
+    const createdFieldType = await this.fieldOfMaterialRepository.create(dto, fieldTypeId);
+    return new InternalResponse(createdFieldType);
   }
 
   async updateById(
     fieldTypeIdId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldTypeUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const updatedTypeField = await this.fieldTypeRepository.updateById(fieldTypeIdId, dto);
-    return new InternalResponse(updatedTypeField);
+    const updatedFieldType = await this.fieldOfMaterialRepository.updateById(fieldTypeIdId, dto);
+    return new InternalResponse(updatedFieldType);
   }
 
   async deleteById(fieldTypeIdId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<FieldTypeEntity>> {
-    const deletedTypeField = await this.fieldTypeRepository.deleteById(fieldTypeIdId);
-    return new InternalResponse(deletedTypeField);
+    const deletedFieldType = await this.fieldOfMaterialRepository.deleteById(fieldTypeIdId);
+    return new InternalResponse(deletedFieldType);
   }
 }

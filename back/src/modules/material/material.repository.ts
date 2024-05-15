@@ -44,11 +44,24 @@ export class MaterialRepository implements IMaterialRepository {
     }
   }
 
-  async create(dto: MaterialCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam): Promise<MaterialEntity> {
+  async create(
+    dto: MaterialCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<MaterialEntity> {
     try {
-      const {} = dto;
+      const { name, responsiblePartnerUuid, unitMeasurementUuid, namePublic, comment, price } = dto;
       const newMaterial = await this.databaseService.material.create({
-        data: {},
+        data: {
+          name,
+          responsiblePartnerUuid,
+          unitMeasurementUuid,
+          namePublic,
+          comment,
+          price,
+          handbookUuid: handbookId,
+          categoryUuid: categoryMaterialId,
+        },
       });
       return existenceEntityHandler(newMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
     } catch (error: unknown) {
@@ -56,10 +69,8 @@ export class MaterialRepository implements IMaterialRepository {
     }
   }
 
-  async updateById(
-    materialId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: MaterialUpdateRequestDto,
-  ): Promise<MaterialEntity> {
+  async updateById(materialId: EntityUrlParamCommand.RequestUuidParam, dto: MaterialUpdateRequestDto): Promise<MaterialEntity> {
+    const { name, namePublic, comment, price } = dto;
     try {
       const updatedMaterial = await this.databaseService.material.update({
         where: {
@@ -67,7 +78,9 @@ export class MaterialRepository implements IMaterialRepository {
         },
         data: {
           name,
-          description,
+          namePublic,
+          comment,
+          price,
         },
       });
 

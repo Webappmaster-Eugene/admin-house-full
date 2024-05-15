@@ -51,14 +51,11 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
       errorRepositoryHandler(error);
     }
   }
-  async create(
-    dto: ResponsiblePartnerProducerCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<ResponsiblePartnerProducerEntity> {
+  async create(dto: ResponsiblePartnerProducerCreateRequestDto): Promise<ResponsiblePartnerProducerEntity> {
     try {
-      const {} = dto;
+      const { name, comment, email, info, phone } = dto;
       const newResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.create({
-        data: {},
+        data: { name, comment, email, info, phone },
       });
       return existenceEntityHandler(
         newResponsiblePartnerProducer,
@@ -72,8 +69,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
 
   async updateById(
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
-    {}: ResponsiblePartnerProducerUpdateRequestDto,
+    dto: ResponsiblePartnerProducerUpdateRequestDto,
   ): Promise<ResponsiblePartnerProducerEntity> {
+    const { name, comment, email, info, phone } = dto;
+
     try {
       const updatedResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.update({
         where: {
@@ -81,7 +80,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
         },
         data: {
           name,
-          description,
+          comment,
+          email,
+          info,
+          phone,
         },
       });
 

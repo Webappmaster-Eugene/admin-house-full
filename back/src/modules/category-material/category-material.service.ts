@@ -30,9 +30,9 @@ export class CategoryMaterialService implements ICategoryMaterialService {
   // для создания CategoryMaterial нужно указать id пользователя (менеджера), для которого создается CategoryMaterial
   async create(
     dto: CategoryMaterialCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
-    const createdCategoryMaterial = await this.categoryMaterialRepository.create(dto, managerId);
+    const createdCategoryMaterial = await this.categoryMaterialRepository.create(dto, handbookId);
     return new InternalResponse(createdCategoryMaterial);
   }
 

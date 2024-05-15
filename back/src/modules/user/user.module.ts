@@ -8,7 +8,7 @@ import { RolesModule } from '../roles/roles.module';
 import { HandbookModule } from '../handbook/handbook.module';
 import { OrganizationModule } from '../organization/organization.module';
 
-// да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить UserService
+// TODO да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить UserService
 @Global()
 @Module({
   providers: [

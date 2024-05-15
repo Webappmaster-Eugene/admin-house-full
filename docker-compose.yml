@@ -67,6 +67,7 @@ services:
     image: redis:7.2.4-alpine
     ports:
       - 6379:6379
+
   redis-commander:
     container_name: redis-commander
     hostname: redis-commander

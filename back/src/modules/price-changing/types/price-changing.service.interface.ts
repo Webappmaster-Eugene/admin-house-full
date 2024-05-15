@@ -12,7 +12,8 @@ export interface IPriceChangingService
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<PriceChangingEntity[]>>;
   create: (
     dto: PriceChangingCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    changedById: EntityUrlParamCommand.RequestUuidParam,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<PriceChangingEntity>>;
   updateById: (
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,

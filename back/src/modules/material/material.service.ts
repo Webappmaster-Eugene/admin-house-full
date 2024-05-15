@@ -29,9 +29,10 @@ export class MaterialService implements IMaterialService {
 
   async create(
     dto: MaterialCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<MaterialEntity>> {
-    const createdMaterial = await this.materialRepository.create(dto, managerId);
+    const createdMaterial = await this.materialRepository.create(dto, handbookId, categoryMaterialId);
     return new InternalResponse(createdMaterial);
   }
 

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -32,8 +32,8 @@ import { okResponseHandler } from '../../common/helpers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/error-response.handler';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
-@ApiTags('Работа с PriceChanging пользователей')
-@Controller('material/:materialId/price-changing')
+@ApiTags('Работа с PriceChanging')
+@Controller('workspace/:workspaceId/handbook/:handbookId/material/:materialId/price-changing')
 export class PriceChangingController implements IPriceChangingController {
   constructor(
     @Inject(KFI.PRICE_CHANGING_SERVICE)
@@ -47,6 +47,7 @@ export class PriceChangingController implements IPriceChangingController {
   })
   @ApiOperation({ summary: 'Получение PriceChanging по id' })
   @ApiResponse({ status: 200, type: PriceChangingGetResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetResponseDto)
@@ -72,9 +73,10 @@ export class PriceChangingController implements IPriceChangingController {
     schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все PriceChanging пользователей (менеджеров Workspace)',
+    summary: 'Получить все PriceChanging',
   })
   @ApiResponse({ status: 200, type: [PriceChangingGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -98,18 +100,19 @@ export class PriceChangingController implements IPriceChangingController {
   })
   @ApiOperation({ summary: 'Создание PriceChanging' })
   @ApiResponse({ status: 201, type: PriceChangingCreateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: PriceChangingCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @User() userInfoFromJWT: IJWTPayload,
+    userInfoFromJWT: IJWTPayload,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<PriceChangingCreateResponseDto> {
     try {
-      const { ok, data } = await this.priceChangingService.create(dto, userInfoFromJWT.uuid);
+      const { ok, data } = await this.priceChangingService.create(dto, userInfoFromJWT.uuid, materialId);
       return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
@@ -127,6 +130,7 @@ export class PriceChangingController implements IPriceChangingController {
     summary: 'Изменение PriceChanging пользователя по id PriceChanging',
   })
   @ApiResponse({ status: 200, type: PriceChangingUpdateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(PriceChangingUpdateResponseDto)
@@ -153,10 +157,10 @@ export class PriceChangingController implements IPriceChangingController {
     summary: 'Удаление PriceChanging внутри Workspace менеджера по id PriceChanging',
   })
   @ApiResponse({ status: 200, type: PriceChangingDeleteResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(PriceChangingDeleteResponseDto)
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:priceChangingId')
   async deleteByIdEP(
     @Param('priceChangingId', ParseUUIDPipe)

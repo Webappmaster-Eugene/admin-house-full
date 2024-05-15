@@ -10,10 +10,7 @@ export interface IStatusResourceService
   extends IServiceCommon<StatusResourceCreateRequestDto, StatusResourceUpdateRequestDto, StatusResourceEntity> {
   getById: (statusResourceId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<StatusResourceEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<StatusResourceEntity[]>>;
-  create: (
-    dto: StatusResourceCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ) => Promise<UniversalInternalResponse<StatusResourceEntity>>;
+  create: (dto: StatusResourceCreateRequestDto) => Promise<UniversalInternalResponse<StatusResourceEntity>>;
   updateById: (
     statusResourceId: EntityUrlParamCommand.RequestUuidParam,
     dto: StatusResourceUpdateRequestDto,

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -40,7 +40,7 @@ import { errorResponseHandler } from '../../common/helpers/error-response.handle
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с ResponsiblePartnerProducer')
-@Controller('/responsible-partner-producer')
+@Controller('workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer')
 export class ResponsiblePartnerProducerController implements IResponsiblePartnerProducerController {
   constructor(
     @Inject(KFI.RESPONSIBLE_PARTNER_PRODUCER_SERVICE)
@@ -54,6 +54,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   })
   @ApiOperation({ summary: 'Получение ResponsiblePartnerProducer по id' })
   @ApiResponse({ status: 200, type: ResponsiblePartnerProducerGetResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerGetResponseDto)
@@ -85,6 +86,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     status: 200,
     type: [ResponsiblePartnerProducerGetAllResponseDto],
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -114,18 +116,17 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     status: 201,
     type: ResponsiblePartnerProducerCreateResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: ResponsiblePartnerProducerCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @User() userInfoFromJWT: IJWTPayload,
   ): Promise<ResponsiblePartnerProducerCreateResponseDto> {
     try {
-      const { ok, data } = await this.responsiblePartnerProducerService.create(dto, userInfoFromJWT.uuid);
+      const { ok, data } = await this.responsiblePartnerProducerService.create(dto);
       return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
@@ -140,12 +141,13 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     schema: zodToOpenAPI(ResponsiblePartnerProducerUpdateCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Изменение ResponsiblePartnerProducer пользователя по id ResponsiblePartnerProducer',
+    summary: 'Изменение ResponsiblePartnerProducer по id ResponsiblePartnerProducer',
   })
   @ApiResponse({
     status: 200,
     type: ResponsiblePartnerProducerUpdateResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerUpdateResponseDto)
@@ -175,10 +177,10 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     status: 200,
     type: ResponsiblePartnerProducerDeleteResponseDto,
   })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(ResponsiblePartnerProducerDeleteResponseDto)
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:responsiblePartnerProducerId')
   async deleteByIdEP(
     @Param('responsiblePartnerProducerId', ParseUUIDPipe)

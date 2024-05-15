@@ -2,11 +2,8 @@ import { StatusResource } from '@prisma/client';
 
 export class StatusResourceEntity implements StatusResource {
   uuid: string;
-  description: string;
   name: string;
-  canCustomerView: boolean;
-  responsibleManagerUuid: string;
-  workspaceUuid: string;
+  comment: string;
   createdAt: Date;
   updatedAt: Date;
 

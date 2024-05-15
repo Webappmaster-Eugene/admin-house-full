@@ -9,8 +9,8 @@ export class FieldTypeEntity implements FieldType {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(fieldType: Partial<FieldType>) {
-    Object.assign(this, fieldType);
+  constructor(fieldOfMaterial: Partial<FieldType>) {
+    Object.assign(this, fieldOfMaterial);
     return this;
   }
 }

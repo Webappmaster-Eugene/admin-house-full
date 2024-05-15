@@ -11,7 +11,8 @@ export interface IMaterialService extends IServiceCommon<MaterialCreateRequestDt
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
   create: (
     dto: MaterialCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<MaterialEntity>>;
   updateById: (
     materialId: EntityUrlParamCommand.RequestUuidParam,

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
@@ -33,8 +33,8 @@ import { okResponseHandler } from '../../common/helpers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
-@ApiTags('Работа с Material пользователей')
-@Controller('/workspace/:workspaceId/material')
+@ApiTags('Работа с Material')
+@Controller('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material')
 export class MaterialController implements IMaterialController {
   constructor(
     @Inject(KFI.MATERIAL_SERVICE)
@@ -48,6 +48,7 @@ export class MaterialController implements IMaterialController {
   })
   @ApiOperation({ summary: 'Получение Material по id' })
   @ApiResponse({ status: 200, type: MaterialGetResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialGetResponseDto)
@@ -73,9 +74,10 @@ export class MaterialController implements IMaterialController {
     schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все Material пользователей (менеджеров Workspace)',
+    summary: 'Получить все Materials',
   })
   @ApiResponse({ status: 200, type: [MaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -99,19 +101,22 @@ export class MaterialController implements IMaterialController {
   })
   @ApiOperation({ summary: 'Создание Material' })
   @ApiResponse({ status: 201, type: MaterialCreateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialCreateResponseDto)
   @Post()
   async createEP(
     @Body() dto: MaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
     @User() userInfoFromJWT: IJWTPayload,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('categoryMaterialId', ParseUUIDPipe)
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<MaterialCreateResponseDto> {
-    // в create нужно передать id пользователя, для которого создается material
     try {
-      const { ok, data } = await this.materialService.create(dto, userInfoFromJWT.uuid);
+      const { ok, data } = await this.materialService.create(dto, handbookId, categoryMaterialId);
       return okResponseHandler(ok, data, MaterialEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
@@ -125,8 +130,9 @@ export class MaterialController implements IMaterialController {
   @ApiOkResponse({
     schema: zodToOpenAPI(MaterialUpdateCommand.ResponseSchema),
   })
-  @ApiOperation({ summary: 'Изменение Material пользователя по id Material' })
+  @ApiOperation({ summary: 'Изменение Material по id Material' })
   @ApiResponse({ status: 200, type: MaterialUpdateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(MaterialUpdateResponseDto)
@@ -153,10 +159,10 @@ export class MaterialController implements IMaterialController {
     summary: 'Удаление Material внутри Workspace менеджера по id Material',
   })
   @ApiResponse({ status: 200, type: MaterialDeleteResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(MaterialDeleteResponseDto)
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete('/:materialId')
   async deleteByIdEP(
     @Param('materialId', ParseUUIDPipe)

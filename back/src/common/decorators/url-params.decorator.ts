@@ -5,9 +5,7 @@ export interface IUrlParams {
   method: MethodName;
 }
 
-export const UrlParams = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
-    const request = context.switchToHttp().getRequest();
-    return { url: request?.url, method: request?.method };
-  },
-);
+export const UrlParams = createParamDecorator((data: unknown, context: ExecutionContext) => {
+  const request = context.switchToHttp().getRequest();
+  return { url: request?.url, method: request?.method };
+});

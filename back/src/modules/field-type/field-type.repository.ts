@@ -20,13 +20,13 @@ export class FieldTypeRepository implements IFieldTypeRepository {
 
   async getById(fieldTypeId: EntityUrlParamCommand.RequestUuidParam): Promise<FieldTypeEntity> {
     try {
-      const findedTypeField = await this.databaseService.fieldType.findUnique({
+      const findedFieldType = await this.databaseService.fieldType.findUnique({
         where: {
           uuid: fieldTypeId,
         },
       });
 
-      return existenceEntityHandler(findedTypeField, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
+      return existenceEntityHandler(findedFieldType, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -42,26 +42,26 @@ export class FieldTypeRepository implements IFieldTypeRepository {
     }
   }
 
-  async create(dto: FieldTypeCreateRequestDto, fieldTypeId: EntityUrlParamCommand.RequestUuidParam): Promise<FieldTypeEntity> {
+  async create(dto: FieldTypeCreateRequestDto): Promise<FieldTypeEntity> {
     try {
-      const {} = dto;
-      const newTypeField = await this.databaseService.fieldType.create({
-        data: {},
+      const { jsType, description, name } = dto;
+      const newFieldType = await this.databaseService.fieldType.create({
+        data: { jsType, description, name },
       });
-      return existenceEntityHandler(newTypeField, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
+      return existenceEntityHandler(newFieldType, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
   }
 
   async updateById(
-    typeFieldId: EntityUrlParamCommand.RequestUuidParam,
+    fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
     { name, description }: FieldTypeCreateRequestDto,
   ): Promise<FieldTypeEntity> {
     try {
-      const updatedTypeField = await this.databaseService.fieldType.update({
+      const updatedFieldType = await this.databaseService.fieldType.update({
         where: {
-          uuid: typeFieldId,
+          uuid: fieldTypeId,
         },
         data: {
           name,
@@ -69,7 +69,7 @@ export class FieldTypeRepository implements IFieldTypeRepository {
         },
       });
 
-      return existenceEntityHandler(updatedTypeField, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
+      return existenceEntityHandler(updatedFieldType, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -77,13 +77,13 @@ export class FieldTypeRepository implements IFieldTypeRepository {
 
   async deleteById(fieldTypeId: EntityUrlParamCommand.RequestUuidParam): Promise<FieldTypeEntity> {
     try {
-      const deletedTypeField = await this.databaseService.fieldType.delete({
+      const deletedFieldType = await this.databaseService.fieldType.delete({
         where: {
           uuid: fieldTypeId,
         },
       });
 
-      return existenceEntityHandler(deletedTypeField, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
+      return existenceEntityHandler(deletedFieldType, FieldTypeEntity, EntityName.FIELD_TYPE) as FieldTypeEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }

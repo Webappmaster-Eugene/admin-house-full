@@ -4,6 +4,8 @@ import { ResponseClientSchema } from '../../models';
 
 const PriceChangingCreateRequestSchema = PriceChangingSchema.omit({
   uuid: true,
+  materialUuid: true,
+  changedByUuid: true,
   createdAt: true,
   updatedAt: true,
 });

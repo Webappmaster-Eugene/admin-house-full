@@ -28,11 +28,8 @@ export class PriceChangingService implements IPriceChangingService {
   }
 
   // для создания PriceChanging нужно указать id пользователя (менеджера), для которого создается PriceChanging
-  async create(
-    dto: PriceChangingCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalInternalResponse<PriceChangingEntity>> {
-    const createdPriceChanging = await this.priceChangingRepository.create(dto, managerId);
+  async create(dto: PriceChangingCreateRequestDto): Promise<UniversalInternalResponse<PriceChangingEntity>> {
+    const createdPriceChanging = await this.priceChangingRepository.create(dto);
     return new InternalResponse(createdPriceChanging);
   }
 

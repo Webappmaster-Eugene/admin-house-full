@@ -4,12 +4,17 @@ import { IRepositoryCommon } from '../../../common/types/main/slices/repository.
 import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
 import { PriceChangingEntity } from '../entities/price-changing.entity';
+import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 
 export interface IPriceChangingRepository
   extends IRepositoryCommon<PriceChangingCreateRequestDto, PriceChangingUpdateRequestDto, PriceChangingEntity> {
   getById: (priceChangingId: EntityUrlParamCommand.RequestUuidParam) => Promise<PriceChangingEntity>;
   getAll: (skip?: number, take?: number) => Promise<PriceChangingEntity[]>;
-  create: (dto: PriceChangingCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<PriceChangingEntity>;
+  create: (
+    dto: PriceChangingCreateRequestDto,
+    changedById: EntityUrlParamCommand.RequestUuidParam,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<PriceChangingEntity>;
   updateById: (priceChangingId: EntityUrlParamCommand.RequestUuidParam, dto: PriceChangingUpdateRequestDto) => Promise<PriceChangingEntity>;
   deleteById: (priceChangingId: EntityUrlParamCommand.RequestUuidParam) => Promise<PriceChangingEntity>;
 }

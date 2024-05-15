@@ -155,7 +155,7 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
     schema: zodToOpenAPI(GlobalCategoryMaterialDeleteCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Удаление GlobalCategoryMaterial пользователя по id GlobalCategoryMaterial',
+    summary: 'Удаление GlobalCategoryMaterial по id GlobalCategoryMaterial',
   })
   @ApiResponse({ status: 200, type: GlobalCategoryMaterialDeleteResponseDto })
   @ApiBearerAuth('access-token')

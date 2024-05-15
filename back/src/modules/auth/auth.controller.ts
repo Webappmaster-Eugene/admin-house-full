@@ -124,7 +124,7 @@ export class AuthController implements IAuthController {
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(AuthGenerateKeyResponseDto)
-  @Post('/strict-admin-key-generate')
+  @Post('/strict-admin-key/generate')
   async generateStrictAdminKeyEP(
     @Body() dto: AuthGenerateKeyRequestDto,
     @UrlParams() urlParams: IUrlParams,

@@ -8,7 +8,7 @@ export interface IStatusResourceRepository
   extends IRepositoryCommon<StatusResourceCreateRequestDto, StatusResourceUpdateRequestDto, StatusResourceEntity> {
   getById: (statusResourceId: EntityUrlParamCommand.RequestUuidParam) => Promise<StatusResourceEntity>;
   getAll: (skip?: number, take?: number) => Promise<StatusResourceEntity[]>;
-  create: (dto: StatusResourceCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<StatusResourceEntity>;
+  create: (dto: StatusResourceCreateRequestDto) => Promise<StatusResourceEntity>;
   updateById: (
     statusResourceId: EntityUrlParamCommand.RequestUuidParam,
     dto: StatusResourceUpdateRequestDto,

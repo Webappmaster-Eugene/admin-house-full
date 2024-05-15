@@ -2,16 +2,16 @@ import { ResponsiblePartnerProducer } from '@prisma/client';
 
 export class ResponsiblePartnerProducerEntity implements ResponsiblePartnerProducer {
   uuid: string;
-  description: string;
   name: string;
-  canCustomerView: boolean;
-  responsibleManagerUuid: string;
-  workspaceUuid: string;
+  comment: string;
+  email: string;
+  phone: string;
+  info: string;
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(responsible-partner-producer: Partial<ResponsiblePartnerProducer>) {
-    Object.assign(this, responsible-partner-producer);
+  constructor(responsiblePartnerProducer: Partial<ResponsiblePartnerProducer>) {
+    Object.assign(this, responsiblePartnerProducer);
     return this;
   }
 }

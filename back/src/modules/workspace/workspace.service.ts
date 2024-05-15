@@ -34,7 +34,7 @@ export class WorkspaceService implements IWorkspaceService {
     return new InternalResponse(allWorkspaces);
   }
 
-  // для создания Workspace нужно указать id пользователя (менеджера), для которого создается Workspace
+  // DOC для создания Workspace нужно указать id пользователя (менеджера), для которого создается Workspace
   async create(
     dto: WorkspaceCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
@@ -62,7 +62,7 @@ export class WorkspaceService implements IWorkspaceService {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: WorkspaceChangeOwnerRequestDto,
   ): Promise<UniversalInternalResponse<WorkspaceEntity>> {
-    // Этого мало, нужно еще у старого пользователя все поменять, а новому передать handbook и следить за истинностью данных. Для этого нужно будет перенести в Users данную ручку (чтобы избежать кольцевых зависимостей)
+    // TODO Этого мало, нужно еще у старого пользователя все поменять, а новому передать handbook и следить за истинностью данных. Для этого нужно будет перенести в Users данную ручку (чтобы избежать кольцевых зависимостей)
     const updatedWorkspace = await this.workspaceRepository.changeWorkspaceOwner(workspaceId, dto);
     return new InternalResponse(updatedWorkspace);
   }

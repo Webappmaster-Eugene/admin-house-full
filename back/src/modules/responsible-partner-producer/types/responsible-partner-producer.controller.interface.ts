@@ -33,7 +33,6 @@ export interface IResponsiblePartnerProducerController
   createEP: (
     dto: ResponsiblePartnerProducerCreateRequestDto,
     urlParams: IUrlParams,
-    userInfoFromJWT: IJWTPayload,
   ) => Promise<ResponsiblePartnerProducerCreateResponseDto>;
   updateByIdEP: (
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,

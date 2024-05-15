@@ -2,11 +2,12 @@ import { Material } from '@prisma/client';
 
 export class MaterialEntity implements Material {
   uuid: string;
-  description: string;
-  name: string;
-  canCustomerView: boolean;
-  responsibleManagerUuid: string;
-  workspaceUuid: string;
+  namePublic: string;
+  comment: string;
+  handbookUuid: string;
+  categoryUuid: string;
+  unitMeasurementUuid: string;
+  responsiblePartnerUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

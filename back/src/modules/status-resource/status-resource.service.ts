@@ -27,12 +27,8 @@ export class StatusResourceService implements IStatusResourceService {
     return new InternalResponse(allStatusResources);
   }
 
-  // для создания StatusResource нужно указать id пользователя (менеджера), для которого создается StatusResource
-  async create(
-    dto: StatusResourceCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<UniversalInternalResponse<StatusResourceEntity>> {
-    const createdStatusResource = await this.statusResourceRepository.create(dto, managerId);
+  async create(dto: StatusResourceCreateRequestDto): Promise<UniversalInternalResponse<StatusResourceEntity>> {
+    const createdStatusResource = await this.statusResourceRepository.create(dto);
     return new InternalResponse(createdStatusResource);
   }
 

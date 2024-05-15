@@ -2,10 +2,8 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put,
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { StatusResourceGetResponseDto } from './dto/controller/get-status-resource.dto';
 import { StatusResourceCreateRequestDto, StatusResourceCreateResponseDto } from './dto/controller/create-status-resource.dto';
 import { StatusResourceGetAllResponseDto } from './dto/controller/get-all-status-resources.dto';
@@ -27,20 +25,21 @@ import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '@prisma/client';
-import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с StatusResource пользователей')
-@Controller('/workspace/:workspaceId/statusResource')
+@Controller('statusResource')
 export class StatusResourceController implements IStatusResourceController {
   constructor(
     @Inject(KFI.STATUS_RESOURCE_SERVICE)
     private readonly statusResourceService: IStatusResourceService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}
+
+  // FIXME понять предметную область этой сущности лучше
 
   //region SWAGGER
   @ApiOkResponse({
@@ -74,9 +73,10 @@ export class StatusResourceController implements IStatusResourceController {
     schema: zodToOpenAPI(StatusResourceGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все StatusResource пользователей (менеджеров Workspace)',
+    summary: 'Получить все StatusResources',
   })
   @ApiResponse({ status: 200, type: [StatusResourceGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -100,6 +100,7 @@ export class StatusResourceController implements IStatusResourceController {
   })
   @ApiOperation({ summary: 'Создание StatusResource' })
   @ApiResponse({ status: 201, type: StatusResourceCreateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
@@ -108,11 +109,9 @@ export class StatusResourceController implements IStatusResourceController {
   async createEP(
     @Body() dto: StatusResourceCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @User() userInfoFromJWT: IJWTPayload,
   ): Promise<StatusResourceCreateResponseDto> {
-    // в create нужно передать id пользователя, для которого создается statusResource
     try {
-      const { ok, data } = await this.statusResourceService.create(dto, userInfoFromJWT.uuid);
+      const { ok, data } = await this.statusResourceService.create(dto);
       return okResponseHandler(ok, data, StatusResourceEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
@@ -126,10 +125,12 @@ export class StatusResourceController implements IStatusResourceController {
   @ApiOkResponse({
     schema: zodToOpenAPI(StatusResourceUpdateCommand.ResponseSchema),
   })
-  @ApiOperation({ summary: 'Изменение StatusResource пользователя по id StatusResource' })
+  @ApiOperation({ summary: 'Изменение StatusResource по id StatusResource' })
   @ApiResponse({ status: 200, type: StatusResourceUpdateResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(StatusResourceUpdateResponseDto)
   @Put('/:statusResourceId')
   async updateByIdEP(
@@ -151,9 +152,10 @@ export class StatusResourceController implements IStatusResourceController {
     schema: zodToOpenAPI(StatusResourceDeleteCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Удаление StatusResource внутри Workspace менеджера по id StatusResource',
+    summary: 'Удаление StatusResource',
   })
   @ApiResponse({ status: 200, type: StatusResourceDeleteResponseDto })
+  @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(StatusResourceDeleteResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)

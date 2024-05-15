@@ -44,11 +44,11 @@ export class StatusResourceRepository implements IStatusResourceRepository {
     }
   }
 
-  async create(dto: StatusResourceCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam): Promise<StatusResourceEntity> {
+  async create(dto: StatusResourceCreateRequestDto): Promise<StatusResourceEntity> {
     try {
-      const { name, description, canCustomerView, workspaceUuid } = dto;
+      const { name, comment } = dto;
       const newStatusResource = await this.databaseService.statusResource.create({
-        data: {},
+        data: { name, comment },
       });
       return existenceEntityHandler(newStatusResource, StatusResourceEntity, EntityName.STATUS_RESOURCE) as StatusResourceEntity;
     } catch (error: unknown) {
@@ -58,7 +58,7 @@ export class StatusResourceRepository implements IStatusResourceRepository {
 
   async updateById(
     statusResourceId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: StatusResourceUpdateRequestDto,
+    { name, comment }: StatusResourceUpdateRequestDto,
   ): Promise<StatusResourceEntity> {
     try {
       const updatedStatusResource = await this.databaseService.statusResource.update({
@@ -67,7 +67,7 @@ export class StatusResourceRepository implements IStatusResourceRepository {
         },
         data: {
           name,
-          description,
+          comment,
         },
       });
 

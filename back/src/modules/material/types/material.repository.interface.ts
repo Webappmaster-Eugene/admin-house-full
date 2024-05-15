@@ -7,7 +7,11 @@ import { MaterialEntity } from '../entities/material.entity';
 export interface IMaterialRepository extends IRepositoryCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {
   getById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<MaterialEntity>;
   getAll: (skip?: number, take?: number) => Promise<MaterialEntity[]>;
-  create: (dto: MaterialCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<MaterialEntity>;
+  create: (
+    dto: MaterialCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<MaterialEntity>;
   updateById: (materialId: EntityUrlParamCommand.RequestUuidParam, dto: MaterialUpdateRequestDto) => Promise<MaterialEntity>;
   deleteById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<MaterialEntity>;
 }

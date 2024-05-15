@@ -34,7 +34,7 @@ import { errorResponseHandler } from '../../common/helpers/error-response.handle
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Handbook')
-@Controller('/workspace/:workspaceId/handbook')
+@Controller('workspace/:workspaceId/handbook')
 export class HandbookController implements IHandbookController {
   constructor(
     @Inject(KFI.HANDBOOK_SERVICE)

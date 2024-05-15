@@ -39,8 +39,8 @@ import { errorResponseHandler } from '../../common/helpers/error-response.handle
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
-@ApiTags('Работа с FieldVariantsForSelectorFieldType пользователей')
-@Controller('/workspace/:workspaceId/field-variants-for-selector-field-type')
+@ApiTags('Работа с FieldVariantsForSelectorFieldType')
+@Controller('/workspace/:workspaceId/handbook/:handbookId/field-type/:fieldTypeId/field-variants-for-selector-field-type')
 export class FieldVariantsForSelectorFieldTypeController implements IFieldVariantsForSelectorFieldTypeController {
   constructor(
     @Inject(KFI.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_SERVICE)

@@ -25,6 +25,7 @@ export interface IPriceChangingController
     dto: PriceChangingCreateRequestDto,
     urlParams: IUrlParams,
     userInfoFromJWT: IJWTPayload,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<PriceChangingCreateResponseDto>;
   updateByIdEP: (
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,

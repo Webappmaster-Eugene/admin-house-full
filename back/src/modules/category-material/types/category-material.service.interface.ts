@@ -12,7 +12,7 @@ export interface ICategoryMaterialService
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
   create: (
     dto: CategoryMaterialCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
   updateById: (
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

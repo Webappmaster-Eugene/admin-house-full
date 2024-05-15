@@ -4,7 +4,7 @@ import { WorkspaceController } from './workspace.controller';
 import { KFI } from '../../common/utils/di';
 import { WorkspaceRepository } from './workspace.repository';
 
-// да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить WorkspaceService
+// TODO да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить WorkspaceService
 @Global()
 @Module({
   providers: [

@@ -1,9 +1,8 @@
 import { z } from 'zod';
-import { FieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 import { CategoryMaterialSchema } from '../../models';
 
-const CategoryMaterialCreateRequestSchema = FieldTypeSchema.omit({
+const CategoryMaterialCreateRequestSchema = CategoryMaterialSchema.omit({
   uuid: true,
   createdAt: true,
   updatedAt: true,

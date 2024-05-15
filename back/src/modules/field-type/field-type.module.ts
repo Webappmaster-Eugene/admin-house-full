@@ -19,4 +19,4 @@ import { FieldVariantsForSelectorFieldTypeController } from '../field-variants-f
   imports: [],
   exports: [KFI.FIELD_TYPE_SERVICE],
 })
-export class TypeFieldModule {}
+export class FieldTypeModule {}

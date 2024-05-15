@@ -7,10 +7,7 @@ import { IConfigService } from '../../../common/types/main/config.service.interf
  * Extension of the PrismaClient for use with NestJs.
  */
 @Injectable()
-export class PrismaService
-  extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy
-{
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor(private configService: ConfigService<IConfigService>) {
     super({
       /**
@@ -42,12 +39,8 @@ export class PrismaService
    * A utility function used to clear all database rows for testing.
    */
   clearDatabase() {
-    const modelNames = Prisma.dmmf.datamodel.models.map((model) => model.name);
+    const modelNames = Prisma.dmmf.datamodel.models.map(model => model.name);
 
-    return Promise.all(
-      modelNames.map((modelName) =>
-        this[modelName[0].toLowerCase() + modelName.slice(1)].deleteMany(),
-      ),
-    );
+    return Promise.all(modelNames.map(modelName => this[modelName[0].toLowerCase() + modelName.slice(1)].deleteMany()));
   }
 }

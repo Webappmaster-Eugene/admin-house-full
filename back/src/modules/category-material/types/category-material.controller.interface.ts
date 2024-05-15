@@ -25,6 +25,7 @@ export interface ICategoryMaterialController
     dto: CategoryMaterialCreateRequestDto,
     urlParams: IUrlParams,
     userInfoFromJWT: IJWTPayload,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<CategoryMaterialCreateResponseDto>;
   updateByIdEP: (
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

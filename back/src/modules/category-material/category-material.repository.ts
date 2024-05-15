@@ -44,11 +44,11 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     }
   }
 
-  async create(dto: CategoryMaterialCreateRequestDto, managerId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
+  async create(dto: CategoryMaterialCreateRequestDto, handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
     try {
-      const {} = dto;
+      const { name, templateName, comment, globalCategoryMaterialUuid } = dto;
       const newCategoryMaterial = await this.databaseService.categoryMaterial.create({
-        data: {},
+        data: { name, templateName, comment, globalCategoryMaterialUuid, handbookUuid: handbookId },
       });
       return existenceEntityHandler(newCategoryMaterial, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity;
     } catch (error: unknown) {
@@ -58,7 +58,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
 
   async updateById(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: CategoryMaterialUpdateRequestDto,
+    { name, templateName, comment }: CategoryMaterialUpdateRequestDto,
   ): Promise<CategoryMaterialEntity> {
     try {
       const updatedCategoryMaterial = await this.databaseService.categoryMaterial.update({
@@ -67,7 +67,8 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         },
         data: {
           name,
-          description,
+          templateName,
+          comment,
         },
       });
 
