@@ -5,7 +5,7 @@ WORKDIR /back
 COPY package.json /back
 
 RUN npm config set registry http://registry.npmjs.org/
-RUN npm i -g next@latest
+RUN npm i -g nest@latest
 RUN npm install
 
 #ENV
