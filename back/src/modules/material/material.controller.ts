@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { MaterialGetResponseDto } from './dto/controller/get-material.dto';
 import { MaterialCreateRequestDto, MaterialCreateResponseDto } from './dto/controller/create-material.dto';
@@ -20,7 +20,7 @@ import {
   MaterialGetAllCommand,
   MaterialGetCommand,
   MaterialUpdateCommand,
-} from '../../../libs/contracts';
+} from '@numart/house-admin-contracts';
 import { MaterialEntity } from './entities/material.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';

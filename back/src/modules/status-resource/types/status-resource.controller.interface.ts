@@ -3,7 +3,7 @@ import { StatusResourceCreateRequestDto, StatusResourceCreateResponseDto } from 
 import { StatusResourceUpdateRequestDto, StatusResourceUpdateResponseDto } from '../dto/controller/update-status-resource.dto';
 import { StatusResourceGetResponseDto } from '../dto/controller/get-status-resource.dto';
 import { StatusResourceGetAllResponseDto } from '../dto/controller/get-all-status-resources.dto';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { StatusResourceDeleteResponseDto } from '../dto/controller/delete-status-resource.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldOfMaterialDeleteCommand } from '../../../../../libs/contracts';
-import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
+import { FieldOfMaterialDeleteCommand } from '@numart/house-admin-contracts';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 
 export type FieldOfMaterialDeleteRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 

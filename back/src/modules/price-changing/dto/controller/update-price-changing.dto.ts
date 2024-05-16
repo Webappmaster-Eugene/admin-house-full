@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
-import { PriceChangingUpdateCommand } from '../../../../../libs/contracts';
-import { EntityUrlParamCommand } from '../../../../../libs/contracts/commands/common/entity-url-param.command';
+import { PriceChangingUpdateCommand } from '@numart/house-admin-contracts';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 
 export type PriceChangingUpdateRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 

@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { AuthLoginCommand } from '../../../../../libs/contracts';
+import { AuthLoginCommand } from '@numart/house-admin-contracts';
 
 export class AuthLoginRequestDto extends createZodDto(AuthLoginCommand.RequestSchema) {}
 

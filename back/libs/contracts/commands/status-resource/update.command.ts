@@ -6,10 +6,6 @@ const StatusResourceUpdateRequestSchema = StatusResourceSchema.omit({
   createdAt: true,
   updatedAt: true,
   uuid: true,
-  categoryUuid: true,
-  handbookUuid: true,
-  responsiblePartnerUuid: true,
-  unitMeasurementUuid: true,
 }).partial();
 
 const StatusResourceUpdateResponseSchema = z

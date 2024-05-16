@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldTypeCreateCommand } from '../../../../../libs/contracts';
+import { FieldTypeCreateCommand } from '@numart/house-admin-contracts';
 
 export class FieldTypeCreateRequestDto extends createZodDto(FieldTypeCreateCommand.RequestSchema) {}
 

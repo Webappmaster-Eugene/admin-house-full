@@ -6,7 +6,6 @@ import { ConfirmPasswordSchema } from '../../models';
 const AuthRegisterRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,
   memberOfOrganizationUuid: true,
-  workspaceData: true,
   creatorOfWorkspaceUuid: true,
   uuid: true,
   createdAt: true,

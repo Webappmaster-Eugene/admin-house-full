@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { RoleSchema, WorkspaceSchema } from '../../../../libs/contracts';
+import { RoleSchema, WorkspaceSchema } from '@numart/house-admin-contracts';
 
 export class UserAllInfoEntity implements User {
   uuid: string;

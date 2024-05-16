@@ -6,7 +6,7 @@ const CategoryMaterialUpdateRequestSchema = CategoryMaterialSchema.omit({
   createdAt: true,
   updatedAt: true,
   uuid: true,
-  globalCategoryUuid: true,
+  globalCategoryMaterialUuid: true,
 }).partial();
 
 const CategoryMaterialUpdateResponseSchema = z

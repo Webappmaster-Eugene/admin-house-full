@@ -4,7 +4,6 @@ import { ResponseClientSchema, UserSchema } from '../../models';
 const UserCreateRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,
   memberOfOrganizationUuid: true,
-  workspaceData: true,
   creatorOfWorkspaceUuid: true,
   uuid: true,
   createdAt: true,

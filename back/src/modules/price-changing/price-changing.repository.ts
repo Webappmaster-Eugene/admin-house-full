@@ -3,7 +3,7 @@ import { PriceChangingCreateRequestDto } from './dto/controller/create-price-cha
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IPriceChangingRepository } from './types/price-changing.repository.interface';
 import { PriceChangingUpdateRequestDto } from './dto/controller/update-price-changing.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { PriceChangingEntity } from './entities/price-changing.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

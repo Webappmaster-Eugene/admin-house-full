@@ -3,7 +3,7 @@ import { UserCreateRequestDto } from '../dto/controller/create-user.dto';
 import { UserUpdateRequestDto } from '../dto/controller/update-user.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { UserEntity } from '../entities/user.entity';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { AddUserToWorkspaceRequestDto } from '../dto/controller/add-to-workspace.dto';
 import { AddUserToOrganizationRequestDto } from '../dto/controller/add-to-organization.dto';
 import { AddUserToProjectRequestDto } from '../dto/controller/add-to-project.dto';

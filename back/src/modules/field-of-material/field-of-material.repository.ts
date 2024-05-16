@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldOfMaterialRepository } from './types/field-of-material.repository.interface';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../common/utils/di';
 import { FieldOfMaterialEntity } from './entities/field-of-material.entity';
 import { FieldOfMaterialCreateRequestDto } from './dto/controller/create-field-of-material.dto';

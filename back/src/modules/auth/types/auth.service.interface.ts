@@ -4,7 +4,7 @@ import { AuthEntity } from '../entities/auth.entity';
 import { AuthGenerateKeyRequestDto } from '../dto/controller/auth.generate-key.dto';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleRequestParamDto } from '../dto/controller/auth.register-with-role.dto';
 import { AuthLoginRequestDto } from '../dto/controller/auth.login.dto';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 
 export interface IAuthService {
   register: (dto: AuthRegisterRequestDto) => Promise<UniversalInternalResponse<AuthEntity>>;

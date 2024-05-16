@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { FieldUnitMeasurementGetResponseDto } from './dto/controller/get-field-unit-measurement.dto';
 import {
   FieldUnitMeasurementCreateRequestDto,
@@ -25,7 +25,7 @@ import {
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementUpdateCommand,
   FieldVariantsForSelectorFieldTypeGetAllCommand,
-} from '../../../libs/contracts';
+} from '@numart/house-admin-contracts';
 import { FieldUnitMeasurementEntity } from './entities/field-unit-measurement.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';

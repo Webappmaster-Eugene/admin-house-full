@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { StatusResourceGetResponseDto } from './dto/controller/get-status-resource.dto';
 import { StatusResourceCreateRequestDto, StatusResourceCreateResponseDto } from './dto/controller/create-status-resource.dto';
 import { StatusResourceGetAllResponseDto } from './dto/controller/get-all-status-resources.dto';
@@ -18,7 +18,7 @@ import {
   StatusResourceGetAllCommand,
   StatusResourceGetCommand,
   StatusResourceUpdateCommand,
-} from '../../../libs/contracts';
+} from '@numart/house-admin-contracts';
 import { StatusResourceEntity } from './entities/status-resource.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';

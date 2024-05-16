@@ -3,7 +3,7 @@ import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
 import { UserUpdateRequestDto } from './dto/controller/update-user.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { UserEntity } from './entities/user.entity';
 import { KFI } from '../../common/utils/di';

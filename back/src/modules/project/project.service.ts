@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ProjectEntity } from './entities/project.entity';
 import { KFI } from '../../common/utils/di';
 import { IProjectService } from './types/project.service.interface';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IOrganizationService } from '../organization/types/organization.service.interface';
 import { IProjectRepository } from './types/project.repository.interface';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';

@@ -1,5 +1,5 @@
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { GlobalCategoryMaterialEntity } from '../entities/global-category-material.entity';
 import { GlobalCategoryMaterialCreateRequestDto } from '../dto/controller/create-global-category-material.dto';
 import { GlobalCategoryMaterialUpdateRequestDto } from '../dto/controller/update-global-category-material.dto';

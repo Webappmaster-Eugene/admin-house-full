@@ -4,7 +4,7 @@ import { IWorkspaceService } from '../workspace/types/workspace.service.interfac
 import { ROLE_IDS } from '../../common/consts/role-ids';
 import { IUserRepository } from './types/user.repository.interface';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IUserService } from './types/user.service.interface';
 import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { UserUpdateRequestDto } from './dto/controller/update-user.dto';

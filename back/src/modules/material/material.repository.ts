@@ -3,7 +3,7 @@ import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IMaterialRepository } from './types/material.repository.interface';
 import { MaterialUpdateRequestDto } from './dto/controller/update-material.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { MaterialEntity } from './entities/material.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

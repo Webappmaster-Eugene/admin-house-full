@@ -3,7 +3,7 @@ import { WorkspaceCreateRequestDto } from './dto/controller/create-workspace.dto
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IWorkspaceRepository } from './types/workspace.repository.interface';
 import { WorkspaceUpdateRequestDto } from './dto/controller/update-workspace.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { WorkspaceEntity } from './entities/workspace.entity';
 import { DEFAULT_WORKSPACE_DESCRIPTION, DEFAULT_WORKSPACE_NAME } from './lib/consts/workspace.default-data';

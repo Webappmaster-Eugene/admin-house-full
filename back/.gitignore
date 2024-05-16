@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# Папка (npm-пакет) с контрактами
+/libs/contracts/node_modules
+
 # Logs
 logs
 *.log

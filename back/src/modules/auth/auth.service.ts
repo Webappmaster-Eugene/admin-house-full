@@ -10,7 +10,7 @@ import { InternalResponse, UniversalInternalResponse } from '../../common/types/
 import { IUserService } from '../user/types/user.service.interface';
 import { AuthRegisterRequestDto } from './dto/controller/auth.register.dto';
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { AuthGenerateKeyRequestDto } from './dto/controller/auth.generate-key.dto';
 import { IAuthRepository } from './types/auth.repository.interface';
 import { AuthLoginRequestDto } from './dto/controller/auth.login.dto';

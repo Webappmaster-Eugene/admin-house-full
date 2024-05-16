@@ -10,7 +10,6 @@ const AuthRegisterWithRoleRequestParamSchema = z.object({
 const AuthRegisterWithRoleRequestSchema = UserSchema.omit({
   memberOfWorkspaceUuid: true,
   memberOfOrganizationUuid: true,
-  workspaceData: true,
   creatorOfWorkspaceUuid: true,
   uuid: true,
   createdAt: true,

@@ -7,8 +7,8 @@ import {
   OrganizationGetAllCommand,
   OrganizationGetCommand,
   OrganizationUpdateCommand,
-} from '../../../libs/contracts';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+} from '@numart/house-admin-contracts';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../common/utils/di';
 import { IOrganizationService } from './types/organization.service.interface';
 import { OrganizationGetAllResponseDto } from './dto/controller/get-all-organizations.dto';
@@ -16,7 +16,7 @@ import { OrganizationGetResponseDto } from './dto/controller/get-organization.dt
 import { OrganizationDeleteResponseDto } from './dto/controller/delete-organization.dto';
 import { OrganizationUpdateRequestDto, OrganizationUpdateResponseDto } from './dto/controller/update-organization.dto';
 import { OrganizationCreateRequestDto, OrganizationCreateResponseDto } from './dto/controller/create-organization.dto';
-import { OrganizationDeleteCommand } from '../../../libs/contracts';
+import { OrganizationDeleteCommand } from '@numart/house-admin-contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';

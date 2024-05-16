@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { StatusResourceCreateCommand } from '../../../../../libs/contracts';
+import { StatusResourceCreateCommand } from '@numart/house-admin-contracts';
 
 export class StatusResourceCreateRequestDto extends createZodDto(StatusResourceCreateCommand.RequestSchema) {}
 

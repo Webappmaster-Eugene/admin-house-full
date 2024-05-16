@@ -8,7 +8,7 @@ import { IConfigService } from '../../common/types/main/config.service.interface
 import { IRoleRepository } from './types/role.repository.interface';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { KFI } from '../../common/utils/di';
 import { CACHE_KEYS } from '../../common/consts/cache-keys';

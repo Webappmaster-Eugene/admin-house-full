@@ -10,8 +10,8 @@ import {
   WorkspaceGetAllCommand,
   WorkspaceGetCommand,
   WorkspaceUpdateCommand,
-} from '../../../libs/contracts';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+} from '@numart/house-admin-contracts';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { WorkspaceGetResponseDto } from './dto/controller/get-workspace.dto';
 import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from './dto/controller/create-workspace.dto';
@@ -22,7 +22,7 @@ import { WorkspaceChangeOwnerRequestDto, WorkspaceChangeOwnerResponseDto } from 
 import { IWorkspaceController } from './types/workspace.controller.interface';
 import { IWorkspaceService } from './types/workspace.service.interface';
 import { KFI } from '../../common/utils/di';
-import { WorkspaceChangeOwnerCommand } from '../../../libs/contracts';
+import { WorkspaceChangeOwnerCommand } from '@numart/house-admin-contracts';
 import { WorkspaceEntity } from './entities/workspace.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';

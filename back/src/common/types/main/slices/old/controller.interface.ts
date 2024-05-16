@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { UniversalExternalResponse } from '../../../responses/universal-external-response.interface';
-import { EntityUrlParamCommand } from '../../../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../../jwt.payload.interface';
 
 export interface IControllerCommonOld<

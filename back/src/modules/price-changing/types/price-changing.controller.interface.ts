@@ -3,7 +3,7 @@ import { PriceChangingCreateRequestDto, PriceChangingCreateResponseDto } from '.
 import { PriceChangingUpdateRequestDto, PriceChangingUpdateResponseDto } from '../dto/controller/update-price-changing.dto';
 import { PriceChangingGetResponseDto } from '../dto/controller/get-price-changing.dto';
 import { PriceChangingGetAllResponseDto } from '../dto/controller/get-all-price-changings.dto';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { PriceChangingDeleteResponseDto } from '../dto/controller/delete-price-changing.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTa
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { AppInfoUpdateRequestDto, AppInfoUpdateResponseDto } from './dto/controller/update-app-info.dto';
 import { KFI } from '../../common/utils/di';
-import { AppInfoGetCommand, AppInfoUpdateCommand } from '../../../libs/contracts';
+import { AppInfoGetCommand, AppInfoUpdateCommand } from '@numart/house-admin-contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';

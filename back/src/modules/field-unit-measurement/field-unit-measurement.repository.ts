@@ -3,7 +3,7 @@ import { FieldUnitMeasurementCreateRequestDto } from './dto/controller/create-fi
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldUnitMeasurementRepository } from './types/field-unit-measurement.repository.interface';
 import { FieldUnitMeasurementUpdateRequestDto } from './dto/controller/update-field-unit-measurement.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { FieldUnitMeasurementEntity } from './entities/field-unit-measurement.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

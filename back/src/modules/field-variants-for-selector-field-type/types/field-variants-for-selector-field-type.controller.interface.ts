@@ -9,7 +9,7 @@ import {
 } from '../dto/controller/update-field-variants-for-selector-field-type.dto';
 import { FieldVariantsForSelectorFieldTypeGetResponseDto } from '../dto/controller/get-field-variants-for-selector-field-type.dto';
 import { FieldVariantsForSelectorFieldTypeGetAllResponseDto } from '../dto/controller/get-all-field-variants-for-selector-field-type.dto';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { FieldVariantsForSelectorFieldTypeDeleteResponseDto } from '../dto/controller/delete-field-variants-for-selector-field-type.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

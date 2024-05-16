@@ -6,9 +6,6 @@ const GlobalCategoryMaterialUpdateRequestSchema = GlobalCategoryMaterialSchema.o
   createdAt: true,
   updatedAt: true,
   uuid: true,
-  workspaceHandbookUuid: true,
-  responsibleManagerUuid: true,
-  workspaceUuid: true,
 }).partial();
 
 const GlobalCategoryMaterialUpdateResponseSchema = z

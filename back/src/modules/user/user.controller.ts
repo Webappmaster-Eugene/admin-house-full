@@ -18,9 +18,9 @@ import {
   UserGetAllCommand,
   UserGetCommand,
   UserUpdateCommand,
-} from '../../../libs/contracts';
+} from '@numart/house-admin-contracts';
 import { UserCreateRequestDto, UserCreateResponseDto } from './dto/controller/create-user.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { UserGetResponseDto } from './dto/controller/get-user.dto';
 import { UserDeleteResponseDto } from './dto/controller/delete-user.dto';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';

@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { EGlobalCategoryVariantsSchema } from '../../../../src/common/generated/zod';
+import { EGlobalCategoryVariants } from '../../enums';
 
 export const GlobalCategoryMaterialSchema = z.object({
   uuid: z.string().uuid(),
-  name: EGlobalCategoryVariantsSchema,
+  name: EGlobalCategoryVariants,
   nameRu: z.string(),
   comment: z.string().nullable().optional(),
   color: z.string().nullable(),

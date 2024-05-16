@@ -4,8 +4,8 @@ import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
 import { EUserTypeVariants } from '@prisma/client';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { RoleEntity } from '../entities/role.entity';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 
 export interface IRoleService extends IServiceCommon<RoleCreateRequestDto, RoleUpdateRequestDto, RoleEntity> {
   getById: (roleId: EntityUrlParamCommand.RequestNumberParam) => Promise<UniversalInternalResponse<RoleEntity>>;

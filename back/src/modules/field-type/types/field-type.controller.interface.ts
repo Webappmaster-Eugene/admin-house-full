@@ -1,5 +1,5 @@
 import { IControllerCommon } from '../../../common/types/main/slices/controller.interface';
-import { EntityUrlParamCommand } from '../../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { FieldTypeCreateRequestDto, FieldTypeCreateResponseDto } from '../dto/controller/create-field-type.dto';

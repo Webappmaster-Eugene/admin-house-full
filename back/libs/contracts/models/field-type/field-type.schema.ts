@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { EFieldTypeVariantsSchema } from '../../../../src/common/generated/zod';
+import { EFieldTypeVariants } from '../../enums';
 
 export const FieldTypeSchema = z.object({
-  jsType: EFieldTypeVariantsSchema,
+  jsType: EFieldTypeVariants,
   uuid: z.string().uuid(),
   name: z.string(),
   description: z.string().nullable().optional(),

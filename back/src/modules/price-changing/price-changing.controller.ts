@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { PriceChangingGetResponseDto } from './dto/controller/get-price-changing.dto';
 import { PriceChangingCreateRequestDto, PriceChangingCreateResponseDto } from './dto/controller/create-price-changing.dto';
@@ -19,7 +19,7 @@ import {
   PriceChangingGetAllCommand,
   PriceChangingGetCommand,
   PriceChangingUpdateCommand,
-} from '../../../libs/contracts';
+} from '@numart/house-admin-contracts';
 import { PriceChangingEntity } from './entities/price-changing.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';

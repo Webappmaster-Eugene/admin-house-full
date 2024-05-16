@@ -1,16 +1,19 @@
 {
-  "name": "@purple-code/6-ratingus-contracts",
-  "version": "0.0.14",
+  "name": "@numart/house-admin-contracts",
+  "version": "0.0.2",
   "description": "",
   "main": "build/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "prepublish": "rm -rf build && tsc",
     "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@numart/house-admin-contracts": "^0.0.2",
     "zod": "^3.22.4"
   }
 }

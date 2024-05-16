@@ -7,7 +7,7 @@ import { AuthRegisterRequestDto, AuthRegisterResponseDto } from './dto/controlle
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IAuthService } from './types/auth.service.interface';
 import { KFI } from '../../common/utils/di';
-import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from '../../../libs/contracts';
+import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from '@numart/house-admin-contracts';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleResponseDto } from './dto/controller/auth.register-with-role.dto';
 import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from './dto/controller/auth.generate-key.dto';
 import { AuthGetKeyResponseDto } from './dto/controller/auth.get-key.dto';

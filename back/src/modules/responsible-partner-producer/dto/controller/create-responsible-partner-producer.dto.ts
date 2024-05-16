@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { ResponsiblePartnerProducerCreateCommand } from '../../../../../libs/contracts';
+import { ResponsiblePartnerProducerCreateCommand } from '@numart/house-admin-contracts';
 
 export class ResponsiblePartnerProducerCreateRequestDto extends createZodDto(ResponsiblePartnerProducerCreateCommand.RequestSchema) {}
 

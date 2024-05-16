@@ -6,7 +6,6 @@ const HandbookUpdateRequestSchema = HandbookSchema.omit({
   createdAt: true,
   updatedAt: true,
   uuid: true,
-  workspaceHandbookUuid: true,
   responsibleManagerUuid: true,
   workspaceUuid: true,
 }).partial();

@@ -6,7 +6,7 @@ import { User } from '../../common/decorators/user.decorator';
 import { ProjectEntity } from './entities/project.entity';
 import { KFI } from '../../common/utils/di';
 import { IProjectService } from './types/project.service.interface';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ProjectGetAllResponseDto } from './dto/controller/get-all-projects.dto';
@@ -19,7 +19,7 @@ import {
   ProjectGetAllCommand,
   ProjectGetCommand,
   ProjectUpdateCommand,
-} from '../../../libs/contracts';
+} from '@numart/house-admin-contracts';
 import { ProjectDeleteResponseDto } from './dto/controller/delete-project.dto';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';

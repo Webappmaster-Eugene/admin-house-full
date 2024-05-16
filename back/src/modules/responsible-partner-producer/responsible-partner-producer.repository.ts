@@ -3,7 +3,7 @@ import { ResponsiblePartnerProducerCreateRequestDto } from './dto/controller/cre
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IResponsiblePartnerProducerRepository } from './types/responsible-partner-producer.repository.interface';
 import { ResponsiblePartnerProducerUpdateRequestDto } from './dto/controller/update-responsible-partner-producer.dto';
-import { EntityUrlParamCommand } from '../../../libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { ResponsiblePartnerProducerEntity } from './entities/responsible-partner-producer.entity';
 import { KFI } from '../../common/utils/di';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
