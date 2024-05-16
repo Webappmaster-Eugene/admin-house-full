@@ -17,7 +17,7 @@ import {
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { FieldTypeDeleteResponseDto } from './dto/controller/delete-field-type.dto';
 import { FieldTypeGetResponseDto } from './dto/controller/get-field-type.dto';
 import { FieldTypeEntity } from './entities/field-type.entity';

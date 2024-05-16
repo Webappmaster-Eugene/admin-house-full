@@ -1,4 +1,4 @@
-import { PriceChanging } from '@prisma/client';
+import { PriceChanging } from '.prisma/client';
 
 export class PriceChangingEntity implements PriceChanging {
   uuid: string;

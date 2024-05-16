@@ -1,4 +1,4 @@
-import { Organization } from '@prisma/client';
+import { Organization } from '.prisma/client';
 
 export class OrganizationEntity implements Organization {
   uuid: string;

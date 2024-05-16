@@ -1,4 +1,4 @@
-import { Project } from '@prisma/client';
+import { Project } from '.prisma/client';
 
 export class ProjectEntity implements Project {
   uuid: string;

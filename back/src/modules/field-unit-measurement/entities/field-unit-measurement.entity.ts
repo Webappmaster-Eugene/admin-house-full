@@ -1,4 +1,4 @@
-import { FieldUnitMeasurement } from '@prisma/client';
+import { FieldUnitMeasurement } from '.prisma/client';
 
 export class FieldUnitMeasurementEntity implements FieldUnitMeasurement {
   uuid: string;

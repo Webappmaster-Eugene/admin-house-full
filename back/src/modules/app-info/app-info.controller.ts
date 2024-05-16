@@ -13,7 +13,7 @@ import { IAppInfoService } from './types/app-info.service.interface';
 import { AppInfoEntity } from './entities/app-info.entity';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';

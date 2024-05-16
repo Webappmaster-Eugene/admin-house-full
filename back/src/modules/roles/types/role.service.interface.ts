@@ -1,7 +1,7 @@
 import { IServiceCommon } from '../../../common/types/main/slices/service.interface';
 import { RoleCreateRequestDto } from '../dto/controller/create-role.dto';
 import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { RoleEntity } from '../entities/role.entity';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';

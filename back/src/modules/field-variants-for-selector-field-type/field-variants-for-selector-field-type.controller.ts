@@ -32,7 +32,7 @@ import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';

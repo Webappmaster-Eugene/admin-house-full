@@ -1,4 +1,4 @@
-import { ResponsiblePartnerProducer } from '@prisma/client';
+import { ResponsiblePartnerProducer } from '.prisma/client';
 
 export class ResponsiblePartnerProducerEntity implements ResponsiblePartnerProducer {
   uuid: string;

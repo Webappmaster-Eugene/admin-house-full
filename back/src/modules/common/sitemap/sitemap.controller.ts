@@ -4,7 +4,7 @@
 // import { ISitemapItem } from './sitemap.interface';
 // import { QueryBus } from '@nestjs/cqrs';
 // import { FindPostsQuery } from 'src/module/post/query/find-posts/find-posts.query';
-// import { Post } from '@prisma/client';
+// import { Post } from '.prisma/client';
 //
 // @Controller('sitemap')
 // export class SitemapController {

@@ -1,4 +1,4 @@
-import { CategoryMaterial } from '@prisma/client';
+import { CategoryMaterial } from '.prisma/client';
 
 export class CategoryMaterialEntity implements CategoryMaterial {
   uuid: string;

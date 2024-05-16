@@ -30,7 +30,7 @@ import { FieldUnitMeasurementEntity } from './entities/field-unit-measurement.en
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';

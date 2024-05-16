@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '.prisma/client';
 const prisma = new PrismaClient();
 async function main() {
   // const DELETE_APP_SETTINGS = await prisma?.appSettings?.deleteMany({});

@@ -11,7 +11,7 @@ import { KFI } from '../../common/utils/di';
 import { DEFAULT_PROJECT_DESCRIPTION, DEFAULT_PROJECT_NAME } from './lib/consts/project.default-data';
 import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaClientKnownRequestError } from '.prisma/client/runtime/library';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { ResponsiblePartnerProducerEntity } from '../responsible-partner-producer/entities/responsible-partner-producer.entity';

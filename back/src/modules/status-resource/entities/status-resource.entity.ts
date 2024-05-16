@@ -1,4 +1,4 @@
-import { StatusResource } from '@prisma/client';
+import { StatusResource } from '.prisma/client';
 
 export class StatusResourceEntity implements StatusResource {
   uuid: string;

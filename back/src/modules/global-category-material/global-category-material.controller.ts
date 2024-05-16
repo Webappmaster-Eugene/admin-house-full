@@ -28,7 +28,7 @@ import { GlobalCategoryMaterialEntity } from './entities/global-category-materia
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { GlobalCategoryMaterialGetResponseDto } from './dto/controller/get-global-category-material.dto';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';

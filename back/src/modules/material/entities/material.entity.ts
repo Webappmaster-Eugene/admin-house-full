@@ -1,4 +1,4 @@
-import { Material } from '@prisma/client';
+import { Material } from '.prisma/client';
 
 export class MaterialEntity implements Material {
   uuid: string;

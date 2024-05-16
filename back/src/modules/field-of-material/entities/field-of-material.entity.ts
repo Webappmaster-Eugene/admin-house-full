@@ -1,4 +1,4 @@
-import { FieldOfMaterial } from '@prisma/client';
+import { FieldOfMaterial } from '.prisma/client';
 
 export class FieldOfMaterialEntity implements FieldOfMaterial {
   uuid: string;

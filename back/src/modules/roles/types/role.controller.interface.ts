@@ -1,5 +1,5 @@
 import { IControllerCommon } from '../../../common/types/main/slices/controller.interface';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { RoleCreateRequestDto, RoleCreateResponseDto } from '../dto/controller/create-role.dto';
 import { RoleUpdateRequestDto, RoleUpdateResponseDto } from '../dto/controller/update-role.dto';
 import { RoleGetResponseDto } from '../dto/controller/get-role.dto';

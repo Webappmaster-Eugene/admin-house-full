@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IRoleRepository } from './types/role.repository.interface';

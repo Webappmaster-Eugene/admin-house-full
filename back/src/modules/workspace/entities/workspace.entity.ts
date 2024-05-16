@@ -1,4 +1,4 @@
-import { EUserTypeVariants, Workspace } from '@prisma/client';
+import { EUserTypeVariants, Workspace } from '.prisma/client';
 
 export class WorkspaceEntity implements Workspace {
   uuid: string;

@@ -1,4 +1,4 @@
-import { EFieldTypeVariants, FieldType } from '@prisma/client';
+import { EFieldTypeVariants, FieldType } from '.prisma/client';
 
 export class FieldTypeEntity implements FieldType {
   uuid: string;

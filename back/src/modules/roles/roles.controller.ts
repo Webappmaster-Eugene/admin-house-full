@@ -22,7 +22,7 @@ import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/co
 import { RoleGetResponseDto } from './dto/controller/get-role.dto';
 import { RoleGetAllResponseDto } from './dto/controller/get-all-roles.dto';
 import { RoleDeleteResponseDto } from './dto/controller/delete-role.dto';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { KFI } from '../../common/utils/di';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { RoleCreateCommand, RoleDeleteCommand, RoleGetAllCommand, RoleGetCommand, RoleUpdateCommand } from '@numart/house-admin-contracts';

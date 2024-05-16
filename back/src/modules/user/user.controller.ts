@@ -28,7 +28,7 @@ import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { ROLE_IDS } from '../../common/consts/role-ids';
 import { WorkspaceAffiliationGuard } from '../../common/guards/workspace-affiliation.guard';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { AddUserToWorkspaceRequestDto, AddUserToWorkspaceResponseDto } from './dto/controller/add-to-workspace.dto';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
 import { AddUserToProjectRequestDto, AddUserToProjectResponseDto } from './dto/controller/add-to-project.dto';

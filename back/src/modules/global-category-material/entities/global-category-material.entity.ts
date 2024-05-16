@@ -1,5 +1,5 @@
 import { EGlobalCategoryVariantsType } from '../../../common/generated/zod';
-import { GlobalCategoryMaterial } from '@prisma/client';
+import { GlobalCategoryMaterial } from '.prisma/client';
 
 export class GlobalCategoryMaterialEntity implements GlobalCategoryMaterial {
   uuid: string;

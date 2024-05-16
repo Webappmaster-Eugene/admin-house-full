@@ -1,4 +1,4 @@
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 
 export class AuthEntity {
   uuid: string;

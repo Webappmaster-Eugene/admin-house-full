@@ -1,4 +1,4 @@
-import { Handbook } from '@prisma/client';
+import { Handbook } from '.prisma/client';
 
 export class HandbookEntity implements Handbook {
   uuid: string;

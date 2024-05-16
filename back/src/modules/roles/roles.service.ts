@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EUserTypeVariants } from '@prisma/client';
+import { EUserTypeVariants } from '.prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { RoleEntity } from './entities/role.entity';
 import { IRoleService } from './types/role.service.interface';

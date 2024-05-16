@@ -1,4 +1,4 @@
-import { FieldVariantsForSelectorFieldType } from '@prisma/client';
+import { FieldVariantsForSelectorFieldType } from '.prisma/client';
 
 export class FieldVariantsForSelectorFieldTypeEntity implements FieldVariantsForSelectorFieldType {
   uuid: string;
