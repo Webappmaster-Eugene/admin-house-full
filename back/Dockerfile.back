@@ -5,7 +5,7 @@ WORKDIR /back
 COPY package.json /back
 
 RUN npm config set registry http://registry.npmjs.org/
-RUN npm i -g nest@latest
+RUN npm install -g @nestjs/cli
 RUN npm install
 RUN npx prisma generate
 
