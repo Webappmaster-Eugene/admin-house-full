@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { UniversalInternalResponse } from '../../responses/universal-internal-response.interface';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../jwt.payload.interface';
 
 export interface IServiceCommon<
   CReqDto,

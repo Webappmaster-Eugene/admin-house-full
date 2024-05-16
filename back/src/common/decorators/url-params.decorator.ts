@@ -1,5 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { MethodName } from '../types/method.enum';
+
 export interface IUrlParams {
   url: string;
   method: MethodName;
