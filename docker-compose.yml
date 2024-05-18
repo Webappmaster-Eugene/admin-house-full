@@ -35,7 +35,7 @@ services:
     restart: always
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 3s
         max_attempts: 5
         window: 10s
@@ -54,7 +54,7 @@ services:
     restart: always
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 3s
         max_attempts: 5
         window: 10s
@@ -70,12 +70,26 @@ services:
   redis:
     container_name: admin-house-redis
     image: redis:7.2.4-alpine
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 5
+        window: 10s
     ports:
       - 6379:6379
 
   redis-commander:
     container_name: admin-house-redis-commander
     hostname: redis-commander
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 5
+        window: 10s
     image: rediscommander/redis-commander:latest
     environment:
       - REDIS_HOSTS=local:redis:6379
@@ -88,7 +102,7 @@ services:
     restart: always
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 3s
         max_attempts: 5
         window: 10s
@@ -103,6 +117,12 @@ services:
   certbot:
     container_name: admin-house-certbot
     image: certbot/certbot:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 5
+        window: 10s
     depends_on:
       - nginx
     command: certonly --webroot --webroot-path=/var/www/html --email jamesnumart@gmail.com --agree-tos --no-eff-email -d alibaba.hhos.ru -d www.alibaba.hhos.ru -d api.alibaba.hhos.ru -d www.api.alibaba.hhos.ru
