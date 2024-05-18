@@ -3,16 +3,18 @@ FROM node:20.11.1-alpine
 WORKDIR /back
 
 COPY package.json /back
+COPY prisma ./prisma/
 #ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 RUN npm config set registry http://registry.npmjs.org/
 #RUN npm config set strict-ssl false
-#
+
 RUN npm install -g npm@latest
 RUN npm i -g @prisma/client@latest
 #RUN npm i -g @nestjs/cli
 RUN npm install prisma --save-dev
-RUN  prisma init
+RUN npm i @prisma/client@latest
+
 RUN npx prisma generate
 
 RUN npm install
