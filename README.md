@@ -6,15 +6,3 @@
 4) Авторизация - refresh+access (front: axios interceptor).
 5) DevOps - nginx, certbot, CI/CD (Github Actions), Redis, подключены домены, оповещение при деплое приходит в телеграм. В планах при развитии - масштабирование на нескольно нод, репликация БД, внедрение тестов (в частности e2e), k8s (при появлении микросервисов+grps).
 6) Планы на 1 этап: Auth (back -> front), CRUD справочник, минимальное и достаточное предзаполнение БД.
-
-Development server commands:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
