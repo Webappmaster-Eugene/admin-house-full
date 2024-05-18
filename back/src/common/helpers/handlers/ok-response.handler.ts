@@ -11,7 +11,7 @@ export function okResponseHandler<TEntity>(
   Entity: AbstractClassType,
   instanceLogger: ILogger,
 ): ExternalResponse<TEntity> {
-  if (isOkResponseHandler(ok, data, Entity)) {
+  if (isOkResponseHandler(ok, data)) {
     return new ExternalResponse<TEntity>(data);
   } else {
     errorResponseHandler(instanceLogger, data);

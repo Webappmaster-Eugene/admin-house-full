@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate {
     const roles = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]) || [];
 
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
-
     try {
       const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
 
@@ -37,7 +36,9 @@ export class AuthGuard implements CanActivate {
         return true;
       }
 
-      return !!roles.includes(user.role['roleId']);
+      console.log(roles, user.role);
+
+      return !!roles.includes(user.role['name']);
     } catch (error) {
       this.logger.error(JSON.stringify(error));
       return false;

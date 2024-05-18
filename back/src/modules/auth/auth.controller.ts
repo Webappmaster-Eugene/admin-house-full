@@ -103,6 +103,7 @@ export class AuthController implements IAuthController {
   async loginEP(@Body() dto: AuthLoginRequestDto, @UrlParams() urlParams: IUrlParams): Promise<AuthLoginResponseDto> {
     try {
       const { ok, data } = await this.authService.login(dto);
+
       return okResponseHandler(ok, data, AuthEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
@@ -159,6 +160,7 @@ export class AuthController implements IAuthController {
     // DOC каждый раз при вызове запись берется из БД таблицы registerWithRoleKey
     try {
       const { ok, data } = await this.authService.getStrictAdminKey();
+      console.log(ok, data);
       if (ok) {
         return new ExternalResponse<{ key: string }>(data as { key: string });
       }
