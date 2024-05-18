@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   back:
+    container_name: admin-house-back
     image: eugenenumart/admin-house-back:latest
     restart: always
     deploy:
@@ -15,6 +16,7 @@ services:
     command: "npm run start"
 
   front:
+    container_name: admin-house-front
     image: eugenenumart/admin-house-front:latest
     restart: always
     deploy:
@@ -28,6 +30,7 @@ services:
     command: "npm run start"
 
   postgres:
+    container_name: admin-house-postgres
     image: postgres:16-alpine
     restart: always
     deploy:
@@ -47,6 +50,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:8
+    container_name: admin-house-pgadmin
     restart: always
     deploy:
       restart_policy:
@@ -64,12 +68,13 @@ services:
       - postgres
 
   redis:
+    container_name: admin-house-redis
     image: redis:7.2.4-alpine
     ports:
       - 6379:6379
 
   redis-commander:
-    container_name: redis-commander
+    container_name: admin-house-redis-commander
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
     environment:
@@ -78,7 +83,7 @@ services:
       - "8081:8081"
 
   nginx:
-    container_name: nginx
+    container_name: admin-house-nginx
     image: nginx:latest
     restart: always
     deploy:
@@ -96,7 +101,7 @@ services:
       - ./certbot/data:/var/www/html
 
   certbot:
-    container_name: certbot
+    container_name: admin-house-certbot
     image: certbot/certbot:latest
     depends_on:
       - nginx
