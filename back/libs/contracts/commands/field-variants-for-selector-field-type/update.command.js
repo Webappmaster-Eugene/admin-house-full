@@ -8,6 +8,8 @@ const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = models_2.FieldVaria
     createdAt: true,
     updatedAt: true,
     uuid: true,
+    fieldOfCategoryMaterialUuid: true,
+    handbookUuid: true,
 }).partial();
 const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = zod_1.z
     .object({

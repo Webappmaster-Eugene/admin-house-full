@@ -33,8 +33,8 @@ export interface IFieldVariantsForSelectorFieldTypeController
   createEP: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     urlParams: IUrlParams,
-    userInfoFromJWT: IJWTPayload,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldVariantsForSelectorFieldTypeCreateResponseDto>;
   updateByIdEP: (
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,

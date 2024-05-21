@@ -60,7 +60,7 @@ export class MaterialRepository implements IMaterialRepository {
           comment,
           price,
           handbookUuid: handbookId,
-          categoryUuid: categoryMaterialId,
+          categoryMaterialUuid: categoryMaterialId,
         },
       });
       return existenceEntityHandler(newMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;

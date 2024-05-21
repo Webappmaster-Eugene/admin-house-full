@@ -16,4 +16,5 @@ export * from './field-type';
 export * from './field-variants-for-selector-field-type';
 export * from './common';
 export * from './status-resource';
-export * from './field-of-material';
+export * from './field-of-category-material';
+export * from './characteristics-material';

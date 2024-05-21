@@ -32,4 +32,5 @@ __exportStar(require("./field-type"), exports);
 __exportStar(require("./field-variants-for-selector-field-type"), exports);
 __exportStar(require("./common"), exports);
 __exportStar(require("./status-resource"), exports);
-__exportStar(require("./field-of-material"), exports);
+__exportStar(require("./field-of-category-material"), exports);
+__exportStar(require("./characteristics-material"), exports);

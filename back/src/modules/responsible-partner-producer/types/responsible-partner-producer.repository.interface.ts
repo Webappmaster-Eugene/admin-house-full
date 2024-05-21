@@ -12,7 +12,10 @@ export interface IResponsiblePartnerProducerRepository
   > {
   getById: (responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam) => Promise<ResponsiblePartnerProducerEntity>;
   getAll: (skip?: number, take?: number) => Promise<ResponsiblePartnerProducerEntity[]>;
-  create: (dto: ResponsiblePartnerProducerCreateRequestDto) => Promise<ResponsiblePartnerProducerEntity>;
+  create: (
+    dto: ResponsiblePartnerProducerCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<ResponsiblePartnerProducerEntity>;
   updateById: (
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
     dto: ResponsiblePartnerProducerUpdateRequestDto,

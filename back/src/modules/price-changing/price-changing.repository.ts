@@ -50,9 +50,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     changedById: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<PriceChangingEntity> {
     try {
-      const { newPrice, comment } = dto;
+      const { newPrice, comment, source } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
-        data: { newPrice, comment, changedByUuid: changedById, materialUuid: materialId },
+        data: { newPrice, comment, source, changedByUuid: changedById, materialUuid: materialId },
       });
       return existenceEntityHandler(newPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
     } catch (error: unknown) {

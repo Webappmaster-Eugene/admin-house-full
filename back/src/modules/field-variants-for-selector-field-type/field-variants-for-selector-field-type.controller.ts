@@ -2,10 +2,8 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put,
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { FieldVariantsForSelectorFieldTypeGetResponseDto } from './dto/controller/get-field-variants-for-selector-field-type.dto';
 import {
   FieldVariantsForSelectorFieldTypeCreateRequestDto,
@@ -40,7 +38,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldVariantsForSelectorFieldType')
-@Controller('/workspace/:workspaceId/handbook/:handbookId/field-of-material/:fieldOfMaterialId/field-variants')
+@Controller('/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants')
 export class FieldVariantsForSelectorFieldTypeController implements IFieldVariantsForSelectorFieldTypeController {
   constructor(
     @Inject(KFI.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_SERVICE)
@@ -85,7 +83,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все FieldVariantsForSelectorFieldType пользователей (менеджеров Workspace)',
+    summary: 'Получить все FieldVariantsForSelectorFieldType',
   })
   @ApiResponse({
     status: 200,
@@ -129,12 +127,13 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   async createEP(
     @Body() dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    @User() userInfoFromJWT: IJWTPayload,
     @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldVariantsForSelectorFieldTypeCreateResponseDto> {
     try {
-      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.create(dto, handbookId);
+      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.create(dto, handbookId, fieldOfCategoryMaterialId);
       return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
@@ -179,7 +178,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeDeleteCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Удаление FieldVariantsForSelectorFieldType внутри Workspace менеджера по id FieldVariantsForSelectorFieldType',
+    summary: 'Удаление FieldVariantsForSelectorFieldType по id FieldVariantsForSelectorFieldType',
   })
   @ApiResponse({
     status: 200,

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EntityUrlParamCommand } from '../common/entity-url-param.command';
+import { EntityUrlParamCommand } from '../common';
 import { ResponseClientSchema } from '../../models';
 import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 

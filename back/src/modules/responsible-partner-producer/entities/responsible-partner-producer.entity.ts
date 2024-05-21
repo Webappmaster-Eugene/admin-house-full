@@ -4,6 +4,7 @@ export class ResponsiblePartnerProducerEntity implements ResponsiblePartnerProdu
   uuid: string;
   name: string;
   comment: string;
+  handbookUuid: string;
   email: string;
   phone: string;
   info: string;

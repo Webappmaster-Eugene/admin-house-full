@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  // output = "../node_modules/.prisma/client"
   output   = "../node_modules/.prisma/client"
 }
 
@@ -52,35 +51,36 @@ enum ECurrencyTypeVariants {
 }
 
 model User {
-  uuid                         String            @id @default(uuid()) @db.Uuid
-  firstName                    String            @map("first_name")
-  secondName                   String?           @map("second_name")
+  uuid                         String                    @id @default(uuid()) @db.Uuid
+  firstName                    String                    @map("first_name")
+  secondName                   String?                   @map("second_name")
   avatar                       String?
   phone                        String?
-  email                        String            @unique
+  email                        String                    @unique
   password                     String
   address                      String?
   info                         String?
   documents                    String?
-  customerOfProjects           Project[]         @relation("project_customer")
-  responsibleManagerOfProjects Project[]         @relation("project_responsible_manager")
-  createdFieldsOfMaterials     FieldOfMaterial[]
+  customerOfProjects           Project[]                 @relation("project_customer")
+  responsibleManagerOfProjects Project[]                 @relation("project_responsible_manager")
+  fieldsOfCategoryMaterials    FieldOfCategoryMaterial[]
   changedPrices                PriceChanging[]
-  roleUuid                     String            @map("role_uuid") @db.Uuid
-  role                         Role              @relation(fields: [roleUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  creatorOfWorkspaceUuid       String?           @map("creator_of_workspace_uuid") @db.Uuid
-  creatorOfWorkspace           Workspace?        @relation("creator_of_workspace")
-  handbookManagerUuid          String?           @map("handbook_manager_uuid") @db.Uuid
+  roleUuid                     String                    @map("role_uuid") @db.Uuid
+  role                         Role                      @relation(fields: [roleUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  creatorOfWorkspaceUuid       String?                   @map("creator_of_workspace_uuid") @db.Uuid
+  creatorOfWorkspace           Workspace?                @relation("creator_of_workspace")
+  handbookManagerUuid          String?                   @map("handbook_manager_uuid") @db.Uuid
   handbookManager              Handbook?
-  memberOfWorkspaceUuid        String?           @map("member_of_workspace_uuid") @db.Uuid
-  memberOfWorkspace            Workspace?        @relation("workspace_members", fields: [memberOfWorkspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  memberOfOrganizationUuid     String?           @map("member_of_organization_uuid") @db.Uuid
-  memberOfOrganization         Organization?     @relation("organization_members", fields: [memberOfOrganizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  memberOfProjectUuid          String?           @map("member_of_project_uuid") @db.Uuid
-  memberOfProject              Project?          @relation("project_members", fields: [memberOfProjectUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  memberOfWorkspaceUuid        String?                   @map("member_of_workspace_uuid") @db.Uuid
+  memberOfWorkspace            Workspace?                @relation("workspace_members", fields: [memberOfWorkspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  memberOfOrganizationUuid     String?                   @map("member_of_organization_uuid") @db.Uuid
+  memberOfOrganization         Organization?             @relation("organization_members", fields: [memberOfOrganizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  memberOfProjectUuid          String?                   @map("member_of_project_uuid") @db.Uuid
+  memberOfProject              Project?                  @relation("project_members", fields: [memberOfProjectUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   leaderOfOrganizations        Organization[]
-  createdAt                    DateTime          @default(now()) @map("created_at")
-  updatedAt                    DateTime          @updatedAt @map("updated_at")
+  characteristicsMaterials     CharacteristicsMaterial[]
+  createdAt                    DateTime                  @default(now()) @map("created_at")
+  updatedAt                    DateTime                  @updatedAt @map("updated_at")
 
   @@map("user")
 }
@@ -164,11 +164,12 @@ model Handbook {
   responsibleManagerUuid       String                              @unique @map("responsible_manager_uuid") @db.Uuid
   responsibleManager           User?                               @relation(fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   materials                    Material[]
-  fieldOfMaterial              FieldOfMaterial[]
+  fieldsOfCategoryMaterials    FieldOfCategoryMaterial[]
   categoryMaterials            CategoryMaterial[]
-  fieldTypes                   FieldType[]
+  responsiblePartnerProducers  ResponsiblePartnerProducer[]
   fieldUnitMeasurements        FieldUnitMeasurement[]
   fieldVariantsForSelectorType FieldVariantsForSelectorFieldType[]
+  characteristicsMaterials     CharacteristicsMaterial[]
   createdAt                    DateTime                            @default(now()) @map("created_at")
   updatedAt                    DateTime                            @updatedAt @map("updated_at")
 
@@ -176,30 +177,30 @@ model Handbook {
 }
 
 model FieldType {
-  uuid                               String                              @id @default(uuid()) @db.Uuid
-  name                               String
-  description                        String
-  jsType                             EFieldTypeVariants                  @map("js_type")
-  fieldOfMaterials                   FieldOfMaterial[]
-  fieldVariantsForSelectorFieldTypes FieldVariantsForSelectorFieldType[]
-  createdAt                          DateTime                            @default(now()) @map("created_at")
-  updatedAt                          DateTime                            @updatedAt @map("updated_at")
-  Handbook                           Handbook?                           @relation(fields: [handbookUuid], references: [uuid])
-  handbookUuid                       String?                             @db.Uuid
+  uuid                      String                    @id @default(uuid()) @db.Uuid
+  name                      String
+  description               String
+  jsType                    EFieldTypeVariants        @map("js_type")
+  fieldsOfCategoryMaterials FieldOfCategoryMaterial[]
+  characteristicsMaterial   CharacteristicsMaterial[]
+  createdAt                 DateTime                  @default(now()) @map("created_at")
+  updatedAt                 DateTime                  @updatedAt @map("updated_at")
 
   @@map("field_type")
 }
 
 model FieldVariantsForSelectorFieldType {
-  uuid          String    @id @default(uuid()) @db.Uuid
-  name          String
-  description   String
-  fieldTypeUuid String    @map("field_type_uuid") @db.Uuid
-  fieldType     FieldType @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  handbookUuid  String    @map("handbook_uuid") @db.Uuid
-  handbook      Handbook  @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  uuid                        String                   @id @default(uuid()) @db.Uuid
+  value                       String
+  description                 String?
+  handbookUuid                String                   @map("handbook_uuid") @db.Uuid
+  handbook                    Handbook                 @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldOfCategoryMaterialUuid String                   @map("field_of_category_material_uuid") @db.Uuid
+  fieldOfCategoryMaterial     FieldOfCategoryMaterial  @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  characteristicsMaterialUuid String?                  @db.Uuid
+  characteristicsMaterial     CharacteristicsMaterial? @relation(fields: [characteristicsMaterialUuid], references: [uuid])
+  createdAt                   DateTime                 @default(now()) @map("created_at")
+  updatedAt                   DateTime                 @updatedAt @map("updated_at")
 
   @@map("field_variants_for_selector_field_type")
 }
@@ -211,55 +212,85 @@ enum EFieldTypeVariants {
 }
 
 model FieldUnitMeasurement {
-  uuid             String            @id @default(uuid()) @db.Uuid
-  name             String
-  comment          String?
-  handbookUuid     String            @map("handbook_uuid") @db.Uuid
-  handbook         Handbook          @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  fieldOfMaterials FieldOfMaterial[]
-  materials        Material[]
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime          @updatedAt @map("updated_at")
+  uuid                      String                    @id @default(uuid()) @db.Uuid
+  name                      String
+  comment                   String?
+  handbookUuid              String                    @map("handbook_uuid") @db.Uuid
+  handbook                  Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  fieldsOfCategoryMaterials FieldOfCategoryMaterial[]
+  materials                 Material[]
+  characteristicsMaterial   CharacteristicsMaterial[]
+  createdAt                 DateTime                  @default(now()) @map("created_at")
+  updatedAt                 DateTime                  @updatedAt @map("updated_at")
 
   @@map("field_unit_measurement")
 }
 
-model FieldOfMaterial {
-  uuid                  String               @id @default(uuid()) @db.Uuid
-  name                  String
-  comment               String?
-  isRequired            Boolean?             @default(true) @map("is_required")
-  defaultValue          String?              @map("default_value")
-  categoryMaterialUuid  String               @map("category_material_uuid") @db.Uuid
-  categoryMaterial      CategoryMaterial     @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  createdByUuid         String               @map("created_by_uuid") @db.Uuid
-  createdBy             User                 @relation(fields: [createdByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  unitOfMeasurementUuid String               @map("unit_of_measurement_uuid") @db.Uuid
-  unitOfMeasurement     FieldUnitMeasurement @relation(fields: [unitOfMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldType             FieldType            @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldTypeUuid         String               @map("field_type_uuid") @db.Uuid
-  handbook              Handbook?            @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  handbookUuid          String?              @map("handbook_uuid") @db.Uuid
-  createdAt             DateTime             @default(now()) @map("created_at")
-  updatedAt             DateTime             @updatedAt @map("updated_at")
+model FieldOfCategoryMaterial {
+  uuid                              String                              @id @default(uuid()) @db.Uuid
+  name                              String
+  unique_name_for_template          String                              @unique
+  comment                           String?
+  isRequired                        Boolean?                            @default(true) @map("is_required")
+  defaultValue                      String?                             @map("default_value")
+  categoryMaterialUuid              String                              @map("category_material_uuid") @db.Uuid
+  categoryMaterial                  CategoryMaterial                    @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdByUuid                     String                              @map("created_by_uuid") @db.Uuid
+  createdBy                         User                                @relation(fields: [createdByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  unitOfMeasurementUuid             String                              @map("unit_of_measurement_uuid") @db.Uuid
+  unitOfMeasurement                 FieldUnitMeasurement                @relation(fields: [unitOfMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldType                         FieldType                           @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldTypeUuid                     String                              @map("field_type_uuid") @db.Uuid
+  handbook                          Handbook?                           @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  handbookUuid                      String?                             @map("handbook_uuid") @db.Uuid
+  fieldVariantsForSelectorFieldType FieldVariantsForSelectorFieldType[]
+  characteristicsMaterial           CharacteristicsMaterial[]
+  createdAt                         DateTime                            @default(now()) @map("created_at")
+  updatedAt                         DateTime                            @updatedAt @map("updated_at")
 
-  @@map("field_of_category")
+  @@map("field_of_category_material")
+}
+
+model CharacteristicsMaterial {
+  uuid                              String                              @id @default(uuid()) @db.Uuid
+  name                              String
+  value                             String
+  comment                           String?
+  fieldOfCategoryMaterialUuid       String                              @map("field_of_category_material_uuid") @db.Uuid
+  fieldOfCategoryMaterial           FieldOfCategoryMaterial             @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  addedByUser                       User                                @relation(fields: [addedByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  addedByUserUuid                   String                              @db.Uuid
+  handbook                          Handbook                            @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  handbookUuid                      String                              @db.Uuid
+  fieldType                         FieldType                           @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldTypeUuid                     String                              @db.Uuid
+  fieldUnitMeasurement              FieldUnitMeasurement?               @relation(fields: [fieldUnitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldUnitMeasurementUuid          String?                             @db.Uuid
+  categoryMaterial                  CategoryMaterial                    @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  categoryMaterialUuid              String                              @db.Uuid
+  material                          Material                            @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  materialUuid                      String                              @db.Uuid
+  fieldVariantsForSelectorFieldType FieldVariantsForSelectorFieldType[]
+  createdAt                         DateTime                            @default(now()) @map("created_at")
+  updatedAt                         DateTime                            @updatedAt @map("updated_at")
+
+  @@map("characteristics_material")
 }
 
 model GlobalCategoryMaterial {
-  uuid              String                  @id @default(uuid()) @db.Uuid
-  name              EGlobalCategoryVariants @unique
-  nameRu            String                  @map("name_ru")
+  uuid              String                          @id @default(uuid()) @db.Uuid
+  name              EGlobalCategoryMaterialVariants @unique
+  nameRu            String                          @map("name_ru")
   comment           String?
   color             String?
   categoryMaterials CategoryMaterial[]
-  createdAt         DateTime                @default(now()) @map("created_at")
-  updatedAt         DateTime                @updatedAt @map("updated_at")
+  createdAt         DateTime                        @default(now()) @map("created_at")
+  updatedAt         DateTime                        @updatedAt @map("updated_at")
 
-  @@map("global_category")
+  @@map("global_category_material")
 }
 
-enum EGlobalCategoryVariants {
+enum EGlobalCategoryMaterialVariants {
   PEOPLE
   MATERIALS
   OVERHEAD
@@ -267,53 +298,57 @@ enum EGlobalCategoryVariants {
 }
 
 model CategoryMaterial {
-  uuid                       String                 @id @default(uuid()) @db.Uuid
+  uuid                       String                    @id @default(uuid()) @db.Uuid
   name                       String
   comment                    String?
-  templateName               String?                @map("template_name")
-  globalCategoryMaterialUuid String                 @map("global_category_uuid") @db.Uuid
-  globalCategoryMaterial     GlobalCategoryMaterial @relation(fields: [globalCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldOfMaterials           FieldOfMaterial[]
+  templateName               String?                   @map("template_name")
+  globalCategoryMaterialUuid String                    @map("global_category_uuid") @db.Uuid
+  globalCategoryMaterial     GlobalCategoryMaterial    @relation(fields: [globalCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldsOfCategoryMaterials  FieldOfCategoryMaterial[]
   materials                  Material[]
-  handbookUuid               String                 @map("handbook_uuid") @db.Uuid
-  handbook                   Handbook               @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  createdAt                  DateTime               @default(now()) @map("created_at")
-  updatedAt                  DateTime               @updatedAt @map("updated_at")
+  handbookUuid               String                    @map("handbook_uuid") @db.Uuid
+  handbook                   Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  characteristicsMaterial    CharacteristicsMaterial[]
+  createdAt                  DateTime                  @default(now()) @map("created_at")
+  updatedAt                  DateTime                  @updatedAt @map("updated_at")
 
   @@map("category_material")
 }
 
 model ResponsiblePartnerProducer {
-  uuid      String     @id @default(uuid()) @db.Uuid
-  name      String
-  comment   String?
-  info      String?
-  email     String?
-  phone     String?
-  materials Material[]
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
+  uuid         String     @id @default(uuid()) @db.Uuid
+  name         String
+  comment      String?
+  info         String?
+  email        String?
+  phone        String?
+  handbookUuid String     @map("handbook_uuid") @db.Uuid
+  handbook     Handbook   @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  materials    Material[]
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
 
   @@map("responsible_partner_producer")
 }
 
 model Material {
-  uuid                   String                     @id @default(uuid()) @db.Uuid
-  name                   String
-  comment                String?
-  namePublic             String?                    @map("name_public")
-  handbookUuid           String                     @map("handbook_uuid") @db.Uuid
-  handbook               Handbook                   @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  price                  Float
-  unitMeasurementUuid    String                     @map("unit_measurement_uuid") @db.Uuid
-  unitMeasurement        FieldUnitMeasurement       @relation(fields: [unitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  categoryUuid           String                     @map("category_uuid") @db.Uuid
-  category               CategoryMaterial           @relation(fields: [categoryUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  responsiblePartnerUuid String                     @map("responsible_partner_uuid") @db.Uuid
-  responsiblePartner     ResponsiblePartnerProducer @relation(fields: [responsiblePartnerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  priceChanges           PriceChanging[]
-  createdAt              DateTime                   @default(now()) @map("created_at")
-  updatedAt              DateTime                   @updatedAt @map("updated_at")
+  uuid                    String                     @id @default(uuid()) @db.Uuid
+  name                    String
+  comment                 String?
+  namePublic              String?                    @map("name_public")
+  price                   Float
+  handbookUuid            String                     @map("handbook_uuid") @db.Uuid
+  handbook                Handbook                   @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  unitMeasurementUuid     String                     @map("unit_measurement_uuid") @db.Uuid
+  unitMeasurement         FieldUnitMeasurement       @relation(fields: [unitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  categoryMaterialUuid    String                     @map("category_material_uuid") @db.Uuid
+  categoryMaterial        CategoryMaterial           @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  responsiblePartnerUuid  String                     @map("responsible_partner_uuid") @db.Uuid
+  responsiblePartner      ResponsiblePartnerProducer @relation(fields: [responsiblePartnerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  priceChanges            PriceChanging[]
+  characteristicsMaterial CharacteristicsMaterial[]
+  createdAt               DateTime                   @default(now()) @map("created_at")
+  updatedAt               DateTime                   @updatedAt @map("updated_at")
 
   @@map("material")
 }
@@ -321,6 +356,7 @@ model Material {
 model PriceChanging {
   uuid          String   @id @default(uuid()) @db.Uuid
   newPrice      Float    @map("new_price")
+  source        String?
   comment       String?
   materialUuid  String   @map("material_uuid") @db.Uuid
   material      Material @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)

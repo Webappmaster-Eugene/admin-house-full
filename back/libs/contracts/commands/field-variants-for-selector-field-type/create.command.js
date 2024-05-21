@@ -8,6 +8,8 @@ const FieldVariantsForSelectorFieldTypeCreateRequestSchema = models_2.FieldVaria
     uuid: true,
     createdAt: true,
     updatedAt: true,
+    characteristicsMaterialUuid: true,
+    handbookUuid: true,
 });
 const FieldVariantsForSelectorFieldTypeCreateResponseSchema = zod_1.z
     .object({

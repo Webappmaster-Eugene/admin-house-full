@@ -4,6 +4,7 @@ import { ResponseClientSchema } from '../../models';
 
 const ResponsiblePartnerProducerCreateRequestSchema = ResponsiblePartnerProducerSchema.omit({
   uuid: true,
+  handbookId: true,
   createdAt: true,
   updatedAt: true,
 });

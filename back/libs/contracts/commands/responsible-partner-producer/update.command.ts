@@ -4,6 +4,7 @@ import { ResponseClientSchema } from '../../models';
 
 const ResponsiblePartnerProducerUpdateRequestSchema = ResponsiblePartnerProducerSchema.omit({
   createdAt: true,
+  handbookId: true,
   updatedAt: true,
   uuid: true,
 }).partial();

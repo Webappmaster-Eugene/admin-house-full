@@ -6,6 +6,7 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const ResponsiblePartnerProducerCreateRequestSchema = models_1.ResponsiblePartnerProducerSchema.omit({
     uuid: true,
+    handbookId: true,
     createdAt: true,
     updatedAt: true,
 });

@@ -7,6 +7,7 @@ export const ResponsiblePartnerProducerSchema = z.object({
   info: z.string().nullable().optional(),
   email: z.string().nullable().optional(),
   phone: z.string().nullable().optional(),
+  handbookId: z.string().uuid(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

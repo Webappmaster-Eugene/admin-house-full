@@ -2,10 +2,8 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put,
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
-import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ResponsiblePartnerProducerGetResponseDto } from './dto/controller/get-responsible-partner-producer.dto';
 import {
   ResponsiblePartnerProducerCreateRequestDto,
@@ -80,7 +78,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все ResponsiblePartnerProducer пользователей (менеджеров Workspace)',
+    summary: 'Получить все ResponsiblePartnerProducer',
   })
   @ApiResponse({
     status: 200,
@@ -124,9 +122,11 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   async createEP(
     @Body() dto: ResponsiblePartnerProducerCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ResponsiblePartnerProducerCreateResponseDto> {
     try {
-      const { ok, data } = await this.responsiblePartnerProducerService.create(dto);
+      const { ok, data } = await this.responsiblePartnerProducerService.create(dto, handbookId);
       return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);

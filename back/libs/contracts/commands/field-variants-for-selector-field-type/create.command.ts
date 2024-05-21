@@ -6,6 +6,8 @@ const FieldVariantsForSelectorFieldTypeCreateRequestSchema = FieldVariantsForSel
   uuid: true,
   createdAt: true,
   updatedAt: true,
+  characteristicsMaterialUuid: true,
+  handbookUuid: true,
 });
 
 const FieldVariantsForSelectorFieldTypeCreateResponseSchema = z

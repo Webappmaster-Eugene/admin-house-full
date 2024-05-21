@@ -1,0 +1,26 @@
+import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { FieldOfCategoryMaterialCreateRequestDto } from '../dto/controller/create-field-of-category-material.dto';
+import { FieldOfCategoryMaterialUpdateRequestDto } from '../dto/controller/update-field-of-category-material.dto';
+import { FieldOfCategoryMaterialEntity } from '../entities/field-of-category-material.entity';
+import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
+
+export interface IFieldOfCategoryMaterialRepository
+  extends IRepositoryCommon<
+    FieldOfCategoryMaterialCreateRequestDto,
+    FieldOfCategoryMaterialUpdateRequestDto,
+    FieldOfCategoryMaterialEntity
+  > {
+  getById: (fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldOfCategoryMaterialEntity>;
+  getAll: (skip?: number, take?: number) => Promise<FieldOfCategoryMaterialEntity[]>;
+  create: (
+    dto: FieldOfCategoryMaterialCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    userId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<FieldOfCategoryMaterialEntity>;
+  updateById: (
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: FieldOfCategoryMaterialUpdateRequestDto,
+  ) => Promise<FieldOfCategoryMaterialEntity>;
+  deleteById: (fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldOfCategoryMaterialEntity>;
+}

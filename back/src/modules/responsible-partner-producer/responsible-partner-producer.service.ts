@@ -29,8 +29,11 @@ export class ResponsiblePartnerProducerService implements IResponsiblePartnerPro
     return new InternalResponse(allResponsiblePartnerProducers);
   }
 
-  async create(dto: ResponsiblePartnerProducerCreateRequestDto): Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity>> {
-    const createdResponsiblePartnerProducer = await this.responsiblePartnerProducerRepository.create(dto);
+  async create(
+    dto: ResponsiblePartnerProducerCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity>> {
+    const createdResponsiblePartnerProducer = await this.responsiblePartnerProducerRepository.create(dto, handbookId);
     return new InternalResponse(createdResponsiblePartnerProducer);
   }
 

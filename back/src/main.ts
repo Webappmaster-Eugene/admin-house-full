@@ -1,17 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { WinstonModule } from 'nest-winston';
-import { instanceWinstonLogger } from '../logger/winston.logger';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { ConfigService } from '@nestjs/config';
 import { CustomExceptionFilter } from './common/exceptions/custom-exception-filter';
+import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // logger: WinstonModule.createLogger({
     //   instance: instanceWinstonLogger,
     // }),
+    bufferLogs: true,
   });
 
   const config = app.get(ConfigService);
@@ -24,15 +24,23 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: config.get<string>('API_VERSION'),
+  });
+
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Документация для проекта Admin House Андрея Завьялова')
+    .setTitle('Документация для проекта Admin House')
+    .setVersion(config.get<string>('API_VERSION'))
     .setDescription('Документация REST API')
     .setVersion('1.1.0')
     .addTag('current version')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' }, 'access-token')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('/api/docs', app, document, {
+    swaggerOptions: { defaultModelsExpandDepth: -1 },
+  });
 
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalFilters(new CustomExceptionFilter());

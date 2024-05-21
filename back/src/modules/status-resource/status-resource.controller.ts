@@ -23,23 +23,21 @@ import { StatusResourceEntity } from './entities/status-resource.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
-import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '.prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
-@ApiTags('Работа с StatusResource пользователей')
-@Controller('statusResource')
+@ApiTags('Работа с StatusResource')
+@Controller('status-resource')
 export class StatusResourceController implements IStatusResourceController {
   constructor(
     @Inject(KFI.STATUS_RESOURCE_SERVICE)
     private readonly statusResourceService: IStatusResourceService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}
-
-  // FIXME понять предметную область этой сущности лучше
+  // FIXME возможно придется привязаться к workspace, так как у каждой компании свои статусы будут
 
   //region SWAGGER
   @ApiOkResponse({
@@ -49,7 +47,7 @@ export class StatusResourceController implements IStatusResourceController {
   @ApiResponse({ status: 200, type: StatusResourceGetResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @UseGuards(AuthGuard)
   @ZodSerializerDto(StatusResourceGetResponseDto)
   @Get('/:statusResourceId')
   async getByIdEP(
@@ -78,7 +76,6 @@ export class StatusResourceController implements IStatusResourceController {
   @ApiResponse({ status: 200, type: [StatusResourceGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
-  @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(StatusResourceGetAllResponseDto)
   @Get()

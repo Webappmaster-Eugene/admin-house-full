@@ -51,11 +51,14 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
       errorRepositoryHandler(error);
     }
   }
-  async create(dto: ResponsiblePartnerProducerCreateRequestDto): Promise<ResponsiblePartnerProducerEntity> {
+  async create(
+    dto: ResponsiblePartnerProducerCreateRequestDto,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<ResponsiblePartnerProducerEntity> {
     try {
       const { name, comment, email, info, phone } = dto;
       const newResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.create({
-        data: { name, comment, email, info, phone },
+        data: { name, comment, email, info, phone, handbookUuid: handbookId },
       });
       return existenceEntityHandler(
         newResponsiblePartnerProducer,

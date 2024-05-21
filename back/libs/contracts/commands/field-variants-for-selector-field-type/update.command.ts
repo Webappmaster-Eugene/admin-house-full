@@ -7,6 +7,8 @@ const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = FieldVariantsForSel
   createdAt: true,
   updatedAt: true,
   uuid: true,
+  fieldOfCategoryMaterialUuid: true,
+  handbookUuid: true,
 }).partial();
 
 const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = z

@@ -11,7 +11,6 @@ import { ResponsiblePartnerProducerGetResponseDto } from '../dto/controller/get-
 import { ResponsiblePartnerProducerGetAllResponseDto } from '../dto/controller/get-all-responsible-partner-producers.dto';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { ResponsiblePartnerProducerDeleteResponseDto } from '../dto/controller/delete-responsible-partner-producer.dto';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
@@ -33,6 +32,7 @@ export interface IResponsiblePartnerProducerController
   createEP: (
     dto: ResponsiblePartnerProducerCreateRequestDto,
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<ResponsiblePartnerProducerCreateResponseDto>;
   updateByIdEP: (
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,

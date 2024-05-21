@@ -1,8 +1,7 @@
 {
   "name": "@numart/house-admin-contracts",
-  "version": "0.0.2",
-  "description": "",
-  "main": "build/index.js",
+  "version": "0.1.4",
+  "description": "Контракты для проекта house-admin",
   "publishConfig": {
     "access": "public"
   },
@@ -13,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@numart/house-admin-contracts": "^0.0.2",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   }
 }

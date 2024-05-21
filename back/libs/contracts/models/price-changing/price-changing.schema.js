@@ -5,6 +5,7 @@ const zod_1 = require("zod");
 exports.PriceChangingSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     newPrice: zod_1.z.number(),
+    source: zod_1.z.string().nullable().optional(),
     comment: zod_1.z.string().nullable().optional(),
     materialUuid: zod_1.z.string().uuid(),
     changedByUuid: zod_1.z.string().uuid(),

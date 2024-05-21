@@ -2,7 +2,9 @@ import { FieldVariantsForSelectorFieldType } from '.prisma/client';
 
 export class FieldVariantsForSelectorFieldTypeEntity implements FieldVariantsForSelectorFieldType {
   uuid: string;
-  name: string;
+  value: string;
+  fieldOfCategoryMaterialUuid: string;
+  characteristicsMaterialUuid: string;
   description: string;
   fieldTypeUuid: string;
   handbookUuid: string;

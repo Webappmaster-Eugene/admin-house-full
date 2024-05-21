@@ -5,6 +5,7 @@ export class PriceChangingEntity implements PriceChanging {
   newPrice: number;
   changedByUuid: string;
   comment: string;
+  source: string;
   materialUuid: string;
   createdAt: Date;
   updatedAt: Date;

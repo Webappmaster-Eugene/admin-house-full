@@ -1,0 +1,4821 @@
+{
+	"info": {
+		"_postman_id": "f752cd3a-f89b-49d2-8e36-bd432f7170d0",
+		"name": "Admin House Back",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23077006"
+	},
+	"item": [
+		{
+			"name": "dev",
+			"item": [
+				{
+					"name": "!status-resource",
+					"item": [
+						{
+							"name": "get status-resource",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"url": {
+									"raw": "http://{{dev_api_url}}/api/status-resource/c865924c-7ff7-4335-bb0a-2f3b542099aa",
+									"protocol": "http",
+									"host": [
+										"{{dev_api_url}}"
+									],
+									"path": [
+										"api",
+										"status-resource",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete status-resource",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/status-resource/43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"status-resource",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete status-resource",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/status-resource/c865924c-7ff7-4335-bb0a-2f3b542099aa",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"status-resource",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update status-resource",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/status-resource/c865924c-7ff7-4335-bb0a-2f3b542099aa",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"status-resource",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create status-resource",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавыfffsasas\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/status-resource/43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"status-resource",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "!responsible-partner-producer",
+					"item": [
+						{
+							"name": "get responsible-partner-producer",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/fsdfstertererggfdg/responsible-partner-producer/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"fsdfstertererggfdg",
+										"responsible-partner-producer",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete responsible-partner-producer",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/fsdfstertererggfdg/responsible-partner-producer/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"fsdfstertererggfdg",
+										"responsible-partner-producer",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete responsible-partner-producer",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/fsdfstertererggfdg/responsible-partner-producer/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"fsdfstertererggfdg",
+										"responsible-partner-producer",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update responsible-partner-producer",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/fsdfstertererggfdg/responsible-partner-producer/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"fsdfstertererggfdg",
+										"responsible-partner-producer",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create responsible-partner-producer",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ООО Лучи\",\r\n    \"comment\": \"Наша собственная дочерняя компания - ООО Лучи\",\r\n    \"info\": \"Не будем искать подрядчика на стороне\",\r\n    \"email\": \"luchi@mail.ru\",\r\n    \"phone\": \"+79996054567\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/fsdfstertererggfdg/responsible-partner-producer",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"fsdfstertererggfdg",
+										"responsible-partner-producer"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "!category-material",
+					"item": [
+						{
+							"name": "get category-material",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/fsdfstertererggfdg/category-material/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"fsdfstertererggfdg",
+										"category-material",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete category-material",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/fsdfstertererggfdg/category-material/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"fsdfstertererggfdg",
+										"category-material",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete category-material",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/fsdfstertererggfdg/category-material/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"fsdfstertererggfdg",
+										"category-material",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update category-material",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/fsdfstertererggfdg/category-material/trterggdfgdgdgdg",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"fsdfstertererggfdg",
+										"category-material",
+										"trterggdfgdgdgdg"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create category-material",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ООО Лучи\",\r\n    \"comment\": \"Наша собственная дочерняя компания - ООО Лучи\",\r\n    \"info\": \"Не будем искать подрядчика на стороне\",\r\n    \"email\": \"luchi@mail.ru\",\r\n    \"phone\": \"+79996054567\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/fsdfstertererggfdg/category-material",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"fsdfstertererggfdg",
+										"category-material"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "!field-unit-measurement",
+					"item": [
+						{
+							"name": "get field-unit-measurement",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/dfsgfdfgdf3r34ffedgdg/field-unit-measurement",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"dfsgfdfgdf3r34ffedgdg",
+										"field-unit-measurement"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete field-unit-measurement",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/15b54585-68ef-4226-895d-838b6a210e23/field-unit-measurement/r34reffeerssggr",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23",
+										"field-unit-measurement",
+										"r34reffeerssggr"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete field-unit-measurement",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/15b54585-68ef-4226-895d-838b6a210e23/field-unit-measurement/tertertertrdgxfgt5654654yd",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23",
+										"field-unit-measurement",
+										"tertertertrdgxfgt5654654yd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update field-unit-measurement",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/15b54585-68ef-4226-895d-838b6a210e23/field-unit-measurement/534sfsggdfg5g6rtgrt",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23",
+										"field-unit-measurement",
+										"534sfsggdfg5g6rtgrt"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create field-unit-measurement",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ООО Лучи\",\r\n  \"comment\": \"Наша собственная дочерняя компания - ООО Лучи\",\r\n  \"info\": \"Не будем искать подрядчика на стороне\",\r\n  \"email\": \"luchi@mail.ru\",\r\n  \"phone\": \"+79996054567\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/fsdfstertererggfdg/field-unit-measurement",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"fsdfstertererggfdg",
+										"field-unit-measurement"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "!field-variants",
+					"item": [
+						{
+							"name": "get field-variants",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/dfsgfdfgdf3r34ffedgdg/field-of-material/daddwr345345t54t/field-variants",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"dfsgfdfgdf3r34ffedgdg",
+										"field-of-material",
+										"daddwr345345t54t",
+										"field-variants"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete field-variants",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/15b54585-68ef-4226-895d-838b6a210e23/field-of-material/rersff453534534rf43f45f45t/field-variants/r34reffeerssggr",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23",
+										"field-of-material",
+										"rersff453534534rf43f45f45t",
+										"field-variants",
+										"r34reffeerssggr"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete field-variants",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/345435fsddgdgdgdgdg/field-of-material/15b54585-68ef-4226-895d-838b6a210e23/field-variants/tertertertrdgxfgt5654654yd",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"345435fsddgdgdgdgdg",
+										"field-of-material",
+										"15b54585-68ef-4226-895d-838b6a210e23",
+										"field-variants",
+										"tertertertrdgxfgt5654654yd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update field-variants",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/345435fsddgdgdgdgdg/field-of-material/345435fsddgdgdgdgdg/field-variants/534sfsggdfg5g6rtgrt",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"345435fsddgdgdgdgdg",
+										"field-of-material",
+										"345435fsddgdgdgdgdg",
+										"field-variants",
+										"534sfsggdfg5g6rtgrt"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create field-variants",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ООО Лучи\",\r\n  \"comment\": \"Наша собственная дочерняя компания - ООО Лучи\",\r\n  \"info\": \"Не будем искать подрядчика на стороне\",\r\n  \"email\": \"luchi@mail.ru\",\r\n  \"phone\": \"+79996054567\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/345435fsddgdgdgdgdg/field-of-material/345435fsddgdgdgdgdg/field-variants/534sfsggdfg5g6rtgrt",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"345435fsddgdgdgdgdg",
+										"field-of-material",
+										"345435fsddgdgdgdgdg",
+										"field-variants",
+										"534sfsggdfg5g6rtgrt"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "!field-types",
+					"item": [
+						{
+							"name": "get field-type",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNThlNjI3YTUtODFkMi00MTRkLTliNDctNzE2Y2NhOGZmNjhiIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIxMjQ3LCJleHAiOjE3MTYxMDc2NDd9._pUtbnDHzKbYEDxs4ui1R2KqDiU3ho5TdrhYeqM_iUc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/field-type",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"field-type"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete field-type",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/field-type/fcdbb525-304e-43d7-97e0-45620f6e55aa",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"field-type",
+										"fcdbb525-304e-43d7-97e0-45620f6e55aa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update field-type",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"PEOPLE\",\r\n        \"nameRu\": \"Людиs\",\r\n        \"comment\": \"Рабочие на проектеs\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/field-type/af6d457d-5b0b-4e89-9e20-9750e8911931",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"field-type",
+										"af6d457d-5b0b-4e89-9e20-9750e8911931"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create field-type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMjc2MTg1MDQtYjY3Mi00M2E1LWE5YmEtZThmZWMzODFhNGYyIiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJ3b3Jrc3BhY2VVdWlkIjoiYTkwNDI1Y2YtMjIwYy00MTViLTgzZTctOTdkNzYyZGI3OTExIiwiaWF0IjoxNzEzNTMzNTIyLCJleHAiOjE3MTM2MTk5MjJ9.w1JNDMbr4dj_m7u2dPRupzvka6NoV5F2YuTD1qBS3l0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавы\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/field-type",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"field-type"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete field-type",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/field-type/af6d457d-5b0b-4e89-9e20-9750e8911931",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"field-type",
+										"af6d457d-5b0b-4e89-9e20-9750e8911931"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "auth/login CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"customer@mail.ru\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/login MANAGER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"manager@mail.ru\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/login ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@mail.ru\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/register CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail42@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/register MANAGER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail21@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"secondName\": \"Ivanov\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/register/with-role/2/argon2idv19m65536t3p4LugVtjVxsTEdJGMzyDHcA3JtYMrsd4zIbBmzhxhtVXevhBWrnPHiODa99J6qJs0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"register",
+										"with-role",
+										"2",
+										"argon2idv19m65536t3p4LugVtjVxsTEdJGMzyDHcA3JtYMrsd4zIbBmzhxhtVXevhBWrnPHiODa99J6qJs0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/register ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail11@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/register/with-role/1/argon2idv19m65536t3p46TrcRBzS6lBT7Tn7W2VgBWbIF0ePBLr04SPRNW9G8qDPV212eMaIJcrbP5gJOM",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"register",
+										"with-role",
+										"1",
+										"argon2idv19m65536t3p46TrcRBzS6lBT7Tn7W2VgBWbIF0ePBLr04SPRNW9G8qDPV212eMaIJcrbP5gJOM"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/strict key get",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNThlNjI3YTUtODFkMi00MTRkLTliNDctNzE2Y2NhOGZmNjhiIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIxMjQ3LCJleHAiOjE3MTYxMDc2NDd9._pUtbnDHzKbYEDxs4ui1R2KqDiU3ho5TdrhYeqM_iUc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/strict-admin-key",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"strict-admin-key"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/strict key generate",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA2MzE1LCJleHAiOjE3MTM3OTI3MTV9.Dntv1KCQGR1Xmb5YTps7JhkNfCoDqAB-KurOQk-FPmI",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"key\": \"$2a$10$sYvgNZMyApHR1BAY7pcsme90eLaTrh9.l21cMCz/ViUmdj3Jw6xHS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/auth/strict-admin-key-generate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"auth",
+										"strict-admin-key-generate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get me",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNThlNjI3YTUtODFkMi00MTRkLTliNDctNzE2Y2NhOGZmNjhiIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIxMjQ3LCJleHAiOjE3MTYxMDc2NDd9._pUtbnDHzKbYEDxs4ui1R2KqDiU3ho5TdrhYeqM_iUc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "get users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNThlNjI3YTUtODFkMi00MTRkLTliNDctNzE2Y2NhOGZmNjhiIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIxMjQ3LCJleHAiOjE3MTYxMDc2NDd9._pUtbnDHzKbYEDxs4ui1R2KqDiU3ho5TdrhYeqM_iUc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MjAxNzAyLCJleHAiOjE3MTQyODgxMDJ9.8OrfLpbKOh2CHrpFueb3ipaJNkJv96NqN-wamHifjbk",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user/byId/8f3b96ab-9b6e-4522-a72f-d14c918df685",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"byId",
+										"8f3b96ab-9b6e-4522-a72f-d14c918df685"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user me ANY",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOTJlNDcwNTAtMWIzOC00ZTk2LTg5NmItMzEzZGI4YTZiNGJmIiwiZW1haWwiOiJtYWlsNDFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MDYwMzQsImV4cCI6MTcxMzc5MjQzNH0.BRaXe9Yz4CI9lJmxpnw5SLv994Dvy2f0GhH8PU2m5Hg",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user me ADMIN",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user CUSTOMER",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/users/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user  by email",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user/byEmail/admin@mail.ru",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"byEmail",
+										"admin@mail.ru"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update user info",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \r\n    \"phone\": \"+79990000000\",\r\n    \"firstName\": \"Ivanssssfg\",\r\n    \"secondName\": \"Ivanovsssssgfd\",\r\n    \"avatar\": \"dfdfdf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/8f3b96ab-9b6e-4522-a72f-d14c918df685",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"8f3b96ab-9b6e-4522-a72f-d14c918df685"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add user to manager workspace",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWwxMUBtYWlsLmNvbSIsImlkIjoxMCwiaWF0IjoxNzExNTQzNTMzLCJleHAiOjE3MTE2Mjk5MzN9.UwgZOPYsIqfBkikrSjYgkzf0Dt96WZq_bQQkcVAKYsI",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \r\n\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/users/addToManagerWorkspace/7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"users",
+										"addToManagerWorkspace",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete user by id",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/user/92e47050-1b38-4e96-896b-313db8a6b4bf",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"92e47050-1b38-4e96-896b-313db8a6b4bf"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDQ5NjgzLCJleHAiOjE3MTQxMzYwODN9.0MYGgLdY9tY035iS_mi3_Opoe5zN3EqFnG76qjRrBFI",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail8@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "workspaces",
+					"item": [
+						{
+							"name": "get workspaces",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNThlNjI3YTUtODFkMi00MTRkLTliNDctNzE2Y2NhOGZmNjhiIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIxMjQ3LCJleHAiOjE3MTYxMDc2NDd9._pUtbnDHzKbYEDxs4ui1R2KqDiU3ho5TdrhYeqM_iUc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete workspace",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update workspace",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNTFiYjBhNmQtMmVmZS00NGI1LWI4MzYtMmNjNTY0YzY4ZjQyIiwiZW1haWwiOiJtYWlsMjRAbWFpbC5jb20iLCJpYXQiOjE3MTM3MDc2NDAsImV4cCI6MTcxMzc5NDA0MH0.MNRTt4grynIZ_eQG07YRzmYu16TsV8i97Pcup4v_skc",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name workspacesasafdsf\",\r\n    \"description\": \"description workspacessdfsdf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c230958e-0061-45cb-9101-d03e70de39d7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c230958e-0061-45cb-9101-d03e70de39d7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change owner workspace",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA4MDU1LCJleHAiOjE3MTM3OTQ0NTV9.eSVdZ0-xfy4K9m1-debj7wMjun2baFrzi3dUmk28OKk",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"a122f9c5-86c0-495d-80e9-4397cb653f17\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/change-owner/fdc0cc7b-de7c-42e5-9b37-fd5f9df919c2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"change-owner",
+										"fdc0cc7b-de7c-42e5-9b37-fd5f9df919c2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete workspace",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA3OTI2LCJleHAiOjE3MTM3OTQzMjZ9.RhgOkt8TGODFHHhoRPV3NZARIFfYRkQ-93RDIVLVPSs",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/e89d0521-33fd-4a52-b04c-4a220aeabc3e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"e89d0521-33fd-4a52-b04c-4a220aeabc3e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create workspace",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWwyQG1haWwuY29tIiwiaWQiOjIsImlhdCI6MTcxMTU0NjAzMywiZXhwIjoxNzExNjMyNDMzfQ.NWhVL4nAW-dzEfu-NctOVx8qVNsUKfdbVFsKezr1iiw",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name workspaces\",\r\n    \"description\": \"description workspaces\",\r\n    \"workspaceCreatorId\": 197\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspaces",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspaces"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "organizations",
+					"item": [
+						{
+							"name": "get organizations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzczNzAwLCJleHAiOjE3MTM4NjAxMDB9.E6DGn_4og6K-BKpM__glma1dV77daxqC5TdwjYqPFaA",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/organization",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"organization"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete organization",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ5NjUsImV4cCI6MTcxMzg2MTM2NX0.XHeyWrcErpAJej4NBxHfHUPEi0BOL-bONKYUh4IvtLk",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete organization",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/organization/d617735a-34aa-49a0-bde0-54aa171d346d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"organization",
+										"d617735a-34aa-49a0-bde0-54aa171d346d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update organization",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description workspacessss\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/organization/d617735a-34aa-49a0-bde0-54aa171d346d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"organization",
+										"d617735a-34aa-49a0-bde0-54aa171d346d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create organization",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавыfffsasas\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/organization",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"organization"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "handbook",
+					"item": [
+						{
+							"name": "get handbook",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete handbook",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/15b54585-68ef-4226-895d-838b6a210e23",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete handbook",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/15b54585-68ef-4226-895d-838b6a210e23",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update handbook",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/15b54585-68ef-4226-895d-838b6a210e23",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create handbook",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавыfffsasas\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "projects",
+					"item": [
+						{
+							"name": "get projects",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzczODA4LCJleHAiOjE3MTM4NjAyMDh9.3s50seYP3Ns0v1db1kSdeGruD3a_m18CLbXikLwMHg0",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete project",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ0NTEsImV4cCI6MTcxMzg2MDg1MX0.K8wPA12nG420BSLV1yHnnVfhvex2LBVB2a33FcIDKk0",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project/39c1407f-fb3d-4cf7-82e1-7480e6b6b11a",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project",
+										"39c1407f-fb3d-4cf7-82e1-7480e6b6b11a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete project",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ5NjUsImV4cCI6MTcxMzg2MTM2NX0.XHeyWrcErpAJej4NBxHfHUPEi0BOL-bONKYUh4IvtLk",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update project",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ0NTEsImV4cCI6MTcxMzg2MDg1MX0.K8wPA12nG420BSLV1yHnnVfhvex2LBVB2a33FcIDKk0",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name prooojects\",\r\n    \"description\": \"description prooojects\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project/39c1407f-fb3d-4cf7-82e1-7480e6b6b11a",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project",
+										"39c1407f-fb3d-4cf7-82e1-7480e6b6b11a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create project",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ0NTEsImV4cCI6MTcxMzg2MDg1MX0.K8wPA12nG420BSLV1yHnnVfhvex2LBVB2a33FcIDKk0",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавdfdf\",\r\n    \"description\": \"dыаываываываfdfd\",\r\n    \"customerMail\": \"zakazchik@mail.ru\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "global categories",
+					"item": [
+						{
+							"name": "get global-categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNThlNjI3YTUtODFkMi00MTRkLTliNDctNzE2Y2NhOGZmNjhiIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIxMjQ3LCJleHAiOjE3MTYxMDc2NDd9._pUtbnDHzKbYEDxs4ui1R2KqDiU3ho5TdrhYeqM_iUc"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/global-category-material",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"global-category-material"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete global-category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/global-category-material/fcdbb525-304e-43d7-97e0-45620f6e55aa",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"global-category-material",
+										"fcdbb525-304e-43d7-97e0-45620f6e55aa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update global-category",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"PEOPLE\",\r\n        \"nameRu\": \"Людиs\",\r\n        \"comment\": \"Рабочие на проектеs\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/global-category-material/af6d457d-5b0b-4e89-9e20-9750e8911931",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"global-category-material",
+										"af6d457d-5b0b-4e89-9e20-9750e8911931"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create global-category",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMjc2MTg1MDQtYjY3Mi00M2E1LWE5YmEtZThmZWMzODFhNGYyIiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJ3b3Jrc3BhY2VVdWlkIjoiYTkwNDI1Y2YtMjIwYy00MTViLTgzZTctOTdkNzYyZGI3OTExIiwiaWF0IjoxNzEzNTMzNTIyLCJleHAiOjE3MTM2MTk5MjJ9.w1JNDMbr4dj_m7u2dPRupzvka6NoV5F2YuTD1qBS3l0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавы\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/global-category-material",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"global-category-material"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete global-category",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/global-category-material/af6d457d-5b0b-4e89-9e20-9750e8911931",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"global-category-material",
+										"af6d457d-5b0b-4e89-9e20-9750e8911931"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "role",
+					"item": [
+						{
+							"name": "create new role CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"CUSTOMER\",\r\n   \"description\": \"заказчик, покупатель\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/roles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update role WORKER",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDI1MzExLCJleHAiOjE3MTQxMTE3MTF9.aILXdhu5ii2rrZwe1OEZGZ5oemfnwf734SsBMvl7ZZE",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"description\": \"Новое описание ролиewrwerwrwerwrewer\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/role/3933a90a-9df5-4b55-9253-277a15cd8bfb",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"role",
+										"3933a90a-9df5-4b55-9253-277a15cd8bfb"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete role WORKER",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZjRkOGY0MDgtMDZhNi00NDc4LWFhNjctYjdiMTVkMDI1ZjdkIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1Iiwid29ya3NwYWNlVXVpZCI6Im5vdCBhIG1lbWJlciBvZiB3b3Jrc3BhY2UiLCJpYXQiOjE3MTM1MzM5NDIsImV4cCI6MTcxMzYyMDM0Mn0.RDrOvizE3Xju5eNO0xpWhPIQkVdiostrY3sbP0bsauY",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/role/0ddd1767-1e4f-4703-86bb-2df886b01ef1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"role",
+										"0ddd1767-1e4f-4703-86bb-2df886b01ef1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new role WORKER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"WORKER\",\r\n   \"description\": \"Сотрудник организации\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/roles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new role MANAGER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"MANAGER\",\r\n   \"description\": \"Менеджер проекта, руководитель организации\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/roles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new role ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"ADMIN\",\r\n   \"description\": \"Админ всего ПО (приложения)\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/roles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOWIxNzIwNzctOWE0Zi00Zjg5LThkZTAtZTcyMjE4MjlkYzZiIiwiZW1haWwiOiJjdXN0b21lckBtYWlsLnJ1IiwiaWF0IjoxNzE2MDIyNDAyLCJleHAiOjE3MTYxMDg4MDJ9.Inokd52VBk-qcAIDWPU9gtD1NSyo9D5OJsgtkL-oa8I"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/role",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete role by name",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNjg0OTg3LCJleHAiOjE3MTM3NzEzODd9.9C1exM-pyJKmKBi9JVemNwpmFocGbS6l6hwyW46QNnY",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/role/name/MANAGER",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"role",
+										"name",
+										"MANAGER"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete role by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDI1MzExLCJleHAiOjE3MTQxMTE3MTF9.aILXdhu5ii2rrZwe1OEZGZ5oemfnwf734SsBMvl7ZZE",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/role/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"role",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "app-info",
+					"item": [
+						{
+							"name": "get app-info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/app-info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"app-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update app-info",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNjg0OTg3LCJleHAiOjE3MTM3NzEzODd9.9C1exM-pyJKmKBi9JVemNwpmFocGbS6l6hwyW46QNnY",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"name\": \"Admin House - SaaS для эффективного контроля и составления сметной документации\",\r\n        \"description\": \"Настройки приложения Admin House\",\r\n        \"comment\": \"Описание приложени\",\r\n        \"status\": \"UP\",\r\n        \"language\": \"RUSSIAN\",\r\n        \"currency\": \"RUB\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/app-info",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"app-info"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "(trainy) homes",
+					"item": [
+						{
+							"name": "get homes filter",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/home?city=Moscow&minPrice=0&maxPrice=4900&propertyType=RESIDENTIAL",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"home"
+									],
+									"query": [
+										{
+											"key": "city",
+											"value": "Moscow"
+										},
+										{
+											"key": "minPrice",
+											"value": "0"
+										},
+										{
+											"key": "maxPrice",
+											"value": "4900"
+										},
+										{
+											"key": "propertyType",
+											"value": "RESIDENTIAL"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create file at home",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSXZhbiIsImlkIjoxLCJpYXQiOjE3MTA5OTc3NTEsImV4cCI6MTcxMTA4NDE1MX0.5CA7f7kMUtFJ9Dpo7Wsq2EwGil3Yfz__os7MqMkwjfU",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/johnn/Pictures/2022-08-02/001.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/home/7/files",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"home",
+										"7",
+										"files"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SWAGGER",
+					"item": [
+						{
+							"name": "get swagger docs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/docs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"docs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "production",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "auth/login CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail42@mail.com\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{prod_api_url}}/api/auth/login",
+									"host": [
+										"{{prod_api_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/login MANAGER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"manager@mail.ru\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/auth/login",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/login ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@mail.ru\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/auth/login",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/register CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail42@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/auth/register",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/register MANAGER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail21@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"secondName\": \"Ivanov\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/auth/register/with-role/2/argon2idv19m65536t3p4LugVtjVxsTEdJGMzyDHcA3JtYMrsd4zIbBmzhxhtVXevhBWrnPHiODa99J6qJs0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"auth",
+										"register",
+										"with-role",
+										"2",
+										"argon2idv19m65536t3p4LugVtjVxsTEdJGMzyDHcA3JtYMrsd4zIbBmzhxhtVXevhBWrnPHiODa99J6qJs0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/register ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail11@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/auth/register/with-role/1/argon2idv19m65536t3p46TrcRBzS6lBT7Tn7W2VgBWbIF0ePBLr04SPRNW9G8qDPV212eMaIJcrbP5gJOM",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register",
+										"with-role",
+										"1",
+										"argon2idv19m65536t3p46TrcRBzS6lBT7Tn7W2VgBWbIF0ePBLr04SPRNW9G8qDPV212eMaIJcrbP5gJOM"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/strict key get",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI2NTc4LCJleHAiOjE3MTM4MTI5Nzh9.BQBPO6ZGls1utbhjjQ-JpCsSJSYr6ik_kDiWO2Rl434"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/auth/strict-admin-key",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"auth",
+										"strict-admin-key"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth/strict key generate",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA2MzE1LCJleHAiOjE3MTM3OTI3MTV9.Dntv1KCQGR1Xmb5YTps7JhkNfCoDqAB-KurOQk-FPmI"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"key\": \"$2a$10$sYvgNZMyApHR1BAY7pcsme90eLaTrh9.l21cMCz/ViUmdj3Jw6xHS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/auth/strict-admin-key-generate",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"auth",
+										"strict-admin-key-generate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get me",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZTdjNTNjN2UtOTc5NC00YjQxLThjY2ItNTIwZGJjMWMyYTY1IiwiZW1haWwiOiJtYWlsMjdAbWFpbC5jb20iLCJpYXQiOjE3MTM3NjAwNzAsImV4cCI6MTcxMzg0NjQ3MH0.s9VcFYvO1g-VzNP0xKxlOj6ggZeYt7Laxu6IROLC7mk"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/me",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "get users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MjAxNzAyLCJleHAiOjE3MTQyODgxMDJ9.8OrfLpbKOh2CHrpFueb3ipaJNkJv96NqN-wamHifjbk"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MjAxNzAyLCJleHAiOjE3MTQyODgxMDJ9.8OrfLpbKOh2CHrpFueb3ipaJNkJv96NqN-wamHifjbk"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/byId/8f3b96ab-9b6e-4522-a72f-d14c918df685",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"byId",
+										"8f3b96ab-9b6e-4522-a72f-d14c918df685"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user me ANY",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOTJlNDcwNTAtMWIzOC00ZTk2LTg5NmItMzEzZGI4YTZiNGJmIiwiZW1haWwiOiJtYWlsNDFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MDYwMzQsImV4cCI6MTcxMzc5MjQzNH0.BRaXe9Yz4CI9lJmxpnw5SLv994Dvy2f0GhH8PU2m5Hg"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/me",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user me ADMIN",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/me",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user CUSTOMER",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/users/2",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete user  by email",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/byEmail/admin@mail.ru",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"byEmail",
+										"admin@mail.ru"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update user info",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \r\n    \"phone\": \"+79990000000\",\r\n    \"firstName\": \"Ivanssssfg\",\r\n    \"secondName\": \"Ivanovsssssgfd\",\r\n    \"avatar\": \"dfdfdf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/8f3b96ab-9b6e-4522-a72f-d14c918df685",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"8f3b96ab-9b6e-4522-a72f-d14c918df685"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add user to manager workspace",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWwxMUBtYWlsLmNvbSIsImlkIjoxMCwiaWF0IjoxNzExNTQzNTMzLCJleHAiOjE3MTE2Mjk5MzN9.UwgZOPYsIqfBkikrSjYgkzf0Dt96WZq_bQQkcVAKYsI"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \r\n\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/users/addToManagerWorkspace/7",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"users",
+										"addToManagerWorkspace",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete user by id",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA1NzkyLCJleHAiOjE3MTM3OTIxOTJ9._3q0LyxcZDlQrWPy8vMA62dMiGybJBChTztNj-iGZOs"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user/92e47050-1b38-4e96-896b-313db8a6b4bf",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user",
+										"92e47050-1b38-4e96-896b-313db8a6b4bf"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDQ5NjgzLCJleHAiOjE3MTQxMzYwODN9.0MYGgLdY9tY035iS_mi3_Opoe5zN3EqFnG76qjRrBFI"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"mail8@mail.com\",\r\n    \"phone\": \"+79200808700\",\r\n    \"firstName\": \"Ivan\",\r\n    \"password\": \"!qwertY32\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/user",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "workspaces",
+					"item": [
+						{
+							"name": "get workspaces",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzczNzAwLCJleHAiOjE3MTM4NjAxMDB9.E6DGn_4og6K-BKpM__glma1dV77daxqC5TdwjYqPFaA"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete workspace",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update workspace",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNTFiYjBhNmQtMmVmZS00NGI1LWI4MzYtMmNjNTY0YzY4ZjQyIiwiZW1haWwiOiJtYWlsMjRAbWFpbC5jb20iLCJpYXQiOjE3MTM3MDc2NDAsImV4cCI6MTcxMzc5NDA0MH0.MNRTt4grynIZ_eQG07YRzmYu16TsV8i97Pcup4v_skc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name workspacesasafdsf\",\r\n    \"description\": \"description workspacessdfsdf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/c230958e-0061-45cb-9101-d03e70de39d7",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"c230958e-0061-45cb-9101-d03e70de39d7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change owner workspace",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA4MDU1LCJleHAiOjE3MTM3OTQ0NTV9.eSVdZ0-xfy4K9m1-debj7wMjun2baFrzi3dUmk28OKk"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"a122f9c5-86c0-495d-80e9-4397cb653f17\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/change-owner/fdc0cc7b-de7c-42e5-9b37-fd5f9df919c2",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"change-owner",
+										"fdc0cc7b-de7c-42e5-9b37-fd5f9df919c2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete workspace",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzA3OTI2LCJleHAiOjE3MTM3OTQzMjZ9.RhgOkt8TGODFHHhoRPV3NZARIFfYRkQ-93RDIVLVPSs"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/e89d0521-33fd-4a52-b04c-4a220aeabc3e",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"e89d0521-33fd-4a52-b04c-4a220aeabc3e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create workspace",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWwyQG1haWwuY29tIiwiaWQiOjIsImlhdCI6MTcxMTU0NjAzMywiZXhwIjoxNzExNjMyNDMzfQ.NWhVL4nAW-dzEfu-NctOVx8qVNsUKfdbVFsKezr1iiw"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name workspaces\",\r\n    \"description\": \"description workspaces\",\r\n    \"workspaceCreatorId\": 197\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspaces",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspaces"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "organizations",
+					"item": [
+						{
+							"name": "get organizations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzczNzAwLCJleHAiOjE3MTM4NjAxMDB9.E6DGn_4og6K-BKpM__glma1dV77daxqC5TdwjYqPFaA"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/organization",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"organization"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete organization",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ5NjUsImV4cCI6MTcxMzg2MTM2NX0.XHeyWrcErpAJej4NBxHfHUPEi0BOL-bONKYUh4IvtLk"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete organization",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/organization/d617735a-34aa-49a0-bde0-54aa171d346d",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"organization",
+										"d617735a-34aa-49a0-bde0-54aa171d346d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update organization",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description workspacessss\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/organization/d617735a-34aa-49a0-bde0-54aa171d346d",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"organization",
+										"d617735a-34aa-49a0-bde0-54aa171d346d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create organization",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавыfffsasas\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/organization",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"organization"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "handbook",
+					"item": [
+						{
+							"name": "get handbook",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete handbook",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNGFlMThiNDgtMmFkOS00NzA4LTg1MjQtM2VkMzBhMDgxODc0IiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJpYXQiOjE3MTM3MjY2MzksImV4cCI6MTcxMzgxMzAzOX0.EHdTs0TIU5h1hICMs_EVmI5su0OZ_HTCCPWhMs8gnws"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook/15b54585-68ef-4226-895d-838b6a210e23",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete handbook",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzU5NDkzLCJleHAiOjE3MTM4NDU4OTN9.TuMZAuDt-7_n6xc5TqPDDuadsea5pRi6SiMuV0FMYrc"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/15b54585-68ef-4226-895d-838b6a210e23",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update handbook",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3MTA1LCJleHAiOjE3MTM4MTM1MDV9.t3OihZCb2a3aXaEKvKoTMEHBXlPtzl5uS0Ek2Zo1dcc"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description dsпы\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/c865924c-7ff7-4335-bb0a-2f3b542099aa/handbook/15b54585-68ef-4226-895d-838b6a210e23",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"c865924c-7ff7-4335-bb0a-2f3b542099aa",
+										"handbook",
+										"15b54585-68ef-4226-895d-838b6a210e23"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create handbook",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTlhMGMyZmMtZjc4Mi00YmQyLTllY2MtZGU1Y2Y5ZmE0NjcxIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzI3NjcxLCJleHAiOjE3MTM4MTQwNzF9.ZeSZ3ht-Cjw6kY7GGYSR-Xs1NpNC00qz4YY314pLi-Y"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавыfffsasas\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/43aa29fe-1dbe-4ba4-8c6f-51a033da560e/handbook",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"43aa29fe-1dbe-4ba4-8c6f-51a033da560e",
+										"handbook"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "projects",
+					"item": [
+						{
+							"name": "get projects",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzczODA4LCJleHAiOjE3MTM4NjAyMDh9.3s50seYP3Ns0v1db1kSdeGruD3a_m18CLbXikLwMHg0"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete project",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ0NTEsImV4cCI6MTcxMzg2MDg1MX0.K8wPA12nG420BSLV1yHnnVfhvex2LBVB2a33FcIDKk0"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project/39c1407f-fb3d-4cf7-82e1-7480e6b6b11a",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project",
+										"39c1407f-fb3d-4cf7-82e1-7480e6b6b11a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete project",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ5NjUsImV4cCI6MTcxMzg2MTM2NX0.XHeyWrcErpAJej4NBxHfHUPEi0BOL-bONKYUh4IvtLk"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update project",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ0NTEsImV4cCI6MTcxMzg2MDg1MX0.K8wPA12nG420BSLV1yHnnVfhvex2LBVB2a33FcIDKk0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name prooojects\",\r\n    \"description\": \"description prooojects\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project/39c1407f-fb3d-4cf7-82e1-7480e6b6b11a",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project",
+										"39c1407f-fb3d-4cf7-82e1-7480e6b6b11a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create project",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiODQ5OGM5OTctOTFiNS00ZDdlLWJhNTMtOTc0ZmQ5ZTA0ZDcyIiwiZW1haWwiOiJtYW5hZ2VyQG1haWwucnUiLCJpYXQiOjE3MTM3NzQ0NTEsImV4cCI6MTcxMzg2MDg1MX0.K8wPA12nG420BSLV1yHnnVfhvex2LBVB2a33FcIDKk0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавdfdf\",\r\n    \"description\": \"dыаываываываfdfd\",\r\n    \"customerMail\": \"zakazchik@mail.ru\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/workspace/4588c93f-dd29-4882-9088-37d404af281e/organization/e2253b74-77dd-489e-8510-ac6eaee9b162/project",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"workspace",
+										"4588c93f-dd29-4882-9088-37d404af281e",
+										"organization",
+										"e2253b74-77dd-489e-8510-ac6eaee9b162",
+										"project"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "global categories",
+					"item": [
+						{
+							"name": "get global-categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/global-category-material",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"global-category-material"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete global-category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/global-category-material/fcdbb525-304e-43d7-97e0-45620f6e55aa",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"global-category-material",
+										"fcdbb525-304e-43d7-97e0-45620f6e55aa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update global-category",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"PEOPLE\",\r\n        \"nameRu\": \"Людиs\",\r\n        \"comment\": \"Рабочие на проектеs\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/global-category-material/af6d457d-5b0b-4e89-9e20-9750e8911931",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"global-category-material",
+										"af6d457d-5b0b-4e89-9e20-9750e8911931"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create global-category",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMjc2MTg1MDQtYjY3Mi00M2E1LWE5YmEtZThmZWMzODFhNGYyIiwiZW1haWwiOiJtYWlsMjFAbWFpbC5jb20iLCJ3b3Jrc3BhY2VVdWlkIjoiYTkwNDI1Y2YtMjIwYy00MTViLTgzZTctOTdkNzYyZGI3OTExIiwiaWF0IjoxNzEzNTMzNTIyLCJleHAiOjE3MTM2MTk5MjJ9.w1JNDMbr4dj_m7u2dPRupzvka6NoV5F2YuTD1qBS3l0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fffdаывавы\",\r\n    \"description\": \"dыаываываыва\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/global-category-material",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"global-category-material"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete concrete global-category",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNzAxNDM5LCJleHAiOjE3MTM3ODc4Mzl9.yEUtemnCLIzt5bG_LaDLpMQ5NzOCwaCA7gkdu5Sw2eU"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/global-category-material/af6d457d-5b0b-4e89-9e20-9750e8911931",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"global-category-material",
+										"af6d457d-5b0b-4e89-9e20-9750e8911931"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "role",
+					"item": [
+						{
+							"name": "create new role CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"CUSTOMER\",\r\n   \"description\": \"заказчик, покупатель\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/roles",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update role WORKER",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDI1MzExLCJleHAiOjE3MTQxMTE3MTF9.aILXdhu5ii2rrZwe1OEZGZ5oemfnwf734SsBMvl7ZZE"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"description\": \"Новое описание ролиewrwerwrwerwrewer\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/role/3933a90a-9df5-4b55-9253-277a15cd8bfb",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"role",
+										"3933a90a-9df5-4b55-9253-277a15cd8bfb"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete role WORKER",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZjRkOGY0MDgtMDZhNi00NDc4LWFhNjctYjdiMTVkMDI1ZjdkIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1Iiwid29ya3NwYWNlVXVpZCI6Im5vdCBhIG1lbWJlciBvZiB3b3Jrc3BhY2UiLCJpYXQiOjE3MTM1MzM5NDIsImV4cCI6MTcxMzYyMDM0Mn0.RDrOvizE3Xju5eNO0xpWhPIQkVdiostrY3sbP0bsauY"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/role/0ddd1767-1e4f-4703-86bb-2df886b01ef1",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"role",
+										"0ddd1767-1e4f-4703-86bb-2df886b01ef1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new role WORKER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"WORKER\",\r\n   \"description\": \"Сотрудник организации\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/roles",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new role MANAGER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"MANAGER\",\r\n   \"description\": \"Менеджер проекта, руководитель организации\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/roles",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new role ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\": \"ADMIN\",\r\n   \"description\": \"Админ всего ПО (приложения)\",\r\n   \"key\": \"$2a$10$aBvLOdwaN1bu9jtqNOfECO1EOo0CNRGqIC0NJnoAgWSEkQO0sD6pG\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/roles",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDI1MzExLCJleHAiOjE3MTQxMTE3MTF9.aILXdhu5ii2rrZwe1OEZGZ5oemfnwf734SsBMvl7ZZE"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/role",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete role by name",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNjg0OTg3LCJleHAiOjE3MTM3NzEzODd9.9C1exM-pyJKmKBi9JVemNwpmFocGbS6l6hwyW46QNnY"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/role/name/MANAGER",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"role",
+										"name",
+										"MANAGER"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get concrete role by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNmRjNDU3MDktN2IyOC00NDk3LTllM2ItNTExNzE0ZTdjMDMzIiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzE0MDI1MzExLCJleHAiOjE3MTQxMTE3MTF9.aILXdhu5ii2rrZwe1OEZGZ5oemfnwf734SsBMvl7ZZE"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/role/1",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"role",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "app-info",
+					"item": [
+						{
+							"name": "get app-info",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNjg0OTg3LCJleHAiOjE3MTM3NzEzODd9.9C1exM-pyJKmKBi9JVemNwpmFocGbS6l6hwyW46QNnY"
+									}
+								],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/app-info",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"app-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update app-info",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGYzYjk2YWItOWI2ZS00NTIyLWE3MmYtZDE0YzkxOGRmNjg1IiwiZW1haWwiOiJhZG1pbkBtYWlsLnJ1IiwiaWF0IjoxNzEzNjg0OTg3LCJleHAiOjE3MTM3NzEzODd9.9C1exM-pyJKmKBi9JVemNwpmFocGbS6l6hwyW46QNnY"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"name\": \"Admin House - SaaS для эффективного контроля и составления сметной документации\",\r\n        \"description\": \"Настройки приложения Admin House\",\r\n        \"comment\": \"Описание приложени\",\r\n        \"status\": \"UP\",\r\n        \"language\": \"RUSSIAN\",\r\n        \"currency\": \"RUB\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/app-info",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"app-info"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SWAGGER",
+					"item": [
+						{
+							"name": "get swagger docs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.alibaba.hhos.ru/api/docs",
+									"protocol": "https",
+									"host": [
+										"api",
+										"alibaba",
+										"hhos",
+										"ru"
+									],
+									"path": [
+										"api",
+										"docs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "dev_api_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "prod_api_url",
+			"value": "https://api.alibaba.hhos.ru",
+			"type": "string"
+		}
+	]
+}

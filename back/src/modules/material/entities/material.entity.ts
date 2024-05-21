@@ -7,7 +7,7 @@ export class MaterialEntity implements Material {
   comment: string;
   price: number;
   handbookUuid: string;
-  categoryUuid: string;
+  categoryMaterialUuid: string;
   unitMeasurementUuid: string;
   responsiblePartnerUuid: string;
   createdAt: Date;

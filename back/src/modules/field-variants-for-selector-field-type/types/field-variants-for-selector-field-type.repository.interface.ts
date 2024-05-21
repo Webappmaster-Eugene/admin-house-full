@@ -17,6 +17,7 @@ export interface IFieldVariantsForSelectorFieldTypeRepository
   create: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldVariantsForSelectorFieldTypeEntity>;
   updateById: (
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,

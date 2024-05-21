@@ -20,15 +20,15 @@ import { GlobalCategoryMaterialModule } from './modules/global-category-material
 import { WinstonModule } from 'nest-winston/dist/winston.module';
 import { LoggerConfig } from '../logger/logger-config';
 import { CategoryMaterialModule } from './modules/category-material/category-material.module';
-import { ResponsiblePartnerProducerController } from './modules/responsible-partner-producer/responsible-partner-producer.controller';
 import { StatusResourceModule } from './modules/status-resource/status-resource.module';
 import { MaterialModule } from './modules/material/material.module';
 import { FieldVariantsForSelectorFieldTypeModule } from './modules/field-variants-for-selector-field-type/field-variants-for-selector-field-type.module';
 import { FieldUnitMeasurementModule } from './modules/field-unit-measurement/field-unit-measurement.module';
 import { FieldTypeModule } from './modules/field-type/field-type.module';
-import { FieldOfMaterialModule } from './modules/field-of-material/field-of-material.module';
+import { FieldOfCategoryMaterialModule } from './modules/field-of-category-material/field-of-category-material.module';
 import { PriceChangingModule } from './modules/price-changing/price-changing.module';
 import { ResponsiblePartnerProducerModule } from './modules/responsible-partner-producer/responsible-partner-producer.module';
+import { CharacteristicsMaterialModule } from './modules/characteristics-material/characteristics-material.module';
 
 const logger: LoggerConfig = new LoggerConfig();
 
@@ -45,6 +45,7 @@ const logger: LoggerConfig = new LoggerConfig();
       isGlobal: true,
       useFactory: async () => ({
         store: await redisStore({
+          ttl: 10, // seconds
           socket: {
             host: process.env.REDIS_HOST ? process.env.HOST : 'localhost',
             port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
@@ -70,7 +71,8 @@ const logger: LoggerConfig = new LoggerConfig();
     FieldVariantsForSelectorFieldTypeModule,
     FieldUnitMeasurementModule,
     FieldTypeModule,
-    FieldOfMaterialModule,
+    FieldOfCategoryMaterialModule,
+    CharacteristicsMaterialModule,
     ResponsiblePartnerProducerModule,
     StatusResourceModule,
   ],

@@ -32,9 +32,14 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
 
   async create(
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
-    managerId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity>> {
-    const createdFieldVariantsForSelectorFieldType = await this.fieldVariantsForSelectorFieldTypeRepository.create(dto, managerId);
+    const createdFieldVariantsForSelectorFieldType = await this.fieldVariantsForSelectorFieldTypeRepository.create(
+      dto,
+      handbookId,
+      fieldOfCategoryMaterialId,
+    );
     return new InternalResponse(createdFieldVariantsForSelectorFieldType);
   }
 
