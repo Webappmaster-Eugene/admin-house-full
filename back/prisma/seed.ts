@@ -257,7 +257,7 @@ async function main() {
     },
   });
 
-  const RESPONSIBLE_PARTNER_PRODUCER_1 = await prisma?.responsiblePartnerProducer?.create({
+  const RESPONSIBLE_PARTNER_PRODUCER_0 = await prisma?.responsiblePartnerProducer?.create({
     data: {
       name: 'ООО Лучи',
       comment: 'Наша собственная дочерняя компания - ООО Лучи',
@@ -268,7 +268,7 @@ async function main() {
     },
   });
 
-  const RESPONSIBLE_PARTNER_PRODUCER_2 = await prisma?.responsiblePartnerProducer?.create({
+  const RESPONSIBLE_PARTNER_PRODUCER_1 = await prisma?.responsiblePartnerProducer?.create({
     data: {
       name: 'ООО СВЕЗА',
       comment: 'СВЕЗА',
@@ -279,7 +279,7 @@ async function main() {
     },
   });
 
-  const RESPONSIBLE_PARTNER_PRODUCER_3 = await prisma?.responsiblePartnerProducer?.create({
+  const RESPONSIBLE_PARTNER_PRODUCER_2 = await prisma?.responsiblePartnerProducer?.create({
     data: {
       name: 'Grand Line',
       comment: 'Grand Line',
@@ -290,764 +290,989 @@ async function main() {
     },
   });
 
-  const FIELD_UNIT_MEASUREMENTS = await prisma?.fieldUnitMeasurement?.createMany({
-    data: [
-      {
-        name: 'м3',
-        comment: 'Метры кубические',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'м2',
-        comment: 'Метры квадратные',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'мм',
-        comment: 'Миллиметры',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'см',
-        comment: 'Сантиметры',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'пог. м',
-        comment: 'Погонные метры',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'м',
-        comment: 'Метры',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'кг',
-        comment: 'Килограммы',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'литр',
-        comment: 'Литры',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'бухта',
-        comment: 'Бухты',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'упаковка',
-        comment: 'Упаковки',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'шт.',
-        comment: 'Штуки',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'рулон',
-        comment: 'Рулоны',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'лист',
-        comment: 'Листы',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'месяц',
-        comment: 'Месяцы',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'чел.ч',
-        comment: 'Человеко-часы',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'чел.дн',
-        comment: 'Человеко-дни',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: '-',
-        comment: 'Отсутствует единица измерения (не важно)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-    ],
+  const FIELD_UNIT_MEASUREMENT_0 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'м3',
+      comment: 'Метры кубические',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
   });
 
-  const FIELD_TYPES = await prisma?.fieldType?.createMany({
-    data: [
-      {
-        name: 'Текст',
-        description: 'Текстовое поле',
-        jsType: 'string',
-      },
-      {
-        name: 'Число',
-        description: 'Числовое поле',
-        jsType: 'number',
-      },
-      {
-        name: 'Выпадающий список',
-        description: 'Поле - выбор из набора данных, выпадающий список',
-        jsType: 'array',
-      },
-    ],
+  const FIELD_UNIT_MEASUREMENT_1 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'м2',
+      comment: 'Метры квадратные',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
   });
 
-  const CATEGORY_MATERIALS = await prisma?.categoryMaterial?.createMany({
-    data: [
-      {
-        name: 'Листовые',
-        comment: 'Листовые материалы',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Теплоизоляция',
-        comment: 'Теплоизоляция',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Рулонные',
-        comment: 'Рулонные материалы',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Метизы',
-        comment: 'Метизы',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Фасонные элементы',
-        comment: 'Фасонные элементы',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Лес',
-        comment: 'Лес',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Другое',
-        comment: 'Другое',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Измерительные приборы',
-        comment: 'Измерительные приборы',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Шины',
-        comment: 'Шины',
-        globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
-        templateName: '',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-    ],
+  const FIELD_UNIT_MEASUREMENT_2 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'мм',
+      comment: 'Миллиметры',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
   });
 
-  const FIELD_OF_CATEGORY_MATERIALS = await prisma?.fieldOfCategoryMaterial?.createMany({
-    data: [
-      {
-        name: 'Диаметр метиза',
-        comment: 'Диаметр окружности метиза',
-        createdByUuid: MANAGER_USER.uuid,
-        defaultValue: '5',
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        //uniqueNameForTemplate: `{{#диаметр-метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
-        fieldTypeUuid: FIELD_TYPES[1].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Длина метиза',
-        comment: 'Длина метиза',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        //uniqueNameForTemplate: `{{#длина-метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
-        fieldTypeUuid: FIELD_TYPES[1].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Подтип метиза',
-        comment: 'Подтип метиза (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        //uniqueNameForTemplate: `{{#подтип-метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Подтип листового материала',
-        comment: 'Подтип листового материала (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        //uniqueNameForTemplate: `{{#подтип-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Материал изготовления листового материала',
-        comment: 'Материал изготовления листового материала (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        // uniqueNameForTemplate: `{{#материал-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Толщина листового материала',
-        comment: 'Толщина листового материала',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        //uniqueNameForTemplate: `{{#толщина-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[1].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Ширина листового материала',
-        comment: 'Ширина листового материала',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        //uniqueNameForTemplate: `{{#ширина-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[1].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Длина листового материала',
-        comment: 'Длина листового материала',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        //uniqueNameForTemplate: `{{#длина-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[1].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Сорт листового материала',
-        comment: 'Сорт листового материала (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        //uniqueNameForTemplate: `{{#сорт-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Марка листового материала',
-        comment: 'Марка листового материала (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: true,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        //uniqueNameForTemplate: `{{#марка-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'ГОСТ листового материала',
-        comment: 'ГОСТ листового материала (ТУ или без требований) (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: false,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        //uniqueNameForTemplate: `{{#гост-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-      {
-        name: 'Вид шины',
-        comment: 'Вид шины (список)',
-        createdByUuid: MANAGER_USER.uuid,
-        isRequired: false,
-        unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        //uniqueNameForTemplate: `{{#вид-шины_${CATEGORY_MATERIALS[8].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
-        categoryMaterialUuid: CATEGORY_MATERIALS[8].uuid,
-        fieldTypeUuid: FIELD_TYPES[2].uuid,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-      },
-    ],
+  const FIELD_UNIT_MEASUREMENT_3 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'см',
+      comment: 'Сантиметры',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_0 = await prisma?.fieldOfCategoryMaterial?.update({
+  const FIELD_UNIT_MEASUREMENT_4 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'пог. м',
+      comment: 'Погонные метры',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_5 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'м',
+      comment: 'Метры',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_6 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'кг',
+      comment: 'Килограммы',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_7 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'литр',
+      comment: 'Литры',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_8 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'бухта',
+      comment: 'Бухты',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_9 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'упаковка',
+      comment: 'Упаковки',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_10 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'шт.',
+      comment: 'Штуки',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_11 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'рулон',
+      comment: 'Рулоны',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_12 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'лист',
+      comment: 'Листы',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_13 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'месяц',
+      comment: 'Месяцы',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_14 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'чел.ч',
+      comment: 'Человеко-часы',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_15 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: 'чел.дн',
+      comment: 'Человеко-дни',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_UNIT_MEASUREMENT_16 = await prisma?.fieldUnitMeasurement?.create({
+    data: {
+      name: '-',
+      comment: 'Отсутствует единица измерения (не важно)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_TYPE_0 = await prisma?.fieldType?.create({
+    data: {
+      name: 'Текст',
+      description: 'Текстовое поле',
+      jsType: 'string',
+    },
+  });
+
+  const FIELD_TYPE_1 = await prisma?.fieldType?.create({
+    data: {
+      name: 'Число',
+      description: 'Числовое поле',
+      jsType: 'number',
+    },
+  });
+
+  const FIELD_TYPE_2 = await prisma?.fieldType?.create({
+    data: {
+      name: 'Выпадающий список',
+      description: 'Поле - выбор из набора данных, выпадающий список',
+      jsType: 'array',
+    },
+  });
+
+  const CATEGORY_MATERIAL_0 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Листовые',
+      comment: 'Листовые материалы',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_1 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Теплоизоляция',
+      comment: 'Теплоизоляция',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_2 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Рулонные',
+      comment: 'Рулонные материалы',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_3 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Метизы',
+      comment: 'Метизы',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_4 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Фасонные элементы',
+      comment: 'Фасонные элементы',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_5 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Лес',
+      comment: 'Лес',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_6 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Другое',
+      comment: 'Другое',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_7 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Измерительные приборы',
+      comment: 'Измерительные приборы',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_8 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Шины',
+      comment: 'Шины',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: '',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_0 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Диаметр метиза',
+      comment: 'Диаметр окружности метиза',
+      createdByUuid: MANAGER_USER.uuid,
+      defaultValue: '5',
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      fieldTypeUuid: FIELD_TYPE_1.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_1 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Длина метиза',
+      comment: 'Длина метиза',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      fieldTypeUuid: FIELD_TYPE_1.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_2 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Подтип метиза',
+      comment: 'Подтип метиза (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_3 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Подтип листового материала',
+      comment: 'Подтип листового материала (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_4 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Подтип листового материала',
+      comment: 'Подтип листового материала (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_5 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Материал изготовления листового материала',
+      comment: 'Материал изготовления листового материала (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_6 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Толщина листового материала',
+      comment: 'Толщина листового материала',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_1.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_7 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Ширина листового материала',
+      comment: 'Ширина листового материала',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_1.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_8 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Длина листового материала',
+      comment: 'Длина листового материала',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_1.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_9 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Сорт листового материала',
+      comment: 'Сорт листового материала (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_10 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Сорт листового материала',
+      comment: 'Сорт листового материала (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_11 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Марка листового материала',
+      comment: 'Марка листового материала (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_12 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'ГОСТ листового материала',
+      comment: 'ГОСТ листового материала (ТУ или без требований) (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: false,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const FIELD_OF_CATEGORY_MATERIAL_13 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Вид шины',
+      comment: 'Вид шины (список)',
+      createdByUuid: MANAGER_USER.uuid,
+      isRequired: false,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_8.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_0 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[0].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[0].name)}_${FIELD_OF_CATEGORY_MATERIALS[0].uuid}_${CATEGORY_MATERIALS[3].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_0.name)}_${FIELD_OF_CATEGORY_MATERIAL_0.uuid}_${CATEGORY_MATERIAL_3.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_1 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_1 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[1].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#$${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[1].name)}_${FIELD_OF_CATEGORY_MATERIALS[1].uuid}_${CATEGORY_MATERIALS[3].uuid}}}`,
+      uniqueNameForTemplate: `{{#$${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_1.name)}_${FIELD_OF_CATEGORY_MATERIAL_1.uuid}_${CATEGORY_MATERIAL_3.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_2 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_2 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[2].name)}_${FIELD_OF_CATEGORY_MATERIALS[2].uuid}_${CATEGORY_MATERIALS[3].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_2.name)}_${FIELD_OF_CATEGORY_MATERIAL_2.uuid}_${CATEGORY_MATERIAL_3.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_3 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_3 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[3].name)}_${CATEGORY_MATERIALS[0].uuid}_}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_3.name)}_${CATEGORY_MATERIAL_0.uuid}_}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_4 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_4 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[4].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_4.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[4].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_4.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_5 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_5 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[5].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[5].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_5.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_6 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_6 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[6].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[6].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_6.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_7 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_7 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[7].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_7.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[7].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_7.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_8 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_8 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[8].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_8.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_9 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_9 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[9].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[9].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_9.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_10 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_10 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[10].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_10.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[10].name)}_${CATEGORY_MATERIALS[0]}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_10.name)}_${CATEGORY_MATERIAL_0}}}`,
     },
   });
 
-  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_11 = await prisma?.fieldOfCategoryMaterial?.update({
+  const UPDATED_FIELD_OF_CATEGORY_MATERIAL_11 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
-      uuid: FIELD_OF_CATEGORY_MATERIALS[11].uuid,
+      uuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[11].name)}_${CATEGORY_MATERIALS[8]}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_11.name)}_${CATEGORY_MATERIAL_8}}}`,
     },
   });
 
   const CATEGORY_MATERIAL_COVER_UPDATED = await prisma?.categoryMaterial?.update({
     where: {
-      uuid: CATEGORY_MATERIALS[0].uuid,
+      uuid: CATEGORY_MATERIAL_0.uuid,
     },
     data: {
-      templateName: `${FIELD_OF_CATEGORY_MATERIALS[3].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[4].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[9].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[5].uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIALS[6].uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIALS[7].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[8].uniqueNameForTemplate}`,
+      templateName: `${FIELD_OF_CATEGORY_MATERIAL_3.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_4.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_9.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_5.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIAL_6.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIAL_7.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_8.uniqueNameForTemplate}`,
     },
   });
 
   const CATEGORY_MATERIAL_HARDWARE_UPDATED = await prisma?.categoryMaterial?.update({
     where: {
-      uuid: CATEGORY_MATERIALS[3].uuid,
+      uuid: CATEGORY_MATERIAL_3.uuid,
     },
     data: {
-      templateName: `${FIELD_OF_CATEGORY_MATERIALS[2]?.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[0]?.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIALS[1]?.uniqueNameForTemplate}`,
+      templateName: `${FIELD_OF_CATEGORY_MATERIAL_2?.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_0?.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIAL_1?.uniqueNameForTemplate}`,
     },
   });
 
-  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE = await prisma?.fieldVariantsForSelectorFieldType?.createMany({
-    data: [
-      {
-        value: 'Саморез',
-        description: 'Саморез (метизы), подтип',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
-      },
-      {
-        value: 'Шуруп',
-        description: 'Шуруп (метизы), подтип',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
-      },
-      {
-        value: 'Винт',
-        description: 'Винт (метизы), подтип',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
-      },
-      {
-        value: 'Болт сантехнический',
-        description: 'Болт сантехнический (метизы), подтип',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
-      },
-      {
-        value: 'Фанера',
-        description: 'Фанера (листовые, подтип)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
-      },
-      {
-        value: 'OSB',
-        description: 'OSB (листовые, подтип)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
-      },
-      {
-        value: 'Хвойная',
-        description: 'Хвойная (листовые, материал)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
-      },
-      {
-        value: 'Берёзовая',
-        description: 'Берёзовая (листовые, материал)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
-      },
-      {
-        value: '4/4',
-        description: '4/4 (листовые, сорт)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: '3/4',
-        description: '3/4 (листовые, сорт)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: '3/3',
-        description: '3/3 (листовые, сорт)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: '2ш/3',
-        description: '2ш/3 (листовые, сорт)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: 'ФК',
-        description: 'ФК (листовые, марка)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: 'ФСФ',
-        description: 'ФСФ (листовые, марка)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: 'ЛАК',
-        description: 'ЛАК (листовые, марка)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-      },
-      {
-        value: 'ГОСТ',
-        description: 'ГОСТ (листовые, ГОСТ)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[10].uuid,
-      },
-      {
-        value: 'ТУ',
-        description: 'ТУ (листовые, ГОСТ)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[10].uuid,
-      },
-      {
-        value: 'Зимняя',
-        description: 'Зимняя (шины, вид)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[11].uuid,
-      },
-      {
-        value: 'Летняя',
-        description: 'Летняя (шины, вид)',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[11].uuid,
-      },
-    ],
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_0 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Саморез',
+      description: 'Саморез (метизы), подтип',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+    },
   });
 
-  const MATERIALS = await prisma?.material?.createMany({
-    data: [
-      {
-        name: 'Саморез 6×70 (черновик)',
-        comment: 'Это те винты, которыми мы крепим доски обвязки к фундаменту',
-        price: 4.13,
-        namePublic: 'Глухарь',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
-        unitMeasurementUuid: FIELD_UNIT_MEASUREMENTS[10].uuid,
-        responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_1.uuid,
-      },
-      {
-        name: 'Фанера Берёзовая ФСФ 18×1220×2440 4/4 (черновик)',
-        comment: 'Это ...',
-        price: 1770,
-        namePublic: 'Фанера стандартная',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
-        unitMeasurementUuid: FIELD_UNIT_MEASUREMENTS[12].uuid,
-        responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
-      },
-      {
-        name: 'Болт сантехнический 10×70 (черновик)',
-        comment: 'Это ...',
-        price: 0.83,
-        namePublic: 'Болт обычный',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
-        unitMeasurementUuid: FIELD_UNIT_MEASUREMENTS[10].uuid,
-        responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_2.uuid,
-      },
-    ],
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_1 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Шуруп',
+      description: 'Шуруп (метизы), подтип',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_2 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Винт',
+      description: 'Винт (метизы), подтип',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_3 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Болт сантехнический',
+      description: 'Болт сантехнический (метизы), подтип',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Фанера',
+      description: 'Фанера (листовые, подтип)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_5 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'OSB',
+      description: 'OSB (листовые, подтип)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_6 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Хвойная',
+      description: 'Хвойная (листовые, материал)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Берёзовая',
+      description: 'Берёзовая (листовые, материал)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_8 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: '4/4',
+      description: '4/4 (листовые, сорт)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_9 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: '3/4',
+      description: '3/4 (листовые, сорт)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_10 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: '3/3',
+      description: '3/3 (листовые, сорт)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_11 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: '2ш/3',
+      description: '2ш/3 (листовые, сорт)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_12 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'ФК',
+      description: 'ФК (листовые, марка)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'ФСФ',
+      description: 'ФСФ (листовые, марка)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_14 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'ЛАК',
+      description: 'ЛАК (листовые, марка)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_15 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'ГОСТ',
+      description: 'ГОСТ (листовые, ГОСТ)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_10.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_16 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'ТУ',
+      description: 'ТУ (листовые, ГОСТ)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_10.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_17 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Зимняя',
+      description: 'Зимняя (шины, вид)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
+    },
+  });
+
+  const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_18 = await prisma?.fieldVariantsForSelectorFieldType?.create({
+    data: {
+      value: 'Летняя',
+      description: 'Летняя (шины, вид)',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
+    },
+  });
+
+  const MATERIAL_0 = await prisma?.material?.create({
+    data: {
+      name: 'Саморез 6×70 (черновик)',
+      comment: 'Это те винты, которыми мы крепим доски обвязки к фундаменту',
+      price: 4.13,
+      namePublic: 'Глухарь',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_1.uuid,
+    },
+  });
+
+  const MATERIAL_1 = await prisma?.material?.create({
+    data: {
+      name: 'Фанера Берёзовая ФСФ 18×1220×2440 4/4 (черновик)',
+      comment: 'Это ...',
+      price: 1770,
+      namePublic: 'Фанера стандартная',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_12.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_2.uuid,
+    },
+  });
+
+  const MATERIAL_2 = await prisma?.material?.create({
+    data: {
+      name: 'Болт сантехнический 10×70 (черновик)',
+      comment: 'Это ...',
+      price: 0.83,
+      namePublic: 'Болт обычный',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_0.uuid,
+    },
   });
 
   // FIXME при создании материала нужно проверять - а заполнил ли пользователь все обязательные поля
   // для конкретной категории, к которой принадлежит материал. То есть отношение каткгория материала - поля материала
   // и характеристики материала - поле категории материала
 
-  const CHARACTERISTICS_MATERIAL_OF_GLUHAR = await prisma?.characteristicsMaterial?.createMany({
-    data: [
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[0].name,
-        materialUuid: MATERIALS[0].uuid,
-        value: '6',
-        comment: 'там нестабильный диаметр, надо проверять',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[0].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[0].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[0].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[1].name,
-        materialUuid: MATERIALS[0].uuid,
-        value: '30',
-        comment: 'no comments',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[1].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[1].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[1].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[1].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[2].name,
-        materialUuid: MATERIALS[0].uuid,
-        value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE[0].value,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[2].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[2].unitOfMeasurementUuid,
-      },
-    ],
+  const CHARACTERISTICS_MATERIAL_OF_GLUHAR_0 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_0.name,
+      materialUuid: MATERIAL_0.uuid,
+      value: '6',
+      comment: 'там нестабильный диаметр, надо проверять',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_0.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_0.unitOfMeasurementUuid,
+    },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_BOLT = await prisma?.characteristicsMaterial?.createMany({
-    data: [
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[0].name,
-        materialUuid: MATERIALS[2].uuid,
-        value: '10',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[0].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[0].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[0].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[0].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[1].name,
-        materialUuid: MATERIALS[2].uuid,
-        value: '70',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[1].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[1].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[1].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[1].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[2].name,
-        materialUuid: MATERIALS[2].uuid,
-        value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE[3].value,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[2].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[2].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[2].unitOfMeasurementUuid,
-      },
-    ],
+  const CHARACTERISTICS_MATERIAL_OF_GLUHAR_1 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_1.name,
+      materialUuid: MATERIAL_0.uuid,
+      value: '30',
+      comment: 'no comments',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
+    },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_FANERA = await prisma?.characteristicsMaterial?.createMany({
-    data: [
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[3].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE[4].value,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[3].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[3].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[3].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[4].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE[7].value,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[1].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[1].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[1].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[1].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[5].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: '18',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[5].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[5].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[5].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[5].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[6].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: '1220',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[6].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[6].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[6].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[6].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[7].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: '2440',
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[7].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[7].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[7].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[7].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[8].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE[8].value,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[8].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[8].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[8].unitOfMeasurementUuid,
-      },
-      {
-        name: FIELD_OF_CATEGORY_MATERIALS[9].name,
-        materialUuid: MATERIALS[1].uuid,
-        value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE[13].value,
-        handbookUuid: MANAGER_HANDBOOK.uuid,
-        fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[9].uuid,
-        fieldTypeUuid: FIELD_OF_CATEGORY_MATERIALS[9].fieldTypeUuid,
-        categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIALS[9].categoryMaterialUuid,
-        addedByUserUuid: MANAGER_USER.uuid,
-        fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIALS[9].unitOfMeasurementUuid,
-      },
-    ],
+  const CHARACTERISTICS_MATERIAL_OF_GLUHAR_2 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_2.name,
+      materialUuid: MATERIAL_0.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_0.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_2.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_2.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_BOLT_0 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_0.name,
+      materialUuid: MATERIAL_2.uuid,
+      value: '10',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_0.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_0.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_BOLT_1 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_1.name,
+      materialUuid: MATERIAL_2.uuid,
+      value: '70',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_BOLT_2 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_2.name,
+      materialUuid: MATERIAL_2.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_3.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_2.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_2.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_0 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_3.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_1 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_3.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_2 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_4.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_3 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_5.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: '18',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_5.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_5.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_4 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_6.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: '1220',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_6.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_6.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_5 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_7.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: '2440',
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_7.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_7.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_6 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_8.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_8.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_8.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_8.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_7 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_9.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_8 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      name: FIELD_OF_CATEGORY_MATERIAL_9.name,
+      materialUuid: MATERIAL_1.uuid,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13.value,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
+      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
+      addedByUserUuid: MANAGER_USER.uuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
+    },
   });
 
   async function templateNameMapper(
@@ -1069,7 +1294,7 @@ async function main() {
       handbookUuid: string;
       price: number;
       unitMeasurementUuid: string;
-      categoryUuid: string;
+      categoryMaterialUuid: string;
       responsiblePartnerUuid: string;
       createdAt: Date;
       updatedAt: Date;
@@ -1088,7 +1313,8 @@ async function main() {
     });
 
     const mapAllCharacteristicsOfConcreteMaterial = allCharacteristicsOfConcreteMaterial.reduce((acc, curValue) => {
-      return (acc[curValue.fieldOfCategoryMaterialUuid] = curValue.value);
+      acc[curValue.fieldOfCategoryMaterialUuid] = curValue.value;
+      return acc;
     }, {});
 
     const allFieldsOfMaterialUuids = allFieldsOfConcreteMaterial.map(elem => {
@@ -1111,11 +1337,11 @@ async function main() {
   }
 
   //FIXME - проверить внимательно работу этой функции
-  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED[1], MATERIALS[0]);
+  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED, MATERIAL_0);
 
   const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
     where: {
-      uuid: MATERIALS[0].uuid,
+      uuid: MATERIAL_0.uuid,
     },
     data: {
       name: newNameGluhar,

@@ -37,7 +37,7 @@ const logger: LoggerConfig = new LoggerConfig();
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
-      validate: config => validateConfig(config),
+      // validate: config => validateConfig(config),
     }),
     DatabaseModule,
     WinstonModule.forRoot(logger.configureLogger()),

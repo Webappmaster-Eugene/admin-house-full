@@ -6,6 +6,7 @@ export const configSchema = z.object({
     .default('3000')
     .transform(port => parseInt(port, 10)),
   API_PREFIX: z.string().default('api'),
+  API_VERSION: z.string().default('1.0'),
 
   JWT_KEY: z.string(),
   DATABASE_URL: z.string(),
