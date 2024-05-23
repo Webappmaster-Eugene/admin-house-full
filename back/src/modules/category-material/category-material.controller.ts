@@ -96,6 +96,36 @@ export class CategoryMaterialController implements ICategoryMaterialController {
     }
   }
 
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(CategoryMaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все CategoryMaterial в Handbook',
+  })
+  @ApiResponse({ status: 200, type: [CategoryMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(CategoryMaterialGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<CategoryMaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.categoryMaterialService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
+    }
+  }
+
   @ApiBody({
     schema: zodToOpenAPI(CategoryMaterialCreateCommand.RequestSchema),
   })

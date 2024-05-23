@@ -79,7 +79,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все FieldUnitMeasurement в Workspace',
+    summary: 'Получить все FieldUnitMeasurement',
   })
   @ApiResponse({ status: 200, type: [FieldUnitMeasurementGetAllResponseDto] })
   @ApiBearerAuth('access-token')
@@ -94,6 +94,36 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ): Promise<FieldUnitMeasurementGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.getAll(queryParams);
+      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все FieldUnitMeasurement в Workspace',
+  })
+  @ApiResponse({ status: 200, type: [FieldUnitMeasurementGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard)
+  @ZodSerializerDto(FieldUnitMeasurementGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<FieldUnitMeasurementGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.fieldUnitMeasurementService.getAllInHandbook(handbookId, queryParams);
       return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);

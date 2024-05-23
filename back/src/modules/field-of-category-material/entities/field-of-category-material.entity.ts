@@ -4,7 +4,7 @@ export class FieldOfCategoryMaterialEntity implements FieldOfCategoryMaterial {
   uuid: string;
   name: string;
   comment: string;
-  unique_name_for_template: string;
+  uniqueNameForTemplate: string;
   categoryMaterialUuid: string;
   fieldTypeUuid: string;
   isRequired: boolean;

@@ -3,6 +3,7 @@ import { Material } from '.prisma/client';
 export class MaterialEntity implements Material {
   uuid: string;
   name: string;
+  sourceInfo: string;
   namePublic: string;
   comment: string;
   price: number;

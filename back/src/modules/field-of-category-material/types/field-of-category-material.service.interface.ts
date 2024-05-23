@@ -12,6 +12,14 @@ export interface IFieldOfCategoryMaterialService
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>>;
   create: (
     dto: FieldOfCategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

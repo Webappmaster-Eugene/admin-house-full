@@ -8,6 +8,11 @@ export interface IFieldUnitMeasurementRepository
   extends IRepositoryCommon<FieldUnitMeasurementCreateRequestDto, FieldUnitMeasurementUpdateRequestDto, FieldUnitMeasurementEntity> {
   getById: (fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldUnitMeasurementEntity>;
   getAll: (skip?: number, take?: number) => Promise<FieldUnitMeasurementEntity[]>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<FieldUnitMeasurementEntity[]>;
   create: (
     dto: FieldUnitMeasurementCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

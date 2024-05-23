@@ -108,6 +108,75 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все FieldVariantsForSelectorFieldType внутри Handbook',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [FieldVariantsForSelectorFieldTypeGetAllResponseDto],
+  })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все FieldVariantsForSelectorFieldType внутри fieldOfCategoryMaterialId',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [FieldVariantsForSelectorFieldTypeGetAllResponseDto],
+  })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetAllResponseDto)
+  @Get()
+  async getAllInFieldOfCategoryMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getAllInFieldOfCategoryMaterial(
+        fieldOfCategoryMaterialId,
+        queryParams,
+      );
+      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
+    }
+  }
+
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeCreateCommand.RequestSchema),
   })

@@ -21,6 +21,21 @@ export interface IPriceChangingController
   > {
   getByIdEP: (priceChangingId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<PriceChangingGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<PriceChangingGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<PriceChangingGetAllResponseDto>;
+  getAllInCategoryMaterialEP: (
+    urlParams: IUrlParams,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<PriceChangingGetAllResponseDto>;
+  getAllInMaterialEP: (
+    urlParams: IUrlParams,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<PriceChangingGetAllResponseDto>;
   createEP: (
     dto: PriceChangingCreateRequestDto,
     urlParams: IUrlParams,

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ProjectCreateRequestDto } from './dto/controller/create-project.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IProjectRepository } from './types/project.repository.interface';
@@ -6,15 +6,10 @@ import { ProjectUpdateRequestDto } from './dto/controller/update-project.dto';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { ProjectEntity } from './entities/project.entity';
-import { toEntityArray } from '../../common/utils/mappers';
 import { KFI } from '../../common/utils/di';
 import { DEFAULT_PROJECT_DESCRIPTION, DEFAULT_PROJECT_NAME } from './lib/consts/project.default-data';
-import { InternalResponse } from '../../common/types/responses/universal-internal-response.interface';
-import { BackendErrorNames, BackendPErrorCodes, InternalError } from '../../common/errors/errors.backend';
-import { PrismaClientKnownRequestError } from '.prisma/client/runtime/library';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
-import { ResponsiblePartnerProducerEntity } from '../responsible-partner-producer/entities/responsible-partner-producer.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
@@ -46,6 +41,50 @@ export class ProjectsRepository implements IProjectRepository {
     try {
       const allProjects = await this.databaseService.project.findMany({ take, skip });
       return existenceEntityHandler(allProjects, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInWorkspace(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<ProjectEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allProjectsInWorkspace = await this.databaseService.project.findMany({
+        where: {
+          organization: {
+            workspaceUuid: workspaceId,
+          },
+        },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(allProjectsInWorkspace, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInOrganization(
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<ProjectEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allProjectsInOrganization = await this.databaseService.project.findMany({
+        where: {
+          organizationUuid: organizationId,
+        },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(allProjectsInOrganization, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }

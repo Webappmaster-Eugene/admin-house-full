@@ -34,7 +34,7 @@ export const FieldVariantsForSelectorFieldTypeScalarFieldEnumSchema = z.enum(['u
 
 export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','handbookUuid','createdAt','updatedAt']);
 
-export const FieldOfCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','unique_name_for_template','comment','isRequired','defaultValue','categoryMaterialUuid','createdByUuid','unitOfMeasurementUuid','fieldTypeUuid','handbookUuid','createdAt','updatedAt']);
+export const FieldOfCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','uniqueNameForTemplate','comment','isRequired','defaultValue','categoryMaterialUuid','createdByUuid','unitOfMeasurementUuid','fieldTypeUuid','handbookUuid','createdAt','updatedAt']);
 
 export const CharacteristicsMaterialScalarFieldEnumSchema = z.enum(['uuid','name','value','comment','fieldOfCategoryMaterialUuid','addedByUserUuid','handbookUuid','fieldTypeUuid','fieldUnitMeasurementUuid','categoryMaterialUuid','materialUuid','createdAt','updatedAt']);
 
@@ -44,7 +44,7 @@ export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comm
 
 export const ResponsiblePartnerProducerScalarFieldEnumSchema = z.enum(['uuid','name','comment','info','email','phone','handbookUuid','createdAt','updatedAt']);
 
-export const MaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','namePublic','price','handbookUuid','unitMeasurementUuid','categoryMaterialUuid','responsiblePartnerUuid','createdAt','updatedAt']);
+export const MaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','sourceInfo','namePublic','price','handbookUuid','unitMeasurementUuid','categoryMaterialUuid','responsiblePartnerUuid','createdAt','updatedAt']);
 
 export const PriceChangingScalarFieldEnumSchema = z.enum(['uuid','newPrice','source','comment','materialUuid','changedByUuid','createdAt','updatedAt']);
 
@@ -274,7 +274,7 @@ export type FieldUnitMeasurement = z.infer<typeof FieldUnitMeasurementSchema>
 export const FieldOfCategoryMaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
-  unique_name_for_template: z.string(),
+  uniqueNameForTemplate: z.string().nullable(),
   comment: z.string().nullable(),
   isRequired: z.boolean().nullable(),
   defaultValue: z.string().nullable(),
@@ -370,6 +370,7 @@ export const MaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
   comment: z.string().nullable(),
+  sourceInfo: z.string().nullable(),
   namePublic: z.string().nullable(),
   price: z.number(),
   handbookUuid: z.string(),

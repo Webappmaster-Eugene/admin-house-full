@@ -27,6 +27,33 @@ export class PriceChangingService implements IPriceChangingService {
     return new InternalResponse(allPriceChangings);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
+    const { skip, take } = queryParams;
+    const allPriceChangings = await this.priceChangingRepository.getAllInHandbook(handbookId, skip, take);
+    return new InternalResponse(allPriceChangings);
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
+    const { skip, take } = queryParams;
+    const allPriceChangings = await this.priceChangingRepository.getAllInCategoryMaterial(categoryMaterialId, skip, take);
+    return new InternalResponse(allPriceChangings);
+  }
+
+  async getAllInMaterial(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
+    const { skip, take } = queryParams;
+    const allPriceChangings = await this.priceChangingRepository.getAllInMaterial(materialId, skip, take);
+    return new InternalResponse(allPriceChangings);
+  }
+
   async create(
     dto: PriceChangingCreateRequestDto,
     changedById: EntityUrlParamCommand.RequestUuidParam,

@@ -7,6 +7,7 @@ exports.MaterialSchema = zod_1.z.object({
     name: zod_1.z.string(),
     comment: zod_1.z.string().nullable().optional(),
     namePublic: zod_1.z.string().nullable().optional(),
+    sourceInfo: zod_1.z.string().nullable().optional(),
     handbookUuid: zod_1.z.string().uuid(),
     price: zod_1.z.number(),
     unitMeasurementUuid: zod_1.z.string().uuid(),

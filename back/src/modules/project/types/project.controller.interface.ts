@@ -21,6 +21,16 @@ export interface IProjectController
   > {
   getByIdEP: (projectId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<ProjectGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<ProjectGetAllResponseDto>;
+  getAllInWorkspaceEP: (
+    urlParams: IUrlParams,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<ProjectGetAllResponseDto>;
+  getAllInOrganizationEP: (
+    urlParams: IUrlParams,
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<ProjectGetAllResponseDto>;
   createEP: (
     dto: ProjectCreateRequestDto,
     urlParams: IUrlParams,

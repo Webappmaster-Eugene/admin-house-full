@@ -29,6 +29,15 @@ export class ResponsiblePartnerProducerService implements IResponsiblePartnerPro
     return new InternalResponse(allResponsiblePartnerProducers);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity[]>> {
+    const { skip, take } = queryParams;
+    const allResponsiblePartnerProducers = await this.responsiblePartnerProducerRepository.getAllInHandbook(handbookId, skip, take);
+    return new InternalResponse(allResponsiblePartnerProducers);
+  }
+
   async create(
     dto: ResponsiblePartnerProducerCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

@@ -10,6 +10,10 @@ export interface ICategoryMaterialService
   extends IServiceCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {
   getById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
   create: (
     dto: CategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

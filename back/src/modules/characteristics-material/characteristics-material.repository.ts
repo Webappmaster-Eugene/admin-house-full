@@ -35,11 +35,81 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
       errorRepositoryHandler(error);
     }
   }
+
   async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<CharacteristicsMaterialEntity[]> {
     limitTakeHandler(take);
 
     try {
       const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({ take, skip });
+      return existenceEntityHandler(
+        allCharacteristicsMaterials,
+        CharacteristicsMaterialEntity,
+        EntityName.CHARACTERISTICS_MATERIAL,
+      ) as CharacteristicsMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<CharacteristicsMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({
+        where: { handbookUuid: handbookId },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(
+        allCharacteristicsMaterials,
+        CharacteristicsMaterialEntity,
+        EntityName.CHARACTERISTICS_MATERIAL,
+      ) as CharacteristicsMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<CharacteristicsMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({
+        where: { categoryMaterialUuid: categoryMaterialId },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(
+        allCharacteristicsMaterials,
+        CharacteristicsMaterialEntity,
+        EntityName.CHARACTERISTICS_MATERIAL,
+      ) as CharacteristicsMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInMaterial(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<CharacteristicsMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({
+        where: { materialUuid: materialId },
+        take,
+        skip,
+      });
       return existenceEntityHandler(
         allCharacteristicsMaterials,
         CharacteristicsMaterialEntity,

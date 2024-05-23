@@ -11,7 +11,6 @@ import { FieldVariantsForSelectorFieldTypeGetResponseDto } from '../dto/controll
 import { FieldVariantsForSelectorFieldTypeGetAllResponseDto } from '../dto/controller/get-all-field-variants-for-selector-field-type.dto';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { FieldVariantsForSelectorFieldTypeDeleteResponseDto } from '../dto/controller/delete-field-variants-for-selector-field-type.dto';
-import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
@@ -30,6 +29,16 @@ export interface IFieldVariantsForSelectorFieldTypeController
     urlParams: IUrlParams,
   ) => Promise<FieldVariantsForSelectorFieldTypeGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto>;
+  getAllInFieldOfCategoryMaterialEP: (
+    urlParams: IUrlParams,
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto>;
   createEP: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     urlParams: IUrlParams,

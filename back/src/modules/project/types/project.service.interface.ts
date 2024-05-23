@@ -10,6 +10,14 @@ import { IQueryParams } from '../../../common/decorators/query-params.decorator'
 export interface IProjectService extends IServiceCommon<ProjectCreateRequestDto, ProjectUpdateRequestDto, ProjectEntity> {
   getById: (projectId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<ProjectEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<ProjectEntity[]>>;
+  getAllInWorkspace: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<ProjectEntity[]>>;
+  getAllInOrganization: (
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<ProjectEntity[]>>;
   create: (
     dto: ProjectCreateRequestDto,
     userInfo: IJWTPayload,

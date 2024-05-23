@@ -14,6 +14,16 @@ export interface IFieldVariantsForSelectorFieldTypeRepository
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldVariantsForSelectorFieldTypeEntity>;
   getAll: (skip?: number, take?: number) => Promise<FieldVariantsForSelectorFieldTypeEntity[]>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<FieldVariantsForSelectorFieldTypeEntity[]>;
+  getAllInFieldOfCategoryMaterial: (
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<FieldVariantsForSelectorFieldTypeEntity[]>;
   create: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

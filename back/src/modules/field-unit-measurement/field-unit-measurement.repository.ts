@@ -52,6 +52,29 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
     }
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<FieldUnitMeasurementEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allFieldUnitMeasurements = await this.databaseService.fieldUnitMeasurement.findMany({
+        where: { handbookUuid: handbookId },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(
+        allFieldUnitMeasurements,
+        FieldUnitMeasurementEntity,
+        EntityName.FIELD_UNIT_MEASUREMENT,
+      ) as FieldUnitMeasurementEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async create(
     dto: FieldUnitMeasurementCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

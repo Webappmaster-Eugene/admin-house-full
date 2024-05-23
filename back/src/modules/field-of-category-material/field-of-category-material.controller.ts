@@ -101,6 +101,66 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все FieldOfCategoryMaterial внутри Handbook',
+  })
+  @ApiResponse({ status: 200, type: [FieldOfCategoryMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<FieldOfCategoryMaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.fieldOfCategoryMaterialService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все FieldOfCategoryMaterial внутри FieldOfCategoryMaterial',
+  })
+  @ApiResponse({ status: 200, type: [FieldOfCategoryMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
+  @Get()
+  async getAllInCategoryMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('сategoryMaterialId', ParseUUIDPipe)
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<FieldOfCategoryMaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
+      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(FieldOfCategoryMaterialCreateCommand.RequestSchema),
   })

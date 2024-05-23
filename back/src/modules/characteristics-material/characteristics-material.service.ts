@@ -29,6 +29,37 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
     return new InternalResponse(allCharacteristicsMaterials);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAllInHandbook(handbookId, skip, take);
+    return new InternalResponse(allCharacteristicsMaterials);
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAllInCategoryMaterial(
+      categoryMaterialId,
+      skip,
+      take,
+    );
+    return new InternalResponse(allCharacteristicsMaterials);
+  }
+
+  async getAllInMaterial(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAllInMaterial(materialId, skip, take);
+    return new InternalResponse(allCharacteristicsMaterials);
+  }
+
   async create(
     dto: CharacteristicsMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

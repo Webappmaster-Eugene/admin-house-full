@@ -27,6 +27,15 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     return new InternalResponse(allCategoryMaterials);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allCategoryMaterials = await this.categoryMaterialRepository.getAllInHandbook(handbookId, skip, take);
+    return new InternalResponse(allCategoryMaterials);
+  }
+
   async create(
     dto: CategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

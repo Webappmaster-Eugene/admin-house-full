@@ -29,6 +29,11 @@ export interface IResponsiblePartnerProducerController
     urlParams: IUrlParams,
   ) => Promise<ResponsiblePartnerProducerGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<ResponsiblePartnerProducerGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<ResponsiblePartnerProducerGetAllResponseDto>;
   createEP: (
     dto: ResponsiblePartnerProducerCreateRequestDto,
     urlParams: IUrlParams,

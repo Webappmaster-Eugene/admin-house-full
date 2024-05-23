@@ -89,6 +89,60 @@ export class ProjectController {
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Получить все Projects внутри рабочего пространства' })
+  @ApiResponse({ status: 200, type: [ProjectEntity] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(ProjectGetAllResponseDto)
+  @Get()
+  async getAllInWorkspaceEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('workspaceId') workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<ProjectGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.projectService.getAllInWorkspace(workspaceId, queryParams);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Получить все Projects внутри организации' })
+  @ApiResponse({ status: 200, type: [ProjectEntity] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(ProjectGetAllResponseDto)
+  @Get()
+  async getAllInOrganizationEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('organizationId') organizationId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<ProjectGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.projectService.getAllInOrganization(organizationId, queryParams);
+      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
+    }
+  }
+
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(ProjectCreateCommand.RequestSchema),
   })

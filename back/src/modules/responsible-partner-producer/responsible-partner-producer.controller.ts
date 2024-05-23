@@ -103,6 +103,39 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все ResponsiblePartnerProducer',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [ResponsiblePartnerProducerGetAllResponseDto],
+  })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
+  @ZodSerializerDto(ResponsiblePartnerProducerGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<ResponsiblePartnerProducerGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.responsiblePartnerProducerService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
+    }
+  }
+
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(ResponsiblePartnerProducerCreateCommand.RequestSchema),
   })

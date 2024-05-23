@@ -51,6 +51,30 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
       errorRepositoryHandler(error);
     }
   }
+
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<ResponsiblePartnerProducerEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allResponsiblePartnerProducers = await this.databaseService.responsiblePartnerProducer.findMany({
+        where: { handbookUuid: handbookId },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(
+        allResponsiblePartnerProducers,
+        ResponsiblePartnerProducerEntity,
+        EntityName.RESPONSIBLE_PARTNER_PRODUCER,
+      ) as ResponsiblePartnerProducerEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async create(
     dto: ResponsiblePartnerProducerCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

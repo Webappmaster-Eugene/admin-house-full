@@ -12,6 +12,11 @@ export interface IResponsiblePartnerProducerRepository
   > {
   getById: (responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam) => Promise<ResponsiblePartnerProducerEntity>;
   getAll: (skip?: number, take?: number) => Promise<ResponsiblePartnerProducerEntity[]>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<ResponsiblePartnerProducerEntity[]>;
   create: (
     dto: ResponsiblePartnerProducerCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

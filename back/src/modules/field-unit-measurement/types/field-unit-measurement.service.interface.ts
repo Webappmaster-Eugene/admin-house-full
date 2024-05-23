@@ -12,6 +12,10 @@ export interface IFieldUnitMeasurementService
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>>;
   create: (
     dto: FieldUnitMeasurementCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

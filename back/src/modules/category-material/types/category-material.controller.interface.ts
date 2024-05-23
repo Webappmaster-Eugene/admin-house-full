@@ -21,6 +21,11 @@ export interface ICategoryMaterialController
   > {
   getByIdEP: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<CategoryMaterialGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<CategoryMaterialGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<CategoryMaterialGetAllResponseDto>;
   createEP: (
     dto: CategoryMaterialCreateRequestDto,
     urlParams: IUrlParams,

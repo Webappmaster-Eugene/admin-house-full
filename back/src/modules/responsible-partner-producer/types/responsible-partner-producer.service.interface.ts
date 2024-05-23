@@ -16,6 +16,10 @@ export interface IResponsiblePartnerProducerService
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity[]>>;
   create: (
     dto: ResponsiblePartnerProducerCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

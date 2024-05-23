@@ -29,6 +29,11 @@ export interface IFieldUnitMeasurementController
     urlParams: IUrlParams,
   ) => Promise<FieldUnitMeasurementGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<FieldUnitMeasurementGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<FieldUnitMeasurementGetAllResponseDto>;
   createEP: (
     dto: FieldUnitMeasurementCreateRequestDto,
     urlParams: IUrlParams,

@@ -93,6 +93,64 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все Materials внутри Material',
+  })
+  @ApiResponse({ status: 200, type: [MaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(MaterialGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<MaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.materialService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все Materials внутри CategoryMaterial',
+  })
+  @ApiResponse({ status: 200, type: [MaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(MaterialGetAllResponseDto)
+  @Get()
+  async getAllInCategoryMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<MaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.materialService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
+      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(MaterialCreateCommand.RequestSchema),
   })
@@ -142,9 +200,10 @@ export class MaterialController implements IMaterialController {
     materialId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: MaterialUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,
+    @User() userInfoFromJWT: IJWTPayload,
   ): Promise<MaterialUpdateResponseDto> {
     try {
-      const { ok, data } = await this.materialService.updateById(materialId, dto);
+      const { ok, data } = await this.materialService.updateById(materialId, dto, userInfoFromJWT.uuid);
       return okResponseHandler(ok, data, MaterialEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);

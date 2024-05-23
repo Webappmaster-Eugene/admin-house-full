@@ -30,6 +30,32 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
+    const { skip, take } = queryParams;
+    const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAllInHandbook(
+      handbookId,
+      skip,
+      take,
+    );
+    return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
+  }
+
+  async getAllInFieldOfCategoryMaterial(
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
+    const { skip, take } = queryParams;
+    const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAllInFieldOfCategoryMaterial(
+      fieldOfCategoryMaterialId,
+      skip,
+      take,
+    );
+    return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
+  }
+
   async create(
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

@@ -36,6 +36,15 @@ export class OrganizationService implements IOrganizationService {
     return new InternalResponse(allOrganizations);
   }
 
+  async getAllInWorkspace(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<OrganizationEntity[]>> {
+    const { skip, take } = queryParams;
+    const allOrganizationsInWorkspace = await this.organizationRepository.getAllInWorkspace(workspaceId, skip, take);
+    return new InternalResponse(allOrganizationsInWorkspace);
+  }
+
   async create(
     dto: OrganizationCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,

@@ -4,13 +4,17 @@ import { IRepositoryCommon } from '../../../common/types/main/slices/repository.
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
 import { OrganizationEntity } from '../entities/organization.entity';
+import { IUrlParams } from '../../../common/decorators/url-params.decorator';
+import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { OrganizationGetAllResponseDto } from '../dto/controller/get-all-organizations.dto';
 
 export interface IOrganizationRepository
   extends IRepositoryCommon<OrganizationCreateRequestDto, OrganizationUpdateRequestDto, OrganizationEntity> {
   getById: (organizationId: EntityUrlParamCommand.RequestUuidParam) => Promise<OrganizationEntity>;
   getByManagerId: (managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<OrganizationEntity>;
   getAllCount: () => Promise<CountData>;
-  getAll: (skip: number, take: number) => Promise<OrganizationEntity[]>;
+  getAll: (skip?: number, take?: number) => Promise<OrganizationEntity[]>;
+  getAllInWorkspace: (workspaceId: EntityUrlParamCommand.RequestUuidParam, skip?: number, take?: number) => Promise<OrganizationEntity[]>;
   create: (
     dto: OrganizationCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,

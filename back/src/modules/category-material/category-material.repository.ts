@@ -44,6 +44,25 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     }
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<CategoryMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allCategoryMaterials = await this.databaseService.categoryMaterial.findMany({
+        where: { handbookUuid: handbookId },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(allCategoryMaterials, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async create(dto: CategoryMaterialCreateRequestDto, handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
     try {
       const { name, templateName, comment, globalCategoryMaterialUuid } = dto;

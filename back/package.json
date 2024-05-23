@@ -38,7 +38,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.1",
     "@nestjs/swagger": "^7.3.1",
-    "@numart/house-admin-contracts": "^0.1.4",
+    "@numart/house-admin-contracts": "^0.1.5",
     "@prisma/client": "^5.14.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",

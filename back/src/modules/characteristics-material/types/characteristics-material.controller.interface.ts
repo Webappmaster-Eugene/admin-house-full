@@ -30,6 +30,21 @@ export interface ICharacteristicsMaterialController
     urlParams: IUrlParams,
   ) => Promise<CharacteristicsMaterialGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<CharacteristicsMaterialGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<CharacteristicsMaterialGetAllResponseDto>;
+  getAllInCategoryMaterialEP: (
+    urlParams: IUrlParams,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<CharacteristicsMaterialGetAllResponseDto>;
+  getAllInMaterialEP: (
+    urlParams: IUrlParams,
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<CharacteristicsMaterialGetAllResponseDto>;
   createEP: (
     dto: CharacteristicsMaterialCreateRequestDto,
     urlParams: IUrlParams,

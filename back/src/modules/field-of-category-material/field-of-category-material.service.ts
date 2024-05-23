@@ -29,6 +29,24 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     return new InternalResponse(allFieldOfCategoryMaterials);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAll(handbookId, skip, take);
+    return new InternalResponse(allFieldOfCategoryMaterials);
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAll(categoryMaterialId, skip, take);
+    return new InternalResponse(allFieldOfCategoryMaterials);
+  }
+
   async create(
     dto: FieldOfCategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

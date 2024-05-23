@@ -30,6 +30,16 @@ export interface IFieldOfCategoryMaterialController
     urlParams: IUrlParams,
   ) => Promise<FieldOfCategoryMaterialGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<FieldOfCategoryMaterialGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<FieldOfCategoryMaterialGetAllResponseDto>;
+  getAllInCategoryMaterialEP: (
+    urlParams: IUrlParams,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<FieldOfCategoryMaterialGetAllResponseDto>;
   createEP: (
     dto: FieldOfCategoryMaterialCreateRequestDto,
     urlParams: IUrlParams,

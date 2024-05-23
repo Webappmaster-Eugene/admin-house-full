@@ -1,4 +1,7 @@
 import { PrismaClient } from '.prisma/client';
+import { z } from 'zod';
+import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../src/common/helpers/regex/fieldOfCategoryMaterialRegexGenerator';
+import { templateNameMaterialGenerator } from '../src/common/helpers/regex/regexNameMaterialGenerator';
 const prisma = new PrismaClient();
 async function main() {
   // const DELETE_APP_SETTINGS = await prisma?.appSettings?.deleteMany({});
@@ -474,7 +477,7 @@ async function main() {
         defaultValue: '5',
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        unique_name_for_template: `{{#диаметр_метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#диаметр-метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
         fieldTypeUuid: FIELD_TYPES[1].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -485,7 +488,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        unique_name_for_template: `{{#длина_метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#длина-метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
         fieldTypeUuid: FIELD_TYPES[1].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -496,7 +499,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#подтип_метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#подтип-метиза_${CATEGORY_MATERIALS[3].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[3].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -507,7 +510,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#подтип_листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#подтип-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -518,7 +521,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#материал_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        // uniqueNameForTemplate: `{{#материал-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -529,7 +532,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        unique_name_for_template: `{{#толщина_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#толщина-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[1].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -540,7 +543,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        unique_name_for_template: `{{#ширина_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#ширина-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[1].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -551,7 +554,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[2].uuid,
-        unique_name_for_template: `{{#длина_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#длина-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[1].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -562,7 +565,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#сорт_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#сорт-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -573,7 +576,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: true,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#марка_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#марка-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -584,7 +587,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: false,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#гост_листового${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#гост-листового_${CATEGORY_MATERIALS[0].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[0].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -595,7 +598,7 @@ async function main() {
         createdByUuid: MANAGER_USER.uuid,
         isRequired: false,
         unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENTS[16].uuid,
-        unique_name_for_template: `{{#вид_шины${CATEGORY_MATERIALS[8].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
+        //uniqueNameForTemplate: `{{#вид-шины_${CATEGORY_MATERIALS[8].uuid.slice(0, 5)}_${MANAGER_HANDBOOK.uuid.slice(0, 5)}}}`,
         categoryMaterialUuid: CATEGORY_MATERIALS[8].uuid,
         fieldTypeUuid: FIELD_TYPES[2].uuid,
         handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -603,12 +606,120 @@ async function main() {
     ],
   });
 
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_0 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[0].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[0].name)}_${FIELD_OF_CATEGORY_MATERIALS[0].uuid}_${CATEGORY_MATERIALS[3].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_1 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[1].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#$${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[1].name)}_${FIELD_OF_CATEGORY_MATERIALS[1].uuid}_${CATEGORY_MATERIALS[3].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_2 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[2].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[2].name)}_${FIELD_OF_CATEGORY_MATERIALS[2].uuid}_${CATEGORY_MATERIALS[3].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_3 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[3].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[3].name)}_${CATEGORY_MATERIALS[0].uuid}_}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_4 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[4].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[4].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_5 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[5].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[5].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_6 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[6].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[6].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_7 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[7].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[7].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_8 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[8].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[8].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_9 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[9].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[9].name)}_${CATEGORY_MATERIALS[0].uuid}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_10 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[10].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[10].name)}_${CATEGORY_MATERIALS[0]}}}`,
+    },
+  });
+
+  const UPDATED_FIELD_OF_CATEGORY_MATERIALS_11 = await prisma?.fieldOfCategoryMaterial?.update({
+    where: {
+      uuid: FIELD_OF_CATEGORY_MATERIALS[11].uuid,
+    },
+    data: {
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIALS[11].name)}_${CATEGORY_MATERIALS[8]}}}`,
+    },
+  });
+
   const CATEGORY_MATERIAL_COVER_UPDATED = await prisma?.categoryMaterial?.update({
     where: {
       uuid: CATEGORY_MATERIALS[0].uuid,
     },
     data: {
-      templateName: `${FIELD_OF_CATEGORY_MATERIALS[3].templateName} ${FIELD_OF_CATEGORY_MATERIALS[4].templateName} ${FIELD_OF_CATEGORY_MATERIALS[9].templateName} ${FIELD_OF_CATEGORY_MATERIALS[5].templateName}×${FIELD_OF_CATEGORY_MATERIALS[6].templateName}×${FIELD_OF_CATEGORY_MATERIALS[7].templateName} ${FIELD_OF_CATEGORY_MATERIALS[8].templateName}`,
+      templateName: `${FIELD_OF_CATEGORY_MATERIALS[3].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[4].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[9].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[5].uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIALS[6].uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIALS[7].uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[8].uniqueNameForTemplate}`,
     },
   });
 
@@ -617,7 +728,7 @@ async function main() {
       uuid: CATEGORY_MATERIALS[3].uuid,
     },
     data: {
-      templateName: `${FIELD_OF_CATEGORY_MATERIALS[2].templateName} ${FIELD_OF_CATEGORY_MATERIALS[0].templateName}×${FIELD_OF_CATEGORY_MATERIALS[1].templateName}`,
+      templateName: `${FIELD_OF_CATEGORY_MATERIALS[2]?.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIALS[0]?.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIALS[1]?.uniqueNameForTemplate}`,
     },
   });
 
@@ -939,25 +1050,68 @@ async function main() {
     ],
   });
 
-  function templateNameMapper(
-    categoryTemplate: string,
-    material: {
+  async function templateNameMapper(
+    categoryMaterial: {
+      uuid: string;
       name: string;
-      comment: string;
-      price: number;
-      namePublic: string;
+      comment?: string;
+      templateName?: string;
+      globalCategoryMaterialUuid: string;
+      createdAt: Date;
+      updatedAt: Date;
+    },
+    material: {
+      uuid: string;
+      name: string;
+      comment?: string;
+      namePublic?: string;
+      sourceInfo?: string;
       handbookUuid: string;
-      categoryMaterialUuid: any;
-      unitMeasurementUuid: any;
+      price: number;
+      unitMeasurementUuid: string;
+      categoryUuid: string;
       responsiblePartnerUuid: string;
+      createdAt: Date;
+      updatedAt: Date;
     },
   ) {
-    FIELD_OF_CATEGORY_MATERIALS;
-    const name = ' ';
-    return name;
+    const allFieldsOfConcreteMaterial = await prisma?.fieldOfCategoryMaterial?.findMany({
+      where: {
+        categoryMaterialUuid: categoryMaterial.uuid,
+      },
+    });
+
+    const allCharacteristicsOfConcreteMaterial = await prisma?.characteristicsMaterial?.findMany({
+      where: {
+        materialUuid: material.uuid,
+      },
+    });
+
+    const mapAllCharacteristicsOfConcreteMaterial = allCharacteristicsOfConcreteMaterial.reduce((acc, curValue) => {
+      return (acc[curValue.fieldOfCategoryMaterialUuid] = curValue.value);
+    }, {});
+
+    const allFieldsOfMaterialUuids = allFieldsOfConcreteMaterial.map(elem => {
+      return elem.uuid;
+    });
+
+    // `{{#подтип-метиза_0a23cdfdsfsdff45f45f45f4_0a23cdfdsfsdff45f45f45f4}}}` `{{длина-метиза_0a23cdfdsfsdff45f45f45f4_0a23cdfdsfsdff45f45f45f4}}`×`{{#диаметр-метиза_0a23cdfdsfsdff45f45f45f4_0a23cdfdsfsdff45f45f45f4}}`
+    const templateNameOfCategory = categoryMaterial.templateName;
+
+    function templateNameOfCategoryHandler(mapAllFields: string[]) {
+      mapAllFields.forEach(elem => {
+        if (elem in mapAllCharacteristicsOfConcreteMaterial) {
+          templateNameOfCategory.replace(templateNameMaterialGenerator(elem), mapAllCharacteristicsOfConcreteMaterial[elem]);
+        }
+      });
+      return templateNameOfCategory;
+    }
+
+    return templateNameOfCategoryHandler(allFieldsOfMaterialUuids);
   }
 
-  const newNameGluhar = templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED[1].templateName, MATERIALS[0]);
+  //FIXME - проверить внимательно работу этой функции
+  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED[1], MATERIALS[0]);
 
   const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
     where: {

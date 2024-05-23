@@ -5,12 +5,17 @@ import { UniversalInternalResponse } from '../../../common/types/responses/unive
 import { OrganizationEntity } from '../entities/organization.entity';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 
 export interface IOrganizationService
   extends IServiceCommon<OrganizationCreateRequestDto, OrganizationUpdateRequestDto, OrganizationEntity> {
   getById: (organizationId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<OrganizationEntity>>;
   getByManagerId: (managerId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<OrganizationEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<OrganizationEntity[]>>;
+  getAllInWorkspace: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<OrganizationEntity[]>>;
   create: (
     dto: OrganizationCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,

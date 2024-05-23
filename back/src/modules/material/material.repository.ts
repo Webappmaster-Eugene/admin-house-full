@@ -44,6 +44,40 @@ export class MaterialRepository implements IMaterialRepository {
     }
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<MaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allMaterials = await this.databaseService.material.findMany({ where: { handbookUuid: handbookId }, skip, take });
+      return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<MaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allMaterials = await this.databaseService.material.findMany({
+        where: { categoryMaterialUuid: categoryMaterialId },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async create(
     dto: MaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

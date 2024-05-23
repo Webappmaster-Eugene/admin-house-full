@@ -8,12 +8,17 @@ import { MaterialUpdateRequestDto } from './dto/controller/update-material.dto';
 import { IMaterialService } from './types/material.service.interface';
 import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
+import { IRoleService } from '../roles/types/role.service.interface';
+import { IPriceChangingService } from '../price-changing/types/price-changing.service.interface';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class MaterialService implements IMaterialService {
   constructor(
     @Inject(KFI.MATERIAL_REPOSITORY)
     private readonly materialRepository: IMaterialRepository,
+    @Inject(KFI.PRICE_CHANGING_SERVICE)
+    private readonly priceChangingService: IPriceChangingService,
   ) {}
 
   async getById(materialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<MaterialEntity>> {
@@ -24,6 +29,24 @@ export class MaterialService implements IMaterialService {
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<MaterialEntity[]>> {
     const { skip, take } = queryParams;
     const allMaterials = await this.materialRepository.getAll(skip, take);
+    return new InternalResponse(allMaterials);
+  }
+
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allMaterials = await this.materialRepository.getAllInHandbook(handbookId, skip, take);
+    return new InternalResponse(allMaterials);
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
+    const { skip, take } = queryParams;
+    const allMaterials = await this.materialRepository.getAllInCategoryMaterial(categoryMaterialId, skip, take);
     return new InternalResponse(allMaterials);
   }
 
@@ -39,8 +62,20 @@ export class MaterialService implements IMaterialService {
   async updateById(
     materialId: EntityUrlParamCommand.RequestUuidParam,
     dto: MaterialUpdateRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<MaterialEntity>> {
     const updatedMaterial = await this.materialRepository.updateById(materialId, dto);
+    if (dto?.price) {
+      const oldMaterial = dataInternalExtractor(await this.getById(materialId));
+      await this.priceChangingService.create(
+        {
+          source: dto.sourceInfo,
+          newPrice: dto.price,
+        },
+        userId,
+        materialId,
+      );
+    }
     return new InternalResponse(updatedMaterial);
   }
 

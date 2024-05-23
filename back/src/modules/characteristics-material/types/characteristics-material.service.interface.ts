@@ -12,6 +12,18 @@ export interface ICharacteristicsMaterialService
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>>;
+  getAllInMaterial: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>>;
   create: (
     dto: CharacteristicsMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

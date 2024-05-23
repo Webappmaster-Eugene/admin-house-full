@@ -30,9 +30,10 @@ import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.gua
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с PriceChanging')
-@Controller('workspace/:workspaceId/handbook/:handbookId/material/:materialId/price-changing')
+@Controller('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing')
 export class PriceChangingController implements IPriceChangingController {
   constructor(
     @Inject(KFI.PRICE_CHANGING_SERVICE)
@@ -81,9 +82,99 @@ export class PriceChangingController implements IPriceChangingController {
   @UseGuards(AuthGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
   @Get()
-  async getAllEP(@UrlParams() urlParams: IUrlParams): Promise<PriceChangingGetAllResponseDto> {
+  async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<PriceChangingGetAllResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.getAll();
+      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все PriceChanging внутри Handbook',
+  })
+  @ApiResponse({ status: 200, type: [PriceChangingGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(PriceChangingGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<PriceChangingGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.priceChangingService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все PriceChanging внутри CategoryMaterial',
+  })
+  @ApiResponse({ status: 200, type: [PriceChangingGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(PriceChangingGetAllResponseDto)
+  @Get()
+  async getAllInCategoryMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('categoryMaterialId', ParseUUIDPipe)
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<PriceChangingGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.priceChangingService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
+      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все PriceChanging внутри Material',
+  })
+  @ApiResponse({ status: 200, type: [PriceChangingGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(PriceChangingGetAllResponseDto)
+  @Get()
+  async getAllInMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('materialId', ParseUUIDPipe)
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<PriceChangingGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.priceChangingService.getAllInMaterial(materialId, queryParams);
       return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);

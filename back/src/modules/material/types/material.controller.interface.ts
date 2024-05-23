@@ -21,6 +21,16 @@ export interface IMaterialController
   > {
   getByIdEP: (materialId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<MaterialGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<MaterialGetAllResponseDto>;
+  getAllInHandbookEP: (
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<MaterialGetAllResponseDto>;
+  getAllInCategoryMaterialEP: (
+    urlParams: IUrlParams,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<MaterialGetAllResponseDto>;
   createEP: (
     dto: MaterialCreateRequestDto,
     urlParams: IUrlParams,
@@ -32,6 +42,7 @@ export interface IMaterialController
     materialId: EntityUrlParamCommand.RequestUuidParam,
     dto: MaterialUpdateRequestDto,
     urlParams: IUrlParams,
+    userInfoFromJWT: IJWTPayload,
   ) => Promise<MaterialUpdateResponseDto>;
   deleteByIdEP: (materialId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<MaterialDeleteResponseDto>;
 }

@@ -54,6 +54,52 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
     }
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allFieldVariantsForSelectorFieldTypes = await this.databaseService.fieldVariantsForSelectorFieldType.findMany({
+        where: { handbookUuid: handbookId },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(
+        allFieldVariantsForSelectorFieldTypes,
+        FieldVariantsForSelectorFieldTypeEntity,
+        EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE,
+      ) as FieldVariantsForSelectorFieldTypeEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInFieldOfCategoryMaterial(
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allFieldVariantsForSelectorFieldTypes = await this.databaseService.fieldVariantsForSelectorFieldType.findMany({
+        where: { fieldOfCategoryMaterialUuid: fieldOfCategoryMaterialId },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(
+        allFieldVariantsForSelectorFieldTypes,
+        FieldVariantsForSelectorFieldTypeEntity,
+        EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE,
+      ) as FieldVariantsForSelectorFieldTypeEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async create(
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

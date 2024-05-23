@@ -12,6 +12,21 @@ export interface ICharacteristicsMaterialRepository
   > {
   getById: (characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CharacteristicsMaterialEntity>;
   getAll: (skip?: number, take?: number) => Promise<CharacteristicsMaterialEntity[]>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<CharacteristicsMaterialEntity[]>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<CharacteristicsMaterialEntity[]>;
+  getAllInMaterial: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<CharacteristicsMaterialEntity[]>;
   create: (
     dto: CharacteristicsMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

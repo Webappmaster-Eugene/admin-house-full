@@ -35,11 +35,58 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
       errorRepositoryHandler(error);
     }
   }
+
   async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<FieldOfCategoryMaterialEntity[]> {
     limitTakeHandler(take);
 
     try {
       const allFieldOfCategoryMaterials = await this.databaseService.fieldOfCategoryMaterial.findMany({ take, skip });
+      return existenceEntityHandler(
+        allFieldOfCategoryMaterials,
+        FieldOfCategoryMaterialEntity,
+        EntityName.FIELD_OF_CATEGORY_MATERIAL,
+      ) as FieldOfCategoryMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<FieldOfCategoryMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allFieldOfCategoryMaterials = await this.databaseService.fieldOfCategoryMaterial.findMany({
+        where: { handbookUuid: handbookId },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(
+        allFieldOfCategoryMaterials,
+        FieldOfCategoryMaterialEntity,
+        EntityName.FIELD_OF_CATEGORY_MATERIAL,
+      ) as FieldOfCategoryMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<FieldOfCategoryMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allFieldOfCategoryMaterials = await this.databaseService.fieldOfCategoryMaterial.findMany({
+        where: { categoryMaterialUuid: categoryMaterialId },
+        take,
+        skip,
+      });
       return existenceEntityHandler(
         allFieldOfCategoryMaterials,
         FieldOfCategoryMaterialEntity,
@@ -57,7 +104,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldOfCategoryMaterialEntity> {
     try {
-      const { name, comment, defaultValue, unique_name_for_template, fieldTypeUuid, isRequired, unitOfMeasurementUuid } = dto;
+      const { name, comment, defaultValue, uniqueNameForTemplate, fieldTypeUuid, isRequired, unitOfMeasurementUuid } = dto;
       const newFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.create({
         data: {
           name,
@@ -67,7 +114,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           isRequired,
           categoryMaterialUuid: categoryMaterialId,
           unitOfMeasurementUuid,
-          unique_name_for_template,
+          uniqueNameForTemplate,
           handbookUuid: handbookId,
           createdByUuid: userId,
         },

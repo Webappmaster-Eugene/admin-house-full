@@ -62,6 +62,27 @@ export class OrganizationRepository implements IOrganizationRepository {
     }
   }
 
+  async getAllInWorkspace(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<OrganizationEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allOrganizationsInWorkspace = await this.databaseService.organization.findMany({
+        where: {
+          workspaceUuid: workspaceId,
+        },
+        take,
+        skip,
+      });
+      return existenceEntityHandler(allOrganizationsInWorkspace, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async getAllCount(): Promise<CountData> {
     try {
       const total = await this.databaseService.organization.count({

@@ -31,6 +31,24 @@ export class ProjectService implements IProjectService {
     return new InternalResponse<ProjectEntity[]>(allOrganizations);
   }
 
+  async getAllInWorkspace(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
+    const { skip, take } = queryParams;
+    const allOrganizations = await this.projectRepository.getAllInWorkspace(workspaceId, skip, take);
+    return new InternalResponse<ProjectEntity[]>(allOrganizations);
+  }
+
+  async getAllInOrganization(
+    organizationId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
+    const { skip, take } = queryParams;
+    const allOrganizations = await this.projectRepository.getAllInOrganization(organizationId, skip, take);
+    return new InternalResponse<ProjectEntity[]>(allOrganizations);
+  }
+
   async create(
     dto: ProjectCreateRequestDto,
     userInfoFromJWT: IJWTPayload,

@@ -29,6 +29,15 @@ export class FieldUnitMeasurementService implements IFieldUnitMeasurementService
     return new InternalResponse(allFieldUnitMeasurements);
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>> {
+    const { skip, take } = queryParams;
+    const allFieldUnitMeasurements = await this.fieldUnitMeasurementRepository.getAllInHandbook(handbookId, skip, take);
+    return new InternalResponse(allFieldUnitMeasurements);
+  }
+
   async create(
     dto: FieldUnitMeasurementCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

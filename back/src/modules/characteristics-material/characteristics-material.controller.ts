@@ -103,6 +103,96 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все CharacteristicsMaterial внутри Handbook',
+  })
+  @ApiResponse({ status: 200, type: [CharacteristicsMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
+  @Get()
+  async getAllInHandbookEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<CharacteristicsMaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.characteristicsMaterialService.getAllInHandbook(handbookId, queryParams);
+      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все CharacteristicsMaterial внутри CategoryMaterial',
+  })
+  @ApiResponse({ status: 200, type: [CharacteristicsMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
+  @Get()
+  async getAllInCategoryMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('categoryMaterialId', ParseUUIDPipe)
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<CharacteristicsMaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.characteristicsMaterialService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
+      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все CharacteristicsMaterial внутри Material',
+  })
+  @ApiResponse({ status: 200, type: [CharacteristicsMaterialGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
+  @Get()
+  async getAllInMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('materialId', ParseUUIDPipe)
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<CharacteristicsMaterialGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.characteristicsMaterialService.getAllInMaterial(materialId, queryParams);
+      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
   @ApiBody({
     schema: zodToOpenAPI(CharacteristicsMaterialCreateCommand.RequestSchema),
   })

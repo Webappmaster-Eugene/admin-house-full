@@ -6,6 +6,9 @@ const FieldOfCategoryMaterialUpdateRequestSchema = FieldOfCategoryMaterialSchema
   createdAt: true,
   updatedAt: true,
   uuid: true,
+  handbookUuid: true,
+  createdByUuid: true,
+  categoryMaterialUuid: true,
 }).partial();
 
 const FieldOfCategoryMaterialUpdateResponseSchema = z

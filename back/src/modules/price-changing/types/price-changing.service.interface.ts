@@ -10,6 +10,18 @@ export interface IPriceChangingService
   extends IServiceCommon<PriceChangingCreateRequestDto, PriceChangingUpdateRequestDto, PriceChangingEntity> {
   getById: (priceChangingId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<PriceChangingEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<PriceChangingEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<PriceChangingEntity[]>>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<PriceChangingEntity[]>>;
+  getAllInMaterial: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<PriceChangingEntity[]>>;
   create: (
     dto: PriceChangingCreateRequestDto,
     changedById: EntityUrlParamCommand.RequestUuidParam,

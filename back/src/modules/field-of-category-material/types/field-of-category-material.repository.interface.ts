@@ -11,7 +11,16 @@ export interface IFieldOfCategoryMaterialRepository
     FieldOfCategoryMaterialEntity
   > {
   getById: (fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldOfCategoryMaterialEntity>;
-  getAll: (skip?: number, take?: number) => Promise<FieldOfCategoryMaterialEntity[]>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<FieldOfCategoryMaterialEntity[]>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<FieldOfCategoryMaterialEntity[]>;
   create: (
     dto: FieldOfCategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

@@ -16,6 +16,14 @@ export interface IFieldVariantsForSelectorFieldTypeService
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>>;
+  getAllInFieldOfCategoryMaterial: (
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>>;
   create: (
     dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

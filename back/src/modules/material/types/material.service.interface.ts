@@ -5,10 +5,19 @@ import { UniversalInternalResponse } from '../../../common/types/responses/unive
 import { MaterialEntity } from '../entities/material.entity';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 
 export interface IMaterialService extends IServiceCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {
   getById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<MaterialEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
+  getAllInHandbook: (
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
   create: (
     dto: MaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -17,6 +26,7 @@ export interface IMaterialService extends IServiceCommon<MaterialCreateRequestDt
   updateById: (
     materialId: EntityUrlParamCommand.RequestUuidParam,
     dto: MaterialUpdateRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<MaterialEntity>>;
   deleteById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<MaterialEntity>>;
 }

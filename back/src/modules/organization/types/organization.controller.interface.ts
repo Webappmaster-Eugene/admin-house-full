@@ -21,6 +21,11 @@ export interface IOrganizationController
   > {
   getByIdEP: (organizationId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<OrganizationGetResponseDto>;
   getAllEP: (urlParams: IUrlParams, queryParams?: IQueryParams) => Promise<OrganizationGetAllResponseDto>;
+  getAllInWorkspaceEP: (
+    urlParams: IUrlParams,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ) => Promise<OrganizationGetAllResponseDto>;
   createEP: (
     dto: OrganizationCreateRequestDto,
     urlParams: IUrlParams,

@@ -33,6 +33,63 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     }
   }
 
+  async getAllInHandbook(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<PriceChangingEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allPriceChangings = await this.databaseService.priceChanging.findMany({
+        where: { material: { handbookUuid: handbookId } },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<PriceChangingEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allPriceChangings = await this.databaseService.priceChanging.findMany({
+        where: {
+          material: {
+            categoryMaterialUuid: categoryMaterialId,
+          },
+        },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllInMaterial(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<PriceChangingEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allPriceChangings = await this.databaseService.priceChanging.findMany({ where: { materialUuid: materialId }, skip, take });
+      return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<PriceChangingEntity[]> {
     limitTakeHandler(take);
 

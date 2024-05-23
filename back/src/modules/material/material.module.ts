@@ -3,6 +3,7 @@ import { MaterialService } from './material.service';
 import { MaterialController } from './material.controller';
 import { KFI } from '../../common/utils/di';
 import { MaterialRepository } from './material.repository';
+import { PriceChangingModule } from '../price-changing/price-changing.module';
 
 @Module({
   providers: [
@@ -16,7 +17,7 @@ import { MaterialRepository } from './material.repository';
     },
   ],
   controllers: [MaterialController],
-  imports: [],
+  imports: [PriceChangingModule],
   exports: [KFI.MATERIAL_SERVICE],
 })
 export class MaterialModule {}

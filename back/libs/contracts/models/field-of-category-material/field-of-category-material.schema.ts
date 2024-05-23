@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const FieldOfCategoryMaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
-  unique_name_for_template: z.string().nullable().optional(),
+  uniqueNameForTemplate: z.string().nullable().optional(),
   comment: z.string().nullable().optional(),
   isRequired: z.boolean().default(true),
   defaultValue: z.string().nullable(),

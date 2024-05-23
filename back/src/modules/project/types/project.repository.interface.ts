@@ -9,6 +9,8 @@ export interface IProjectRepository extends IRepositoryCommon<ProjectCreateReque
   getById: (projectId: EntityUrlParamCommand.RequestUuidParam) => Promise<ProjectEntity>;
   getAllCount: () => Promise<CountData>;
   getAll: (skip: number, take: number) => Promise<ProjectEntity[]>;
+  getAllInWorkspace: (workspaceId: EntityUrlParamCommand.RequestUuidParam, skip: number, take: number) => Promise<ProjectEntity[]>;
+  getAllInOrganization: (organizationId: EntityUrlParamCommand.RequestUuidParam, skip: number, take: number) => Promise<ProjectEntity[]>;
   create: (
     dto: ProjectCreateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,

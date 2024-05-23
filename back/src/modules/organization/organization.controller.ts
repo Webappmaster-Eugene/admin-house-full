@@ -72,7 +72,7 @@ export class OrganizationController {
   @ApiOkResponse({
     schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
   })
-  @ApiOperation({ summary: 'Получить все Organizations пользователей' })
+  @ApiOperation({ summary: 'Получить все Organizations' })
   @ApiResponse({ status: 200, type: [OrganizationGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
@@ -83,6 +83,35 @@ export class OrganizationController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<OrganizationGetAllResponseDto> {
     try {
       const { ok, data } = await this.organizationService.getAll(queryParams);
+      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(OrganizationGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Получить все Organizations внутри одного Workspace' })
+  @ApiResponse({ status: 200, type: [OrganizationGetAllResponseDto] })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(OrganizationGetAllResponseDto)
+  @Get()
+  async getAllInWorkspaceEP(
+    @UrlParams() urlParams: IUrlParams,
+
+    @Param('workspaceId')
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<OrganizationGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.organizationService.getAllInWorkspace(workspaceId, queryParams);
       return okResponseHandler(ok, data, OrganizationEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);

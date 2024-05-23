@@ -8,6 +8,7 @@ export interface ICategoryMaterialRepository
   extends IRepositoryCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {
   getById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
   getAll: (skip?: number, take?: number) => Promise<CategoryMaterialEntity[]>;
+  getAllInHandbook: (handbookId: EntityUrlParamCommand.RequestUuidParam, skip?: number, take?: number) => Promise<CategoryMaterialEntity[]>;
   create: (dto: CategoryMaterialCreateRequestDto, handbookId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
   updateById: (
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
