@@ -21,7 +21,9 @@ jobs:
       - name: connect, pull and restart container
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout main && git pull && docker pull ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:latest && docker pull ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:latest && docker compose up -d --no-deps --force-recreate && exit"
       - name: generate, push structure and seed with prisma in PostgreSQL DB
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -it admin-house-back 'npx prisma generate && npx prisma db push && npx prisma db seed' && exit"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -it admin-house-back npx prisma db push && exit"
+      - name: generate, push structure and seed with prisma in PostgreSQL DB
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -it admin-house-back npx prisma db seed && exit"
       - name: cleanup
         run: rm -rf ~/.ssh
 
@@ -37,8 +39,9 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🏹 Deploy ${{ github.repository }} Deployment has started
-            commit message: ${{ github.event.name }}
+            🏹 Deploy ${{ github.repository }} 
+            Deployment has started
+            commit message: ${{ github.event }}
             author: ${{ github.actor }}
             commit timestamp: ${{ github.event.commits[0] }}
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
@@ -76,5 +79,5 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ❌ ${{ github.REPOSITORY }} One of the jobs has fail - ${{github.action}}
+            ❌ ${{ github.REPOSITORY }} One of the jobs has fail
             See commit: https://github.com/${{ github.repository }}/commit/${{github.sha}}
