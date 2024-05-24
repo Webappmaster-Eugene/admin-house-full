@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: admin-house-postgres
+    image: postgres:16-alpine
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 5
+        window: 10s
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE: ${POSTGRES_DATABASE}
+    volumes:
+      - data:/var/lib/postgresql/data
+    expose:
+      - "5432:5432"
+
+volumes:
+  data:

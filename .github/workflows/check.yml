@@ -22,6 +22,7 @@ jobs:
         run: cd front && npm install
       - name: Lint
         run: cd front && npm run lint
+
   job-back-lint:
     runs-on: ubuntu-latest
     strategy:
@@ -38,6 +39,7 @@ jobs:
         run: cd back && npm install
       - name: Lint
         run: cd back && npm run lint
+
   job-back-test:
     needs: [job-back-lint]
     strategy:
