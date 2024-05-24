@@ -58,11 +58,10 @@ jobs:
           message: |
             ✅ ${{ github.REPOSITORY }} Build, Deployed Successfully
             image tag: *${{ github.sha }}*
-            commit message: ${{ commit.ref }}
+            commit message: ${{ github.ref }}
             author: ${{ github.actor }}
             commit timestamp: ${{ github.ref }}
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            
 
   notify-on-error:
     runs-on: ubuntu-latest
