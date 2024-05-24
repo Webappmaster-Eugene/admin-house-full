@@ -47,10 +47,8 @@ const logger: LoggerConfig = new LoggerConfig();
         store: await redisStore({
           ttl: 10, // seconds
           socket: {
-            // host: process.env.REDIS_HOST ? process.env.HOST : 'localhost',
-            // port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
-            host: 'redis',
-            port: 6379,
+            host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
+            port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
           },
         }),
       }),
