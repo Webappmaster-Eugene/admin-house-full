@@ -1,20 +1,8 @@
 import { PrismaClient } from '.prisma/client';
-import { z } from 'zod';
 import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../src/common/helpers/regex/fieldOfCategoryMaterialRegexGenerator';
 import { templateNameMaterialGenerator } from '../src/common/helpers/regex/regexNameMaterialGenerator';
 const prisma = new PrismaClient();
 async function main() {
-  // const DELETE_APP_SETTINGS = await prisma?.appSettings?.deleteMany({});
-  //
-  // const DELETE_REGISTER_WITH_ROLE_KEY =
-  //   await prisma?.registerWithRoleKey?.deleteMany({});
-  //
-  // const DELETE_ALL_WORKSPACES = await prisma?.workspace?.deleteMany({});
-  //
-  // const DELETE_ALL_USERS = await prisma?.user?.deleteMany({});
-  //
-  // const DELETE_ALL_ROLES = await prisma?.role?.deleteMany({});
-
   const ADMIN = await prisma?.role?.create({
     data: {
       name: 'ADMIN',
