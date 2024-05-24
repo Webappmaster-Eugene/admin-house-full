@@ -54,7 +54,7 @@ back/prisma/.env
 .env.local
 .envprod
 .env.prod
-.env.
+.env
 
 # temp directory
 .temp
