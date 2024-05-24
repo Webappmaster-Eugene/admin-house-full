@@ -48,6 +48,7 @@ services:
       KEY_SECRET_FOR_STRICT_ADMIN_KEY: ${KEY_SECRET_FOR_STRICT_ADMIN_KEY}
       REDIS_HOST: redis
       REDIS_PORT: ${REDIS_PORT}
+      NODE_ENV: production
     deploy:
       restart_policy:
         condition: on-failure
