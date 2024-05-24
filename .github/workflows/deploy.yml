@@ -21,7 +21,7 @@ jobs:
       - name: connect, pull and restart container
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout main && git pull && docker pull ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:latest && docker pull ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:latest && docker compose up -d --no-deps --force-recreate && exit"
       - name: generate, push structure and seed with prisma in PostgreSQL DB
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -it eugenenumart/admin-house-back:latest "npx prisma generate && npx prisma db push && npx prisma db seed && exit"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -it eugenenumart/admin-house-back:latest && npx prisma generate && npx prisma db push && npx prisma db seed && exit"
       - name: cleanup
         run: rm -rf ~/.ssh
 
@@ -37,10 +37,11 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🏹 Deploy ${{ github.REPOSITORY }} Deployment has started
-            commit message: ${{ github.event.head_commit.message }}
-            author: ${{ github.event.head_commit.author.name }}
-            commit timestamp: ${{ github.event.head_commit.timestamp }}
+            🏹 Deploy ${{ github.repository }} Deployment has started
+            commit message: ${{ github.event.commits[0].message }}
+            author: ${{ github.actor }}
+            commit timestamp: ${{ github.event.commits[0].timestamp }}
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
 
   send-telegram-message:
     name: Send Telegram message
