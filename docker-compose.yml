@@ -39,14 +39,14 @@ services:
     image: eugenenumart/admin-house-back:latest
     restart: always
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://postgres:postgres@admin-house-postgres:5432/house-admin?schema=public
       STRICT_ADMIN_KEY: ${STRICT_ADMIN_KEY}
       APP_PORT: ${APP_PORT}
       API_PREFIX: ${API_PREFIX}
       API_VERSION: ${API_VERSION}
       JWT_KEY: ${JWT_KEY}
       KEY_SECRET_FOR_STRICT_ADMIN_KEY: ${KEY_SECRET_FOR_STRICT_ADMIN_KEY}
-      REDIS_HOST: ${REDIS_HOST}
+      REDIS_HOST: redis
       REDIS_PORT: ${REDIS_PORT}
     deploy:
       restart_policy:
