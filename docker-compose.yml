@@ -1,30 +1,6 @@
 version: "3.9"
 
 services:
-  back:
-    container_name: admin-house-back
-    image: eugenenumart/admin-house-back:latest
-    restart: always
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      STRICT_ADMIN_KEY: ${STRICT_ADMIN_KEY}
-      APP_PORT: ${APP_PORT}
-      API_PREFIX: ${API_PREFIX}
-      API_VERSION: ${API_VERSION}
-      JWT_KEY: ${JWT_KEY}
-      KEY_SECRET_FOR_STRICT_ADMIN_KEY: ${KEY_SECRET_FOR_STRICT_ADMIN_KEY}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-    expose:
-      - 3000
-    command: "npm run start"
-
   front:
     container_name: admin-house-front
     image: eugenenumart/admin-house-front:latest
@@ -57,6 +33,32 @@ services:
       - data:/var/lib/postgresql/data
     expose:
       - "5432:5432"
+
+  back:
+    container_name: admin-house-back
+    image: eugenenumart/admin-house-back:latest
+    restart: always
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      STRICT_ADMIN_KEY: ${STRICT_ADMIN_KEY}
+      APP_PORT: ${APP_PORT}
+      API_PREFIX: ${API_PREFIX}
+      API_VERSION: ${API_VERSION}
+      JWT_KEY: ${JWT_KEY}
+      KEY_SECRET_FOR_STRICT_ADMIN_KEY: ${KEY_SECRET_FOR_STRICT_ADMIN_KEY}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    depends_on:
+      - postgres
+    expose:
+      - 3000
+    command: "npm run start"
 
   pgadmin:
     image: dpage/pgadmin4:8
