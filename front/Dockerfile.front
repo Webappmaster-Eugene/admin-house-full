@@ -1,0 +1,16 @@
+FROM node:20.11.1-alpine
+
+WORKDIR /front
+
+COPY package.json /front
+
+RUN npm config set registry http://registry.npmjs.org/
+RUN npm i -g next@latest
+RUN npm install
+
+#ENV
+#ENV NODE
+
+COPY . .
+
+RUN npm run build
