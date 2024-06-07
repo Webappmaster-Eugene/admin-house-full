@@ -4,18 +4,29 @@ exports.FieldOfCategoryMaterialCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const FieldOfCategoryMaterialCreateRequestSchema = models_1.FieldOfCategoryMaterialSchema.omit({
-    uuid: true,
-    createdByUuid: true,
-    handbookUuid: true,
-    createdAt: true,
-    updatedAt: true,
+const FieldOfCategoryMaterialCreateRequestSchema = models_1.FieldOfCategoryMaterialSchema.pick({
+    name: true,
+    comment: true,
+    uniqueNameForTemplate: true,
+    defaultValue: true,
+    isRequired: true,
+    unitOfMeasurementUuid: true,
+    fieldTypeUuid: true,
 });
 const FieldOfCategoryMaterialCreateResponseSchema = zod_1.z
     .object({
-    data: models_1.FieldOfCategoryMaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: models_1.FieldOfCategoryMaterialSchema.pick({
+        name: true,
+        comment: true,
+        uniqueNameForTemplate: true,
+        defaultValue: true,
+        isRequired: true,
+        unitOfMeasurementUuid: true,
+        fieldTypeUuid: true,
+        categoryMaterialUuid: true,
+        lastChangeByUserUuid: true,
+        handbookUuid: true,
+        uuid: true,
     }),
 })
     .merge(models_2.ResponseClientSchema);

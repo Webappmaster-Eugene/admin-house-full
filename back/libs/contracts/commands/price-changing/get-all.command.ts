@@ -5,9 +5,14 @@ import { ResponseClientSchema } from '../../models';
 const PriceChangingGetAllResponseSchema = z
   .object({
     data: z.array(
-      PriceChangingSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      PriceChangingSchema.pick({
+        oldPrice: true,
+        comment: true,
+        newPrice: true,
+        source: true,
+        uuid: true,
+        lastChangeByUserUuid: true,
+        materialUuid: true,
       }),
     ),
   })

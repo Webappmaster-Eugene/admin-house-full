@@ -8,6 +8,7 @@ export class ResponsiblePartnerProducerEntity implements ResponsiblePartnerProdu
   email: string;
   phone: string;
   info: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

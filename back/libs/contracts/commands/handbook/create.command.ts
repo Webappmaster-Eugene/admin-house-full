@@ -2,18 +2,23 @@ import { z } from 'zod';
 import { HandbookSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const HandbookCreateRequestSchema = HandbookSchema.omit({
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-  responsibleManagerUuid: true,
+const HandbookCreateRequestSchema = HandbookSchema.pick({
+  name: true,
+  description: true,
+  canCustomerView: true,
+  workspaceUuid: true,
 });
 
 const HandbookCreateResponseSchema = z
   .object({
-    data: HandbookSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: HandbookSchema.pick({
+      name: true,
+      description: true,
+      canCustomerView: true,
+      uuid: true,
+      responsibleManagerUuid: true,
+      workspaceUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

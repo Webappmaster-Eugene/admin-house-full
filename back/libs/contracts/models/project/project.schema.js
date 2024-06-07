@@ -5,11 +5,12 @@ const zod_1 = require("zod");
 exports.ProjectSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     name: zod_1.z.string(),
+    description: zod_1.z.string().nullable().optional(),
     customerMail: zod_1.z.string().email(),
-    description: zod_1.z.string().nullable(),
-    organizationUuid: zod_1.z.string(),
-    customerUuid: zod_1.z.string(),
-    responsibleManagerUuid: zod_1.z.string(),
+    organizationUuid: zod_1.z.string().uuid(),
+    customerUuid: zod_1.z.string().uuid(),
+    responsibleManagerUuid: zod_1.z.string().uuid(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
 });

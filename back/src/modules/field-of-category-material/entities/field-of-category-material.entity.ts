@@ -10,7 +10,7 @@ export class FieldOfCategoryMaterialEntity implements FieldOfCategoryMaterial {
   isRequired: boolean;
   defaultValue: string | null;
   handbookUuid: string;
-  createdByUuid: string;
+  lastChangeByUserUuid: string;
   unitOfMeasurementUuid: string;
   createdAt: Date;
   updatedAt: Date;

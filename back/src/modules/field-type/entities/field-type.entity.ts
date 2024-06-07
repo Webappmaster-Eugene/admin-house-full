@@ -6,6 +6,7 @@ export class FieldTypeEntity implements FieldType {
   jsType: EFieldTypeVariants;
   name: string;
   handbookUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

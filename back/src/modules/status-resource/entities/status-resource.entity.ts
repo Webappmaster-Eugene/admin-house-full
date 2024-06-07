@@ -4,6 +4,7 @@ export class StatusResourceEntity implements StatusResource {
   uuid: string;
   name: string;
   comment: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

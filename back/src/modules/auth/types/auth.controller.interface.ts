@@ -5,16 +5,20 @@ import { AuthGetKeyResponseDto } from '../dto/controller/auth.get-key.dto';
 import { AuthLoginRequestDto, AuthLoginResponseDto } from '../dto/controller/auth.login.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { Response, Request } from 'express';
+import { AuthRefreshKeysResponseDto } from '../dto/controller/auth.refresh-keys.dto';
 
 export interface IAuthController {
-  registerEP: (dto: AuthRegisterRequestDto, urlParams: IUrlParams) => Promise<AuthRegisterResponseDto>;
+  registerEP: (dto: AuthRegisterRequestDto, urlParams: IUrlParams, response: Response) => Promise<AuthRegisterResponseDto>;
   registerWithRoleEP: (
     dto: AuthRegisterWithRoleRequestDto,
     roleId: EntityUrlParamCommand.RequestNumberParam,
     registerWithRoleKey: string,
     urlParams: IUrlParams,
+    response: Response,
   ) => Promise<AuthRegisterWithRoleResponseDto>;
-  loginEP: (dto: AuthLoginRequestDto, urlParams: IUrlParams) => Promise<AuthLoginResponseDto>;
+  refreshKeysEP: (accessKey: string, urlParams: IUrlParams, request: Request, response: Response) => Promise<AuthRefreshKeysResponseDto>;
+  loginEP: (dto: AuthLoginRequestDto, urlParams: IUrlParams, response: Response) => Promise<AuthLoginResponseDto>;
   generateStrictAdminKeyEP: (dto: AuthGenerateKeyRequestDto, urlParams: IUrlParams) => Promise<AuthGenerateKeyResponseDto>;
   getStrictAdminKeyEP: (urlParams: IUrlParams) => Promise<AuthGetKeyResponseDto>;
 }

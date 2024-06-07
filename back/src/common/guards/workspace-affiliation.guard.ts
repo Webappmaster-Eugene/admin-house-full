@@ -9,11 +9,12 @@ import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
+import { IConfigService } from 'src/common/types/main/config.service.interface';
 
 @Injectable()
 export class WorkspaceAffiliationGuard implements CanActivate {
   constructor(
-    private configService: ConfigService,
+    private configService: ConfigService<IConfigService>,
     @Inject(KFI.USER_SERVICE) private userService: IUserService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
   ) {}

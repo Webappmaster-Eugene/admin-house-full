@@ -5,9 +5,12 @@ import { ResponseClientSchema } from '../../models';
 const FieldUnitMeasurementGetAllResponseSchema = z
   .object({
     data: z.array(
-      FieldUnitMeasurementSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      FieldUnitMeasurementSchema.pick({
+        name: true,
+        comment: true,
+        uuid: true,
+        handbookUuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

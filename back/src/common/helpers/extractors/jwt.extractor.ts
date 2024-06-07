@@ -1,9 +1,10 @@
 import { ExecutionContext } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { IConfigService } from 'src/common/types/main/config.service.interface';
 
 export function jwtExtractor(
   context: ExecutionContext,
-  configService: ConfigService,
+  configService: ConfigService<IConfigService>,
 ): {
   token: string;
   jwtSecret: string;

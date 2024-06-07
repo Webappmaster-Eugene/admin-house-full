@@ -19,3 +19,4 @@ __exportStar(require("./register.command"), exports);
 __exportStar(require("./register-with-role.command"), exports);
 __exportStar(require("./generate-key.command"), exports);
 __exportStar(require("./get-key.command"), exports);
+__exportStar(require("./refresh-keys.command"), exports);

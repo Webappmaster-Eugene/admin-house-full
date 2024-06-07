@@ -38,7 +38,9 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldVariantsForSelectorFieldType')
-@Controller('/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants')
+@Controller(
+  '/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants',
+)
 export class FieldVariantsForSelectorFieldTypeController implements IFieldVariantsForSelectorFieldTypeController {
   constructor(
     @Inject(KFI.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_SERVICE)
@@ -125,10 +127,10 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
-    @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
+    @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     @QueryParams() queryParams?: IQueryParams,
   ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
@@ -148,7 +150,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
     schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все FieldVariantsForSelectorFieldType внутри fieldOfCategoryMaterialId',
+    summary: 'Получить все FieldVariantsForSelectorFieldType внутри CategoryMaterial',
   })
   @ApiResponse({
     status: 200,
@@ -158,7 +160,40 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetAllResponseDto)
-  @Get()
+  @Get('/in-category-material')
+  async getAllInCategoryMaterialEP(
+    @UrlParams() urlParams: IUrlParams,
+    @Param('categoryMaterialId', ParseUUIDPipe)
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    @QueryParams() queryParams?: IQueryParams,
+  ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
+    try {
+      const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
+      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiQuery({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  })
+  @ApiOperation({
+    summary: 'Получить все FieldVariantsForSelectorFieldType внутри FieldOfCategoryMaterial',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [FieldVariantsForSelectorFieldTypeGetAllResponseDto],
+  })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetAllResponseDto)
+  @Get('/in-field-of-category-material')
   async getAllInFieldOfCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)

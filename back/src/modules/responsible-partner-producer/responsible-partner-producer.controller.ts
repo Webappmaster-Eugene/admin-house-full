@@ -110,7 +110,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все ResponsiblePartnerProducer',
+    summary: 'Получить все ResponsiblePartnerProducer внутри Handbook',
   })
   @ApiResponse({
     status: 200,
@@ -121,7 +121,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     handbookId: EntityUrlParamCommand.RequestUuidParam,

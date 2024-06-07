@@ -32,6 +32,9 @@ export interface ICharacteristicsMaterialRepository
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    fieldTypeUuid: EntityUrlParamCommand.RequestUuidParam,
+    unitOfMeasurementUuid: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<CharacteristicsMaterialEntity>;
   updateById: (

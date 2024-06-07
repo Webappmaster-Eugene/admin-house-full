@@ -1,19 +1,26 @@
 import { z } from 'zod';
 import { CharacteristicsMaterialSchema, ResponseClientSchema } from '../../models';
 
-const CharacteristicsMaterialUpdateRequestSchema = CharacteristicsMaterialSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  handbookUuid: true,
-  addedByUserUuid: true,
+const CharacteristicsMaterialUpdateRequestSchema = CharacteristicsMaterialSchema.pick({
+  name: true,
+  value: true,
+  comment: true,
 }).partial();
 
 const CharacteristicsMaterialUpdateResponseSchema = z
   .object({
-    data: CharacteristicsMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: CharacteristicsMaterialSchema.pick({
+      uuid: true,
+      value: true,
+      name: true,
+      comment: true,
+      fieldOfCategoryMaterialUuid: true,
+      fieldUnitMeasurementUuid: true,
+      fieldTypeUuid: true,
+      handbookUuid: true,
+      categoryMaterialUuid: true,
+      materialUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

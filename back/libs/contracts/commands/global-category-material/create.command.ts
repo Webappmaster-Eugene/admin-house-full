@@ -2,17 +2,22 @@ import { z } from 'zod';
 import { ResponseClientSchema } from '../../models';
 import { GlobalCategoryMaterialSchema } from '../../models';
 
-const GlobalCategoryMaterialCreateRequestSchema = GlobalCategoryMaterialSchema.omit({
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
+const GlobalCategoryMaterialCreateRequestSchema = GlobalCategoryMaterialSchema.pick({
+  name: true,
+  nameRu: true,
+  comment: true,
+  color: true,
 });
 
 const GlobalCategoryMaterialCreateResponseSchema = z
   .object({
-    data: GlobalCategoryMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: GlobalCategoryMaterialSchema.pick({
+      name: true,
+      nameRu: true,
+      comment: true,
+      color: true,
+      uuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

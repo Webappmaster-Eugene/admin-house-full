@@ -2,15 +2,18 @@ import { z } from 'zod';
 import { StatusResourceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const StatusResourceUpdateRequestSchema = StatusResourceSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
+const StatusResourceUpdateRequestSchema = StatusResourceSchema.pick({
+  name: true,
+  comment: true,
 }).partial();
 
 const StatusResourceUpdateResponseSchema = z
   .object({
-    data: StatusResourceSchema.omit({
+    data: StatusResourceSchema.pick({
+      name: true,
+      comment: true,
+      uuid: true,
+      lastChangeByUserUuid: true,
       createdAt: true,
       updatedAt: true,
     }),

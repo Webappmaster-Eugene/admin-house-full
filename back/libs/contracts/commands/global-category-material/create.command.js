@@ -4,16 +4,21 @@ exports.GlobalCategoryMaterialCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const GlobalCategoryMaterialCreateRequestSchema = models_2.GlobalCategoryMaterialSchema.omit({
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
+const GlobalCategoryMaterialCreateRequestSchema = models_2.GlobalCategoryMaterialSchema.pick({
+    name: true,
+    nameRu: true,
+    comment: true,
+    color: true,
 });
 const GlobalCategoryMaterialCreateResponseSchema = zod_1.z
     .object({
-    data: models_2.GlobalCategoryMaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: models_2.GlobalCategoryMaterialSchema.pick({
+        name: true,
+        nameRu: true,
+        comment: true,
+        color: true,
+        uuid: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_1.ResponseClientSchema);

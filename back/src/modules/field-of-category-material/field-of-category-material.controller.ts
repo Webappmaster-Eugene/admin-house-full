@@ -115,7 +115,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -145,7 +145,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('сategoryMaterialId', ParseUUIDPipe)

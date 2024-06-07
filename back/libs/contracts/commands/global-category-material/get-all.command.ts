@@ -5,9 +5,13 @@ import { GlobalCategoryMaterialSchema } from '../../models';
 const GlobalCategoryMaterialGetAllResponseSchema = z
   .object({
     data: z.array(
-      GlobalCategoryMaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      GlobalCategoryMaterialSchema.pick({
+        name: true,
+        nameRu: true,
+        comment: true,
+        color: true,
+        uuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

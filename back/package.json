@@ -13,6 +13,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=production nest start",
+    "db:generate": "npx prisma generatc",
     "db:seed": "npx prisma db seed",
     "db:push": "npx prisma db push",
     "db:restart": "npx prisma migrate reset --force",
@@ -21,6 +22,7 @@
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
+    "madge": "npx madge dist/src/main.js --image ./graph/graph-actual.png",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -38,18 +40,19 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.1",
     "@nestjs/swagger": "^7.3.1",
-    "@numart/house-admin-contracts": "^0.1.5",
     "@prisma/client": "^5.14.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/uuid": "^9.0.8",
     "argon2": "^0.40.1",
     "cache-manager": "^5.5.1",
-    "cache-manager-redis-yet": "^5.0.0",
+    "cache-manager-redis-yet": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "madge": "^7.0.0",
     "nest-winston": "^1.9.4",
     "nestjs-zod": "^3.0.0",
     "redis": "^4.6.13",
@@ -61,6 +64,8 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^10.3.8",
+    "@numart/house-admin-contracts": "^1.0.6",
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/multer": "^1.4.11",
@@ -98,6 +103,10 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
   }
 }

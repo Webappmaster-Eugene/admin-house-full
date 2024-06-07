@@ -3,6 +3,7 @@ import { KFI } from '../../common/utils/di';
 import { CharacteristicsMaterialService } from './characteristics-material.service';
 import { CharacteristicsMaterialRepository } from './characteristics-material.repository';
 import { CharacteristicsMaterialController } from './characteristics-material.controller';
+import { FieldOfCategoryMaterialModule } from 'src/modules/field-of-category-material/field-of-category-material.module';
 
 @Module({
   providers: [
@@ -16,7 +17,7 @@ import { CharacteristicsMaterialController } from './characteristics-material.co
     },
   ],
   controllers: [CharacteristicsMaterialController],
-  imports: [],
+  imports: [FieldOfCategoryMaterialModule],
   exports: [KFI.CHARACTERISTICS_MATERIAL_SERVICE],
 })
 export class CharacteristicsMaterialModule {}

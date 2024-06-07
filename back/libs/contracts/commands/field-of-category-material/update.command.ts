@@ -2,20 +2,31 @@ import { z } from 'zod';
 import { FieldOfCategoryMaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldOfCategoryMaterialUpdateRequestSchema = FieldOfCategoryMaterialSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  handbookUuid: true,
-  createdByUuid: true,
-  categoryMaterialUuid: true,
+const FieldOfCategoryMaterialUpdateRequestSchema = FieldOfCategoryMaterialSchema.pick({
+  name: true,
+  comment: true,
+  uniqueNameForTemplate: true,
+  defaultValue: true,
+  unitOfMeasurementUuid: true,
+  // DOC пока не дадим пользователю изменять этип поля
+  //isRequired: true,
+  // fieldTypeUuid: true,
 }).partial();
 
 const FieldOfCategoryMaterialUpdateResponseSchema = z
   .object({
-    data: FieldOfCategoryMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldOfCategoryMaterialSchema.pick({
+      name: true,
+      comment: true,
+      uniqueNameForTemplate: true,
+      defaultValue: true,
+      isRequired: true,
+      unitOfMeasurementUuid: true,
+      fieldTypeUuid: true,
+      categoryMaterialUuid: true,
+      lastChangeByUserUuid: true,
+      handbookUuid: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

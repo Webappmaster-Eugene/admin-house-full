@@ -42,6 +42,7 @@ export class RolesRepository implements IRoleRepository {
           uuid: roleUuid,
         },
       });
+
       return existenceEntityHandler(concreteRole, RoleEntity, EntityName.ROLE) as RoleEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);

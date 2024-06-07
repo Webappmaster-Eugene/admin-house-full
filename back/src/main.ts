@@ -5,6 +5,8 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { ConfigService } from '@nestjs/config';
 import { CustomExceptionFilter } from './common/exceptions/custom-exception-filter';
 import { VersioningType } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
+import { IConfigService } from 'src/common/types/main/config.service.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -14,7 +16,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  const config = app.get(ConfigService);
+  const config = app.get(ConfigService<IConfigService>);
 
   app.setGlobalPrefix(config.get<string>('API_PREFIX'));
 
@@ -34,7 +36,6 @@ async function bootstrap() {
     .setVersion(config.get<string>('API_VERSION'))
     .setDescription('Документация REST API')
     .setVersion('1.1.0')
-    .addTag('current version')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' }, 'access-token')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
@@ -44,6 +45,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalFilters(new CustomExceptionFilter());
+  app.use(cookieParser());
 
   const PORT = Number(config.get<string>('APP_PORT')) || 3001;
 

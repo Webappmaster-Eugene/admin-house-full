@@ -4,7 +4,11 @@ import { ResponseClientSchema } from '../../models';
 
 const StatusResourceGetResponseSchema = z
   .object({
-    data: StatusResourceSchema.omit({
+    data: StatusResourceSchema.pick({
+      name: true,
+      comment: true,
+      uuid: true,
+      lastChangeByUserUuid: true,
       createdAt: true,
       updatedAt: true,
     }),

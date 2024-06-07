@@ -2,19 +2,22 @@ import { z } from 'zod';
 import { PriceChangingSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const PriceChangingUpdateRequestSchema = PriceChangingSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  changedByUuid: true,
-  materialUuid: true,
+const PriceChangingUpdateRequestSchema = PriceChangingSchema.pick({
+  source: true,
+  comment: true,
+  newPrice: true,
 }).partial();
 
 const PriceChangingUpdateResponseSchema = z
   .object({
-    data: PriceChangingSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: PriceChangingSchema.pick({
+      oldPrice: true,
+      comment: true,
+      newPrice: true,
+      source: true,
+      uuid: true,
+      lastChangeByUserUuid: true,
+      materialUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

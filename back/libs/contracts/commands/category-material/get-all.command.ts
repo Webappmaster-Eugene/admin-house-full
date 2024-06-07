@@ -5,9 +5,13 @@ import { ResponseClientSchema } from '../../models';
 const CategoryMaterialGetAllResponseSchema = z
   .object({
     data: z.array(
-      CategoryMaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      CategoryMaterialSchema.pick({
+        name: true,
+        templateName: true,
+        comment: true,
+        uuid: true,
+        globalCategoryMaterialUuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

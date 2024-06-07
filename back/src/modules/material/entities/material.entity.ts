@@ -11,6 +11,7 @@ export class MaterialEntity implements Material {
   categoryMaterialUuid: string;
   unitMeasurementUuid: string;
   responsiblePartnerUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

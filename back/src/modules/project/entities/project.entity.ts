@@ -8,6 +8,7 @@ export class ProjectEntity implements Project {
   customerMail: string;
   organizationUuid: string;
   responsibleManagerUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

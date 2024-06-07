@@ -9,4 +9,5 @@ exports.AuthSchema = zod_1.z.object({
     firstName: zod_1.z.string(),
     roleName: enums_1.EUserVariants,
     accessToken: zod_1.z.string(),
+    refreshToken: zod_1.z.string(),
 });

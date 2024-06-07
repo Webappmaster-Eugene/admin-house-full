@@ -6,9 +6,13 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const FieldVariantsForSelectorFieldTypeGetAllResponseSchema = zod_1.z
     .object({
-    data: zod_1.z.array(models_2.FieldVariantsForSelectorFieldTypeSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: zod_1.z.array(models_2.FieldVariantsForSelectorFieldTypeSchema.pick({
+        description: true,
+        value: true,
+        handbookUuid: true,
+        uuid: true,
+        fieldOfCategoryMaterialUuid: true,
+        lastChangeByUserUuid: true,
     })),
 })
     .merge(models_1.ResponseClientSchema);

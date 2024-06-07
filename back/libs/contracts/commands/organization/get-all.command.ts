@@ -5,9 +5,13 @@ import { ResponseClientSchema } from '../../models';
 const OrganizationGetAllResponseSchema = z
   .object({
     data: z.array(
-      OrganizationSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      OrganizationSchema.pick({
+        uuid: true,
+        name: true,
+        description: true,
+        organizationLeaderUuid: true,
+        workspaceUuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

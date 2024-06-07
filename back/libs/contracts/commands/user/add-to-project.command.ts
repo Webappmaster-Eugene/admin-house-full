@@ -4,6 +4,7 @@ import { ResponseClientSchema } from '../../models';
 
 const AddUserToProjectRequestSchema = UserSchema.pick({
   uuid: true,
+  memberOfProjectUuid: true,
 });
 
 const AddUserToProjectResponseSchema = z

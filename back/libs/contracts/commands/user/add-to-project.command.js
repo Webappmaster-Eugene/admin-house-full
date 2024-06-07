@@ -6,6 +6,7 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const AddUserToProjectRequestSchema = models_1.UserSchema.pick({
     uuid: true,
+    memberOfProjectUuid: true,
 });
 const AddUserToProjectResponseSchema = zod_1.z
     .object({

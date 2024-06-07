@@ -116,7 +116,6 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           unitOfMeasurementUuid,
           uniqueNameForTemplate,
           handbookUuid: handbookId,
-          createdByUuid: userId,
         },
       });
       return existenceEntityHandler(
@@ -134,7 +133,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
     dto: FieldOfCategoryMaterialCreateRequestDto,
   ): Promise<FieldOfCategoryMaterialEntity> {
     try {
-      const { name, comment, defaultValue, fieldTypeUuid, isRequired, categoryMaterialUuid, unitOfMeasurementUuid } = dto;
+      const { name, comment, defaultValue, unitOfMeasurementUuid } = dto;
       const updatedFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.update({
         where: {
           uuid: fieldOfCategoryMaterialId,
@@ -143,9 +142,6 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           name,
           comment,
           defaultValue,
-          fieldTypeUuid,
-          isRequired,
-          categoryMaterialUuid,
           unitOfMeasurementUuid,
         },
       });

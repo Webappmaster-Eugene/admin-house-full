@@ -1,30 +1,32 @@
-import { PrismaClient } from '.prisma/client';
 import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../src/common/helpers/regex/fieldOfCategoryMaterialRegexGenerator';
 import { templateNameMaterialGenerator } from '../src/common/helpers/regex/regexNameMaterialGenerator';
+import { PrismaClient } from '.prisma/client';
+
 const prisma = new PrismaClient();
+
 async function main() {
-  const ADMIN = await prisma?.role?.create({
+  const ADMIN_ROLE = await prisma?.role?.create({
     data: {
       name: 'ADMIN',
       description: 'Админ всего ПО (приложения)',
     },
   });
 
-  const MANAGER = await prisma?.role?.create({
+  const MANAGER_ROLE = await prisma?.role?.create({
     data: {
       name: 'MANAGER',
       description: 'Менеджер проекта, руководитель организации',
     },
   });
 
-  const WORKER = await prisma?.role?.create({
+  const WORKER_ROLE = await prisma?.role?.create({
     data: {
       name: 'WORKER',
       description: 'Сотрудник организации',
     },
   });
 
-  const CUSTOMER = await prisma?.role?.create({
+  const CUSTOMER_ROLE = await prisma?.role?.create({
     data: {
       name: 'CUSTOMER',
       description: 'Заказчик, покупатель',
@@ -35,7 +37,7 @@ async function main() {
     data: {
       email: 'admin@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
-      roleUuid: ADMIN.uuid,
+      roleUuid: ADMIN_ROLE.uuid,
       firstName: 'Admin',
       secondName: 'Starter',
       phone: '+79999999999',
@@ -47,7 +49,7 @@ async function main() {
     data: {
       email: 'worker@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
-      roleUuid: WORKER.uuid,
+      roleUuid: WORKER_ROLE.uuid,
       firstName: 'Worker',
       secondName: 'Starter',
       phone: '+79999999999',
@@ -59,7 +61,7 @@ async function main() {
     data: {
       email: 'customer@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
-      roleUuid: CUSTOMER.uuid,
+      roleUuid: CUSTOMER_ROLE.uuid,
       firstName: 'Customer',
       secondName: 'Starter',
       phone: '+79999999999',
@@ -71,7 +73,7 @@ async function main() {
     data: {
       email: 'manager@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
-      roleUuid: MANAGER.uuid,
+      roleUuid: MANAGER_ROLE.uuid,
       firstName: 'Manager',
       secondName: 'Starter',
       phone: '+79999999999',
@@ -157,7 +159,7 @@ async function main() {
     },
   });
 
-  const APP_SETTINGS = await prisma?.appSettings?.create({
+  const APP_SETTINGS = await prisma?.appInfo?.create({
     data: {
       name: 'Admin House - SaaS для эффективного контроля и составления сметной документации',
       description: 'Настройки приложения Admin House',
@@ -532,7 +534,6 @@ async function main() {
     data: {
       name: 'Диаметр метиза',
       comment: 'Диаметр окружности метиза',
-      createdByUuid: MANAGER_USER.uuid,
       defaultValue: '5',
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
@@ -546,7 +547,6 @@ async function main() {
     data: {
       name: 'Длина метиза',
       comment: 'Длина метиза',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
@@ -559,7 +559,6 @@ async function main() {
     data: {
       name: 'Подтип метиза',
       comment: 'Подтип метиза (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
@@ -572,7 +571,6 @@ async function main() {
     data: {
       name: 'Подтип листового материала',
       comment: 'Подтип листового материала (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -585,7 +583,6 @@ async function main() {
     data: {
       name: 'Подтип листового материала',
       comment: 'Подтип листового материала (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -598,7 +595,6 @@ async function main() {
     data: {
       name: 'Материал изготовления листового материала',
       comment: 'Материал изготовления листового материала (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -611,7 +607,6 @@ async function main() {
     data: {
       name: 'Толщина листового материала',
       comment: 'Толщина листового материала',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -624,7 +619,6 @@ async function main() {
     data: {
       name: 'Ширина листового материала',
       comment: 'Ширина листового материала',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -637,7 +631,6 @@ async function main() {
     data: {
       name: 'Длина листового материала',
       comment: 'Длина листового материала',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_2.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -650,7 +643,6 @@ async function main() {
     data: {
       name: 'Сорт листового материала',
       comment: 'Сорт листового материала (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -663,7 +655,6 @@ async function main() {
     data: {
       name: 'Сорт листового материала',
       comment: 'Сорт листового материала (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
@@ -676,12 +667,12 @@ async function main() {
     data: {
       name: 'Марка листового материала',
       comment: 'Марка листового материала (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: true,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
       fieldTypeUuid: FIELD_TYPE_2.uuid,
       handbookUuid: MANAGER_HANDBOOK.uuid,
+      lastChangeByUserUuid: MANAGER_USER.uuid,
     },
   });
 
@@ -689,12 +680,12 @@ async function main() {
     data: {
       name: 'ГОСТ листового материала',
       comment: 'ГОСТ листового материала (ТУ или без требований) (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: false,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
       fieldTypeUuid: FIELD_TYPE_2.uuid,
       handbookUuid: MANAGER_HANDBOOK.uuid,
+      lastChangeByUserUuid: MANAGER_USER.uuid,
     },
   });
 
@@ -702,12 +693,12 @@ async function main() {
     data: {
       name: 'Вид шины',
       comment: 'Вид шины (список)',
-      createdByUuid: MANAGER_USER.uuid,
       isRequired: false,
       unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_8.uuid,
       fieldTypeUuid: FIELD_TYPE_2.uuid,
       handbookUuid: MANAGER_HANDBOOK.uuid,
+      lastChangeByUserUuid: MANAGER_USER.uuid,
     },
   });
 
@@ -1061,7 +1052,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_0.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_0.unitOfMeasurementUuid,
     },
   });
@@ -1076,7 +1066,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
     },
   });
@@ -1090,7 +1079,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_2.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_2.unitOfMeasurementUuid,
     },
   });
@@ -1104,7 +1092,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_0.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_0.unitOfMeasurementUuid,
     },
   });
@@ -1118,7 +1105,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
     },
   });
@@ -1132,7 +1118,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_2.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_2.unitOfMeasurementUuid,
     },
   });
@@ -1146,7 +1131,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
     },
   });
@@ -1160,7 +1144,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
     },
   });
@@ -1174,7 +1157,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
     },
   });
@@ -1188,7 +1170,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_5.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_5.unitOfMeasurementUuid,
     },
   });
@@ -1202,7 +1183,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_6.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_6.unitOfMeasurementUuid,
     },
   });
@@ -1216,7 +1196,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_7.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_7.unitOfMeasurementUuid,
     },
   });
@@ -1230,7 +1209,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_8.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_8.unitOfMeasurementUuid,
     },
   });
@@ -1244,7 +1222,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
     },
   });
@@ -1258,7 +1235,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
       categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
-      addedByUserUuid: MANAGER_USER.uuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
     },
   });

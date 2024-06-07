@@ -11,4 +11,7 @@ exports.AppInfoSchema = zod_1.z.object({
     status: enums_1.EStatusVariants,
     language: enums_1.ELanguagesVariants,
     currency: enums_1.ECurrencyVariants,
+    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
+    createdAt: zod_1.z.coerce.date(),
+    updatedAt: zod_1.z.coerce.date(),
 });

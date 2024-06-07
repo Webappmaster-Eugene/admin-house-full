@@ -4,9 +4,13 @@ import { ResponseClientSchema } from '../../models';
 
 const OrganizationSchemaGetResponseSchema = z
   .object({
-    data: OrganizationSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: OrganizationSchema.pick({
+      uuid: true,
+      name: true,
+      description: true,
+      organizationLeaderUuid: true,
+      workspaceUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

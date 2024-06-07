@@ -3,14 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const UserCreateRequestSchema = models_1.UserSchema.omit({
-    memberOfWorkspaceUuid: true,
-    memberOfOrganizationUuid: true,
-    creatorOfWorkspaceUuid: true,
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-    roleUuid: true,
+const UserCreateRequestSchema = models_1.UserSchema.pick({
+    avatar: true,
+    info: true,
+    address: true,
+    secondName: true,
+    documents: true,
+    email: true,
+    password: true,
+    firstName: true,
+    phone: true,
 });
 const UserCreateResponseSchema = zod_1.z
     .object({

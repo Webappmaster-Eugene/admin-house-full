@@ -7,6 +7,7 @@ export class GlobalCategoryMaterialEntity implements GlobalCategoryMaterial {
   nameRu: string;
   comment: string;
   color: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

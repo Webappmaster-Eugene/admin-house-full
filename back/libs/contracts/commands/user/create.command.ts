@@ -1,14 +1,16 @@
 import { z } from 'zod';
 import { ResponseClientSchema, UserSchema } from '../../models';
 
-const UserCreateRequestSchema = UserSchema.omit({
-  memberOfWorkspaceUuid: true,
-  memberOfOrganizationUuid: true,
-  creatorOfWorkspaceUuid: true,
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-  roleUuid: true,
+const UserCreateRequestSchema = UserSchema.pick({
+  avatar: true,
+  info: true,
+  address: true,
+  secondName: true,
+  documents: true,
+  email: true,
+  password: true,
+  firstName: true,
+  phone: true,
 });
 
 const UserCreateResponseSchema = z

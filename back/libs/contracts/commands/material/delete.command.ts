@@ -5,9 +5,18 @@ import { ResponseClientSchema } from '../../models';
 
 const MaterialDeleteResponseSchema = z
   .object({
-    data: MaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: MaterialSchema.pick({
+      name: true,
+      price: true,
+      comment: true,
+      namePublic: true,
+      sourceInfo: true,
+      unitMeasurementUuid: true,
+      responsiblePartnerUuid: true,
+      categoryUuid: true,
+      handbookUuid: true,
+      lastChangeByUserUuid: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

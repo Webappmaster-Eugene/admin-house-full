@@ -5,9 +5,13 @@ import { GlobalCategoryMaterialSchema } from '../../models';
 
 const GlobalCategoryMaterialDeleteResponseSchema = z
   .object({
-    data: GlobalCategoryMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: GlobalCategoryMaterialSchema.pick({
+      name: true,
+      nameRu: true,
+      comment: true,
+      color: true,
+      uuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

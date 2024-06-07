@@ -4,6 +4,7 @@ import { ResponseClientSchema } from '../../models';
 
 const AddUserToOrganizationRequestSchema = UserSchema.pick({
   uuid: true,
+  memberOfOrganizationUuid: true,
 });
 
 const AddUserToOrganizationResponseSchema = z

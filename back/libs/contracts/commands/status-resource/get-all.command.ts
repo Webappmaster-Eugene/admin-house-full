@@ -5,7 +5,7 @@ import { ResponseClientSchema } from '../../models';
 const StatusResourceGetAllResponseSchema = z
   .object({
     data: z.array(
-      StatusResourceSchema.omit({
+      StatusResourceSchema.pick({
         createdAt: true,
         updatedAt: true,
       }),

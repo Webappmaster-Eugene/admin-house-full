@@ -37,22 +37,22 @@ export interface IUserController
   ) => Promise<UserUpdateResponseDto>;
   deleteByIdEP: (userId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<UserDeleteResponseDto>;
   getCurrentUserEP: (userInfoFromJWT: IJWTPayload, urlParams: IUrlParams) => Promise<UserGetResponseDto>;
-  addUserToManagerWorkspaceEP: (
+  addUserToWorkspaceEP: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToWorkspaceRequestDto,
+    dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     urlParams: IUrlParams,
   ) => Promise<AddUserToOrganizationResponseDto>;
-  addUserToManagerOrganizationEP: (
+  addUserToOrganizationEP: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToOrganizationRequestDto,
+    dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     urlParams: IUrlParams,
   ) => Promise<AddUserToOrganizationResponseDto>;
-  addUserToManagerProjectEP: (
+  addUserToProjectEP: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     projectId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToProjectRequestDto,
+    dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     urlParams: IUrlParams,
   ) => Promise<AddUserToProjectResponseDto>;
 }

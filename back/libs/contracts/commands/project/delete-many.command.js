@@ -7,7 +7,7 @@ const ProjectSchemaDeleteManyRequestSchema = models_1.ProjectSchema.pick({
     uuid: true,
 });
 const ProjectSchemaDeleteManyResponseSchema = zod_1.z.object({
-    deletedWorkspace: zod_1.z.array(models_1.ProjectSchema),
+    deletedProjects: zod_1.z.array(models_1.ProjectSchema),
     count: zod_1.z.number(),
 });
 var ProjectSchemaDeleteManyCommand;

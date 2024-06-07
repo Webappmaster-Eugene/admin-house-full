@@ -3,19 +3,20 @@ import { ResponseClientSchema } from '../../models';
 import {} from '../../models/field-variants-for-selector-field-type';
 import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
-const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  fieldOfCategoryMaterialUuid: true,
-  handbookUuid: true,
+const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.pick({
+  description: true,
+  value: true,
 }).partial();
 
 const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = z
   .object({
-    data: FieldVariantsForSelectorFieldTypeSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldVariantsForSelectorFieldTypeSchema.pick({
+      description: true,
+      value: true,
+      handbookUuid: true,
+      uuid: true,
+      fieldOfCategoryMaterialUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

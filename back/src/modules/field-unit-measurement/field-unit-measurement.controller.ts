@@ -115,7 +115,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   //endregion
   @UseGuards(AuthGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)

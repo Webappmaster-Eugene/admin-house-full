@@ -43,6 +43,19 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
   }
 
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
+    const { skip, take } = queryParams;
+    const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAllInCategoryMaterial(
+      categoryMaterialId,
+      skip,
+      take,
+    );
+    return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
+  }
+
   async getAllInFieldOfCategoryMaterial(
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,

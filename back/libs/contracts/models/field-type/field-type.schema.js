@@ -10,4 +10,5 @@ exports.FieldTypeSchema = zod_1.z.object({
     description: zod_1.z.string().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
 });

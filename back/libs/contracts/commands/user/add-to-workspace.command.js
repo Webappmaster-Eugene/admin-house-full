@@ -5,6 +5,7 @@ const zod_1 = require("zod");
 const models_1 = require("../../models");
 const AddUserToWorkspaceRequestSchema = models_1.UserSchema.pick({
     uuid: true,
+    memberOfWorkspaceUuid: true,
 });
 const AddUserToWorkspaceResponseSchema = zod_1.z
     .object({

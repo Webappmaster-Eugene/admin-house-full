@@ -102,7 +102,7 @@ export class OrganizationController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(OrganizationGetAllResponseDto)
-  @Get()
+  @Get('/in-workspace')
   async getAllInWorkspaceEP(
     @UrlParams() urlParams: IUrlParams,
 

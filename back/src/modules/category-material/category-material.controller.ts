@@ -111,7 +111,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CategoryMaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)

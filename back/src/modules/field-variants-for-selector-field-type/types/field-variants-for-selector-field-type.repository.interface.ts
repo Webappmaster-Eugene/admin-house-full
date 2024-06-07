@@ -19,6 +19,11 @@ export interface IFieldVariantsForSelectorFieldTypeRepository
     skip?: number,
     take?: number,
   ) => Promise<FieldVariantsForSelectorFieldTypeEntity[]>;
+  getAllInCategoryMaterial: (
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip?: number,
+    take?: number,
+  ) => Promise<FieldVariantsForSelectorFieldTypeEntity[]>;
   getAllInFieldOfCategoryMaterial: (
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip?: number,

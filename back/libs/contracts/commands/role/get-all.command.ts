@@ -9,6 +9,8 @@ const RoleGetAllResponseSchema = z
         uuid: true,
         idRole: true,
         name: true,
+        description: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

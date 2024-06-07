@@ -1,14 +1,15 @@
-import Columns from "@/shared/columns";
-import {Button} from "@/shared/ui";
+'use client';
 
-export default function Home() {
-  return (
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { PATH_AFTER_LOGIN } from '@/shared/config-global';
 
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        {/* <div className='mx-auto w-full max-w-7xl px-6'> */}
-        {/*  <Columns/> */}
-        {/* </div> */}
-          <Button appearance={"primary"}>gdgdfgdf </Button>
-      </main>
-  );
+export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push(PATH_AFTER_LOGIN);
+  }, [router]);
+
+  return null;
 }

@@ -5,9 +5,12 @@ import { ResponseClientSchema } from '../../models';
 const FieldTypeGetAllResponseSchema = z
   .object({
     data: z.array(
-      FieldTypeSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      FieldTypeSchema.pick({
+        name: true,
+        description: true,
+        jsType: true,
+        lastChangeByUserUuid: true,
+        uuid: true,
       }),
     ),
   })

@@ -3,9 +3,18 @@ import { CharacteristicsMaterialSchema, ResponseClientSchema } from '../../model
 
 const CharacteristicsMaterialGetResponseSchema = z
   .object({
-    data: CharacteristicsMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: CharacteristicsMaterialSchema.pick({
+      uuid: true,
+      value: true,
+      name: true,
+      comment: true,
+      fieldOfCategoryMaterialUuid: true,
+      fieldUnitMeasurementUuid: true,
+      fieldTypeUuid: true,
+      handbookUuid: true,
+      categoryMaterialUuid: true,
+      materialUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

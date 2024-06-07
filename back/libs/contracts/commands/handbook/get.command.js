@@ -6,9 +6,14 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const HandbookGetResponseSchema = zod_1.z
     .object({
-    data: models_1.HandbookSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: models_1.HandbookSchema.pick({
+        name: true,
+        description: true,
+        canCustomerView: true,
+        uuid: true,
+        responsibleManagerUuid: true,
+        workspaceUuid: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_2.ResponseClientSchema);

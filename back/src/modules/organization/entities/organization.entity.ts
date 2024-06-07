@@ -6,6 +6,7 @@ export class OrganizationEntity implements Organization {
   workspaceUuid: string;
   organizationLeaderUuid: string;
   description: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

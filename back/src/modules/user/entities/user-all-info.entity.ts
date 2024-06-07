@@ -18,6 +18,7 @@ export class UserAllInfoEntity implements User {
   memberOfOrganizationUuid: string;
   memberOfProjectUuid: string;
   handbookManagerUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
   role: typeof RoleSchema;

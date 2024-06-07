@@ -40,7 +40,7 @@ import { IQueryParams, QueryParams } from '../../common/decorators/query-params.
 
 @ApiTags('Работа с CharacteristicsMaterial')
 @Controller(
-  'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristics-material',
+  'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/use-field-category-material/:fieldCategoryMaterialId/use-field-category-material/:fieldCategoryMaterialId/characteristics-material',
 )
 export class CharacteristicsMaterialController implements ICharacteristicsMaterialController {
   constructor(
@@ -117,7 +117,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -147,7 +147,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('categoryMaterialId', ParseUUIDPipe)
@@ -177,7 +177,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-material')
   async getAllInMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('materialId', ParseUUIDPipe)
@@ -215,6 +215,8 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     @Param('materialId', ParseUUIDPipe)
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('fieldCategoryMaterialId', ParseUUIDPipe)
+    fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     @User() userInfoFromJWT: IJWTPayload,
   ): Promise<CharacteristicsMaterialCreateResponseDto> {
     try {
@@ -223,6 +225,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
         handbookId,
         categoryMaterialId,
         materialId,
+        fieldCategoryMaterialId,
         userInfoFromJWT.uuid,
       );
       return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);

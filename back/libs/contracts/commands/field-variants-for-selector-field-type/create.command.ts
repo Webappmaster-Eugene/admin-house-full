@@ -2,19 +2,20 @@ import { z } from 'zod';
 import { ResponseClientSchema } from '../../models';
 import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
-const FieldVariantsForSelectorFieldTypeCreateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.omit({
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-  characteristicsMaterialUuid: true,
-  handbookUuid: true,
+const FieldVariantsForSelectorFieldTypeCreateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.pick({
+  description: true,
+  value: true,
 });
 
 const FieldVariantsForSelectorFieldTypeCreateResponseSchema = z
   .object({
-    data: FieldVariantsForSelectorFieldTypeSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldVariantsForSelectorFieldTypeSchema.pick({
+      description: true,
+      value: true,
+      handbookUuid: true,
+      uuid: true,
+      fieldOfCategoryMaterialUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

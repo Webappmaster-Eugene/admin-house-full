@@ -5,9 +5,18 @@ import { ResponseClientSchema } from '../../models';
 const MaterialGetAllResponseSchema = z
   .object({
     data: z.array(
-      MaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      MaterialSchema.pick({
+        name: true,
+        price: true,
+        comment: true,
+        namePublic: true,
+        sourceInfo: true,
+        unitMeasurementUuid: true,
+        responsiblePartnerUuid: true,
+        categoryUuid: true,
+        handbookUuid: true,
+        lastChangeByUserUuid: true,
+        uuid: true,
       }),
     ),
   })

@@ -109,7 +109,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     try {
       const { newPrice, comment, source } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
-        data: { newPrice, comment, source, changedByUuid: changedById, materialUuid: materialId },
+        data: { newPrice, comment, source, materialUuid: materialId },
       });
       return existenceEntityHandler(newPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
     } catch (error: unknown) {

@@ -125,24 +125,27 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    fieldTypeUuid: EntityUrlParamCommand.RequestUuidParam,
+    unitOfMeasurementUuid: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<CharacteristicsMaterialEntity> {
     try {
-      const { name, comment, fieldTypeUuid, fieldUnitMeasurementUuid, fieldOfCategoryMaterialUuid, value } = dto;
+      const { name, comment, value } = dto;
       const newCharacteristicsMaterial = await this.databaseService.characteristicsMaterial.create({
         data: {
           name,
           comment,
+          fieldUnitMeasurementUuid: unitOfMeasurementUuid,
           fieldTypeUuid,
-          fieldUnitMeasurementUuid,
-          fieldOfCategoryMaterialUuid,
+          fieldOfCategoryMaterialUuid: fieldCategoryMaterialId,
           value,
           categoryMaterialUuid: categoryMaterialId,
-          addedByUserUuid: userId,
           materialUuid: materialId,
           handbookUuid: handbookId,
         },
       });
+
       return existenceEntityHandler(
         newCharacteristicsMaterial,
         CharacteristicsMaterialEntity,

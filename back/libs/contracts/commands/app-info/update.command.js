@@ -11,8 +11,14 @@ const AppInfoUpdateRequestSchema = models_2.AppInfoSchema.omit({
     .strict();
 const AppInfoUpdateResponseSchema = zod_1.z
     .object({
-    data: models_2.AppInfoSchema.omit({
-        uuid: true,
+    data: models_2.AppInfoSchema.pick({
+        status: true,
+        comment: true,
+        language: true,
+        currency: true,
+        name: true,
+        description: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_1.ResponseClientSchema);

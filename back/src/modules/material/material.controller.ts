@@ -107,7 +107,7 @@ export class MaterialController implements IMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -136,7 +136,7 @@ export class MaterialController implements IMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialGetAllResponseDto)
-  @Get()
+  @Get('/in-category-material/')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

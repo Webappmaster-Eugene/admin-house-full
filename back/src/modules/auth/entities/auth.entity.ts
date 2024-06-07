@@ -6,6 +6,7 @@ export class AuthEntity {
   firstName: string;
   roleName: EUserTypeVariants;
   accessToken: string;
+  refreshToken: string;
 
   constructor(auth: Partial<AuthEntity>) {
     Object.assign(this, auth);

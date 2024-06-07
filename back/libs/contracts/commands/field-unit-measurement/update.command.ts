@@ -2,17 +2,19 @@ import { z } from 'zod';
 import { FieldUnitMeasurementSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldUnitMeasurementUpdateRequestSchema = FieldUnitMeasurementSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
+const FieldUnitMeasurementUpdateRequestSchema = FieldUnitMeasurementSchema.pick({
+  name: true,
+  comment: true,
 }).partial();
 
 const FieldUnitMeasurementUpdateResponseSchema = z
   .object({
-    data: FieldUnitMeasurementSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldUnitMeasurementSchema.pick({
+      name: true,
+      comment: true,
+      uuid: true,
+      handbookUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

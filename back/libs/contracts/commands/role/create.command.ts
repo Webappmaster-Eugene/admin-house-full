@@ -2,11 +2,9 @@ import { z } from 'zod';
 import { RoleSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const RoleCreateRequestSchema = RoleSchema.omit({
-  idRole: true,
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
+const RoleCreateRequestSchema = RoleSchema.pick({
+  name: true,
+  description: true,
 }).merge(
   z.object({
     key: z.string(),
@@ -19,6 +17,8 @@ const RoleCreateResponseSchema = z
       uuid: true,
       idRole: true,
       name: true,
+      description: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

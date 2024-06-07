@@ -7,6 +7,7 @@ export class HandbookEntity implements Handbook {
   canCustomerView: boolean;
   responsibleManagerUuid: string;
   workspaceUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

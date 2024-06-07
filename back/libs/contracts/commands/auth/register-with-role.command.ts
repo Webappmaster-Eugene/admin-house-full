@@ -7,14 +7,16 @@ const AuthRegisterWithRoleRequestParamSchema = z.object({
   registerWithRoleKey: z.string(),
 });
 
-const AuthRegisterWithRoleRequestSchema = UserSchema.omit({
-  memberOfWorkspaceUuid: true,
-  memberOfOrganizationUuid: true,
-  creatorOfWorkspaceUuid: true,
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-  roleUuid: true,
+const AuthRegisterWithRoleRequestSchema = UserSchema.pick({
+  email: true,
+  password: true,
+  address: true,
+  documents: true,
+  firstName: true,
+  secondName: true,
+  info: true,
+  phone: true,
+  avatar: true,
 })
   .merge(ConfirmPasswordSchema)
   .refine(

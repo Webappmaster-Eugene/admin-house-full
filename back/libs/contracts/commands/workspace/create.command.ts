@@ -2,12 +2,9 @@ import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const WorkspaceCreateRequestSchema = WorkspaceSchema.omit({
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-  workspaceCreatorUuid: true,
-  handbookOfWorkspaceUuid: true,
+const WorkspaceCreateRequestSchema = WorkspaceSchema.pick({
+  name: true,
+  description: true,
 });
 
 const WorkspaceCreateResponseSchema = z

@@ -77,6 +77,33 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
     }
   }
 
+  async getAllInCategoryMaterial(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_5,
+  ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allFieldVariantsForSelectorFieldTypes = await this.databaseService.fieldVariantsForSelectorFieldType.findMany({
+        where: {
+          fieldOfCategoryMaterial: {
+            categoryMaterialUuid: categoryMaterialId,
+          },
+        },
+        skip,
+        take,
+      });
+      return existenceEntityHandler(
+        allFieldVariantsForSelectorFieldTypes,
+        FieldVariantsForSelectorFieldTypeEntity,
+        EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE,
+      ) as FieldVariantsForSelectorFieldTypeEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async getAllInFieldOfCategoryMaterial(
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,

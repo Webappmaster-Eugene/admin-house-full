@@ -6,9 +6,13 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const GlobalCategoryMaterialGetAllResponseSchema = zod_1.z
     .object({
-    data: zod_1.z.array(models_2.GlobalCategoryMaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: zod_1.z.array(models_2.GlobalCategoryMaterialSchema.pick({
+        name: true,
+        nameRu: true,
+        comment: true,
+        color: true,
+        uuid: true,
+        lastChangeByUserUuid: true,
     })),
 })
     .merge(models_1.ResponseClientSchema);

@@ -5,9 +5,17 @@ import { ResponseClientSchema } from '../../models';
 const ProjectGetAllResponseSchema = z
   .object({
     data: z.array(
-      ProjectSchema.omit({
+      ProjectSchema.pick({
+        name: true,
+        description: true,
+        customerMail: true,
+        customerUuid: true,
         createdAt: true,
         updatedAt: true,
+        uuid: true,
+        responsibleManagerUuid: true,
+        organizationUuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

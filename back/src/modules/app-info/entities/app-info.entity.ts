@@ -1,7 +1,7 @@
-import { AppSettings } from '.prisma/client';
 import { ECurrencyTypeVariantsType, ELanguagesTypeVariantsType, EStatusAppType } from '../../../common/generated/zod';
+import { AppInfo } from '.prisma/client';
 
-export class AppInfoEntity implements AppSettings {
+export class AppInfoEntity implements AppInfo {
   uuid: string;
   comment: string;
   description: string;
@@ -9,8 +9,11 @@ export class AppInfoEntity implements AppSettings {
   status: EStatusAppType;
   name: string;
   currency: ECurrencyTypeVariantsType;
+  lastChangeByUserUuid: string;
+  createdAt: Date;
+  updatedAt: Date;
 
-  constructor(appInfo: Partial<AppSettings>) {
+  constructor(appInfo: Partial<AppInfo>) {
     Object.assign(this, appInfo);
     return this;
   }

@@ -3,14 +3,16 @@ import { AuthSchema, UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 import { ConfirmPasswordSchema } from '../../models';
 
-const AuthRegisterRequestSchema = UserSchema.omit({
-  memberOfWorkspaceUuid: true,
-  memberOfOrganizationUuid: true,
-  creatorOfWorkspaceUuid: true,
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-  roleUuid: true,
+const AuthRegisterRequestSchema = UserSchema.pick({
+  email: true,
+  password: true,
+  address: true,
+  documents: true,
+  firstName: true,
+  secondName: true,
+  info: true,
+  phone: true,
+  avatar: true,
 })
   .merge(ConfirmPasswordSchema)
   .refine(

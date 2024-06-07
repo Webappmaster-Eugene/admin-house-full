@@ -3,10 +3,11 @@ import { PriceChanging } from '.prisma/client';
 export class PriceChangingEntity implements PriceChanging {
   uuid: string;
   newPrice: number;
-  changedByUuid: string;
+  oldPrice: number;
   comment: string;
   source: string;
   materialUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

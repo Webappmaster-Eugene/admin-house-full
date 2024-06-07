@@ -4,9 +4,13 @@ generator client {
 }
 
 generator zod {
-  provider         = "zod-prisma-types"
-  output           = "../src/common/generated/zod"
-  createInputTypes = false
+  provider                         = "zod-prisma-types"
+  output                           = "../src/common/generated/zod"
+  createInputTypes                 = false
+  createOptionalDefaultValuesTypes = true
+  useDefaultValidators             = false
+  writeNullishInModelTypes         = true // Accept "undefined" in nullable fields
+  useTypeAssertions                = true // silence typescript issues :p
 }
 
 datasource db {
@@ -14,96 +18,114 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model RegisterWithRoleKey {
-  uuid String @id @default(uuid()) @db.Uuid
-  key  String @unique
-
-  @@map("register_with_role_key")
-}
-
-model AppSettings {
-  uuid        String                 @id @default(uuid()) @db.Uuid
-  name        String
-  description String
-  comment     String
-  status      EStatusApp
-  language    ELanguagesTypeVariants
-  currency    ECurrencyTypeVariants
+// DOC Информация о приложении (App-Info) - определяются на уровне приложения (создаются автоматически сидами, изменяются админом):
+// DOC app-info
+model AppInfo {
+  uuid                 String                 @id @default(uuid()) @db.Uuid
+  name                 String
+  description          String
+  comment              String
+  status               EStatusApp
+  language             ELanguagesTypeVariants
+  currency             ECurrencyTypeVariants
+  lastChangeByUserUuid String?                @map("last_change_by_user_uuid") @db.Uuid
+  // If you delete a AppInfo, the AppInfo is not removed from all logs because RESTRICT,
+  lastChangeByUser     User?                  @relation("AppInfo_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @updatedAt @map("updated_at")
 
   @@map("app_settings")
 }
 
-enum EStatusApp {
-  UP
-  DOWN
-}
-
-enum ELanguagesTypeVariants {
-  RUSSIAN
-  ENGLISH
-}
-
-enum ECurrencyTypeVariants {
-  RUB
-  USD
-  EUR
-  BYR
-}
-
-model User {
-  uuid                         String                    @id @default(uuid()) @db.Uuid
-  firstName                    String                    @map("first_name")
-  secondName                   String?                   @map("second_name")
-  avatar                       String?
-  phone                        String?
-  email                        String                    @unique
-  password                     String
-  address                      String?
-  info                         String?
-  documents                    String?
-  customerOfProjects           Project[]                 @relation("project_customer")
-  responsibleManagerOfProjects Project[]                 @relation("project_responsible_manager")
-  fieldsOfCategoryMaterials    FieldOfCategoryMaterial[]
-  changedPrices                PriceChanging[]
-  roleUuid                     String                    @map("role_uuid") @db.Uuid
-  role                         Role                      @relation(fields: [roleUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  creatorOfWorkspaceUuid       String?                   @map("creator_of_workspace_uuid") @db.Uuid
-  creatorOfWorkspace           Workspace?                @relation("creator_of_workspace")
-  handbookManagerUuid          String?                   @map("handbook_manager_uuid") @db.Uuid
-  handbookManager              Handbook?
-  memberOfWorkspaceUuid        String?                   @map("member_of_workspace_uuid") @db.Uuid
-  memberOfWorkspace            Workspace?                @relation("workspace_members", fields: [memberOfWorkspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  memberOfOrganizationUuid     String?                   @map("member_of_organization_uuid") @db.Uuid
-  memberOfOrganization         Organization?             @relation("organization_members", fields: [memberOfOrganizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  memberOfProjectUuid          String?                   @map("member_of_project_uuid") @db.Uuid
-  memberOfProject              Project?                  @relation("project_members", fields: [memberOfProjectUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  leaderOfOrganizations        Organization[]
-  characteristicsMaterials     CharacteristicsMaterial[]
-  createdAt                    DateTime                  @default(now()) @map("created_at")
-  updatedAt                    DateTime                  @updatedAt @map("updated_at")
-
-  @@map("user")
-}
-
+// DOC Роль (Role) - определяются на уровне приложения (создаются автоматически сидами, изменяются админом):
+// DOC role
 model Role {
-  uuid        String            @id @default(uuid()) @db.Uuid
-  idRole      Int?              @unique @default(autoincrement()) @map("id_role")
-  name        EUserTypeVariants @unique
-  description String?
-  users       User[]
-  createdAt   DateTime          @default(now()) @map("created_at")
-  updatedAt   DateTime          @updatedAt @map("updated_at")
+  uuid                 String            @id @default(uuid()) @db.Uuid
+  idRole               Int?              @unique @default(autoincrement()) @map("id_role")
+  name                 EUserTypeVariants @unique
+  description          String?
+  users                User[]            @relation("role_uuid")
+  lastChangeByUserUuid String?           @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?             @relation("Role_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt            DateTime          @default(now()) @map("created_at")
+  updatedAt            DateTime          @updatedAt @map("updated_at")
 
   @@map("role")
 }
 
-enum EUserTypeVariants {
-  ADMIN
-  MANAGER
-  WORKER
-  CUSTOMER
+// DOC Пользователи (Users) определяются на уровне приложения (4 создаются автоматически сидами, остальные регистрируются):
+// DOC user
+
+// DOC Авторизация (Auth) определяется на уровне приложения:
+// DOC login, register
+model User {
+  uuid                              String                              @id @default(uuid()) @db.Uuid
+  firstName                         String                              @map("first_name")
+  secondName                        String?                             @map("second_name")
+  avatar                            String?
+  phone                             String?
+  email                             String                              @unique
+  password                          String
+  address                           String?
+  info                              String?
+  documents                         String?
+  customerOfProjects                Project[]                           @relation("project_customer")
+  responsibleManagerOfProjects      Project[]                           @relation("project_responsible_manager")
+  roleUuid                          String                              @map("role_uuid") @db.Uuid
+  role                              Role                                @relation("role_uuid", fields: [roleUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  creatorOfWorkspaceUuid            String?                             @map("creator_of_workspace_uuid") @db.Uuid
+  creatorOfWorkspace                Workspace?                          @relation("creator_of_workspace")
+  handbookManagerUuid               String?                             @map("handbook_manager_uuid") @db.Uuid
+  handbookManager                   Handbook?
+  memberOfWorkspaceUuid             String?                             @map("member_of_workspace_uuid") @db.Uuid
+  memberOfWorkspace                 Workspace?                          @relation("workspace_members", fields: [memberOfWorkspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  memberOfOrganizationUuid          String?                             @map("member_of_organization_uuid") @db.Uuid
+  memberOfOrganization              Organization?                       @relation("organization_members", fields: [memberOfOrganizationUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  memberOfProjectUuid               String?                             @map("member_of_project_uuid") @db.Uuid
+  memberOfProject                   Project?                            @relation("project_members", fields: [memberOfProjectUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  leaderOfOrganizations             Organization[]
+  lastChangeByUserUuid              String?                             @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser                  User?                               @relation("User_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  AppInfo                           AppInfo[]                           @relation("AppInfo_changed_by")
+  Role                              Role[]                              @relation("Role_changed_by")
+  RegisterWithRoleKey               RegisterWithRoleKey[]               @relation("RegisterWithRoleKey_changed_by")
+  Workspace                         Workspace[]                         @relation("Workspace_changed_by")
+  Handbook                          Handbook[]                          @relation("Handbook_changed_by")
+  Organization                      Organization[]                      @relation("Organization_changed_by")
+  Project                           Project[]                           @relation("Project_changed_by")
+  FieldType                         FieldType[]                         @relation("FieldType_changed_by")
+  GlobalCategoryMaterial            GlobalCategoryMaterial[]            @relation("GlobalCategoryMaterial_changed_by")
+  CategoryMaterial                  CategoryMaterial[]                  @relation("CategoryMaterial_changed_by")
+  FieldUnitMeasurement              FieldUnitMeasurement[]              @relation("FieldUnitMeasurement_changed_by")
+  FieldOfCategoryMaterial           FieldOfCategoryMaterial[]           @relation("FieldOfCategoryMaterial_changed_by")
+  FieldVariantsForSelectorFieldType FieldVariantsForSelectorFieldType[] @relation("FieldVariantsForSelectorFieldType_changed_by")
+  ResponsiblePartnerProducer        ResponsiblePartnerProducer[]        @relation("ResponsiblePartnerProducer_changed_by")
+  Material                          Material[]                          @relation("Material_changed_by")
+  CharacteristicsMaterial           CharacteristicsMaterial[]           @relation("CharacteristicsMaterial_changed_by")
+  PriceChanging                     PriceChanging[]                     @relation("PriceChanging_changed_by")
+  StatusResource                    StatusResource[]                    @relation("StatusResource_changed_by")
+  User                              User[]                              @relation("User_changed_by")
+  createdAt                         DateTime                            @default(now()) @map("created_at")
+  updatedAt                         DateTime                            @updatedAt @map("updated_at")
+
+  @@map("user")
 }
 
+// DOC Ключ для регистрации пользователя с ролью менеджера, работника или админа (RegisterWithRoleKey) - определяется на уровне приложения (создается автоматически сидами, изменяется (обновляется) админом):
+// DOC auth/strict-admin-key
+model RegisterWithRoleKey {
+  uuid                 String   @id @default(uuid()) @db.Uuid
+  key                  String   @unique
+  lastChangeByUserUuid String?  @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?    @relation("RegisterWithRoleKey_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("register_with_role_key")
+}
+
+// DOC Информационное пространство (Workspaces) - определяются на уровне приложения (создаются автоматически при создании пользователя-менеджера):
+// DOC workspace
 model Workspace {
   uuid                    String         @id @default(uuid()) @db.Uuid
   name                    String
@@ -114,12 +136,42 @@ model Workspace {
   organizations           Organization[]
   handbookOfWorkspaceUuid String?        @unique @map("handbook_of_workspace_uuid") @db.Uuid
   handbookOfWorkspace     Handbook?
+  lastChangeByUserUuid    String?        @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser        User?          @relation("Workspace_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt               DateTime       @default(now()) @map("created_at")
   updatedAt               DateTime       @updatedAt @map("updated_at")
 
   @@map("workspace")
 }
 
+// DOC Справочник (Handbook) - определяются на уровне приложения (создаются автоматически при создании пользователя-менеджера):
+// DOC workspace/:workspaceId/handbook
+model Handbook {
+  uuid                         String                              @id @default(uuid()) @db.Uuid
+  name                         String
+  description                  String?
+  canCustomerView              Boolean?                            @default(false) @map("can_customer_view")
+  workspaceUuid                String                              @unique @map("workspace_uuid") @db.Uuid
+  workspace                    Workspace                           @relation(fields: [workspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  responsibleManagerUuid       String                              @unique @map("responsible_manager_uuid") @db.Uuid
+  responsibleManager           User?                               @relation(fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  materials                    Material[]
+  fieldsOfCategoryMaterials    FieldOfCategoryMaterial[]
+  categoryMaterials            CategoryMaterial[]
+  responsiblePartnerProducers  ResponsiblePartnerProducer[]
+  fieldUnitMeasurements        FieldUnitMeasurement[]
+  fieldVariantsForSelectorType FieldVariantsForSelectorFieldType[]
+  characteristicsMaterials     CharacteristicsMaterial[]
+  lastChangeByUserUuid         String?                             @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser             User?                               @relation("Handbook_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt                    DateTime                            @default(now()) @map("created_at")
+  updatedAt                    DateTime                            @updatedAt @map("updated_at")
+
+  @@map("handbook")
+}
+
+// DOC Организации (Organization) - определяются на уровне workspace (создаются менеджером workspace):
+// DOC workspace/:workspaceId/organization/
 model Organization {
   uuid                   String    @id @default(uuid()) @db.Uuid
   name                   String
@@ -130,12 +182,16 @@ model Organization {
   organizationLeader     User      @relation(fields: [organizationLeaderUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   organizationMembers    User[]    @relation("organization_members")
   projects               Project[]
+  lastChangeByUserUuid   String?   @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser       User?     @relation("Organization_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt              DateTime  @default(now()) @map("created_at")
   updatedAt              DateTime  @updatedAt @map("updated_at")
 
   @@map("organization")
 }
 
+// DOC Проекты (Project) - определяются на уровне workspace (создаются менеджером workspace):
+// DOC workspace/:workspaceId/organization/:organizationId/project/
 model Project {
   uuid                   String       @id @default(uuid()) @db.Uuid
   name                   String
@@ -148,155 +204,50 @@ model Project {
   responsibleManagerUuid String       @map("responsible_manager_uuid") @db.Uuid
   responsibleManager     User         @relation("project_responsible_manager", fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   projectMembers         User[]       @relation("project_members")
+  lastChangeByUserUuid   String?      @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser       User?        @relation("Project_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt              DateTime     @default(now()) @map("created_at")
   updatedAt              DateTime     @updatedAt @map("updated_at")
 
   @@map("project")
 }
 
-model Handbook {
-  uuid                         String                              @id @default(uuid()) @db.Uuid
-  name                         String
-  description                  String?
-  canCustomerView              Boolean?                            @default(false) @map("can_customer_view")
-  workspaceUuid                String?                             @unique @map("workspace_uuid") @db.Uuid
-  workspace                    Workspace?                          @relation(fields: [workspaceUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  responsibleManagerUuid       String                              @unique @map("responsible_manager_uuid") @db.Uuid
-  responsibleManager           User?                               @relation(fields: [responsibleManagerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  materials                    Material[]
-  fieldsOfCategoryMaterials    FieldOfCategoryMaterial[]
-  categoryMaterials            CategoryMaterial[]
-  responsiblePartnerProducers  ResponsiblePartnerProducer[]
-  fieldUnitMeasurements        FieldUnitMeasurement[]
-  fieldVariantsForSelectorType FieldVariantsForSelectorFieldType[]
-  characteristicsMaterials     CharacteristicsMaterial[]
-  createdAt                    DateTime                            @default(now()) @map("created_at")
-  updatedAt                    DateTime                            @updatedAt @map("updated_at")
-
-  @@map("handbook")
-}
-
+// DOC Тип поля (FieldType) - определяются на уровне приложения (создаются автоматически, изменяются администратором):
+// DOC field-type
 model FieldType {
   uuid                      String                    @id @default(uuid()) @db.Uuid
   name                      String
-  description               String
+  description               String?
   jsType                    EFieldTypeVariants        @map("js_type")
   fieldsOfCategoryMaterials FieldOfCategoryMaterial[]
   characteristicsMaterial   CharacteristicsMaterial[]
+  lastChangeByUserUuid      String?                   @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser          User?                     @relation("FieldType_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt                 DateTime                  @default(now()) @map("created_at")
   updatedAt                 DateTime                  @updatedAt @map("updated_at")
 
   @@map("field_type")
 }
 
-model FieldVariantsForSelectorFieldType {
-  uuid                        String                   @id @default(uuid()) @db.Uuid
-  value                       String
-  description                 String?
-  handbookUuid                String                   @map("handbook_uuid") @db.Uuid
-  handbook                    Handbook                 @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldOfCategoryMaterialUuid String                   @map("field_of_category_material_uuid") @db.Uuid
-  fieldOfCategoryMaterial     FieldOfCategoryMaterial  @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  characteristicsMaterialUuid String?                  @map("characteristics_material_uuid") @db.Uuid
-  characteristicsMaterial     CharacteristicsMaterial? @relation(fields: [characteristicsMaterialUuid], references: [uuid])
-  createdAt                   DateTime                 @default(now()) @map("created_at")
-  updatedAt                   DateTime                 @updatedAt @map("updated_at")
-
-  @@map("field_variants_for_selector_field_type")
-}
-
-enum EFieldTypeVariants {
-  number
-  string
-  array
-}
-
-model FieldUnitMeasurement {
-  uuid                      String                    @id @default(uuid()) @db.Uuid
-  name                      String
-  comment                   String?
-  handbookUuid              String                    @map("handbook_uuid") @db.Uuid
-  handbook                  Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  fieldsOfCategoryMaterials FieldOfCategoryMaterial[]
-  materials                 Material[]
-  characteristicsMaterial   CharacteristicsMaterial[]
-  createdAt                 DateTime                  @default(now()) @map("created_at")
-  updatedAt                 DateTime                  @updatedAt @map("updated_at")
-
-  @@map("field_unit_measurement")
-}
-
-model FieldOfCategoryMaterial {
-  uuid                              String                              @id @default(uuid()) @db.Uuid
-  name                              String
-  uniqueNameForTemplate             String?                             @unique @map("unique_name_for_template")
-  comment                           String?
-  isRequired                        Boolean?                            @default(true) @map("is_required")
-  defaultValue                      String?                             @map("default_value")
-  categoryMaterialUuid              String                              @map("category_material_uuid") @db.Uuid
-  categoryMaterial                  CategoryMaterial                    @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  createdByUuid                     String                              @map("created_by_uuid") @db.Uuid
-  createdBy                         User                                @relation(fields: [createdByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  unitOfMeasurementUuid             String                              @map("unit_of_measurement_uuid") @db.Uuid
-  unitOfMeasurement                 FieldUnitMeasurement                @relation(fields: [unitOfMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldTypeUuid                     String                              @map("field_type_uuid") @db.Uuid
-  fieldType                         FieldType                           @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  handbookUuid                      String?                             @map("handbook_uuid") @db.Uuid
-  handbook                          Handbook?                           @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldVariantsForSelectorFieldType FieldVariantsForSelectorFieldType[]
-  characteristicsMaterial           CharacteristicsMaterial[]
-  createdAt                         DateTime                            @default(now()) @map("created_at")
-  updatedAt                         DateTime                            @updatedAt @map("updated_at")
-
-  @@map("field_of_category_material")
-}
-
-model CharacteristicsMaterial {
-  uuid                              String                              @id @default(uuid()) @db.Uuid
-  name                              String
-  value                             String
-  comment                           String?
-  fieldOfCategoryMaterialUuid       String                              @map("field_of_category_material_uuid") @db.Uuid
-  fieldOfCategoryMaterial           FieldOfCategoryMaterial             @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  addedByUserUuid                   String                              @map("added_by_user_uuid") @db.Uuid
-  addedByUser                       User                                @relation(fields: [addedByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  handbookUuid                      String                              @map("handbook_uuid") @db.Uuid
-  handbook                          Handbook                            @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldTypeUuid                     String                              @map("field_type_uuid") @db.Uuid
-  fieldType                         FieldType                           @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldUnitMeasurementUuid          String?                             @map("field_unit_measurement_uuid") @db.Uuid
-  fieldUnitMeasurement              FieldUnitMeasurement?               @relation(fields: [fieldUnitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  categoryMaterialUuid              String                              @map("category_material_uuid") @db.Uuid
-  categoryMaterial                  CategoryMaterial                    @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  materialUuid                      String                              @map("material_uuid") @db.Uuid
-  material                          Material                            @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  fieldVariantsForSelectorFieldType FieldVariantsForSelectorFieldType[]
-  createdAt                         DateTime                            @default(now()) @map("created_at")
-  updatedAt                         DateTime                            @updatedAt @map("updated_at")
-
-  @@map("characteristics_material")
-}
-
+// DOC Глобальные категории материалов (GlobalCategoryMaterial)- определяются на уровне приложения (создаются автоматически, изменяются администратором):
+// DOC global-category-material
 model GlobalCategoryMaterial {
-  uuid              String                          @id @default(uuid()) @db.Uuid
-  name              EGlobalCategoryMaterialVariants @unique
-  nameRu            String                          @map("name_ru")
-  comment           String?
-  color             String?
-  categoryMaterials CategoryMaterial[]
-  createdAt         DateTime                        @default(now()) @map("created_at")
-  updatedAt         DateTime                        @updatedAt @map("updated_at")
+  uuid                 String                          @id @default(uuid()) @db.Uuid
+  name                 EGlobalCategoryMaterialVariants @unique
+  nameRu               String?                         @map("name_ru")
+  comment              String?
+  color                String?
+  categoryMaterials    CategoryMaterial[]
+  lastChangeByUserUuid String?                         @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?                           @relation("GlobalCategoryMaterial_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt            DateTime                        @default(now()) @map("created_at")
+  updatedAt            DateTime                        @updatedAt @map("updated_at")
 
   @@map("global_category_material")
 }
 
-enum EGlobalCategoryMaterialVariants {
-  PEOPLE
-  MATERIALS
-  OVERHEAD
-  MECHANISMS
-}
-
+// DOC Категории материалов (CategoryMaterial) - определяются на уровне workspace (создаются членами workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/category-material
 model CategoryMaterial {
   uuid                       String                    @id @default(uuid()) @db.Uuid
   name                       String
@@ -309,72 +260,252 @@ model CategoryMaterial {
   handbookUuid               String                    @map("handbook_uuid") @db.Uuid
   handbook                   Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
   characteristicsMaterial    CharacteristicsMaterial[]
+  lastChangeByUserUuid       String?                   @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser           User?                     @relation("CategoryMaterial_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt                  DateTime                  @default(now()) @map("created_at")
   updatedAt                  DateTime                  @updatedAt @map("updated_at")
 
   @@map("category_material")
 }
 
+// DOC Единица измерения для полей (FieldUnitMeasurement) - определяются на уровне workspace (создаются членами workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/field-unit-measurement
+model FieldUnitMeasurement {
+  uuid                      String                    @id @default(uuid()) @db.Uuid
+  name                      String
+  comment                   String?
+  handbookUuid              String                    @map("handbook_uuid") @db.Uuid
+  handbook                  Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  fieldsOfCategoryMaterials FieldOfCategoryMaterial[]
+  materials                 Material[]
+  characteristicsMaterial   CharacteristicsMaterial[]
+  lastChangeByUserUuid      String?                   @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser          User?                     @relation("FieldUnitMeasurement_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt                 DateTime                  @default(now()) @map("created_at")
+  updatedAt                 DateTime                  @updatedAt @map("updated_at")
+
+  @@map("field_unit_measurement")
+}
+
+// DOC Само поле в материале (FieldOfCategoryMaterial) - определяются на уровне workspace (создаются членами workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/
+model FieldOfCategoryMaterial {
+  uuid                              String                              @id @default(uuid()) @db.Uuid
+  name                              String
+  uniqueNameForTemplate             String?                             @unique @map("unique_name_for_template")
+  comment                           String?
+  isRequired                        Boolean?                            @default(true) @map("is_required")
+  defaultValue                      String?                             @map("default_value")
+  categoryMaterialUuid              String                              @map("category_material_uuid") @db.Uuid
+  categoryMaterial                  CategoryMaterial                    @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  unitOfMeasurementUuid             String                              @map("unit_of_measurement_uuid") @db.Uuid
+  unitOfMeasurement                 FieldUnitMeasurement                @relation(fields: [unitOfMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldTypeUuid                     String                              @map("field_type_uuid") @db.Uuid
+  fieldType                         FieldType                           @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  handbookUuid                      String                              @map("handbook_uuid") @db.Uuid
+  handbook                          Handbook                            @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldVariantsForSelectorFieldType FieldVariantsForSelectorFieldType[]
+  characteristicsMaterial           CharacteristicsMaterial[]
+  lastChangeByUserUuid              String?                             @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser                  User?                               @relation("FieldOfCategoryMaterial_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt                         DateTime                            @default(now()) @map("created_at")
+  updatedAt                         DateTime                            @updatedAt @map("updated_at")
+
+  @@map("field_of_category_material")
+}
+
+// DOC Варианты списка для конкретного типа поля (селектора) - определяются на уровне workspace (создаются членами workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants
+model FieldVariantsForSelectorFieldType {
+  uuid                        String                  @id @default(uuid()) @db.Uuid
+  value                       String
+  description                 String?
+  handbookUuid                String                  @map("handbook_uuid") @db.Uuid
+  handbook                    Handbook                @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldOfCategoryMaterialUuid String                  @map("field_of_category_material_uuid") @db.Uuid
+  fieldOfCategoryMaterial     FieldOfCategoryMaterial @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  lastChangeByUserUuid        String?                 @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser            User?                   @relation("FieldVariantsForSelectorFieldType_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt                   DateTime                @default(now()) @map("created_at")
+  updatedAt                   DateTime                @updatedAt @map("updated_at")
+
+  @@map("field_variants_for_selector_field_type")
+}
+
+// DOC Поставщик/производитель работ (ResponsiblePartnerProducer) - определяется на уровне workspace (создаются членами Workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer
 model ResponsiblePartnerProducer {
-  uuid         String     @id @default(uuid()) @db.Uuid
-  name         String
-  comment      String?
-  info         String?
-  email        String?
-  phone        String?
-  handbookUuid String     @map("handbook_uuid") @db.Uuid
-  handbook     Handbook   @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  materials    Material[]
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  uuid                 String     @id @default(uuid()) @db.Uuid
+  name                 String
+  comment              String?
+  info                 String?
+  email                String?
+  phone                String?
+  handbookUuid         String     @map("handbook_uuid") @db.Uuid
+  handbook             Handbook   @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
+  materials            Material[]
+  lastChangeByUserUuid String?    @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?      @relation("ResponsiblePartnerProducer_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
 
   @@map("responsible_partner_producer")
 }
 
+// DOC Материалы (Material) - определяются на уровне workspace (создаются членами workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material
 model Material {
-  uuid                    String                     @id @default(uuid()) @db.Uuid
+  uuid                    String                      @id @default(uuid()) @db.Uuid
   name                    String
   comment                 String?
-  sourceInfo              String?                    @map("source_info")
-  namePublic              String?                    @map("name_public")
+  sourceInfo              String?                     @map("source_info")
+  namePublic              String?                     @map("name_public")
   price                   Float
-  handbookUuid            String                     @map("handbook_uuid") @db.Uuid
-  handbook                Handbook                   @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  unitMeasurementUuid     String                     @map("unit_measurement_uuid") @db.Uuid
-  unitMeasurement         FieldUnitMeasurement       @relation(fields: [unitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  categoryMaterialUuid    String                     @map("category_material_uuid") @db.Uuid
-  categoryMaterial        CategoryMaterial           @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  responsiblePartnerUuid  String                     @map("responsible_partner_uuid") @db.Uuid
-  responsiblePartner      ResponsiblePartnerProducer @relation(fields: [responsiblePartnerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  handbookUuid            String                      @map("handbook_uuid") @db.Uuid
+  handbook                Handbook                    @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  unitMeasurementUuid     String                      @map("unit_measurement_uuid") @db.Uuid
+  unitMeasurement         FieldUnitMeasurement        @relation(fields: [unitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  categoryMaterialUuid    String                      @map("category_material_uuid") @db.Uuid
+  categoryMaterial        CategoryMaterial            @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  responsiblePartnerUuid  String?                     @map("responsible_partner_uuid") @db.Uuid
+  responsiblePartner      ResponsiblePartnerProducer? @relation(fields: [responsiblePartnerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   priceChanges            PriceChanging[]
   characteristicsMaterial CharacteristicsMaterial[]
-  createdAt               DateTime                   @default(now()) @map("created_at")
-  updatedAt               DateTime                   @updatedAt @map("updated_at")
+  lastChangeByUserUuid    String?                     @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser        User?                       @relation("Material_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt               DateTime                    @default(now()) @map("created_at")
+  updatedAt               DateTime                    @updatedAt @map("updated_at")
 
   @@map("material")
 }
 
+// DOC Характеристики материала (CharacteristicsMaterial) - определяются на уровне workspace (создаются членами workspace):
+// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/use-field-category-material/:fieldCategoryMaterialId/characteristics-material
+model CharacteristicsMaterial {
+  uuid                        String                  @id @default(uuid()) @db.Uuid
+  name                        String
+  value                       String
+  comment                     String?
+  fieldOfCategoryMaterialUuid String                  @map("field_of_category_material_uuid") @db.Uuid
+  fieldOfCategoryMaterial     FieldOfCategoryMaterial @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  handbookUuid                String                  @map("handbook_uuid") @db.Uuid
+  handbook                    Handbook                @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldTypeUuid               String                  @map("field_type_uuid") @db.Uuid
+  fieldType                   FieldType               @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  fieldUnitMeasurementUuid    String?                 @map("field_unit_measurement_uuid") @db.Uuid
+  fieldUnitMeasurement        FieldUnitMeasurement?   @relation(fields: [fieldUnitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  categoryMaterialUuid        String                  @map("category_material_uuid") @db.Uuid
+  categoryMaterial            CategoryMaterial        @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  materialUuid                String                  @map("material_uuid") @db.Uuid
+  material                    Material                @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  lastChangeByUserUuid        String?                 @map("last_change_by_user_uuid") @db.Uuid
+  // If you delete a CharacteristicsMaterial, the CharacteristicsMaterial is removed from all logs by setting the field value to Null,
+  // because of the SetNull referential action. To allow this, CharacteristicsMaterial and CharacteristicsMaterialId must be optional fields in TechLogChanges.
+  lastChangeByUser            User?                   @relation("CharacteristicsMaterial_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  createdAt                   DateTime                @default(now()) @map("created_at")
+  updatedAt                   DateTime                @updatedAt @map("updated_at")
+
+  @@map("characteristics_material")
+}
+
+// DOC Изменение цены на материал (PriceChanging) - определяются на уровне workspace (создаются автоматически при любом изменении (с сохранением) цены материала):
+// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing
 model PriceChanging {
-  uuid          String   @id @default(uuid()) @db.Uuid
-  newPrice      Float    @map("new_price")
-  source        String?
-  comment       String?
-  materialUuid  String   @map("material_uuid") @db.Uuid
-  material      Material @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  changedByUuid String   @map("changed_by_uuid") @db.Uuid
-  changedBy     User     @relation(fields: [changedByUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  uuid                 String   @id @default(uuid()) @db.Uuid
+  newPrice             Float    @map("new_price")
+  oldPrice             Float?   @map("old_price")
+  source               String?
+  comment              String?
+  materialUuid         String   @map("material_uuid") @db.Uuid
+  material             Material @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  lastChangeByUserUuid String?  @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?    @relation("PriceChanging_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
 
   @@map("price_changing")
 }
 
+// DOC Статус конкретного ресурса (StatusResource) - ПРЕДЛОЖЕНИЕ определяются на уровне приложения (создаются автоматически, изменяются администратором):
+// DOC status-resource
 model StatusResource {
-  uuid      String   @id @default(uuid()) @db.Uuid
-  name      String
-  comment   String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  uuid                 String   @id @default(uuid()) @db.Uuid
+  name                 String
+  comment              String?
+  lastChangeByUserUuid String?  @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?    @relation("StatusResource_changed_by", fields: [lastChangeByUserUuid], references: [uuid])
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
 
   @@map("status_resource")
+}
+
+// DOC Техническая таблица с отслеживанием всех изменений (CREATE, UPDATE, DELETE) (TechLogChangesModule) - определяются на уровне приложения (создаются автоматически, изменяться и обновляться не могут):
+// DOC tech-log-changes
+model TechLogChanges {
+  uuid       String         @id @default(uuid()) @db.Uuid
+  name       String?
+  entity     String
+  comment    String?
+  action     EEntityActions
+  // oldInfo    Json?
+  // newInfo    Json
+  // updateInfo Json?
+  oldInfo    String?
+  newInfo    String
+  updateInfo String?
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
+
+  @@map("tech_log_changes")
+}
+
+// вспомогательный enum
+enum EStatusApp {
+  UP
+  DOWN
+}
+
+// вспомогательный enum
+enum ELanguagesTypeVariants {
+  RUSSIAN
+  ENGLISH
+}
+
+// вспомогательный enum
+enum ECurrencyTypeVariants {
+  RUB
+  USD
+  EUR
+  BYR
+}
+
+// вспомогательный enum
+enum EUserTypeVariants {
+  ADMIN
+  MANAGER
+  WORKER
+  CUSTOMER
+}
+
+// вспомогательный enum
+enum EFieldTypeVariants {
+  number
+  string
+  array
+}
+
+// вспомогательный enum
+enum EGlobalCategoryMaterialVariants {
+  PEOPLE
+  MATERIALS
+  OVERHEAD
+  MECHANISMS
+}
+
+// вспомогательный enum
+enum EEntityActions {
+  DELETE
+  UPDATE
+  CREATE
 }

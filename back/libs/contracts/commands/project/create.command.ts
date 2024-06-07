@@ -6,13 +6,22 @@ const ProjectCreateRequestSchema = ProjectSchema.pick({
   name: true,
   description: true,
   customerMail: true,
+  customerUuid: true,
 });
 
 const ProjectCreateResponseSchema = z
   .object({
-    data: ProjectSchema.omit({
+    data: ProjectSchema.pick({
+      name: true,
+      description: true,
+      customerMail: true,
+      customerUuid: true,
       createdAt: true,
       updatedAt: true,
+      uuid: true,
+      responsibleManagerUuid: true,
+      organizationUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

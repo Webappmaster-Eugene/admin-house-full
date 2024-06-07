@@ -2,17 +2,18 @@ import { z } from 'zod';
 import { FieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldTypeUpdateRequestSchema = FieldTypeSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
+const FieldTypeUpdateRequestSchema = FieldTypeSchema.pick({
+  description: true,
 }).partial();
 
 const FieldTypeUpdateResponseSchema = z
   .object({
-    data: FieldTypeSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldTypeSchema.pick({
+      name: true,
+      description: true,
+      jsType: true,
+      lastChangeByUserUuid: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

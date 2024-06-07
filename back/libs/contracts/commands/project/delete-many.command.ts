@@ -6,7 +6,7 @@ const ProjectSchemaDeleteManyRequestSchema = ProjectSchema.pick({
 });
 
 const ProjectSchemaDeleteManyResponseSchema = z.object({
-  deletedWorkspace: z.array(ProjectSchema),
+  deletedProjects: z.array(ProjectSchema),
   count: z.number(),
 });
 

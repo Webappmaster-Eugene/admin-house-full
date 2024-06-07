@@ -51,6 +51,7 @@ export interface ICharacteristicsMaterialController
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     userInfoFromJWT: IJWTPayload,
   ) => Promise<CharacteristicsMaterialCreateResponseDto>;
   updateByIdEP: (

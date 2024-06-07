@@ -10,9 +10,8 @@ export class CharacteristicsMaterialEntity implements CharacteristicsMaterial {
   categoryMaterialUuid: string;
   materialUuid: string;
   handbookUuid: string;
-  addedByUserUuid: string;
+  lastChangeByUserUuid: string;
   fieldUnitMeasurementUuid: string | null;
-
   createdAt: Date;
   updatedAt: Date;
 

@@ -4,11 +4,10 @@ exports.WorkspaceUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const WorkspaceUpdateRequestSchema = models_1.WorkspaceSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-    workspaceCreatorUuid: true,
-    uuid: true,
+const WorkspaceUpdateRequestSchema = models_1.WorkspaceSchema.pick({
+    name: true,
+    description: true,
+    handbookOfWorkspaceUuid: true,
 }).partial();
 const WorkspaceUpdateResponseSchema = zod_1.z
     .object({

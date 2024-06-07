@@ -5,9 +5,17 @@ import { ResponseClientSchema } from '../../models';
 const ResponsiblePartnerProducerGetAllResponseSchema = z
   .object({
     data: z.array(
-      ResponsiblePartnerProducerSchema.omit({
+      ResponsiblePartnerProducerSchema.pick({
+        name: true,
+        comment: true,
+        info: true,
+        email: true,
+        phone: true,
         createdAt: true,
         updatedAt: true,
+        uuid: true,
+        handbookUuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

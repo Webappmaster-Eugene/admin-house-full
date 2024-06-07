@@ -6,6 +6,9 @@ import { CountData } from '../../../common/types/main/count.data';
 import { UserEntity } from '../entities/user.entity';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';
 import type { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
+import { AddUserToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
+import { AddUserToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { AddUserToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
 
 export interface IUserRepository extends IRepositoryCommon<UserCreateRequestDto, UserUpdateRequestDto, UserEntity> {
   getById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UserEntity>;
@@ -31,4 +34,7 @@ export interface IUserRepository extends IRepositoryCommon<UserCreateRequestDto,
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     transactionDbClient?: TransactionDbClient,
   ) => Promise<UserEntity>;
+  addUserToWorkspaceById: (dto: AddUserToWorkspaceRequestDto) => Promise<UserEntity>;
+  addUserToOrganizationById: (dto: AddUserToOrganizationRequestDto) => Promise<UserEntity>;
+  addUserToProjectById: (dto: AddUserToProjectRequestDto) => Promise<UserEntity>;
 }

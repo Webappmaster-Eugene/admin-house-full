@@ -6,6 +6,7 @@ export class WorkspaceEntity implements Workspace {
   description: string;
   workspaceCreatorUuid: string;
   handbookOfWorkspaceUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

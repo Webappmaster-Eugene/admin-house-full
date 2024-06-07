@@ -2,19 +2,26 @@ import { z } from 'zod';
 import { ProjectSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ProjectUpdateRequestSchema = ProjectSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  responsibleManagerUuid: true,
-  organizationUuid: true,
+const ProjectUpdateRequestSchema = ProjectSchema.pick({
+  name: true,
+  customerMail: true,
+  customerUuid: true,
+  description: true,
 }).partial();
 
 const ProjectUpdateResponseSchema = z
   .object({
-    data: ProjectSchema.omit({
+    data: ProjectSchema.pick({
+      name: true,
+      description: true,
+      customerMail: true,
+      customerUuid: true,
       createdAt: true,
       updatedAt: true,
+      uuid: true,
+      responsibleManagerUuid: true,
+      organizationUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

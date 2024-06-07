@@ -18,7 +18,7 @@ export class AppInfoRepository implements IAppInfoRepository {
 
   async get(): Promise<AppInfoEntity> {
     try {
-      const findedAppInfo = await this.databaseService.appSettings.findFirst();
+      const findedAppInfo = await this.databaseService.appInfo.findFirst();
       return existenceEntityHandler(findedAppInfo, AppInfoEntity, EntityName.APP_INFO) as AppInfoEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -29,7 +29,7 @@ export class AppInfoRepository implements IAppInfoRepository {
     try {
       const { name, description, currency, status, language, comment } = dto;
 
-      const updatedAppInfo = await this.databaseService.appSettings.update({
+      const updatedAppInfo = await this.databaseService.appInfo.update({
         where: {
           uuid: appInfoId,
         },

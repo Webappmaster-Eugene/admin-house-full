@@ -1,5 +1,18 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseInterceptors, UseGuards } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserUpdateRequestDto, UserUpdateResponseDto } from './dto/controller/update-user.dto';
 import { User } from '../../common/decorators/user.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
@@ -37,6 +50,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
+import { AuthInterceptor } from 'src/common/interceptors/auth.interceptor';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')
@@ -77,7 +91,29 @@ export class UserController {
   })
   @ApiOperation({ summary: 'Получение пользователя по email' })
   @ApiResponse({ status: 200, type: UserGetResponseDto })
+  // @ApiSecurity('bearer')
   @ApiBearerAuth('access-token')
+  @ApiNotFoundResponse({
+    description: 'User was not found',
+    schema: {
+      type: 'object',
+      example: { message: 'Cannot GET /api/user/byEmail/admin@mail.ru', error: 'Not Found', statusCode: 404 },
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'Error',
+    schema: {
+      type: 'object',
+      example: { message: 'Error', error: 'Error', statusCode: 400 },
+    },
+  })
+  @ApiInternalServerErrorResponse({
+    description: '500. InternalServerError',
+    schema: {
+      type: 'object',
+      example: { message: 'Error', error: 'Error', statusCode: 500 },
+    },
+  })
   //endregion
   @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
   @ZodSerializerDto(UserGetResponseDto)
@@ -206,8 +242,9 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserGetResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard)
   @ZodSerializerDto(UserGetResponseDto)
+  @UseGuards(AuthGuard)
+  @UseInterceptors(AuthInterceptor)
   @Get('/me')
   async getCurrentUserEP(@User() userInfoFromJWT: IJWTPayload, @UrlParams() urlParams: IUrlParams): Promise<UserGetResponseDto> {
     try {
@@ -234,11 +271,11 @@ export class UserController {
   async addUserToManagerWorkspaceEP(
     @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    @Body() dto: AddUserToWorkspaceRequestDto,
+    @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     @UrlParams() urlParams: IUrlParams,
   ): Promise<AddUserToWorkspaceResponseDto> {
     try {
-      const { ok, data } = await this.userService.addUserToManagerWorkspace(workspaceId, dto);
+      const { ok, data } = await this.userService.addUserToWorkspace(workspaceId, dto.userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -263,11 +300,11 @@ export class UserController {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     @Param('organization', ParseUUIDPipe)
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    @Body() dto: AddUserToOrganizationRequestDto,
+    @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     @UrlParams() urlParams: IUrlParams,
   ): Promise<AddUserToOrganizationResponseDto> {
     try {
-      const { ok, data } = await this.userService.addUserToManagerOrganization(workspaceId, organizationId, dto);
+      const { ok, data } = await this.userService.addUserToOrganization(workspaceId, organizationId, dto.userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -294,11 +331,11 @@ export class UserController {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     @Param('project', ParseUUIDPipe)
     projectId: EntityUrlParamCommand.RequestUuidParam,
-    @Body() dto: AddUserToProjectRequestDto,
+    @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     @UrlParams() urlParams: IUrlParams,
   ): Promise<AddUserToProjectResponseDto> {
     try {
-      const { ok, data } = await this.userService.addUserToManagerProject(workspaceId, organizationId, projectId, dto);
+      const { ok, data } = await this.userService.addUserToProject(workspaceId, organizationId, projectId, dto.userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);

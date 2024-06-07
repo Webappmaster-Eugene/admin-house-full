@@ -8,4 +8,5 @@ export const FieldTypeSchema = z.object({
   description: z.string().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  lastChangeByUserUuid: z.string().uuid().optional().nullable(),
 });

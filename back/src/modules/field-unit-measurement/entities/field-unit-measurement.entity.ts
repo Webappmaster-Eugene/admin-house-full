@@ -5,6 +5,7 @@ export class FieldUnitMeasurementEntity implements FieldUnitMeasurement {
   comment: string;
   name: string;
   handbookUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

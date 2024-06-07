@@ -8,12 +8,16 @@ import { ICharacteristicsMaterialService } from './types/characteristics-materia
 import { CharacteristicsMaterialUpdateRequestDto } from './dto/controller/update-characteristics-material.dto';
 import { CharacteristicsMaterialCreateRequestDto } from './dto/controller/create-characteristics-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
+import { IFieldOfCategoryMaterialService } from 'src/modules/field-of-category-material/types/field-of-category-material.service.interface';
+import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class CharacteristicsMaterialService implements ICharacteristicsMaterialService {
   constructor(
     @Inject(KFI.CHARACTERISTICS_MATERIAL_REPOSITORY)
     private readonly characteristicsMaterialRepository: ICharacteristicsMaterialRepository,
+    @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE)
+    private readonly fieldOfCategoryMaterialService: IFieldOfCategoryMaterialService,
   ) {}
 
   async getById(
@@ -60,18 +64,25 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
     return new InternalResponse(allCharacteristicsMaterials);
   }
 
+  // FIXME сделать так, чтобы при добавлении другого значения в качестве характеристики у материала старая заись удалялась (чтобы не накапливать тупо старые значения свойств материала)
   async create(
     dto: CharacteristicsMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity>> {
+    const fieldOfCategoryMaterial = await this.fieldOfCategoryMaterialService.getById(fieldCategoryMaterialId);
+    const { fieldTypeUuid, unitOfMeasurementUuid } = dataInternalExtractor(fieldOfCategoryMaterial);
     const createdCharacteristicsMaterial = await this.characteristicsMaterialRepository.create(
       dto,
       handbookId,
       categoryMaterialId,
       materialId,
+      fieldCategoryMaterialId,
+      fieldTypeUuid,
+      unitOfMeasurementUuid,
       userId,
     );
     return new InternalResponse(createdCharacteristicsMaterial);

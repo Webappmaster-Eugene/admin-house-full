@@ -3,6 +3,7 @@ import { ResponseClientSchema, UserSchema } from '../../models';
 
 const AddUserToWorkspaceRequestSchema = UserSchema.pick({
   uuid: true,
+  memberOfWorkspaceUuid: true,
 });
 
 const AddUserToWorkspaceResponseSchema = z

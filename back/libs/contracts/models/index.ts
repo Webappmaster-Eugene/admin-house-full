@@ -18,3 +18,4 @@ export * from './common';
 export * from './status-resource';
 export * from './field-of-category-material';
 export * from './characteristics-material';
+export * from './tech-log-changes';

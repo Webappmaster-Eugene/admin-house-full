@@ -4,18 +4,19 @@ exports.FieldVariantsForSelectorFieldTypeUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = models_2.FieldVariantsForSelectorFieldTypeSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
-    fieldOfCategoryMaterialUuid: true,
-    handbookUuid: true,
+const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = models_2.FieldVariantsForSelectorFieldTypeSchema.pick({
+    description: true,
+    value: true,
 }).partial();
 const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = zod_1.z
     .object({
-    data: models_2.FieldVariantsForSelectorFieldTypeSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: models_2.FieldVariantsForSelectorFieldTypeSchema.pick({
+        description: true,
+        value: true,
+        handbookUuid: true,
+        uuid: true,
+        fieldOfCategoryMaterialUuid: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_1.ResponseClientSchema);

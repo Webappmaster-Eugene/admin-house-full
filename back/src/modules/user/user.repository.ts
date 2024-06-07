@@ -15,6 +15,9 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { existenceUserEntityHandler } from './lib/user-entity-existance.handler';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
+import { AddUserToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
+import { AddUserToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
+import { AddUserToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -194,6 +197,54 @@ export class UserRepository implements IUserRepository {
         },
       });
       return existenceEntityHandler(updatedManager, UserEntity, EntityName.USER) as UserEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async addUserToWorkspaceById({ uuid, memberOfWorkspaceUuid }: AddUserToWorkspaceRequestDto): Promise<UserEntity> {
+    try {
+      const updatedUser = await this.databaseService.user.update({
+        where: {
+          uuid,
+        },
+        data: {
+          memberOfWorkspaceUuid,
+        },
+      });
+      return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async addUserToOrganizationById({ uuid, memberOfOrganizationUuid }: AddUserToOrganizationRequestDto): Promise<UserEntity> {
+    try {
+      const updatedUser = await this.databaseService.user.update({
+        where: {
+          uuid,
+        },
+        data: {
+          memberOfOrganizationUuid,
+        },
+      });
+      return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async addUserToProjectById({ uuid, memberOfProjectUuid }: AddUserToProjectRequestDto): Promise<UserEntity> {
+    try {
+      const updatedUser = await this.databaseService.user.update({
+        where: {
+          uuid,
+        },
+        data: {
+          memberOfProjectUuid,
+        },
+      });
+      return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }

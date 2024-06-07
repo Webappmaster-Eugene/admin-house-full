@@ -4,11 +4,9 @@ exports.RoleCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const RoleCreateRequestSchema = models_1.RoleSchema.omit({
-    idRole: true,
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
+const RoleCreateRequestSchema = models_1.RoleSchema.pick({
+    name: true,
+    description: true,
 }).merge(zod_1.z.object({
     key: zod_1.z.string(),
 }));
@@ -18,6 +16,8 @@ const RoleCreateResponseSchema = zod_1.z
         uuid: true,
         idRole: true,
         name: true,
+        description: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_2.ResponseClientSchema);

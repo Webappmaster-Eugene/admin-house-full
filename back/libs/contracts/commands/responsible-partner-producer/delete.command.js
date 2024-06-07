@@ -7,9 +7,17 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const ResponsiblePartnerProducerDeleteResponseSchema = zod_1.z
     .object({
-    data: models_1.ResponsiblePartnerProducerSchema.omit({
+    data: models_1.ResponsiblePartnerProducerSchema.pick({
+        name: true,
+        comment: true,
+        info: true,
+        email: true,
+        phone: true,
         createdAt: true,
         updatedAt: true,
+        uuid: true,
+        handbookUuid: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_2.ResponseClientSchema);

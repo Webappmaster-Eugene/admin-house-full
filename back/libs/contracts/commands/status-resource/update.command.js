@@ -4,14 +4,17 @@ exports.StatusResourceUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const StatusResourceUpdateRequestSchema = models_1.StatusResourceSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
+const StatusResourceUpdateRequestSchema = models_1.StatusResourceSchema.pick({
+    name: true,
+    comment: true,
 }).partial();
 const StatusResourceUpdateResponseSchema = zod_1.z
     .object({
-    data: models_1.StatusResourceSchema.omit({
+    data: models_1.StatusResourceSchema.pick({
+        name: true,
+        comment: true,
+        uuid: true,
+        lastChangeByUserUuid: true,
         createdAt: true,
         updatedAt: true,
     }),

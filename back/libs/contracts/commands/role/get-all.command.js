@@ -10,6 +10,8 @@ const RoleGetAllResponseSchema = zod_1.z
         uuid: true,
         idRole: true,
         name: true,
+        description: true,
+        lastChangeByUserUuid: true,
     })),
 })
     .merge(models_2.ResponseClientSchema);

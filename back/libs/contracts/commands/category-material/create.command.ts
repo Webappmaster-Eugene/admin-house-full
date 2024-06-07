@@ -2,17 +2,22 @@ import { z } from 'zod';
 import { ResponseClientSchema } from '../../models';
 import { CategoryMaterialSchema } from '../../models';
 
-const CategoryMaterialCreateRequestSchema = CategoryMaterialSchema.omit({
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
+const CategoryMaterialCreateRequestSchema = CategoryMaterialSchema.pick({
+  name: true,
+  comment: true,
+  templateName: true,
+  globalCategoryMaterialUuid: true,
 });
 
 const CategoryMaterialCreateResponseSchema = z
   .object({
-    data: CategoryMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: CategoryMaterialSchema.pick({
+      name: true,
+      templateName: true,
+      comment: true,
+      uuid: true,
+      globalCategoryMaterialUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

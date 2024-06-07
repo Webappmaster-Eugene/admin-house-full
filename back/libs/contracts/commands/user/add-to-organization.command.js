@@ -6,6 +6,7 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const AddUserToOrganizationRequestSchema = models_1.UserSchema.pick({
     uuid: true,
+    memberOfOrganizationUuid: true,
 });
 const AddUserToOrganizationResponseSchema = zod_1.z
     .object({

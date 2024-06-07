@@ -2,19 +2,20 @@ import { z } from 'zod';
 import { OrganizationSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const OrganizationUpdateRequestSchema = OrganizationSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  workspaceUuid: true,
-  organizationLeaderUuid: true,
+const OrganizationUpdateRequestSchema = OrganizationSchema.pick({
+  name: true,
+  description: true,
 }).partial();
 
 const OrganizationUpdateResponseSchema = z
   .object({
-    data: OrganizationSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: OrganizationSchema.pick({
+      uuid: true,
+      name: true,
+      description: true,
+      organizationLeaderUuid: true,
+      workspaceUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

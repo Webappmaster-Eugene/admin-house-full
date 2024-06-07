@@ -4,8 +4,14 @@ import { AppInfoSchema } from '../../models';
 
 const AppInfoGetResponseSchema = z
   .object({
-    data: AppInfoSchema.omit({
-      uuid: true,
+    data: AppInfoSchema.pick({
+      name: true,
+      description: true,
+      currency: true,
+      language: true,
+      comment: true,
+      status: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

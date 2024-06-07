@@ -5,6 +5,7 @@ export class RoleEntity implements Role {
   idRole: number;
   name: EUserTypeVariants;
   description: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

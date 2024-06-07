@@ -5,8 +5,8 @@ export type BackendError = {
 };
 
 export const enum BackendPErrorCodes {
-  'PRISMA_CONFLICT_ERROR' = 'P2002',
-  'PRISMA_NOT_FOUND_ERROR' = 'P2025',
+  PRISMA_CONFLICT_ERROR = 'P2002',
+  PRISMA_NOT_FOUND_ERROR = 'P2025',
 }
 
 export const enum BackendErrorNames {
@@ -14,6 +14,8 @@ export const enum BackendErrorNames {
   CONFLICT_ERROR = 'CONFLICT_ERROR',
   UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS',
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
+  ACCESS_KEY_EXPIRED = 'ACCESS_KEY_EXPIRED',
+  REFRESH_KEY_EXPIRED = 'REFRESH_KEY_EXPIRED',
   BAD_REQUEST = 'BAD_REQUEST',
   INTERNAL_ERROR = 'INTERNAL_ERROR',
   WORKSPACE_MISMATCH = 'WORKSPACE_MISMATCH',
@@ -26,6 +28,8 @@ export type BackendArrayErrors = {
     [BackendErrorNames.NOT_FOUND]: BackendError;
     [BackendErrorNames.UNAUTHORIZED_ACCESS]: BackendError;
     [BackendErrorNames.INVALID_CREDENTIALS]: BackendError;
+    [BackendErrorNames.ACCESS_KEY_EXPIRED]: BackendError;
+    [BackendErrorNames.REFRESH_KEY_EXPIRED]: BackendError;
     [BackendErrorNames.BAD_REQUEST]: BackendError;
     [BackendErrorNames.INTERNAL_ERROR]: BackendError;
     [BackendErrorNames.SKIP_TAKES_TOO_MUCH]: BackendError;
@@ -54,8 +58,24 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       },
       httpCode: 403,
     },
-    [BackendErrorNames.INVALID_CREDENTIALS]: {
+    [BackendErrorNames.ACCESS_KEY_EXPIRED]: {
       innerCode: 'S003',
+      error: {
+        name: 'Forbidden error (access jwt expired)',
+        description: 'Your Access JWT-key is expired. Relogin or refresh your pair of tokens.',
+      },
+      httpCode: 403,
+    },
+    [BackendErrorNames.REFRESH_KEY_EXPIRED]: {
+      innerCode: 'S004',
+      error: {
+        name: 'Forbidden error (refresh jwt expired)',
+        description: 'Your Refresh JWT key is expired. Relogin please.',
+      },
+      httpCode: 403,
+    },
+    [BackendErrorNames.INVALID_CREDENTIALS]: {
+      innerCode: 'S005',
       error: {
         name: 'Unauthorized error',
         description: 'Failed to get requesting info - you must have right credentials (login and password)',
@@ -63,7 +83,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       httpCode: 401,
     },
     [BackendErrorNames.BAD_REQUEST]: {
-      innerCode: 'S004',
+      innerCode: 'S006',
       error: {
         name: 'Сlient error',
         description: 'Failed to get info due to an client-side error',
@@ -71,7 +91,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       httpCode: 400,
     },
     [BackendErrorNames.INTERNAL_ERROR]: {
-      innerCode: 'S005',
+      innerCode: 'S007',
       error: {
         name: 'Internal error',
         description: 'Failed to get info due to an internal server error',
@@ -79,7 +99,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       httpCode: 500,
     },
     [BackendErrorNames.WORKSPACE_MISMATCH]: {
-      innerCode: 'S006',
+      innerCode: 'S008',
       error: {
         name: 'Workspace mismatch error',
         description:
@@ -88,7 +108,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       httpCode: 400,
     },
     [BackendErrorNames.SKIP_TAKES_TOO_MUCH]: {
-      innerCode: 'S007',
+      innerCode: 'S009',
       error: {
         name: 'Skip query takes too much error',
         description: 'Failed to get all entities due to a really big skip query error',

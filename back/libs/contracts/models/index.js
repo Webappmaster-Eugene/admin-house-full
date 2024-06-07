@@ -34,3 +34,4 @@ __exportStar(require("./common"), exports);
 __exportStar(require("./status-resource"), exports);
 __exportStar(require("./field-of-category-material"), exports);
 __exportStar(require("./characteristics-material"), exports);
+__exportStar(require("./tech-log-changes"), exports);

@@ -10,8 +10,14 @@ const AppInfoUpdateRequestSchema = AppInfoSchema.omit({
 
 const AppInfoUpdateResponseSchema = z
   .object({
-    data: AppInfoSchema.omit({
-      uuid: true,
+    data: AppInfoSchema.pick({
+      status: true,
+      comment: true,
+      language: true,
+      currency: true,
+      name: true,
+      description: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

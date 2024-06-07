@@ -1,4 +1,5 @@
-import { Body, Controller, Get, HttpCode, Inject, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Param, ParseIntPipe, Post, Res, UseGuards, Req, UseInterceptors } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IAuthController } from './types/auth.controller.interface';
 import { AuthLoginRequestDto, AuthLoginResponseDto } from './dto/controller/auth.login.dto';
@@ -10,6 +11,7 @@ import { KFI } from '../../common/utils/di';
 import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from '@numart/house-admin-contracts';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleResponseDto } from './dto/controller/auth.register-with-role.dto';
 import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from './dto/controller/auth.generate-key.dto';
+import { AuthRefreshKeysResponseDto } from './dto/controller/auth.refresh-keys.dto';
 import { AuthGetKeyResponseDto } from './dto/controller/auth.get-key.dto';
 import { AuthEntity } from './entities/auth.entity';
 import { EntityName } from '../../common/types/entity.enum';
@@ -21,6 +23,12 @@ import { EUserTypeVariants } from '.prisma/client';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { AuthHeader } from 'src/common/decorators/auth-header.decorator';
+import { AuthRefreshKeysCommand } from '@numart/house-admin-contracts';
+import { RefreshKeyGuard } from '../../common/guards/refresh-key.guard';
+import { AuthRefreshKeysEntity } from './entities/auth-refresh-keys.entity';
+import { AuthInterceptor } from 'src/common/interceptors/auth.interceptor';
+import { UserInterceptor } from 'src/common/interceptors/user.interceptor';
 
 @ApiTags('Работа с аутентификацией пользователя')
 @Controller('auth')
@@ -44,9 +52,13 @@ export class AuthController implements IAuthController {
   @HttpCode(200)
   @ZodSerializerDto(AuthRegisterResponseDto)
   @Post('/register')
-  async registerEP(@Body() dto: AuthRegisterRequestDto, @UrlParams() urlParams: IUrlParams): Promise<AuthRegisterResponseDto> {
+  async registerEP(
+    @Body() dto: AuthRegisterRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<AuthRegisterResponseDto> {
     try {
-      const { ok, data } = await this.authService.register(dto);
+      const { ok, data } = await this.authService.register(dto, response);
       return okResponseHandler(ok, data, AuthEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
@@ -73,15 +85,47 @@ export class AuthController implements IAuthController {
     @Param('roleId', ParseIntPipe) roleId: number,
     @Param('registerWithRoleKey') registerWithRoleKey: string,
     @UrlParams() urlParams: IUrlParams,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<AuthRegisterWithRoleResponseDto> {
     // DOC каждый раз при вызове идет запись в БД в таблицу registerWithRoleKey (то есть обновление) - при успешной регистрации пользователя с ролью НЕ customer
     // DOC иначе вызов данной ручки не происходит
     try {
-      const { ok, data } = await this.authService.registerWithRole(dto, {
-        roleId,
-        registerWithRoleKey,
-      });
+      const { ok, data } = await this.authService.registerWithRole(
+        dto,
+        {
+          roleId,
+          registerWithRoleKey,
+        },
+        response,
+      );
       return okResponseHandler(ok, data, AuthEntity, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiOkResponse({
+    schema: zodToOpenAPI(AuthRefreshKeysCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Обновление пары токенов' })
+  @ApiResponse({ status: 200, type: AuthRefreshKeysResponseDto })
+  //endregion
+  @HttpCode(200)
+  @ZodSerializerDto(AuthRefreshKeysResponseDto)
+  @UseGuards(RefreshKeyGuard)
+  @Post('/refresh-keys')
+  async refreshKeysEP(
+    @AuthHeader() accessKey: string,
+    @UrlParams() urlParams: IUrlParams,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    // FIXME Promise<unknown> - потому что не могу отловить баг с типизацией ответа
+  ): Promise<unknown> {
+    // DOC ручка для обновления пары ключей доступа
+    try {
+      const { ok, data } = await this.authService.refreshKeys(accessKey, request, response);
+      return okResponseHandler(ok, data, AuthRefreshKeysEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }
@@ -100,10 +144,13 @@ export class AuthController implements IAuthController {
   @HttpCode(200)
   @ZodSerializerDto(AuthLoginResponseDto)
   @Post('/login')
-  async loginEP(@Body() dto: AuthLoginRequestDto, @UrlParams() urlParams: IUrlParams): Promise<AuthLoginResponseDto> {
+  async loginEP(
+    @Body() dto: AuthLoginRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<AuthLoginResponseDto> {
     try {
-      const { ok, data } = await this.authService.login(dto);
-
+      const { ok, data } = await this.authService.login(dto, response);
       return okResponseHandler(ok, data, AuthEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);

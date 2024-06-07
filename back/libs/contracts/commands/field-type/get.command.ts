@@ -4,9 +4,12 @@ import { ResponseClientSchema } from '../../models';
 
 const FieldTypeGetResponseSchema = z
   .object({
-    data: FieldTypeSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldTypeSchema.pick({
+      name: true,
+      description: true,
+      jsType: true,
+      lastChangeByUserUuid: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

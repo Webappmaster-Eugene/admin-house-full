@@ -7,4 +7,5 @@ export const AuthSchema = z.object({
   firstName: z.string(),
   roleName: EUserVariants,
   accessToken: z.string(),
+  refreshToken: z.string(),
 });

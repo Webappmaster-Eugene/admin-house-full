@@ -4,10 +4,10 @@ export class FieldVariantsForSelectorFieldTypeEntity implements FieldVariantsFor
   uuid: string;
   value: string;
   fieldOfCategoryMaterialUuid: string;
-  characteristicsMaterialUuid: string;
   description: string;
   fieldTypeUuid: string;
   handbookUuid: string;
+  lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
 

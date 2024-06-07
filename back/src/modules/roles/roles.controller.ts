@@ -31,7 +31,6 @@ import { EntityName } from '../../common/types/entity.enum';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IRoleController } from './types/role.controller.interface';
-import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
@@ -44,7 +43,6 @@ export class RolesController implements IRoleController {
     @Inject(KFI.ROLE_SERVICE)
     private readonly rolesService: IRoleService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore,
   ) {}
 
   //region SWAGGER
@@ -59,11 +57,11 @@ export class RolesController implements IRoleController {
   @ZodSerializerDto(RoleGetResponseDto)
   @Get('/:roleId')
   async getByIdEP(
-    @Param('roleId', ParseIntPipe) id: EntityUrlParamCommand.RequestNumberParam,
+    @Param('roleId', ParseIntPipe) roleId: EntityUrlParamCommand.RequestNumberParam,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<RoleGetResponseDto> {
     try {
-      const { ok, data } = await this.rolesService.getById(id);
+      const { ok, data } = await this.rolesService.getById(roleId);
       return okResponseHandler(ok, data, RoleEntity, this.logger);
     } catch (error) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);

@@ -2,21 +2,30 @@ import { z } from 'zod';
 import { MaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const MaterialUpdateRequestSchema = MaterialSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  categoryUuid: true,
-  handbookUuid: true,
-  responsiblePartnerUuid: true,
+const MaterialUpdateRequestSchema = MaterialSchema.pick({
+  name: true,
+  price: true,
+  comment: true,
+  namePublic: true,
+  sourceInfo: true,
   unitMeasurementUuid: true,
+  responsiblePartnerUuid: true,
 }).partial();
 
 const MaterialUpdateResponseSchema = z
   .object({
-    data: MaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: MaterialSchema.pick({
+      name: true,
+      price: true,
+      comment: true,
+      namePublic: true,
+      sourceInfo: true,
+      unitMeasurementUuid: true,
+      responsiblePartnerUuid: true,
+      categoryUuid: true,
+      handbookUuid: true,
+      lastChangeByUserUuid: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

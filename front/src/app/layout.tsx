@@ -1,47 +1,59 @@
-import { Inter } from "next/font/google";
+import '@/shared/global.css';
+import ThemeProvider from '@/shared/theme';
+import ProgressBar from '@/entities/progress-bar';
+import { primaryFont } from '@/shared/theme/typography';
+import { MotionLazy } from '@/entities/animate/motion-lazy';
+import { Props } from '@/shared/utils/types/react-node.type';
+import { SettingsDrawer, SettingsProvider } from '@/entities/settings';
 
-import Header from "@/bwidgets/Header/Header";
-import Footer from "@/bwidgets/Footer/Footer";
-import {YMetrika} from "@/shared/YMetrika/YMetrika";
+import { AuthProvider } from 'src/shared/auth/context';
 
-import type { Metadata } from "next";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Admin house",
-  description: "App for building houses",
-  icons: {
-    icon: "/favicon-32x32.png",
-    apple: "/apple-touch-icon.png",
-  },
+export const viewport = {
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-      <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico"/>
-        <meta name="yandex-verification" content="cd2158a63c257605"/>
-        <meta
-            name="google-site-verification"
-            content="YjNMY_H6UeEa7TOw48sffDoksjAxLJ5na09PfZFfgWg"
-        />
-        <link rel="icon" href="/favicon.ico"/>
-        <title></title>
-      </head>
+export const metadata = {
+  title: 'Minimal UI Kit',
+  description:
+    'The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style',
+  keywords: 'react,material,kit,application,dashboard,admin,template',
+  manifest: '/manifest.json',
+  icons: [
+    { rel: 'icon', url: '/favicon/favicon.ico' },
+    { rel: 'icon', type: 'image/png', sizes: '16x16', url: '/favicon/favicon-16x16.png' },
+    { rel: 'icon', type: 'image/png', sizes: '32x32', url: '/favicon/favicon-32x32.png' },
+    { rel: 'apple-touch-icon', sizes: '180x180', url: '/favicon/apple-touch-icon.png' },
+  ],
+};
 
-      {/* <YMetrika /> */}
-      <body className={inter.className}>
-      <Header/>
-      {children}
-      <Footer />
+export default function RootLayout({ children }: Props) {
+  return (
+    <html lang="ru" className={primaryFont.className}>
+      <body>
+        <AuthProvider>
+          <SettingsProvider
+            defaultSettings={{
+              themeMode: 'light', // 'light' | 'dark'
+              themeDirection: 'ltr', //  'rtl' | 'ltr'
+              themeContrast: 'default', // 'default' | 'bold'
+              themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+              themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+              themeStretch: false,
+            }}
+          >
+            <ThemeProvider>
+              <MotionLazy>
+                <SettingsDrawer />
+                <ProgressBar />
+                {children}
+              </MotionLazy>
+            </ThemeProvider>
+          </SettingsProvider>
+        </AuthProvider>
       </body>
-      {/* <YMetrika /> */}
-      </html>
+    </html>
   );
 }

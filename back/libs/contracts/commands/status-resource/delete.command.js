@@ -7,7 +7,11 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const StatusResourceDeleteResponseSchema = zod_1.z
     .object({
-    data: models_1.StatusResourceSchema.omit({
+    data: models_1.StatusResourceSchema.pick({
+        name: true,
+        comment: true,
+        uuid: true,
+        lastChangeByUserUuid: true,
         createdAt: true,
         updatedAt: true,
     }),

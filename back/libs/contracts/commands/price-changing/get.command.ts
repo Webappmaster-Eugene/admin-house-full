@@ -4,9 +4,14 @@ import { ResponseClientSchema } from '../../models';
 
 const PriceChangingGetResponseSchema = z
   .object({
-    data: PriceChangingSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: PriceChangingSchema.pick({
+      oldPrice: true,
+      comment: true,
+      newPrice: true,
+      source: true,
+      uuid: true,
+      lastChangeByUserUuid: true,
+      materialUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

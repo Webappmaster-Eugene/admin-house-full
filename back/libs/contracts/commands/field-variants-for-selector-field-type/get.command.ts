@@ -4,9 +4,13 @@ import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
 const FieldVariantsForSelectorFieldTypeGetResponseSchema = z
   .object({
-    data: FieldVariantsForSelectorFieldTypeSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldVariantsForSelectorFieldTypeSchema.pick({
+      description: true,
+      value: true,
+      handbookUuid: true,
+      uuid: true,
+      fieldOfCategoryMaterialUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

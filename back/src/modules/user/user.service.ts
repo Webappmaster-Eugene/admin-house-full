@@ -25,6 +25,8 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { cacheRemoverBatch } from '../../common/helpers/cashe/cache-remover.batch';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
+import { AddUserToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { AddUserToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -197,66 +199,56 @@ export class UserService implements IUserService {
     return new InternalResponse(updatedUserWithHandbook);
   }
 
-  async addUserToManagerWorkspace(
+  async addUserToWorkspace(
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToWorkspaceRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const userToAddingId = dto.uuid;
-    const findedUser = await this.userRepository.getById(userToAddingId);
+    const findedUser = await this.userRepository.getById(userId);
 
     if (!findedUser.memberOfWorkspaceUuid) {
-      const dtoToUpdateUser = { memberOfWorkspaceUuid: workspaceId };
-      const updatedUser = await this.userRepository.updateById(userToAddingId, dtoToUpdateUser);
-      await cacheRemoverBatch(this.cacheManager, [
-        userToAddingId,
-        `${CACHE_KEYS.USER_FULL_INFO}userId${userToAddingId}`,
-        CACHE_KEYS.USER_ALL,
-      ]);
+      const dtoToUpdateUser: AddUserToWorkspaceRequestDto = { uuid: userId, memberOfWorkspaceUuid: workspaceId };
+
+      const updatedUser = await this.userRepository.addUserToWorkspaceById(dtoToUpdateUser);
+      await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
+
       return new InternalResponse(updatedUser);
     } else {
       throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
     }
   }
 
-  async addUserToManagerOrganization(
+  async addUserToOrganization(
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToWorkspaceRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const userToAddingId = dto.uuid;
-    const findedUser = await this.userRepository.getById(userToAddingId);
+    const findedUser = await this.userRepository.getById(userId);
 
     if (findedUser.memberOfWorkspaceUuid === workspaceId) {
-      const dtoToUpdateUser = { memberOfOrganizationUuid: organizationId };
-      const updatedUser = await this.userRepository.updateById(userToAddingId, dtoToUpdateUser);
-      await cacheRemoverBatch(this.cacheManager, [
-        userToAddingId,
-        `${CACHE_KEYS.USER_FULL_INFO}userId${userToAddingId}`,
-        CACHE_KEYS.USER_ALL,
-      ]);
+      const dtoToUpdateUser: AddUserToOrganizationRequestDto = { uuid: userId, memberOfOrganizationUuid: organizationId };
+
+      const updatedUser = await this.userRepository.addUserToOrganizationById(dtoToUpdateUser);
+      await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
+
       return new InternalResponse(updatedUser);
     } else {
       throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
     }
   }
 
-  async addUserToManagerProject(
+  async addUserToProject(
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     projectId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToWorkspaceRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const userToAddingId = dto.uuid;
-    const findedUser = await this.userRepository.getById(userToAddingId);
+    const findedUser = await this.userRepository.getById(userId);
 
     if (findedUser.memberOfWorkspaceUuid === workspaceId && findedUser.memberOfOrganizationUuid === organizationId) {
-      const dtoToUpdateUser = { memberOfProjectUuid: projectId };
-      const updatedUser = await this.userRepository.updateById(userToAddingId, dtoToUpdateUser);
-      await cacheRemoverBatch(this.cacheManager, [
-        userToAddingId,
-        `${CACHE_KEYS.USER_FULL_INFO}userId${userToAddingId}`,
-        CACHE_KEYS.USER_ALL,
-      ]);
+      const dtoToUpdateUser: AddUserToProjectRequestDto = { uuid: userId, memberOfProjectUuid: projectId };
+
+      const updatedUser = await this.userRepository.addUserToProjectById(dtoToUpdateUser);
+      await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
       return new InternalResponse(updatedUser);
     } else {
       throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));

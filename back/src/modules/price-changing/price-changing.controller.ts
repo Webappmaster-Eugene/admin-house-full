@@ -106,7 +106,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
-  @Get()
+  @Get('/in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -136,7 +136,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
-  @Get()
+  @Get('/in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('categoryMaterialId', ParseUUIDPipe)
@@ -166,7 +166,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
-  @Get()
+  @Get('/in-material')
   async getAllInMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('materialId', ParseUUIDPipe)

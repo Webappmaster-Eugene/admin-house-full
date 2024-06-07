@@ -4,9 +4,18 @@ import { ResponseClientSchema } from '../../models';
 
 const FieldOfCategoryMaterialGetResponseSchema = z
   .object({
-    data: FieldOfCategoryMaterialSchema.omit({
-      createdAt: true,
-      updatedAt: true,
+    data: FieldOfCategoryMaterialSchema.pick({
+      name: true,
+      comment: true,
+      uniqueNameForTemplate: true,
+      defaultValue: true,
+      isRequired: true,
+      unitOfMeasurementUuid: true,
+      fieldTypeUuid: true,
+      categoryMaterialUuid: true,
+      lastChangeByUserUuid: true,
+      handbookUuid: true,
+      uuid: true,
     }),
   })
   .merge(ResponseClientSchema);

@@ -15,10 +15,9 @@ import { WorkspaceModule } from './modules/workspace/workspace.module';
 import { AppInfoModule } from './modules/app-info/app-info.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
 import { GlobalCategoryMaterialModule } from './modules/global-category-material/global-category-material.module';
 import { WinstonModule } from 'nest-winston/dist/winston.module';
-import { LoggerConfig } from '../logger/logger-config';
+import { LoggerConfig } from 'logger/logger-config';
 import { CategoryMaterialModule } from './modules/category-material/category-material.module';
 import { StatusResourceModule } from './modules/status-resource/status-resource.module';
 import { MaterialModule } from './modules/material/material.module';
@@ -29,6 +28,8 @@ import { FieldOfCategoryMaterialModule } from './modules/field-of-category-mater
 import { PriceChangingModule } from './modules/price-changing/price-changing.module';
 import { ResponsiblePartnerProducerModule } from './modules/responsible-partner-producer/responsible-partner-producer.module';
 import { CharacteristicsMaterialModule } from './modules/characteristics-material/characteristics-material.module';
+import { redisStore } from 'cache-manager-redis-yet';
+import { TechLogChangesModule } from 'src/modules/tech/tech-log-changes/tech-log-changes.module';
 
 const logger: LoggerConfig = new LoggerConfig();
 
@@ -47,10 +48,13 @@ const logger: LoggerConfig = new LoggerConfig();
         store: await redisStore({
           ttl: 10, // seconds
           socket: {
-            host: 'redis',
-            port: 6379,
-            // host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-            // port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+            // DOC данные подключения redis для прода
+            // host: 'redis',
+            // port: 6379,
+
+            // DOC данные подключения redis для dev
+            host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
+            port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
           },
         }),
       }),
@@ -77,6 +81,7 @@ const logger: LoggerConfig = new LoggerConfig();
     CharacteristicsMaterialModule,
     ResponsiblePartnerProducerModule,
     StatusResourceModule,
+    TechLogChangesModule,
   ],
   controllers: [],
   providers: [

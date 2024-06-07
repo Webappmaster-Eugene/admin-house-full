@@ -6,8 +6,14 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const AppInfoGetResponseSchema = zod_1.z
     .object({
-    data: models_2.AppInfoSchema.omit({
-        uuid: true,
+    data: models_2.AppInfoSchema.pick({
+        name: true,
+        description: true,
+        currency: true,
+        language: true,
+        comment: true,
+        status: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_1.ResponseClientSchema);

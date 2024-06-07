@@ -6,7 +6,7 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const StatusResourceGetAllResponseSchema = zod_1.z
     .object({
-    data: zod_1.z.array(models_1.StatusResourceSchema.omit({
+    data: zod_1.z.array(models_1.StatusResourceSchema.pick({
         createdAt: true,
         updatedAt: true,
     })),

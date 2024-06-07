@@ -29,19 +29,19 @@ export interface IUserService extends IServiceCommon<UserCreateRequestDto, UserU
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     transactionDbClient?: TransactionDbClient,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
-  addUserToManagerWorkspace: (
+  addUserToWorkspace: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToWorkspaceRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
-  addUserToManagerOrganization: (
+  addUserToOrganization: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToOrganizationRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
-  addUserToManagerProject: (
+  addUserToProject: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     projectId: EntityUrlParamCommand.RequestUuidParam,
-    dto: AddUserToProjectRequestDto,
+    userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<UserEntity>>;
 }

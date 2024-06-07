@@ -6,9 +6,12 @@ const models_1 = require("../../models");
 const models_2 = require("../../models");
 const FieldUnitMeasurementGetResponseSchema = zod_1.z
     .object({
-    data: models_1.FieldUnitMeasurementSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+    data: models_1.FieldUnitMeasurementSchema.pick({
+        name: true,
+        comment: true,
+        uuid: true,
+        handbookUuid: true,
+        lastChangeByUserUuid: true,
     }),
 })
     .merge(models_2.ResponseClientSchema);

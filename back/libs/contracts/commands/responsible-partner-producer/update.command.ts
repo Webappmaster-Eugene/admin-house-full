@@ -2,18 +2,27 @@ import { z } from 'zod';
 import { ResponsiblePartnerProducerSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ResponsiblePartnerProducerUpdateRequestSchema = ResponsiblePartnerProducerSchema.omit({
-  createdAt: true,
-  handbookId: true,
-  updatedAt: true,
-  uuid: true,
+const ResponsiblePartnerProducerUpdateRequestSchema = ResponsiblePartnerProducerSchema.pick({
+  name: true,
+  info: true,
+  phone: true,
+  email: true,
+  comment: true,
 }).partial();
 
 const ResponsiblePartnerProducerUpdateResponseSchema = z
   .object({
     data: ResponsiblePartnerProducerSchema.omit({
+      name: true,
+      comment: true,
+      info: true,
+      email: true,
+      phone: true,
       createdAt: true,
       updatedAt: true,
+      uuid: true,
+      handbookUuid: true,
+      lastChangeByUserUuid: true,
     }),
   })
   .merge(ResponseClientSchema);

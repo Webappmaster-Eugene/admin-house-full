@@ -4,9 +4,18 @@ import { CharacteristicsMaterialSchema, ResponseClientSchema, RequestGetAllQuery
 const CharacteristicsMaterialGetAllResponseSchema = z
   .object({
     data: z.array(
-      CharacteristicsMaterialSchema.omit({
-        createdAt: true,
-        updatedAt: true,
+      CharacteristicsMaterialSchema.pick({
+        uuid: true,
+        value: true,
+        name: true,
+        comment: true,
+        fieldOfCategoryMaterialUuid: true,
+        fieldUnitMeasurementUuid: true,
+        fieldTypeUuid: true,
+        handbookUuid: true,
+        categoryMaterialUuid: true,
+        materialUuid: true,
+        lastChangeByUserUuid: true,
       }),
     ),
   })

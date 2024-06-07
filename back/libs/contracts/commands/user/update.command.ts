@@ -4,16 +4,13 @@ import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models';
 
 const UserUpdateRequestSchema = UserSchema.pick({
-  firstName: true,
-  secondName: true,
   avatar: true,
-  phone: true,
   info: true,
-  documents: true,
   address: true,
-  memberOfWorkspaceUuid: true,
-  memberOfOrganizationUuid: true,
-  memberOfProjectUuid: true,
+  secondName: true,
+  documents: true,
+  firstName: true,
+  phone: true,
 }).partial();
 
 const UserUpdateResponseSchema = z

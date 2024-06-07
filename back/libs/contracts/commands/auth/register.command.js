@@ -5,14 +5,16 @@ const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
 const models_3 = require("../../models");
-const AuthRegisterRequestSchema = models_1.UserSchema.omit({
-    memberOfWorkspaceUuid: true,
-    memberOfOrganizationUuid: true,
-    creatorOfWorkspaceUuid: true,
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-    roleUuid: true,
+const AuthRegisterRequestSchema = models_1.UserSchema.pick({
+    email: true,
+    password: true,
+    address: true,
+    documents: true,
+    firstName: true,
+    secondName: true,
+    info: true,
+    phone: true,
+    avatar: true,
 })
     .merge(models_3.ConfirmPasswordSchema)
     .refine(data => {

@@ -8,14 +8,16 @@ const AuthRegisterWithRoleRequestParamSchema = zod_1.z.object({
     roleId: zod_1.z.number().gte(1).lte(4),
     registerWithRoleKey: zod_1.z.string(),
 });
-const AuthRegisterWithRoleRequestSchema = models_1.UserSchema.omit({
-    memberOfWorkspaceUuid: true,
-    memberOfOrganizationUuid: true,
-    creatorOfWorkspaceUuid: true,
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-    roleUuid: true,
+const AuthRegisterWithRoleRequestSchema = models_1.UserSchema.pick({
+    email: true,
+    password: true,
+    address: true,
+    documents: true,
+    firstName: true,
+    secondName: true,
+    info: true,
+    phone: true,
+    avatar: true,
 })
     .merge(models_1.ConfirmPasswordSchema)
     .refine(data => {

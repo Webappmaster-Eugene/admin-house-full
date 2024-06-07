@@ -10,11 +10,12 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
 import { IWorkspaceService } from '../../modules/workspace/types/workspace.service.interface';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
+import { IConfigService } from 'src/common/types/main/config.service.interface';
 
 @Injectable()
 export class WorkspaceCreatorGuard implements CanActivate {
   constructor(
-    private configService: ConfigService,
+    private configService: ConfigService<IConfigService>,
     @Inject(KFI.USER_SERVICE) private userService: IUserService,
     @Inject(KFI.WORKSPACE_SERVICE) private workspaceService: IWorkspaceService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
