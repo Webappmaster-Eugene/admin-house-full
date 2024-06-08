@@ -42,9 +42,9 @@ lerna-debug.log*
 /logger/*.log
 .development.env
 .production.env
-#/prisma/.env
-#*.env
-#../.env
+./prisma/.env
+*.env
+../.env
 .env.development.local
 .env.test.local
 .env.production.local
