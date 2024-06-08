@@ -20,7 +20,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect, pull and restart container
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout main && git pull && docker pull ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:latest && docker pull ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:latest && docker compose up -d --no-deps --force-recreate && exit"
-      - name: generate prismastructure in PostgreSQL DB
+      - name: generate prisma structure in PostgreSQL DB
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -t admin-house-back npx prisma generate && exit"
       - name: push structure in PostgreSQL DB
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker exec -t admin-house-back npx prisma db push && exit"

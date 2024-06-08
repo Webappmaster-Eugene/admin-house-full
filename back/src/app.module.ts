@@ -30,6 +30,7 @@ import { ResponsiblePartnerProducerModule } from './modules/responsible-partner-
 import { CharacteristicsMaterialModule } from './modules/characteristics-material/characteristics-material.module';
 import { redisStore } from 'cache-manager-redis-yet';
 import { TechLogChangesModule } from 'src/modules/tech/tech-log-changes/tech-log-changes.module';
+import { AutomapperModule } from '@automapper/nestjs';
 
 const logger: LoggerConfig = new LoggerConfig();
 
@@ -42,6 +43,9 @@ const logger: LoggerConfig = new LoggerConfig();
     }),
     DatabaseModule,
     WinstonModule.forRoot(logger.configureLogger()),
+    // AutomapperModule.forRoot({
+    //   strategyInitializer: classes(),
+    // }),
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: async () => ({

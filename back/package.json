@@ -31,6 +31,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@automapper/core": "^8.8.1",
+    "@automapper/nestjs": "^8.8.1",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/cli": "^10.3.2",
     "@nestjs/common": "^10.3.2",
