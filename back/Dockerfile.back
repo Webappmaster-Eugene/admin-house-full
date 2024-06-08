@@ -2,7 +2,7 @@ FROM node:20.11.1-alpine
 
 WORKDIR /back
 
-#COPY package.json /back
+COPY package.json /back
 #COPY prisma ./prisma/
 
 RUN npm config set registry http://registry.npmjs.org/
@@ -13,11 +13,9 @@ RUN npm i -g @prisma/client@latest
 
 RUN npm i @prisma/client@latest
 
-#RUN npx prisma generate
-
 RUN npm install
 
-
+RUN npx prisma generate
 
 #RUN npx prisma generate --schema='./prisma/schema.prisma'
 
