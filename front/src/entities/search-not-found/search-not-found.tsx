@@ -7,7 +7,7 @@ interface Props extends PaperProps {
   query?: string;
 }
 
-export default function SearchNotFound({ query, sx, ...other }: Props) {
+export function SearchNotFound({ query, sx, ...other }: Props) {
   return query ? (
     <Paper
       sx={{

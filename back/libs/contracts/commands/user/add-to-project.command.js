@@ -1,20 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AddUserToProjectCommand = void 0;
+exports.UserAddToProjectCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const AddUserToProjectRequestSchema = models_1.UserSchema.pick({
+const UserAddToProjectResponseEntitySchema = models_1.UserSchema.omit({
+    password: true,
+    createdAt: true,
+    updatedAt: true,
+});
+const UserAddToProjectRequestSchema = models_1.UserSchema.pick({
     uuid: true,
     memberOfProjectUuid: true,
 });
-const AddUserToProjectResponseSchema = zod_1.z
+const UserAddToProjectResponseSchema = zod_1.z
     .object({
-    data: models_1.UserSchema,
+    data: UserAddToProjectResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
-var AddUserToProjectCommand;
-(function (AddUserToProjectCommand) {
-    AddUserToProjectCommand.RequestSchema = AddUserToProjectRequestSchema;
-    AddUserToProjectCommand.ResponseSchema = AddUserToProjectResponseSchema;
-})(AddUserToProjectCommand || (exports.AddUserToProjectCommand = AddUserToProjectCommand = {}));
+var UserAddToProjectCommand;
+(function (UserAddToProjectCommand) {
+    UserAddToProjectCommand.RequestSchema = UserAddToProjectRequestSchema;
+    UserAddToProjectCommand.ResponseSchema = UserAddToProjectResponseSchema;
+    UserAddToProjectCommand.ResponseEntitySchema = UserAddToProjectResponseEntitySchema;
+})(UserAddToProjectCommand || (exports.UserAddToProjectCommand = UserAddToProjectCommand = {}));

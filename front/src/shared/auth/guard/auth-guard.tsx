@@ -1,30 +1,22 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
-import { SplashScreen } from '@/entities/loading-screen';
 
 import { paths } from 'src/shared/routes/paths';
+import { SplashScreen } from 'src/shared/components';
 import { useAuthContext } from 'src/shared/auth/hooks';
+import { PropsReactNode } from 'src/shared/utils/types/react-node.type';
 
-const loginPaths: Record<string, string> = {
-  jwt: paths.auth.jwt.login,
-};
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function AuthGuard({ children }: Props) {
+export function AuthGuard({ children }: PropsReactNode) {
   const { loading } = useAuthContext();
 
-  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>;
+  return <>{loading ? <SplashScreen /> : <GuardContainer>{children}</GuardContainer>}</>;
 }
 
-// ----------------------------------------------------------------------
-
-function Container({ children }: Props) {
+function GuardContainer({ children }: PropsReactNode) {
   const router = useRouter();
 
-  const { authenticated, method } = useAuthContext();
+  const { authenticated } = useAuthContext();
+  console.log();
 
   const [checked, setChecked] = useState(false);
 
@@ -34,7 +26,8 @@ function Container({ children }: Props) {
         returnTo: window.location.pathname,
       }).toString();
 
-      const loginPath = loginPaths[method];
+      // const loginPath = loginPaths[method];
+      const loginPath = paths.auth.login;
 
       const href = `${loginPath}?${searchParams}`;
 
@@ -42,12 +35,11 @@ function Container({ children }: Props) {
     } else {
       setChecked(true);
     }
-  }, [authenticated, method, router]);
+  }, [authenticated, router]);
 
   useEffect(() => {
     check();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [check]);
 
   if (!checked) {
     return null;

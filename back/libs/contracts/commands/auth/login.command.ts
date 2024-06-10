@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { AuthSchema, UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const AuthLoginResponseEntitySchema = AuthSchema;
+
 const AuthLoginRequestSchema = UserSchema.pick({
   email: true,
   password: true,
@@ -9,7 +11,7 @@ const AuthLoginRequestSchema = UserSchema.pick({
 
 const AuthLoginResponseSchema = z
   .object({
-    data: AuthSchema,
+    data: AuthLoginResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -19,4 +21,7 @@ export namespace AuthLoginCommand {
 
   export const ResponseSchema = AuthLoginResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = AuthLoginResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

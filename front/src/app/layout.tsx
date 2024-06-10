@@ -1,12 +1,12 @@
 import '@/shared/global.css';
-import ThemeProvider from '@/shared/theme';
 import ProgressBar from '@/entities/progress-bar';
-import { primaryFont } from '@/shared/theme/typography';
 import { MotionLazy } from '@/entities/animate/motion-lazy';
-import { Props } from '@/shared/utils/types/react-node.type';
-import { SettingsDrawer, SettingsProvider } from '@/entities/settings';
+import { PropsReactNode } from '@/shared/utils/types/react-node.type';
 
 import { AuthProvider } from 'src/shared/auth/context';
+import { ThemeProvider } from 'src/shared/components/theme';
+import { primaryFont } from 'src/shared/components/theme/typography';
+import { SettingsDrawer, SettingsProvider } from 'src/shared/components/settings';
 
 export const viewport = {
   themeColor: '#000000',
@@ -29,7 +29,7 @@ export const metadata = {
   ],
 };
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: PropsReactNode) {
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>

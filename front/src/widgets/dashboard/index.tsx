@@ -1,8 +1,10 @@
 import { useBoolean } from '@/shared/hooks/use-boolean';
-import { useSettingsContext } from '@/entities/settings';
 import { useResponsive } from '@/shared/hooks/use-responsive';
 
 import Box from '@mui/material/Box';
+
+import { PropsReactNode } from 'src/shared';
+import { useSettingsContext } from 'src/shared/components/settings';
 
 import Main from './main';
 import Header from './header';
@@ -10,11 +12,7 @@ import NavMini from './nav-mini';
 import NavVertical from './nav-vertical';
 import NavHorizontal from './nav-horizontal';
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function DashboardLayout({ children }: Props) {
+export default function DashboardLayout({ children }: PropsReactNode) {
   const settings = useSettingsContext();
 
   const lgUp = useResponsive('up', 'lg');

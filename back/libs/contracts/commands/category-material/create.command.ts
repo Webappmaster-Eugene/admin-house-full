@@ -1,6 +1,15 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models';
+import { CharacteristicsMaterialSchema, ResponseClientSchema } from '../../models';
 import { CategoryMaterialSchema } from '../../models';
+
+const CategoryMaterialCreateResponseEntitySchema = CategoryMaterialSchema.pick({
+  name: true,
+  templateName: true,
+  comment: true,
+  uuid: true,
+  globalCategoryMaterialUuid: true,
+  lastChangeByUserUuid: true,
+});
 
 const CategoryMaterialCreateRequestSchema = CategoryMaterialSchema.pick({
   name: true,
@@ -11,14 +20,7 @@ const CategoryMaterialCreateRequestSchema = CategoryMaterialSchema.pick({
 
 const CategoryMaterialCreateResponseSchema = z
   .object({
-    data: CategoryMaterialSchema.pick({
-      name: true,
-      templateName: true,
-      comment: true,
-      uuid: true,
-      globalCategoryMaterialUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: CategoryMaterialCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -28,4 +30,7 @@ export namespace CategoryMaterialCreateCommand {
 
   export const ResponseSchema = CategoryMaterialCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = CategoryMaterialCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

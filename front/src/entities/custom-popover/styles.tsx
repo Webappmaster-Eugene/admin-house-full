@@ -1,6 +1,6 @@
-import { bgBlur } from '@/shared/theme/css';
-
 import { alpha, styled } from '@mui/material/styles';
+
+import { bgBlur } from 'src/shared/components/theme/css';
 
 import { MenuPopoverArrowValue } from './types';
 

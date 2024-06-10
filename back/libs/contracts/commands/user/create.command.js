@@ -3,6 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
+const UserCreateResponseEntitySchema = models_1.UserSchema.omit({
+    password: true,
+    createdAt: true,
+    updatedAt: true,
+});
 const UserCreateRequestSchema = models_1.UserSchema.pick({
     avatar: true,
     info: true,
@@ -16,15 +21,12 @@ const UserCreateRequestSchema = models_1.UserSchema.pick({
 });
 const UserCreateResponseSchema = zod_1.z
     .object({
-    data: models_1.UserSchema.omit({
-        password: true,
-        createdAt: true,
-        updatedAt: true,
-    }),
+    data: UserCreateResponseEntitySchema,
 })
     .merge(models_1.ResponseClientSchema);
 var UserCreateCommand;
 (function (UserCreateCommand) {
     UserCreateCommand.RequestSchema = UserCreateRequestSchema;
     UserCreateCommand.ResponseSchema = UserCreateResponseSchema;
+    UserCreateCommand.ResponseEntitySchema = UserCreateResponseEntitySchema;
 })(UserCreateCommand || (exports.UserCreateCommand = UserCreateCommand = {}));

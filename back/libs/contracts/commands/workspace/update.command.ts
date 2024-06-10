@@ -2,6 +2,11 @@ import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const WorkspaceUpdateResponseEntitySchema = WorkspaceSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
 const WorkspaceUpdateRequestSchema = WorkspaceSchema.pick({
   name: true,
   description: true,
@@ -10,10 +15,7 @@ const WorkspaceUpdateRequestSchema = WorkspaceSchema.pick({
 
 const WorkspaceUpdateResponseSchema = z
   .object({
-    data: WorkspaceSchema.omit({
-      createdAt: true,
-      updatedAt: true,
-    }),
+    data: WorkspaceUpdateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -23,4 +25,7 @@ export namespace WorkspaceUpdateCommand {
 
   export const ResponseSchema = WorkspaceUpdateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = WorkspaceUpdateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

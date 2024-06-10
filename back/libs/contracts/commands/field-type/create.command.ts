@@ -1,6 +1,14 @@
 import { z } from 'zod';
-import { FieldTypeSchema } from '../../models';
+import { FieldTypeSchema, FieldUnitMeasurementSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
+
+const FieldTypeCreateResponseEntitySchema = FieldTypeSchema.pick({
+  name: true,
+  description: true,
+  jsType: true,
+  lastChangeByUserUuid: true,
+  uuid: true,
+});
 
 const FieldTypeCreateRequestSchema = FieldTypeSchema.pick({
   name: true,
@@ -10,13 +18,7 @@ const FieldTypeCreateRequestSchema = FieldTypeSchema.pick({
 
 const FieldTypeCreateResponseSchema = z
   .object({
-    data: FieldTypeSchema.pick({
-      name: true,
-      description: true,
-      jsType: true,
-      lastChangeByUserUuid: true,
-      uuid: true,
-    }),
+    data: FieldTypeCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -26,4 +28,7 @@ export namespace FieldTypeCreateCommand {
 
   export const ResponseSchema = FieldTypeCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = FieldTypeCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

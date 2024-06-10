@@ -1,9 +1,8 @@
-import { bgBlur } from '@/shared/theme/css';
-
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
-import Iconify from '../iconify';
+import { Iconify } from 'src/shared';
+import { bgBlur } from 'src/shared/components/theme/css';
 
 // ----------------------------------------------------------------------
 

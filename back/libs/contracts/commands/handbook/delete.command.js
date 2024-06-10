@@ -5,21 +5,23 @@ const zod_1 = require("zod");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
+const HandbookDeleteResponseEntitySchema = models_1.HandbookSchema.pick({
+    name: true,
+    description: true,
+    canCustomerView: true,
+    uuid: true,
+    responsibleManagerUuid: true,
+    workspaceUuid: true,
+    lastChangeByUserUuid: true,
+});
 const HandbookDeleteResponseSchema = zod_1.z
     .object({
-    data: models_1.HandbookSchema.pick({
-        name: true,
-        description: true,
-        canCustomerView: true,
-        uuid: true,
-        responsibleManagerUuid: true,
-        workspaceUuid: true,
-        lastChangeByUserUuid: true,
-    }),
+    data: HandbookDeleteResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var HandbookDeleteCommand;
 (function (HandbookDeleteCommand) {
     HandbookDeleteCommand.RequestParamSchema = entity_url_param_command_1.EntityUrlParamCommand.RequestUuidParamSchema;
     HandbookDeleteCommand.ResponseSchema = HandbookDeleteResponseSchema;
+    HandbookDeleteCommand.ResponseEntitySchema = HandbookDeleteResponseEntitySchema;
 })(HandbookDeleteCommand || (exports.HandbookDeleteCommand = HandbookDeleteCommand = {}));

@@ -2,14 +2,20 @@ import { z } from 'zod';
 import { RequestGetAllQuerySchema, StatusResourceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const StatusResourceGetAllResponseEntitySchema = z.array(
+  StatusResourceSchema.pick({
+    name: true,
+    comment: true,
+    uuid: true,
+    lastChangeByUserUuid: true,
+    createdAt: true,
+    updatedAt: true,
+  }),
+);
+
 const StatusResourceGetAllResponseSchema = z
   .object({
-    data: z.array(
-      StatusResourceSchema.pick({
-        createdAt: true,
-        updatedAt: true,
-      }),
-    ),
+    data: StatusResourceGetAllResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -19,4 +25,7 @@ export namespace StatusResourceGetAllCommand {
 
   export const ResponseSchema = StatusResourceGetAllResponseSchema;
   export type Request = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = StatusResourceGetAllResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

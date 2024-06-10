@@ -1,12 +1,13 @@
 import { m } from 'framer-motion';
-import Iconify from '@/entities/iconify';
 import { varHover } from '@/entities/animate';
-import { useSettingsContext } from '@/entities/settings';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { Theme, SxProps } from '@mui/material/styles';
 import Badge, { badgeClasses } from '@mui/material/Badge';
+
+import { Iconify } from 'src/shared';
+import { useSettingsContext } from 'src/shared/components/settings';
 
 type Props = {
   sx?: SxProps<Theme>;

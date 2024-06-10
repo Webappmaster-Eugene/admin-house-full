@@ -2,6 +2,16 @@ import { z } from 'zod';
 import { PriceChangingSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const PriceChangingUpdateResponseEntitySchema = PriceChangingSchema.pick({
+  oldPrice: true,
+  comment: true,
+  newPrice: true,
+  source: true,
+  uuid: true,
+  lastChangeByUserUuid: true,
+  materialUuid: true,
+});
+
 const PriceChangingUpdateRequestSchema = PriceChangingSchema.pick({
   source: true,
   comment: true,
@@ -10,15 +20,7 @@ const PriceChangingUpdateRequestSchema = PriceChangingSchema.pick({
 
 const PriceChangingUpdateResponseSchema = z
   .object({
-    data: PriceChangingSchema.pick({
-      oldPrice: true,
-      comment: true,
-      newPrice: true,
-      source: true,
-      uuid: true,
-      lastChangeByUserUuid: true,
-      materialUuid: true,
-    }),
+    data: PriceChangingUpdateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -28,4 +30,7 @@ export namespace PriceChangingUpdateCommand {
 
   export const ResponseSchema = PriceChangingUpdateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = PriceChangingUpdateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

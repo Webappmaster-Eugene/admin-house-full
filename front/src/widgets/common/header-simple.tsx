@@ -1,5 +1,3 @@
-import Logo from '@/entities/logo';
-import { bgBlur } from '@/shared/theme/css';
 import { HEADER } from '@/shared/config-layout';
 import { useOffSetTop } from '@/shared/hooks/use-off-set-top';
 
@@ -8,6 +6,9 @@ import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
+
+import { Logo } from 'src/shared';
+import { bgBlur } from 'src/shared/components/theme/css';
 
 import HeaderShadow from './header-shadow';
 import SettingsButton from './settings-button';

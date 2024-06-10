@@ -1,14 +1,12 @@
 import { paths } from '@/shared/routes/paths';
 import { useEffect, useCallback } from 'react';
 import { useAuthContext } from '@/shared/auth/hooks';
-import { SplashScreen } from '@/entities/loading-screen';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-type Props = {
-  children: React.ReactNode;
-};
+import { SplashScreen } from 'src/shared/components';
+import { PropsReactNode } from 'src/shared/utils/types/react-node.type';
 
-export default function GuestGuard({ children }: Props) {
+export function GuestGuard({ children }: PropsReactNode) {
   const { loading } = useAuthContext();
 
   return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>;
@@ -16,7 +14,7 @@ export default function GuestGuard({ children }: Props) {
 
 // ----------------------------------------------------------------------
 
-function Container({ children }: Props) {
+function Container({ children }: PropsReactNode) {
   const router = useRouter();
 
   const searchParams = useSearchParams();

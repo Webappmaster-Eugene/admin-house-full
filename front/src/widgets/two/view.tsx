@@ -5,7 +5,7 @@ import { alpha } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import { useSettingsContext } from 'src/entities/settings';
+import { useSettingsContext } from 'src/shared/components/settings';
 
 export default function TwoView() {
   const settings = useSettingsContext();

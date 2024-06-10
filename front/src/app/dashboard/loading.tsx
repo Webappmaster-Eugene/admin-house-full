@@ -1,6 +1,6 @@
 'use client';
 
-import { LoadingScreen } from '@/entities/loading-screen';
+import { LoadingScreen } from 'src/shared';
 
 export default function Loading() {
   return <LoadingScreen />;

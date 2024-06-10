@@ -1,13 +1,10 @@
 'use client';
 
-import { SplashScreen } from 'src/entities/loading-screen';
+import { PropsReactNode } from 'src/shared/utils';
+import { SplashScreen } from 'src/shared/components';
 import { AuthContext } from 'src/shared/auth/context/auth-context';
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export function AuthConsumer({ children }: Props) {
+export function AuthConsumer({ children }: PropsReactNode) {
   return (
     <AuthContext.Consumer>
       {(auth) => (auth.loading ? <SplashScreen /> : children)}

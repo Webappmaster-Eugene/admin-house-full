@@ -1,4 +1,4 @@
-import { LoginView } from '@/widgets/auth';
+import { LoginView } from 'src/widgets/auth';
 
 export const metadata = {
   title: 'House Admin: вход',
@@ -6,5 +6,6 @@ export const metadata = {
 };
 
 export default function LoginPage() {
+  // return <div />;
   return <LoginView />;
 }

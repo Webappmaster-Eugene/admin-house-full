@@ -4,6 +4,19 @@ exports.MaterialUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
+const MaterialUpdateResponseEntitySchema = models_1.MaterialSchema.pick({
+    name: true,
+    price: true,
+    comment: true,
+    namePublic: true,
+    sourceInfo: true,
+    unitMeasurementUuid: true,
+    responsiblePartnerUuid: true,
+    categoryUuid: true,
+    handbookUuid: true,
+    lastChangeByUserUuid: true,
+    uuid: true,
+});
 const MaterialUpdateRequestSchema = models_1.MaterialSchema.pick({
     name: true,
     price: true,
@@ -15,23 +28,12 @@ const MaterialUpdateRequestSchema = models_1.MaterialSchema.pick({
 }).partial();
 const MaterialUpdateResponseSchema = zod_1.z
     .object({
-    data: models_1.MaterialSchema.pick({
-        name: true,
-        price: true,
-        comment: true,
-        namePublic: true,
-        sourceInfo: true,
-        unitMeasurementUuid: true,
-        responsiblePartnerUuid: true,
-        categoryUuid: true,
-        handbookUuid: true,
-        lastChangeByUserUuid: true,
-        uuid: true,
-    }),
+    data: MaterialUpdateResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var MaterialUpdateCommand;
 (function (MaterialUpdateCommand) {
     MaterialUpdateCommand.RequestSchema = MaterialUpdateRequestSchema;
     MaterialUpdateCommand.ResponseSchema = MaterialUpdateResponseSchema;
+    MaterialUpdateCommand.ResponseEntitySchema = MaterialUpdateResponseEntitySchema;
 })(MaterialUpdateCommand || (exports.MaterialUpdateCommand = MaterialUpdateCommand = {}));

@@ -1,7 +1,5 @@
 import { m } from 'framer-motion';
-import Iconify from '@/entities/iconify';
 import { _contacts } from '@/shared/_mock';
-import Scrollbar from '@/entities/scrollbar';
 import { varHover } from '@/entities/animate';
 import { fToNow } from '@/shared/utils/format-time';
 import CustomPopover, { usePopover } from '@/entities/custom-popover';
@@ -12,6 +10,9 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
+
+import { Iconify } from 'src/shared';
+import Scrollbar from 'src/shared/components/scrollbar';
 
 export default function ContactsPopover() {
   const popover = usePopover();

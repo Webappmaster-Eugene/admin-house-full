@@ -4,6 +4,15 @@ exports.PriceChangingUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
+const PriceChangingUpdateResponseEntitySchema = models_1.PriceChangingSchema.pick({
+    oldPrice: true,
+    comment: true,
+    newPrice: true,
+    source: true,
+    uuid: true,
+    lastChangeByUserUuid: true,
+    materialUuid: true,
+});
 const PriceChangingUpdateRequestSchema = models_1.PriceChangingSchema.pick({
     source: true,
     comment: true,
@@ -11,19 +20,12 @@ const PriceChangingUpdateRequestSchema = models_1.PriceChangingSchema.pick({
 }).partial();
 const PriceChangingUpdateResponseSchema = zod_1.z
     .object({
-    data: models_1.PriceChangingSchema.pick({
-        oldPrice: true,
-        comment: true,
-        newPrice: true,
-        source: true,
-        uuid: true,
-        lastChangeByUserUuid: true,
-        materialUuid: true,
-    }),
+    data: PriceChangingUpdateResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var PriceChangingUpdateCommand;
 (function (PriceChangingUpdateCommand) {
     PriceChangingUpdateCommand.RequestSchema = PriceChangingUpdateRequestSchema;
     PriceChangingUpdateCommand.ResponseSchema = PriceChangingUpdateResponseSchema;
+    PriceChangingUpdateCommand.ResponseEntitySchema = PriceChangingUpdateResponseEntitySchema;
 })(PriceChangingUpdateCommand || (exports.PriceChangingUpdateCommand = PriceChangingUpdateCommand = {}));

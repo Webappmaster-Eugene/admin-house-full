@@ -1,7 +1,3 @@
-import Logo from '@/entities/logo';
-import SvgColor from '@/entities/svg-color';
-import { bgBlur } from '@/shared/theme/css';
-import { useSettingsContext } from '@/entities/settings';
 import { useOffSetTop } from '@/shared/hooks/use-off-set-top';
 import { useResponsive } from '@/shared/hooks/use-responsive';
 
@@ -11,7 +7,11 @@ import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
+import { Logo } from 'src/shared';
 import { NAV, HEADER } from 'src/shared/config-layout';
+import { bgBlur } from 'src/shared/components/theme/css';
+import { SvgColor } from 'src/shared/components/svg-color';
+import { useSettingsContext } from 'src/shared/components/settings';
 
 import Searchbar from '../common/searchbar';
 import SettingsButton from '../common/settings-button';

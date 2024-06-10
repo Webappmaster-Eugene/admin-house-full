@@ -1,12 +1,8 @@
-import Label from '@/entities/label';
-import Iconify from '@/entities/iconify';
 import { useRouter } from 'next/navigation';
-import Scrollbar from '@/entities/scrollbar';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import { memo, useState, useCallback } from 'react';
 import { useBoolean } from '@/shared/hooks/use-boolean';
-import SearchNotFound from '@/entities/search-not-found';
 import { useResponsive } from '@/shared/hooks/use-responsive';
 import { useEventListener } from '@/shared/hooks/use-event-listener';
 
@@ -18,6 +14,10 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Dialog, { dialogClasses } from '@mui/material/Dialog';
+
+import { Label, Iconify } from 'src/shared';
+import { SearchNotFound } from 'src/entities';
+import Scrollbar from 'src/shared/components/scrollbar';
 
 import ResultItem from './result-item';
 import { useNavData } from '../../dashboard/config-navigation';

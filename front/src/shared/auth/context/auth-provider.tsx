@@ -1,36 +1,28 @@
 'use client';
 
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
+import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
-import axios from 'src/shared/utils/auth/axios';
+import axiosInstance from 'src/shared/utils/auth/axios';
+import { isValidToken } from 'src/shared/utils/auth/auth.utils';
 import { axiosEndpoints } from 'src/shared/utils/auth/endpoints';
 import { AuthContext } from 'src/shared/auth/context/auth-context';
-import { setSession, isValidToken } from 'src/shared/utils/auth/auth.utils';
-import { AuthUserType, ActionMapType, AuthStateType } from 'src/shared/auth/types';
+import { AuthStateType } from 'src/shared/utils/auth/auth-state-type';
+import { ActionMapType } from 'src/shared/utils/types/action-map-type';
+import { PropsReactNode } from 'src/shared/utils/types/react-node.type';
+import { localStorageKeys } from 'src/shared/utils/const/keys.localstorage';
 
-enum Types {
+enum ActionTypeNames {
   INITIAL = 'INITIAL',
-  LOGIN = 'LOGIN',
-  REGISTER = 'REGISTER',
-  LOGOUT = 'LOGOUT',
 }
 
 type Payload = {
-  [Types.INITIAL]: {
-    user: AuthUserType;
+  [ActionTypeNames.INITIAL]: {
+    user: (UserGetFullInfoCommand.ResponseEntity & { accessToken: string }) | null;
   };
-  [Types.LOGIN]: {
-    user: AuthUserType;
-  };
-  [Types.REGISTER]: {
-    user: AuthUserType;
-  };
-  [Types.LOGOUT]: undefined;
 };
 
-type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
-
-// ----------------------------------------------------------------------
+export type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
 
 const initialState: AuthStateType = {
   user: null,
@@ -38,28 +30,10 @@ const initialState: AuthStateType = {
 };
 
 const reducer = (state: AuthStateType, action: ActionsType) => {
-  if (action.type === Types.INITIAL) {
+  if (action.type === ActionTypeNames.INITIAL) {
     return {
       loading: false,
       user: action.payload.user,
-    };
-  }
-  if (action.type === Types.LOGIN) {
-    return {
-      ...state,
-      user: action.payload.user,
-    };
-  }
-  if (action.type === Types.REGISTER) {
-    return {
-      ...state,
-      user: action.payload.user,
-    };
-  }
-  if (action.type === Types.LOGOUT) {
-    return {
-      ...state,
-      user: null,
     };
   }
   return state;
@@ -67,38 +41,32 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'accessToken';
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export function AuthProvider({ children }: Props) {
+export function AuthProvider({ children }: PropsReactNode) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialize = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
+      const accessToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
 
-      if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
+      if (accessToken && isValidToken(accessToken, 'ACCESS_TOKEN')) {
+        const userFullInfoResponse: UserGetFullInfoCommand.Response = await axiosInstance.get(
+          axiosEndpoints.users.me
+        );
 
-        const res = await axios.get(axiosEndpoints.auth.me);
-
-        const { user } = res.data;
+        const userFullInfo: UserGetFullInfoCommand.ResponseEntity = userFullInfoResponse.data;
 
         dispatch({
-          type: Types.INITIAL,
+          type: ActionTypeNames.INITIAL,
           payload: {
             user: {
-              ...user,
               accessToken,
+              ...userFullInfo,
             },
           },
         });
       } else {
         dispatch({
-          type: Types.INITIAL,
+          type: ActionTypeNames.INITIAL,
           payload: {
             user: null,
           },
@@ -107,7 +75,7 @@ export function AuthProvider({ children }: Props) {
     } catch (error) {
       console.error(error);
       dispatch({
-        type: Types.INITIAL,
+        type: ActionTypeNames.INITIAL,
         payload: {
           user: null,
         },
@@ -119,86 +87,17 @@ export function AuthProvider({ children }: Props) {
     initialize();
   }, [initialize]);
 
-  // LOGIN
-  const login = useCallback(async (email: string, password: string) => {
-    const data = {
-      email,
-      password,
-    };
+  const statusAuthentication = state.user ? 'authenticated' : 'unauthenticated';
 
-    const res = await axios.post(axiosEndpoints.auth.login, data);
-
-    const { accessToken, user } = res.data;
-
-    setSession(accessToken);
-
-    dispatch({
-      type: Types.LOGIN,
-      payload: {
-        user: {
-          ...user,
-          accessToken,
-        },
-      },
-    });
-  }, []);
-
-  // REGISTER
-  const register = useCallback(
-    async (email: string, password: string, firstName: string, lastName: string) => {
-      const data = {
-        email,
-        password,
-        firstName,
-        lastName,
-      };
-
-      const res = await axios.post(axiosEndpoints.auth.register, data);
-
-      const { accessToken, user } = res.data;
-
-      sessionStorage.setItem(STORAGE_KEY, accessToken);
-
-      dispatch({
-        type: Types.REGISTER,
-        payload: {
-          user: {
-            ...user,
-            accessToken,
-          },
-        },
-      });
-    },
-    []
-  );
-
-  // LOGOUT
-  const logout = useCallback(async () => {
-    setSession(null);
-    dispatch({
-      type: Types.LOGOUT,
-    });
-  }, []);
-
-  // ----------------------------------------------------------------------
-
-  const checkAuthenticated = state.user ? 'authenticated' : 'unauthenticated';
-
-  const status = state.loading ? 'loading' : checkAuthenticated;
+  const statusLoading = state.loading ? 'loading' : 'ready';
 
   const memoizedValue = useMemo(
     () => ({
       user: state.user,
-      method: 'jwt',
-      loading: status === 'loading',
-      authenticated: status === 'authenticated',
-      unauthenticated: status === 'unauthenticated',
-      //
-      login,
-      register,
-      logout,
+      loading: statusLoading === 'loading',
+      authenticated: statusAuthentication === 'authenticated',
     }),
-    [login, logout, register, state.user, status]
+    [state.user, statusLoading, statusAuthentication]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

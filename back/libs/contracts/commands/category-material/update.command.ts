@@ -2,6 +2,15 @@ import { z } from 'zod';
 import { CategoryMaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const CategoryMaterialUpdateResponseEntitySchema = CategoryMaterialSchema.omit({
+  name: true,
+  templateName: true,
+  comment: true,
+  uuid: true,
+  globalCategoryMaterialUuid: true,
+  lastChangeByUserUuid: true,
+});
+
 const CategoryMaterialUpdateRequestSchema = CategoryMaterialSchema.pick({
   name: true,
   comment: true,
@@ -10,14 +19,7 @@ const CategoryMaterialUpdateRequestSchema = CategoryMaterialSchema.pick({
 
 const CategoryMaterialUpdateResponseSchema = z
   .object({
-    data: CategoryMaterialSchema.omit({
-      name: true,
-      templateName: true,
-      comment: true,
-      uuid: true,
-      globalCategoryMaterialUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: CategoryMaterialUpdateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -27,4 +29,7 @@ export namespace CategoryMaterialUpdateCommand {
 
   export const ResponseSchema = CategoryMaterialUpdateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = CategoryMaterialUpdateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

@@ -1,6 +1,13 @@
-import { info, error, primary, success, warning, secondary } from 'src/shared/theme/palette';
-
 // ----------------------------------------------------------------------
+
+import {
+  info,
+  error,
+  primary,
+  success,
+  warning,
+  secondary,
+} from 'src/shared/components/theme/palette';
 
 export const CALENDAR_COLOR_OPTIONS = [
   primary.main,

@@ -1,6 +1,14 @@
 import { z } from 'zod';
-import { FieldUnitMeasurementSchema } from '../../models';
+import { FieldUnitMeasurementSchema, FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
+
+const FieldUnitMeasurementCreateResponseEntitySchema = FieldUnitMeasurementSchema.pick({
+  name: true,
+  comment: true,
+  uuid: true,
+  handbookUuid: true,
+  lastChangeByUserUuid: true,
+});
 
 const FieldUnitMeasurementCreateRequestSchema = FieldUnitMeasurementSchema.pick({
   name: true,
@@ -9,13 +17,7 @@ const FieldUnitMeasurementCreateRequestSchema = FieldUnitMeasurementSchema.pick(
 
 const FieldUnitMeasurementCreateResponseSchema = z
   .object({
-    data: FieldUnitMeasurementSchema.pick({
-      name: true,
-      comment: true,
-      uuid: true,
-      handbookUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: FieldUnitMeasurementCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -25,4 +27,7 @@ export namespace FieldUnitMeasurementCreateCommand {
 
   export const ResponseSchema = FieldUnitMeasurementCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = FieldUnitMeasurementCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

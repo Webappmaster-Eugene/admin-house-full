@@ -1,20 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AddUserToOrganizationCommand = void 0;
+exports.UserAddToOrganizationCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const AddUserToOrganizationRequestSchema = models_1.UserSchema.pick({
+const UserAddToOrganizationResponseEntitySchema = models_1.UserSchema.omit({
+    password: true,
+    createdAt: true,
+    updatedAt: true,
+});
+const UserAddToOrganizationRequestSchema = models_1.UserSchema.pick({
     uuid: true,
     memberOfOrganizationUuid: true,
 });
-const AddUserToOrganizationResponseSchema = zod_1.z
+const UserAddToOrganizationResponseSchema = zod_1.z
     .object({
-    data: models_1.UserSchema,
+    data: UserAddToOrganizationResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
-var AddUserToOrganizationCommand;
-(function (AddUserToOrganizationCommand) {
-    AddUserToOrganizationCommand.RequestSchema = AddUserToOrganizationRequestSchema;
-    AddUserToOrganizationCommand.ResponseSchema = AddUserToOrganizationResponseSchema;
-})(AddUserToOrganizationCommand || (exports.AddUserToOrganizationCommand = AddUserToOrganizationCommand = {}));
+var UserAddToOrganizationCommand;
+(function (UserAddToOrganizationCommand) {
+    UserAddToOrganizationCommand.RequestSchema = UserAddToOrganizationRequestSchema;
+    UserAddToOrganizationCommand.ResponseSchema = UserAddToOrganizationResponseSchema;
+    UserAddToOrganizationCommand.ResponseEntitySchema = UserAddToOrganizationResponseEntitySchema;
+})(UserAddToOrganizationCommand || (exports.UserAddToOrganizationCommand = UserAddToOrganizationCommand = {}));

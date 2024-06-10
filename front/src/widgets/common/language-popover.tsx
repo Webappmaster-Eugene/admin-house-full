@@ -1,11 +1,12 @@
 import { m } from 'framer-motion';
 import { useCallback } from 'react';
-import Iconify from '@/entities/iconify';
 import { varHover } from '@/entities/animate';
 import CustomPopover, { usePopover } from '@/entities/custom-popover';
 
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+
+import { Iconify } from 'src/shared';
 
 export const allLangs = [
   {

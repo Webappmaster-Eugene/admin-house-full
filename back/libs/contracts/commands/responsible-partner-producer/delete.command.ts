@@ -3,20 +3,22 @@ import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponsiblePartnerProducerSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const ResponsiblePartnerProducerDeleteResponseEntitySchema = ResponsiblePartnerProducerSchema.pick({
+  name: true,
+  comment: true,
+  info: true,
+  email: true,
+  phone: true,
+  createdAt: true,
+  updatedAt: true,
+  uuid: true,
+  handbookUuid: true,
+  lastChangeByUserUuid: true,
+});
+
 const ResponsiblePartnerProducerDeleteResponseSchema = z
   .object({
-    data: ResponsiblePartnerProducerSchema.pick({
-      name: true,
-      comment: true,
-      info: true,
-      email: true,
-      phone: true,
-      createdAt: true,
-      updatedAt: true,
-      uuid: true,
-      handbookUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: ResponsiblePartnerProducerDeleteResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -26,4 +28,7 @@ export namespace ResponsiblePartnerProducerDeleteCommand {
 
   export const ResponseSchema = ResponsiblePartnerProducerDeleteResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = ResponsiblePartnerProducerDeleteResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

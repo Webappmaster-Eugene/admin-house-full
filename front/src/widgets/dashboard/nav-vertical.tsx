@@ -1,6 +1,4 @@
 import { useEffect } from 'react';
-import Logo from '@/entities/logo';
-import Scrollbar from '@/entities/scrollbar';
 import { usePathname } from 'next/navigation';
 import { NavSectionVertical } from '@/entities/nav-section';
 import { useResponsive } from '@/shared/hooks/use-responsive';
@@ -10,7 +8,9 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 
+import { Logo } from 'src/shared';
 import { NAV } from 'src/shared/config-layout';
+import Scrollbar from 'src/shared/components/scrollbar';
 
 import NavUpgrade from '../common/nav-upgrade';
 import { useNavData } from './config-navigation';

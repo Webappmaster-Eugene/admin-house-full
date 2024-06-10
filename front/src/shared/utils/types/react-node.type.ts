@@ -1,3 +1,3 @@
-export type Props = {
+export type PropsReactNode = {
   children: React.ReactNode;
 };

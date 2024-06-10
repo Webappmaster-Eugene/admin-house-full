@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { RouterLink } from '@/shared/components';
+import { Iconify, RouterLink } from '@/shared/components';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -7,7 +7,6 @@ import Tooltip from '@mui/material/Tooltip';
 import { alpha, styled } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import Iconify from '../../iconify';
 import { NavItemProps, NavItemStateProps } from '../types';
 
 const NavItem = forwardRef<HTMLDivElement, NavItemProps>(

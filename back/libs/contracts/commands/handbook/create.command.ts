@@ -2,6 +2,16 @@ import { z } from 'zod';
 import { HandbookSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const HandbookCreateResponseEntitySchema = HandbookSchema.pick({
+  name: true,
+  description: true,
+  canCustomerView: true,
+  uuid: true,
+  responsibleManagerUuid: true,
+  workspaceUuid: true,
+  lastChangeByUserUuid: true,
+});
+
 const HandbookCreateRequestSchema = HandbookSchema.pick({
   name: true,
   description: true,
@@ -11,15 +21,7 @@ const HandbookCreateRequestSchema = HandbookSchema.pick({
 
 const HandbookCreateResponseSchema = z
   .object({
-    data: HandbookSchema.pick({
-      name: true,
-      description: true,
-      canCustomerView: true,
-      uuid: true,
-      responsibleManagerUuid: true,
-      workspaceUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: HandbookCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -29,4 +31,7 @@ export namespace HandbookCreateCommand {
 
   export const ResponseSchema = HandbookCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = HandbookCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

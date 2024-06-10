@@ -2,6 +2,15 @@ import { z } from 'zod';
 import { StatusResourceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const StatusResourceUpdateResponseEntitySchema = StatusResourceSchema.pick({
+  name: true,
+  comment: true,
+  uuid: true,
+  lastChangeByUserUuid: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 const StatusResourceUpdateRequestSchema = StatusResourceSchema.pick({
   name: true,
   comment: true,
@@ -9,14 +18,7 @@ const StatusResourceUpdateRequestSchema = StatusResourceSchema.pick({
 
 const StatusResourceUpdateResponseSchema = z
   .object({
-    data: StatusResourceSchema.pick({
-      name: true,
-      comment: true,
-      uuid: true,
-      lastChangeByUserUuid: true,
-      createdAt: true,
-      updatedAt: true,
-    }),
+    data: StatusResourceUpdateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -26,4 +28,7 @@ export namespace StatusResourceUpdateCommand {
 
   export const ResponseSchema = StatusResourceUpdateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = StatusResourceUpdateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

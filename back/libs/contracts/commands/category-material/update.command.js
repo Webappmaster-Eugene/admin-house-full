@@ -4,6 +4,14 @@ exports.CategoryMaterialUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
+const CategoryMaterialUpdateResponseEntitySchema = models_1.CategoryMaterialSchema.omit({
+    name: true,
+    templateName: true,
+    comment: true,
+    uuid: true,
+    globalCategoryMaterialUuid: true,
+    lastChangeByUserUuid: true,
+});
 const CategoryMaterialUpdateRequestSchema = models_1.CategoryMaterialSchema.pick({
     name: true,
     comment: true,
@@ -11,18 +19,12 @@ const CategoryMaterialUpdateRequestSchema = models_1.CategoryMaterialSchema.pick
 }).partial();
 const CategoryMaterialUpdateResponseSchema = zod_1.z
     .object({
-    data: models_1.CategoryMaterialSchema.omit({
-        name: true,
-        templateName: true,
-        comment: true,
-        uuid: true,
-        globalCategoryMaterialUuid: true,
-        lastChangeByUserUuid: true,
-    }),
+    data: CategoryMaterialUpdateResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var CategoryMaterialUpdateCommand;
 (function (CategoryMaterialUpdateCommand) {
     CategoryMaterialUpdateCommand.RequestSchema = CategoryMaterialUpdateRequestSchema;
     CategoryMaterialUpdateCommand.ResponseSchema = CategoryMaterialUpdateResponseSchema;
+    CategoryMaterialUpdateCommand.ResponseEntitySchema = CategoryMaterialUpdateResponseEntitySchema;
 })(CategoryMaterialUpdateCommand || (exports.CategoryMaterialUpdateCommand = CategoryMaterialUpdateCommand = {}));

@@ -3,6 +3,12 @@ import { UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models';
 
+const UserUpdateResponseEntitySchema = UserSchema.omit({
+  password: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 const UserUpdateRequestSchema = UserSchema.pick({
   avatar: true,
   info: true,
@@ -15,11 +21,7 @@ const UserUpdateRequestSchema = UserSchema.pick({
 
 const UserUpdateResponseSchema = z
   .object({
-    data: UserSchema.omit({
-      password: true,
-      createdAt: true,
-      updatedAt: true,
-    }),
+    data: UserUpdateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -32,4 +34,7 @@ export namespace UserUpdateCommand {
 
   export const ResponseSchema = UserUpdateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = UserUpdateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

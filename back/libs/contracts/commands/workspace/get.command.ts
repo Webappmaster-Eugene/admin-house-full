@@ -2,16 +2,18 @@ import { z } from 'zod';
 import { WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const WorkspaceGetResponseEntitySchema = WorkspaceSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
 const WorkspaceGetRequestSchema = WorkspaceSchema.pick({
   uuid: true,
 });
 
 const WorkspaceGetResponseSchema = z
   .object({
-    data: WorkspaceSchema.omit({
-      createdAt: true,
-      updatedAt: true,
-    }),
+    data: WorkspaceGetResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -21,4 +23,7 @@ export namespace WorkspaceGetCommand {
 
   export const ResponseSchema = WorkspaceGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = WorkspaceGetResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

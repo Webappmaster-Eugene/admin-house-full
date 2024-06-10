@@ -2,6 +2,20 @@ import { z } from 'zod';
 import { MaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const MaterialCreateResponseEntitySchema = MaterialSchema.pick({
+  name: true,
+  price: true,
+  comment: true,
+  namePublic: true,
+  sourceInfo: true,
+  unitMeasurementUuid: true,
+  responsiblePartnerUuid: true,
+  categoryUuid: true,
+  handbookUuid: true,
+  lastChangeByUserUuid: true,
+  uuid: true,
+});
+
 const MaterialCreateRequestSchema = MaterialSchema.pick({
   name: true,
   price: true,
@@ -14,19 +28,7 @@ const MaterialCreateRequestSchema = MaterialSchema.pick({
 
 const MaterialCreateResponseSchema = z
   .object({
-    data: MaterialSchema.pick({
-      name: true,
-      price: true,
-      comment: true,
-      namePublic: true,
-      sourceInfo: true,
-      unitMeasurementUuid: true,
-      responsiblePartnerUuid: true,
-      categoryUuid: true,
-      handbookUuid: true,
-      lastChangeByUserUuid: true,
-      uuid: true,
-    }),
+    data: MaterialCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -36,4 +38,7 @@ export namespace MaterialCreateCommand {
 
   export const ResponseSchema = MaterialCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = MaterialCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

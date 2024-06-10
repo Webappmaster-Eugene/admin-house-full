@@ -1,4 +1,3 @@
-import Label from '@/entities/label';
 import { fToNow } from '@/shared/utils/format-time';
 import FileThumbnail from '@/entities/file-thumbnail';
 
@@ -10,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
+
+import { Label } from 'src/shared';
 
 type NotificationItemProps = {
   notification: {

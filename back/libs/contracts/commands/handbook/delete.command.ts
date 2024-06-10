@@ -3,17 +3,19 @@ import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { HandbookSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const HandbookDeleteResponseEntitySchema = HandbookSchema.pick({
+  name: true,
+  description: true,
+  canCustomerView: true,
+  uuid: true,
+  responsibleManagerUuid: true,
+  workspaceUuid: true,
+  lastChangeByUserUuid: true,
+});
+
 const HandbookDeleteResponseSchema = z
   .object({
-    data: HandbookSchema.pick({
-      name: true,
-      description: true,
-      canCustomerView: true,
-      uuid: true,
-      responsibleManagerUuid: true,
-      workspaceUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: HandbookDeleteResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -23,4 +25,7 @@ export namespace HandbookDeleteCommand {
 
   export const ResponseSchema = HandbookDeleteResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = HandbookDeleteResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

@@ -1,12 +1,12 @@
-import Logo from '@/entities/logo';
-import { hideScroll } from '@/shared/theme/css';
 import { NavSectionMini } from '@/entities/nav-section';
 import { useMockedUser } from '@/shared/hooks/use-mocked-user';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
+import { Logo } from 'src/shared';
 import { NAV } from 'src/shared/config-layout';
+import { hideScroll } from 'src/shared/components/theme/css';
 
 import { useNavData } from './config-navigation';
 import NavToggleButton from '../common/nav-toggle-button';

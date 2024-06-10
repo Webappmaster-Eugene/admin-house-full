@@ -5,6 +5,7 @@ const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
 const models_3 = require("../../models");
+const AuthRegisterResponseEntitySchema = models_1.AuthSchema;
 const AuthRegisterRequestSchema = models_1.UserSchema.pick({
     email: true,
     password: true,
@@ -25,11 +26,12 @@ const AuthRegisterRequestSchema = models_1.UserSchema.pick({
 });
 const AuthRegisterResponseSchema = zod_1.z
     .object({
-    data: models_1.AuthSchema,
+    data: AuthRegisterResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var AuthRegisterCommand;
 (function (AuthRegisterCommand) {
     AuthRegisterCommand.RequestSchema = AuthRegisterRequestSchema;
     AuthRegisterCommand.ResponseSchema = AuthRegisterResponseSchema;
+    AuthRegisterCommand.ResponseEntitySchema = AuthRegisterResponseEntitySchema;
 })(AuthRegisterCommand || (exports.AuthRegisterCommand = AuthRegisterCommand = {}));

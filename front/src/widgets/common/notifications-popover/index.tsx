@@ -1,7 +1,4 @@
 import { m } from 'framer-motion';
-import Label from '@/entities/label';
-import Iconify from '@/entities/iconify';
-import Scrollbar from '@/entities/scrollbar';
 import { useState, useCallback } from 'react';
 import { varHover } from '@/entities/animate';
 import { _notifications } from '@/shared/_mock';
@@ -20,6 +17,9 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+
+import { Label, Iconify } from 'src/shared';
+import Scrollbar from 'src/shared/components/scrollbar';
 
 import NotificationItem from './notification-item';
 

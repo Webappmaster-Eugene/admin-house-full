@@ -1,18 +1,16 @@
 'use client';
 
 import { GuestGuard } from '@/shared/auth/guard';
-import AuthClassicLayout from '@/widgets/auth/classic';
 
-type Props = {
-  children: React.ReactNode;
-};
+import { PropsReactNode } from 'src/shared/utils/types/react-node.type';
+import { AuthGeneralLayout } from 'src/widgets/auth/auth-general-layout';
 
-export default function Layout({ children }: Props) {
+export default function Layout({ children }: PropsReactNode) {
   return (
     <GuestGuard>
-      <AuthClassicLayout title="House Admin - удобный сервис для составления смет (регистрация)">
+      <AuthGeneralLayout title="House Admin - удобный сервис для составления смет (регистрация)">
         {children}
-      </AuthClassicLayout>
+      </AuthGeneralLayout>
     </GuestGuard>
   );
 }

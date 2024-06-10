@@ -5,20 +5,22 @@ const zod_1 = require("zod");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
+const OrganizationDeleteResponseEntitySchema = models_1.OrganizationSchema.pick({
+    uuid: true,
+    name: true,
+    description: true,
+    organizationLeaderUuid: true,
+    workspaceUuid: true,
+    lastChangeByUserUuid: true,
+});
 const OrganizationDeleteResponseSchema = zod_1.z
     .object({
-    data: models_1.OrganizationSchema.pick({
-        uuid: true,
-        name: true,
-        description: true,
-        organizationLeaderUuid: true,
-        workspaceUuid: true,
-        lastChangeByUserUuid: true,
-    }),
+    data: OrganizationDeleteResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var OrganizationDeleteCommand;
 (function (OrganizationDeleteCommand) {
     OrganizationDeleteCommand.RequestParamSchema = entity_url_param_command_1.EntityUrlParamCommand.RequestUuidParamSchema;
     OrganizationDeleteCommand.ResponseSchema = OrganizationDeleteResponseSchema;
+    OrganizationDeleteCommand.ResponseEntitySchema = OrganizationDeleteResponseEntitySchema;
 })(OrganizationDeleteCommand || (exports.OrganizationDeleteCommand = OrganizationDeleteCommand = {}));

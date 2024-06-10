@@ -1,6 +1,15 @@
 import { z } from 'zod';
-import { OrganizationSchema } from '../../models';
+import { OrganizationSchema, PriceChangingSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
+
+const OrganizationCreateResponseEntitySchema = OrganizationSchema.pick({
+  uuid: true,
+  name: true,
+  description: true,
+  organizationLeaderUuid: true,
+  workspaceUuid: true,
+  lastChangeByUserUuid: true,
+});
 
 const OrganizationCreateRequestSchema = OrganizationSchema.pick({
   name: true,
@@ -9,14 +18,7 @@ const OrganizationCreateRequestSchema = OrganizationSchema.pick({
 
 const OrganizationCreateResponseSchema = z
   .object({
-    data: OrganizationSchema.pick({
-      uuid: true,
-      name: true,
-      description: true,
-      organizationLeaderUuid: true,
-      workspaceUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: OrganizationCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -26,4 +28,7 @@ export namespace OrganizationCreateCommand {
 
   export const ResponseSchema = OrganizationCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = OrganizationCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

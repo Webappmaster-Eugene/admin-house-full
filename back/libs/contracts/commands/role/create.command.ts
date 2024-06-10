@@ -2,6 +2,14 @@ import { z } from 'zod';
 import { RoleSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const RoleCreateResponseEntitySchema = RoleSchema.pick({
+  uuid: true,
+  idRole: true,
+  name: true,
+  description: true,
+  lastChangeByUserUuid: true,
+});
+
 const RoleCreateRequestSchema = RoleSchema.pick({
   name: true,
   description: true,
@@ -13,13 +21,7 @@ const RoleCreateRequestSchema = RoleSchema.pick({
 
 const RoleCreateResponseSchema = z
   .object({
-    data: RoleSchema.pick({
-      uuid: true,
-      idRole: true,
-      name: true,
-      description: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: RoleCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -29,4 +31,7 @@ export namespace RoleCreateCommand {
 
   export const ResponseSchema = RoleCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = RoleCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

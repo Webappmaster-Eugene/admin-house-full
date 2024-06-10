@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import { ResponseClientSchema, UserSchema } from '../../models';
 
+const UserCreateResponseEntitySchema = UserSchema.omit({
+  password: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 const UserCreateRequestSchema = UserSchema.pick({
   avatar: true,
   info: true,
@@ -15,11 +21,7 @@ const UserCreateRequestSchema = UserSchema.pick({
 
 const UserCreateResponseSchema = z
   .object({
-    data: UserSchema.omit({
-      password: true,
-      createdAt: true,
-      updatedAt: true,
-    }),
+    data: UserCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -29,4 +31,7 @@ export namespace UserCreateCommand {
 
   export const ResponseSchema = UserCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = UserCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

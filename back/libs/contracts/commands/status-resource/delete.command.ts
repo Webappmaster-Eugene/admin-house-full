@@ -3,16 +3,18 @@ import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { StatusResourceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const StatusResourceDeleteResponseEntitySchema = StatusResourceSchema.pick({
+  name: true,
+  comment: true,
+  uuid: true,
+  lastChangeByUserUuid: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 const StatusResourceDeleteResponseSchema = z
   .object({
-    data: StatusResourceSchema.pick({
-      name: true,
-      comment: true,
-      uuid: true,
-      lastChangeByUserUuid: true,
-      createdAt: true,
-      updatedAt: true,
-    }),
+    data: StatusResourceDeleteResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -22,4 +24,7 @@ export namespace StatusResourceDeleteCommand {
 
   export const ResponseSchema = StatusResourceDeleteResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = StatusResourceDeleteResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

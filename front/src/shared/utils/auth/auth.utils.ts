@@ -1,38 +1,27 @@
-import axios from 'src/shared/utils/auth/axios';
-import { paths } from 'src/shared/routes/paths';
+import axios from '@/shared/utils/auth/axios';
+import { paths } from '@/shared/routes/paths';
 
-function jwtDecode(token: string) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split('')
-      .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
-      .join('')
-  );
+import { TokenType, TTokenType } from './token-type';
+import { decodeAccessToken, decodeRefreshToken } from './decode.tokens';
 
-  return JSON.parse(jsonPayload);
-}
-
-// ----------------------------------------------------------------------
-
-export const isValidToken = (accessToken: string) => {
-  if (!accessToken) {
+export const isValidToken = (authToken: string, tokenType: TTokenType) => {
+  if (!authToken) {
     return false;
   }
 
-  const decoded = jwtDecode(accessToken);
+  const decodedToken =
+    tokenType === TokenType.ACCESS_TOKEN
+      ? decodeAccessToken(authToken)
+      : decodeRefreshToken(authToken);
 
-  const currentTime = Date.now() / 1000;
+  const currentTime = Date.now();
 
-  return decoded.exp > currentTime;
+  return decodedToken.exp > currentTime;
 };
 
 // ----------------------------------------------------------------------
 
 export const tokenExpired = (exp: number) => {
-  // eslint-disable-next-line prefer-const
   let expiredTimer;
 
   const currentTime = Date.now();
@@ -48,7 +37,7 @@ export const tokenExpired = (exp: number) => {
 
     sessionStorage.removeItem('accessToken');
 
-    window.location.href = paths.auth.jwt.login;
+    window.location.href = paths.auth.login;
   }, timeLeft);
 };
 
@@ -61,7 +50,7 @@ export const setSession = (accessToken: string | null) => {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
     // This function below will handle when token is expired
-    const { exp } = jwtDecode(accessToken); // ~3 days by minimals server
+    const { exp } = decodeAccessToken(accessToken); // ~3 days by minimals server
     tokenExpired(exp);
   } else {
     sessionStorage.removeItem('accessToken');

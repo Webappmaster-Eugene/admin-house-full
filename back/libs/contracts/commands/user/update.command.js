@@ -5,6 +5,11 @@ const zod_1 = require("zod");
 const models_1 = require("../../models");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_2 = require("../../models");
+const UserUpdateResponseEntitySchema = models_1.UserSchema.omit({
+    password: true,
+    createdAt: true,
+    updatedAt: true,
+});
 const UserUpdateRequestSchema = models_1.UserSchema.pick({
     avatar: true,
     info: true,
@@ -16,11 +21,7 @@ const UserUpdateRequestSchema = models_1.UserSchema.pick({
 }).partial();
 const UserUpdateResponseSchema = zod_1.z
     .object({
-    data: models_1.UserSchema.omit({
-        password: true,
-        createdAt: true,
-        updatedAt: true,
-    }),
+    data: UserUpdateResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var UserUpdateCommand;
@@ -28,4 +29,5 @@ var UserUpdateCommand;
     UserUpdateCommand.RequestParamSchema = entity_url_param_command_1.EntityUrlParamCommand.RequestUuidParamSchema;
     UserUpdateCommand.RequestSchema = UserUpdateRequestSchema;
     UserUpdateCommand.ResponseSchema = UserUpdateResponseSchema;
+    UserUpdateCommand.ResponseEntitySchema = UserUpdateResponseEntitySchema;
 })(UserUpdateCommand || (exports.UserUpdateCommand = UserUpdateCommand = {}));

@@ -16,7 +16,7 @@ type RoleBasedGuardProp = {
   sx?: SxProps<Theme>;
 };
 
-export default function RoleBasedGuard({ hasContent, roles, children, sx }: RoleBasedGuardProp) {
+export function RoleBasedGuard({ hasContent, roles, children, sx }: RoleBasedGuardProp) {
   // Logic here to get current user role
   const { user } = useMockedUser();
 

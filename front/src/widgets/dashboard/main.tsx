@@ -1,8 +1,8 @@
 import Box, { BoxProps } from '@mui/material/Box';
 
 import { NAV, HEADER } from 'src/shared/config-layout';
-import { useSettingsContext } from 'src/entities/settings';
 import { useResponsive } from 'src/shared/hooks/use-responsive';
+import { useSettingsContext } from 'src/shared/components/settings';
 
 // ----------------------------------------------------------------------
 

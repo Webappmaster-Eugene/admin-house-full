@@ -2,6 +2,19 @@ import { z } from 'zod';
 import { ResponsiblePartnerProducerSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
+const ResponsiblePartnerProducerCreateResponseEntitySchema = ResponsiblePartnerProducerSchema.pick({
+  name: true,
+  comment: true,
+  info: true,
+  email: true,
+  phone: true,
+  createdAt: true,
+  updatedAt: true,
+  uuid: true,
+  handbookUuid: true,
+  lastChangeByUserUuid: true,
+});
+
 const ResponsiblePartnerProducerCreateRequestSchema = ResponsiblePartnerProducerSchema.pick({
   name: true,
   comment: true,
@@ -12,18 +25,7 @@ const ResponsiblePartnerProducerCreateRequestSchema = ResponsiblePartnerProducer
 
 const ResponsiblePartnerProducerCreateResponseSchema = z
   .object({
-    data: ResponsiblePartnerProducerSchema.pick({
-      name: true,
-      comment: true,
-      info: true,
-      email: true,
-      phone: true,
-      createdAt: true,
-      updatedAt: true,
-      uuid: true,
-      handbookUuid: true,
-      lastChangeByUserUuid: true,
-    }),
+    data: ResponsiblePartnerProducerCreateResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -33,4 +35,7 @@ export namespace ResponsiblePartnerProducerCreateCommand {
 
   export const ResponseSchema = ResponsiblePartnerProducerCreateResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = ResponsiblePartnerProducerCreateResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

@@ -4,6 +4,13 @@ exports.FieldTypeCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
+const FieldTypeCreateResponseEntitySchema = models_1.FieldTypeSchema.pick({
+    name: true,
+    description: true,
+    jsType: true,
+    lastChangeByUserUuid: true,
+    uuid: true,
+});
 const FieldTypeCreateRequestSchema = models_1.FieldTypeSchema.pick({
     name: true,
     description: true,
@@ -11,17 +18,12 @@ const FieldTypeCreateRequestSchema = models_1.FieldTypeSchema.pick({
 });
 const FieldTypeCreateResponseSchema = zod_1.z
     .object({
-    data: models_1.FieldTypeSchema.pick({
-        name: true,
-        description: true,
-        jsType: true,
-        lastChangeByUserUuid: true,
-        uuid: true,
-    }),
+    data: FieldTypeCreateResponseEntitySchema,
 })
     .merge(models_2.ResponseClientSchema);
 var FieldTypeCreateCommand;
 (function (FieldTypeCreateCommand) {
     FieldTypeCreateCommand.RequestSchema = FieldTypeCreateRequestSchema;
     FieldTypeCreateCommand.ResponseSchema = FieldTypeCreateResponseSchema;
+    FieldTypeCreateCommand.ResponseEntitySchema = FieldTypeCreateResponseEntitySchema;
 })(FieldTypeCreateCommand || (exports.FieldTypeCreateCommand = FieldTypeCreateCommand = {}));

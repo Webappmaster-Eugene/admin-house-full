@@ -1,13 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { HOST_API } from 'src/shared/config-global';
-import { localStorageKeys } from 'src/shared/utils/keys.localstorage';
+import { localStorageKeys } from 'src/shared/utils/const/keys.localstorage';
 
 const axiosInstance = axios.create({ baseURL: HOST_API, withCredentials: true });
 
 axiosInstance.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
-  config.headers.authorization = `Bearer ${accessToken}`;
+  const clientAccessToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
+  config.headers.authorization = `Bearer ${clientAccessToken}`;
   return config;
 });
 

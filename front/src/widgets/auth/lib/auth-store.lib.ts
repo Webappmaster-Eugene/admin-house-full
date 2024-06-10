@@ -8,7 +8,7 @@ export type Role = z.infer<typeof allUseRoles>;
 export const AccessTokenDataSchema = z.object({
   uuid: z.string().uuid(),
   email: z.string(),
-  roleId: z.string().uuid(),
+  roleUuid: z.string().uuid(),
   iat: z.number(),
   exp: z.number(),
 });

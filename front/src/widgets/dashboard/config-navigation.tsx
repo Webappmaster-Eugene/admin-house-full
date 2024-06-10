@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import SvgColor from '@/entities/svg-color';
 
-import { paths } from 'src/shared/routes/paths';
+import { paths } from 'src/shared';
+import { SvgColor } from 'src/shared/components/svg-color';
 
 // ----------------------------------------------------------------------
 

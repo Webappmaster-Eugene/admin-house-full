@@ -1,6 +1,8 @@
 import { z } from 'zod';
-import { AuthSchema, ConfirmPasswordSchema, UserSchema } from '../../models';
+import { AuthSchema, AuthStrictKeySchema, ConfirmPasswordSchema, UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
+
+const AuthRegisterWithRoleResponseEntitySchema = AuthSchema;
 
 const AuthRegisterWithRoleRequestParamSchema = z.object({
   roleId: z.number().gte(1).lte(4),
@@ -31,7 +33,7 @@ const AuthRegisterWithRoleRequestSchema = UserSchema.pick({
 
 const AuthRegisterWithRoleResponseSchema = z
   .object({
-    data: AuthSchema,
+    data: AuthRegisterWithRoleResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
@@ -44,4 +46,7 @@ export namespace AuthRegisterWithRoleCommand {
 
   export const ResponseSchema = AuthRegisterWithRoleResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
+
+  export const ResponseEntitySchema = AuthRegisterWithRoleResponseEntitySchema;
+  export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;
 }

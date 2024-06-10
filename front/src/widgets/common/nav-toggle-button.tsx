@@ -1,12 +1,12 @@
-import Iconify from '@/entities/iconify';
-import { bgBlur } from '@/shared/theme/css';
 import { useResponsive } from '@/shared/hooks';
-import { useSettingsContext } from '@/entities/settings';
 
 import { useTheme } from '@mui/material/styles';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
+import { Iconify } from 'src/shared';
 import { NAV } from 'src/shared/config-layout';
+import { bgBlur } from 'src/shared/components/theme/css';
+import { useSettingsContext } from 'src/shared/components/settings';
 
 export default function NavToggleButton({ sx, ...other }: IconButtonProps) {
   const theme = useTheme();

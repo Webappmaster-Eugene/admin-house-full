@@ -1,12 +1,14 @@
 import { create } from 'zustand';
+import { cookies } from 'next/headers';
 import { persist, devtools, createJSONStorage } from 'zustand/middleware';
 import { TokenType, AuthLoginCommand } from '@numart/house-admin-contracts';
 
 import { getLocalStorage } from 'src/shared/hooks';
 import axiosInstance from 'src/shared/utils/auth/axios';
+import { cookieKeys } from 'src/shared/utils/const/keys.cookie';
 import { axiosEndpoints } from 'src/shared/utils/auth/endpoints';
-import { localStorageKeys } from 'src/shared/utils/keys.localstorage';
-import { decodeAccessToken, decodeRefreshToken } from 'src/widgets/auth/lib/decode.tokens';
+import { localStorageKeys } from 'src/shared/utils/const/keys.localstorage';
+import { decodeAccessToken, decodeRefreshToken } from 'src/shared/utils/auth/decode.tokens';
 
 import { AccessTokenData } from '../lib/auth-store.lib';
 
@@ -17,12 +19,20 @@ type AuthStore = {
   refreshTokenData: AccessTokenData | undefined;
 
   // actions
-  login: (email: string, password: string) => Promise<AuthStore>;
+  login: (email: string, password: string) => void;
   register: (email: string, password: string) => void;
-  setAccessToken: (accessToken: string | undefined) => string;
-  setRefreshToken: (refreshToken: string | undefined) => string;
+  setAccessToken: (accessToken: string) => string;
+  setRefreshToken: (refreshToken: string) => string;
   init: () => void; // set tokens on the app start
   clearTokens: () => void;
+};
+
+export const getServerSideProps = async () => {
+  // // Fetch data from external API
+  // const res = await fetch('https://api.github.com/repos/vercel/next.js');
+  // const repo: Repo = await res.json();
+  // // Pass data to the page via props
+  // return { props: { repo } };
 };
 
 export const authStore = create<AuthStore>()(
@@ -35,7 +45,7 @@ export const authStore = create<AuthStore>()(
         refreshTokenData: undefined,
 
         // actions
-        login: async (email: string, password: string): Promise<AuthStore> => {
+        login: async (email: string, password: string): Promise<void> => {
           try {
             const { setAccessToken, setRefreshToken } = get();
             const response: AuthLoginCommand.Response = await axiosInstance.post(
@@ -46,10 +56,13 @@ export const authStore = create<AuthStore>()(
               }
             );
             const responseBody = response.data;
-            localStorage.setItem(localStorageKeys.ACCESS_TOKEN, responseBody.accessToken);
+            const cookieStore = cookies();
+            const refreshToken = cookieStore.get(cookieKeys.REFRESH_KEY);
+
             setAccessToken(responseBody.accessToken);
             setRefreshToken(responseBody.refreshToken);
-            return get();
+            console.error(refreshToken, responseBody.refreshToken);
+            return undefined;
           } catch (error) {
             console.error(error);
             return error;
@@ -66,8 +79,9 @@ export const authStore = create<AuthStore>()(
         //   return undefined;
         // }
 
-        setAccessToken: (accessToken: string | undefined) => {
+        setAccessToken: (accessToken: string): string => {
           try {
+            localStorage.setItem(localStorageKeys.ACCESS_TOKEN, accessToken);
             const accessTokenDataDecoded = accessToken ? decodeAccessToken(accessToken) : undefined;
             console.log(accessTokenDataDecoded);
             set({
@@ -85,8 +99,8 @@ export const authStore = create<AuthStore>()(
             const refreshTokenDataDecoded = refreshToken
               ? decodeRefreshToken(refreshToken)
               : undefined;
-            console.log(refreshTokenDataDecoded);
             set({
+              refreshToken,
               refreshTokenData: refreshTokenDataDecoded,
             });
             return refreshToken;
@@ -99,7 +113,7 @@ export const authStore = create<AuthStore>()(
         init: () => {
           const { setAccessToken, setRefreshToken } = get();
           setAccessToken(getLocalStorage(TokenType.ACCESS));
-          setRefreshToken(getLocalStorage(TokenType.REFRESH));
+          // setRefreshToken(cookies(TokenType.REFRESH));
         },
 
         clearTokens: () =>
