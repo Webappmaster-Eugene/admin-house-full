@@ -15,9 +15,9 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { existenceUserEntityHandler } from './lib/user-entity-existance.handler';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
-import { AddUserToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
-import { AddUserToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
-import { AddUserToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
+import { UserAddToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
+import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -202,7 +202,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async addUserToWorkspaceById({ uuid, memberOfWorkspaceUuid }: AddUserToWorkspaceRequestDto): Promise<UserEntity> {
+  async addUserToWorkspaceById({ uuid, memberOfWorkspaceUuid }: UserAddToWorkspaceRequestDto): Promise<UserEntity> {
     try {
       const updatedUser = await this.databaseService.user.update({
         where: {
@@ -218,7 +218,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async addUserToOrganizationById({ uuid, memberOfOrganizationUuid }: AddUserToOrganizationRequestDto): Promise<UserEntity> {
+  async addUserToOrganizationById({ uuid, memberOfOrganizationUuid }: UserAddToOrganizationRequestDto): Promise<UserEntity> {
     try {
       const updatedUser = await this.databaseService.user.update({
         where: {
@@ -234,7 +234,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async addUserToProjectById({ uuid, memberOfProjectUuid }: AddUserToProjectRequestDto): Promise<UserEntity> {
+  async addUserToProjectById({ uuid, memberOfProjectUuid }: UserAddToProjectRequestDto): Promise<UserEntity> {
     try {
       const updatedUser = await this.databaseService.user.update({
         where: {

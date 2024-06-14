@@ -1,11 +1,10 @@
-import { LoginView } from 'src/widgets/auth';
+import LoginView from 'src/sections/auth/login-view';
 
 export const metadata = {
-  title: 'House Admin: вход',
-  description: 'Login page',
+  title: 'Jwt: Login',
 };
 
-export default function LoginPage() {
-  // return <div />;
+export default async function LoginPage() {
   return <LoginView />;
+  // return <LoginForm />;
 }

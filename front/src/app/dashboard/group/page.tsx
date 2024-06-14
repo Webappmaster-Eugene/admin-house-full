@@ -1,4 +1,6 @@
-import FourView from 'src/widgets/four/view';
+import FourView from 'src/sections/four/view';
+
+// ----------------------------------------------------------------------
 
 export const metadata = {
   title: 'Dashboard: Four',

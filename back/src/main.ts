@@ -17,13 +17,22 @@ async function bootstrap() {
   });
 
   const config = app.get(ConfigService<IConfigService>);
-
+  app.use(cookieParser());
   app.setGlobalPrefix(config.get<string>('API_PREFIX'));
 
   app.enableCors({
-    origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    // origin: true,
+    // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    methods: 'all',
     credentials: true,
+    // origin: [
+    //   'http://localhost:3000',
+    //   'http://localhost:8080',
+    //   'http://127.0.0.1',
+    //   'https://alibaba.hhos.ru',
+    //   'https://api.alibaba.hhos.ru',
+    // ], // your origins here
+    exposedHeaders: ['set-cookie'],
   });
 
   app.enableVersioning({
@@ -45,7 +54,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalFilters(new CustomExceptionFilter());
-  app.use(cookieParser());
 
   const PORT = Number(config.get<string>('APP_PORT')) || 3001;
 

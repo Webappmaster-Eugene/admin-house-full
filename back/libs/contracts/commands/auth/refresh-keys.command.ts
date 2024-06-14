@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AuthRefreshKeysSchema, AuthStrictKeySchema, ResponseClientSchema } from '../../models';
+import { AuthRefreshKeysSchema, ResponseClientSchema } from '../../models';
 
 const AuthRefreshKeysResponseEntitySchema = AuthRefreshKeysSchema;
 

@@ -7,22 +7,22 @@ const UserAddToWorkspaceResponseEntitySchema = UserSchema.omit({
   updatedAt: true,
 });
 
-const AddUserToWorkspaceRequestSchema = UserSchema.pick({
+const UserAddToWorkspaceRequestSchema = UserSchema.pick({
   uuid: true,
   memberOfWorkspaceUuid: true,
 });
 
-const AddUserToWorkspaceResponseSchema = z
+const UserAddToWorkspaceResponseSchema = z
   .object({
     data: UserAddToWorkspaceResponseEntitySchema,
   })
   .merge(ResponseClientSchema);
 
-export namespace AddUserToWorkspaceCommand {
-  export const RequestSchema = AddUserToWorkspaceRequestSchema;
+export namespace UserAddToWorkspaceCommand {
+  export const RequestSchema = UserAddToWorkspaceRequestSchema;
   export type Request = z.infer<typeof RequestSchema>;
 
-  export const ResponseSchema = AddUserToWorkspaceResponseSchema;
+  export const ResponseSchema = UserAddToWorkspaceResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 
   export const ResponseEntitySchema = UserAddToWorkspaceResponseEntitySchema;

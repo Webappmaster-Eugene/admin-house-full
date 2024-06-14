@@ -1,4 +1,6 @@
-import FiveView from 'src/widgets/five/view';
+import FiveView from 'src/sections/five/view';
+
+// ----------------------------------------------------------------------
 
 export const metadata = {
   title: 'Dashboard: Five',

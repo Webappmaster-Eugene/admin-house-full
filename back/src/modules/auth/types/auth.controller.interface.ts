@@ -17,7 +17,7 @@ export interface IAuthController {
     urlParams: IUrlParams,
     response: Response,
   ) => Promise<AuthRegisterWithRoleResponseDto>;
-  refreshKeysEP: (accessKey: string, urlParams: IUrlParams, request: Request, response: Response) => Promise<AuthRefreshKeysResponseDto>;
+  refreshKeysEP: (urlParams: IUrlParams, request: Request, response: Response) => Promise<AuthRefreshKeysResponseDto>;
   loginEP: (dto: AuthLoginRequestDto, urlParams: IUrlParams, response: Response) => Promise<AuthLoginResponseDto>;
   generateStrictAdminKeyEP: (dto: AuthGenerateKeyRequestDto, urlParams: IUrlParams) => Promise<AuthGenerateKeyResponseDto>;
   getStrictAdminKeyEP: (urlParams: IUrlParams) => Promise<AuthGetKeyResponseDto>;

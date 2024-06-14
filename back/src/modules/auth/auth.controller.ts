@@ -29,6 +29,8 @@ import { RefreshKeyGuard } from '../../common/guards/refresh-key.guard';
 import { AuthRefreshKeysEntity } from './entities/auth-refresh-keys.entity';
 import { AuthInterceptor } from 'src/common/interceptors/auth.interceptor';
 import { UserInterceptor } from 'src/common/interceptors/user.interceptor';
+import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
+import { InternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
 
 @ApiTags('Работа с аутентификацией пользователя')
 @Controller('auth')
@@ -113,20 +115,21 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthRefreshKeysResponseDto)
-  @UseGuards(RefreshKeyGuard)
+  // @UseGuards(RefreshKeyGuard)
   @Post('/refresh-keys')
   async refreshKeysEP(
-    @AuthHeader() accessKey: string,
+    // @AuthHeader() accessKey: string,
     @UrlParams() urlParams: IUrlParams,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-    // FIXME Promise<unknown> - потому что не могу отловить баг с типизацией ответа
-  ): Promise<unknown> {
+  ): Promise<AuthRefreshKeysResponseDto> {
     // DOC ручка для обновления пары ключей доступа
     try {
-      const { ok, data } = await this.authService.refreshKeys(accessKey, request, response);
+      const { ok, data } = await this.authService.refreshKeys(request, response);
+      console.log('9999', okResponseHandler(ok, data, AuthRefreshKeysEntity, this.logger));
       return okResponseHandler(ok, data, AuthRefreshKeysEntity, this.logger);
     } catch (error: unknown) {
+      console.log('rere', error);
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }
   }

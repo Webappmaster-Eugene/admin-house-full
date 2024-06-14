@@ -1,8 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { PATH_AFTER_LOGIN } from '@/shared/config-global';
+
+import { useRouter } from 'src/routes/hooks';
+
+import { PATH_AFTER_LOGIN } from 'src/config-global';
+
+// ----------------------------------------------------------------------
 
 export default function HomePage() {
   const router = useRouter();

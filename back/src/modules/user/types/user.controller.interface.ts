@@ -7,10 +7,9 @@ import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/co
 import { UserDeleteResponseDto } from '../dto/controller/delete-user.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
-import { AddUserToWorkspaceRequestDto } from '../dto/controller/add-to-workspace.dto';
-import { AddUserToProjectRequestDto, AddUserToProjectResponseDto } from '../dto/controller/add-to-project.dto';
-import { AddUserToOrganizationRequestDto, AddUserToOrganizationResponseDto } from '../dto/controller/add-to-organization.dto';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { UserAddToOrganizationResponseDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
+import { UserAddToProjectResponseDto } from 'src/modules/user/dto/controller/add-to-project.dto';
 
 export interface IUserController
   extends IControllerCommon<
@@ -41,18 +40,18 @@ export interface IUserController
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     urlParams: IUrlParams,
-  ) => Promise<AddUserToOrganizationResponseDto>;
+  ) => Promise<UserAddToOrganizationResponseDto>;
   addUserToOrganizationEP: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     urlParams: IUrlParams,
-  ) => Promise<AddUserToOrganizationResponseDto>;
+  ) => Promise<UserAddToOrganizationResponseDto>;
   addUserToProjectEP: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     projectId: EntityUrlParamCommand.RequestUuidParam,
     dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     urlParams: IUrlParams,
-  ) => Promise<AddUserToProjectResponseDto>;
+  ) => Promise<UserAddToProjectResponseDto>;
 }

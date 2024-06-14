@@ -101,12 +101,13 @@ export class AuthService implements IAuthService {
     }
   }
 
-  async refreshKeys(accessToken: string, request: Request, response: Response): Promise<UniversalInternalResponse<AuthRefreshKeysEntity>> {
-    const refreshToken = request.cookies[COOKIE_KEYS.REFRESH_KEY];
+  async refreshKeys(request: Request, response: Response): Promise<UniversalInternalResponse<AuthRefreshKeysEntity>> {
+    const refreshToken = await request.cookies[COOKIE_KEYS.REFRESH_KEY];
     if (!refreshToken) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
-    const { email } = jwt.verify(refreshToken, this.configService.get('JWT_KEY')) as IJWTPayload;
+
+    const { email } = jwt.verify(refreshToken, this.configService.get<string>('JWT_KEY')) as IJWTPayload;
 
     const existedUser = dataInternalExtractor(await this.userService.getByEmail(email));
     if (!existedUser) {
@@ -122,11 +123,10 @@ export class AuthService implements IAuthService {
       accessToken: accessTokenResponse,
       refreshToken: refreshTokenResponse,
     };
-
     const frontendDomain = this.configService.get<string>('FRONTEND_DOMAIN');
     // response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { httpOnly: true, domain: frontendDomain, secure: true });
     response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { domain: frontendDomain });
-    response.cookie(COOKIE_KEYS.NEW_ACCESS_KEY, `Bearer ${accessToken}`, { domain: frontendDomain });
+    response.cookie(COOKIE_KEYS.NEW_ACCESS_KEY, `Bearer ${accessTokenResponse}`, { domain: frontendDomain });
     response.cookie(COOKIE_KEYS.LAST_INTERCEPTOR_UPDATE, new Date().toJSON(), { domain: frontendDomain });
     return new InternalResponse(outputEntity);
   }
@@ -175,7 +175,7 @@ export class AuthService implements IAuthService {
       },
       this.configService.get('JWT_KEY'),
       {
-        expiresIn: tokenType === TokenType.REFRESH ? '1d' : '40s', // 604800(7 суток), 86400(1 сутки)
+        expiresIn: tokenType === TokenType.REFRESH ? '55s' : '40s', // 604800(7 суток), 86400(1 сутки)
       },
     );
 

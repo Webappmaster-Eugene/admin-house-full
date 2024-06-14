@@ -1,4 +1,6 @@
-import ThreeView from 'src/widgets/three/view';
+import ThreeView from 'src/sections/three/view';
+
+// ----------------------------------------------------------------------
 
 export const metadata = {
   title: 'Dashboard: Three',

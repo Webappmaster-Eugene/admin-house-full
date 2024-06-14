@@ -18,6 +18,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+    console.error(exception);
 
     if (exception instanceof ForbiddenException) {
       return response.status(status).json({

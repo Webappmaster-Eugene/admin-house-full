@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, HttpException, Inject, Injectable } from
 import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
-import { IJWTPayload } from '../types/jwt.payload.interface';
+import { IJWTPayload, IJWTRefreshPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/extractors/jwt.extractor';
 import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
@@ -29,14 +29,44 @@ export class AuthGuard implements CanActivate {
     const roles = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]) || [];
 
     const refreshToken = context.switchToHttp().getRequest().cookies[COOKIE_KEYS.REFRESH_KEY];
-    const { token, jwtSecret } = jwtExtractor(context, this.configService);
+    console.log(refreshToken);
 
     if (!refreshToken) {
-      return false;
+      this.logger.error(BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description);
+      const response = new ExternalResponse(
+        null,
+        BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+        BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
+        [BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED]],
+      );
+      throw new HttpException(response, response.statusCode);
     }
 
+    const { token, jwtSecret } = jwtExtractor(context, this.configService);
+
+    // console.log(refreshToken);
+
+    // DOC начало проверки accessToken - старт процесса авторизации
     try {
-      jwt.verify(refreshToken, jwtSecret) as IJWTPayload;
+      const verifiedAccessToken = jwt.verify(token, jwtSecret) as IJWTPayload;
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+      this.logger.error(JSON.stringify(error));
+      return false;
+    }
+    // DOC конец проверки accessToken - старт процесса авторизации
+
+    try {
+      const verifiedRefreshToken = jwt.verify(refreshToken, jwtSecret) as IJWTRefreshPayload;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
@@ -67,7 +97,6 @@ export class AuthGuard implements CanActivate {
 
       return !!roles.includes(user.role['name']);
     } catch (error) {
-      this.logger.error('3223424234');
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(
           null,

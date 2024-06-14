@@ -10,7 +10,10 @@ export function jwtExtractor(
   jwtSecret: string;
 } {
   const request = context.switchToHttp().getRequest();
-  const token = request?.headers?.authorization?.split(' ')[1];
+  const authHeaderSplitted = request?.headers?.authorization?.split(' ');
+  // console.error(111111, request);
+
+  const token = authHeaderSplitted[authHeaderSplitted.length - 1];
   const JWT_SECRET_KEY = configService.get('JWT_KEY');
 
   return { token: token, jwtSecret: JWT_SECRET_KEY };

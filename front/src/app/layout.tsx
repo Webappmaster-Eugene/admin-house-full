@@ -1,12 +1,21 @@
-import '@/shared/global.css';
-import ProgressBar from '@/entities/progress-bar';
-import { MotionLazy } from '@/entities/animate/motion-lazy';
-import { PropsReactNode } from '@/shared/utils/types/react-node.type';
+import 'src/global.css';
 
-import { AuthProvider } from 'src/shared/auth/context';
-import { ThemeProvider } from 'src/shared/components/theme';
-import { primaryFont } from 'src/shared/components/theme/typography';
-import { SettingsDrawer, SettingsProvider } from 'src/shared/components/settings';
+// ----------------------------------------------------------------------
+
+import { PropsReactNode } from 'src/utils/types';
+import AppProvider from 'src/utils/providers/app-provider';
+import CurrentUserProvider from 'src/utils/providers/current-user-provider';
+
+import ThemeProvider from 'src/theme';
+import { primaryFont } from 'src/theme/typography';
+import { AuthProvider } from 'src/auth/context/jwt';
+import { getAppInfo } from 'src/api/actions/app-actions/get-app-info.action';
+
+import ProgressBar from 'src/components/progress-bar';
+import { MotionLazy } from 'src/components/animate/motion-lazy';
+import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
+
+// ----------------------------------------------------------------------
 
 export const viewport = {
   themeColor: '#000000',
@@ -29,30 +38,36 @@ export const metadata = {
   ],
 };
 
-export default function RootLayout({ children }: PropsReactNode) {
+export default async function RootLayout({ children }: PropsReactNode) {
+  const appInfo = await getAppInfo();
+
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>
-        <AuthProvider>
-          <SettingsProvider
-            defaultSettings={{
-              themeMode: 'light', // 'light' | 'dark'
-              themeDirection: 'ltr', //  'rtl' | 'ltr'
-              themeContrast: 'default', // 'default' | 'bold'
-              themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-              themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-              themeStretch: false,
-            }}
-          >
-            <ThemeProvider>
-              <MotionLazy>
-                <SettingsDrawer />
-                <ProgressBar />
-                {children}
-              </MotionLazy>
-            </ThemeProvider>
-          </SettingsProvider>
-        </AuthProvider>
+        <AppProvider appInfo={appInfo}>
+          <CurrentUserProvider>
+            <AuthProvider>
+              <SettingsProvider
+                defaultSettings={{
+                  themeMode: 'light', // 'light' | 'dark'
+                  themeDirection: 'ltr', //  'rtl' | 'ltr'
+                  themeContrast: 'default', // 'default' | 'bold'
+                  themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+                  themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                  themeStretch: false,
+                }}
+              >
+                <ThemeProvider>
+                  <MotionLazy>
+                    <SettingsDrawer />
+                    <ProgressBar />
+                    {children}
+                  </MotionLazy>
+                </ThemeProvider>
+              </SettingsProvider>
+            </AuthProvider>
+          </CurrentUserProvider>
+        </AppProvider>
       </body>
     </html>
   );

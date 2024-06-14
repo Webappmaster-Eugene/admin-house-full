@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
-import { AddUserToOrganizationCommand } from '@numart/house-admin-contracts';
+import { UserAddToOrganizationCommand } from '@numart/house-admin-contracts';
 
-export class AddUserToOrganizationRequestDto extends createZodDto(AddUserToOrganizationCommand.RequestSchema) {}
+export class UserAddToOrganizationRequestDto extends createZodDto(UserAddToOrganizationCommand.RequestSchema) {}
 
-export class AddUserToOrganizationResponseDto extends createZodDto(AddUserToOrganizationCommand.ResponseSchema) {}
+export class UserAddToOrganizationResponseDto extends createZodDto(UserAddToOrganizationCommand.ResponseSchema) {}

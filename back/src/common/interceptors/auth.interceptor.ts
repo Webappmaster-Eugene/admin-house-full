@@ -42,7 +42,7 @@ export class AuthInterceptor implements NestInterceptor {
         this.logger.error(`Проблема с токеном oldAccessToken ` + error);
 
         const { accessToken, refreshToken } = dataInternalExtractor(
-          await this.authService.refreshKeys(token, request, context.switchToHttp().getResponse()),
+          await this.authService.refreshKeys(request, context.switchToHttp().getResponse()),
         );
         // request.headers[HEADER_KEYS.AUTHORIZATION_HEADER] = `Bearer ${accessToken}`;
         // request.cookies[COOKIE_KEYS.REFRESH_KEY] = refreshToken;

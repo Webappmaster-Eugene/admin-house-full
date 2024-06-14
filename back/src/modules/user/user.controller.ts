@@ -3,14 +3,12 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiResponse,
-  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { UserUpdateRequestDto, UserUpdateResponseDto } from './dto/controller/update-user.dto';
@@ -24,9 +22,9 @@ import { KFI } from '../../common/utils/di';
 import { IUserService } from './types/user.service.interface';
 import { UserGetAllResponseDto } from './dto/controller/get-all-users.dto';
 import {
-  AddUserToOrganizationCommand,
-  AddUserToProjectCommand,
-  AddUserToWorkspaceCommand,
+  UserAddToOrganizationCommand,
+  UserAddToProjectCommand,
+  UserAddToWorkspaceCommand,
   UserCreateCommand,
   UserGetAllCommand,
   UserGetCommand,
@@ -42,10 +40,10 @@ import { ILogger } from '../../common/types/main/logger.interface';
 import { ROLE_IDS } from '../../common/consts/role-ids';
 import { WorkspaceAffiliationGuard } from '../../common/guards/workspace-affiliation.guard';
 import { EUserTypeVariants } from '.prisma/client';
-import { AddUserToWorkspaceRequestDto, AddUserToWorkspaceResponseDto } from './dto/controller/add-to-workspace.dto';
+import { UserAddToWorkspaceRequestDto, UserAddToWorkspaceResponseDto } from './dto/controller/add-to-workspace.dto';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
-import { AddUserToProjectRequestDto, AddUserToProjectResponseDto } from './dto/controller/add-to-project.dto';
-import { AddUserToOrganizationRequestDto, AddUserToOrganizationResponseDto } from './dto/controller/add-to-organization.dto';
+import { UserAddToProjectRequestDto, UserAddToProjectResponseDto } from './dto/controller/add-to-project.dto';
+import { UserAddToOrganizationRequestDto, UserAddToOrganizationResponseDto } from './dto/controller/add-to-organization.dto';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
@@ -148,6 +146,7 @@ export class UserController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<UserGetAllResponseDto> {
     try {
       const { ok, data } = await this.userService.getAll(queryParams);
+
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -244,7 +243,7 @@ export class UserController {
   //endregion
   @ZodSerializerDto(UserGetResponseDto)
   @UseGuards(AuthGuard)
-  @UseInterceptors(AuthInterceptor)
+  // @UseInterceptors(AuthInterceptor)
   @Get('/me')
   async getCurrentUserEP(@User() userInfoFromJWT: IJWTPayload, @UrlParams() urlParams: IUrlParams): Promise<UserGetResponseDto> {
     try {
@@ -257,12 +256,12 @@ export class UserController {
 
   //region SWAGGER
   @ApiOkResponse({
-    schema: zodToOpenAPI(AddUserToWorkspaceCommand.ResponseSchema),
+    schema: zodToOpenAPI(UserAddToWorkspaceCommand.ResponseSchema),
   })
   @ApiOperation({
     summary: 'Добавление обычного (WORKER, CUSTOMER) пользователя в Workspace менеджера по workspaceId',
   })
-  @ApiResponse({ status: 200, type: AddUserToWorkspaceResponseDto })
+  @ApiResponse({ status: 200, type: UserAddToWorkspaceResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
@@ -273,7 +272,7 @@ export class UserController {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     @UrlParams() urlParams: IUrlParams,
-  ): Promise<AddUserToWorkspaceResponseDto> {
+  ): Promise<UserAddToWorkspaceResponseDto> {
     try {
       const { ok, data } = await this.userService.addUserToWorkspace(workspaceId, dto.userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);
@@ -284,12 +283,12 @@ export class UserController {
 
   //region SWAGGER
   @ApiOkResponse({
-    schema: zodToOpenAPI(AddUserToOrganizationCommand.ResponseSchema),
+    schema: zodToOpenAPI(UserAddToOrganizationCommand.ResponseSchema),
   })
   @ApiOperation({
     summary: 'Добавление обычного (WORKER, CUSTOMER) пользователя в Organization менеджера по organizationId',
   })
-  @ApiResponse({ status: 200, type: AddUserToOrganizationResponseDto })
+  @ApiResponse({ status: 200, type: UserAddToOrganizationResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
@@ -302,7 +301,7 @@ export class UserController {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     @UrlParams() urlParams: IUrlParams,
-  ): Promise<AddUserToOrganizationResponseDto> {
+  ): Promise<UserAddToOrganizationResponseDto> {
     try {
       const { ok, data } = await this.userService.addUserToOrganization(workspaceId, organizationId, dto.userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);
@@ -313,12 +312,12 @@ export class UserController {
 
   //region SWAGGER
   @ApiOkResponse({
-    schema: zodToOpenAPI(AddUserToProjectCommand.ResponseSchema),
+    schema: zodToOpenAPI(UserAddToProjectCommand.ResponseSchema),
   })
   @ApiOperation({
     summary: 'Добавление обычного (WORKER, CUSTOMER) пользователя в Project менеджера по projectId',
   })
-  @ApiResponse({ status: 200, type: AddUserToProjectResponseDto })
+  @ApiResponse({ status: 200, type: UserAddToProjectResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
@@ -333,7 +332,7 @@ export class UserController {
     projectId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
     @UrlParams() urlParams: IUrlParams,
-  ): Promise<AddUserToProjectResponseDto> {
+  ): Promise<UserAddToProjectResponseDto> {
     try {
       const { ok, data } = await this.userService.addUserToProject(workspaceId, organizationId, projectId, dto.userId);
       return okResponseHandler(ok, data, UserEntity, this.logger);

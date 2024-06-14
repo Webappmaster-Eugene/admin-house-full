@@ -1,15 +1,9 @@
 'use client';
 
-import { GuestGuard } from '@/shared/auth/guard';
-import { PropsReactNode } from '@/shared/utils/types/react-node.type';
+import { PropsReactNode } from 'src/utils/types';
 
-import { AuthGeneralLayout } from 'src/widgets/auth';
+import AuthLayout from 'src/layouts/auth/auth.layout';
 
 export default function Layout({ children }: PropsReactNode) {
-  return (
-    <GuestGuard>
-      <div />
-      <AuthGeneralLayout>{children}</AuthGeneralLayout>
-    </GuestGuard>
-  );
+  return <AuthLayout>{children}</AuthLayout>;
 }

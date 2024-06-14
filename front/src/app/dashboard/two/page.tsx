@@ -1,4 +1,6 @@
-import TwoView from 'src/widgets/two/view';
+import TwoView from 'src/sections/two/view';
+
+// ----------------------------------------------------------------------
 
 export const metadata = {
   title: 'Dashboard: Two',

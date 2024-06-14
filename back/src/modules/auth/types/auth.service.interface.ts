@@ -16,7 +16,7 @@ export interface IAuthService {
     response: Response,
   ) => Promise<UniversalInternalResponse<AuthEntity>>;
   login: (dto: AuthLoginRequestDto, response: Response) => Promise<UniversalInternalResponse<AuthEntity>>;
-  refreshKeys: (accessToken: string, request: Request, response: Response) => Promise<UniversalInternalResponse<AuthRefreshKeysEntity>>;
+  refreshKeys: (request: Request, response: Response) => Promise<UniversalInternalResponse<AuthRefreshKeysEntity>>;
   generateJWT: (
     uuid: EntityUrlParamCommand.RequestUuidParam,
     email: string,

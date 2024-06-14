@@ -1,4 +1,6 @@
-import OneView from 'src/widgets/one/view';
+import OneView from 'src/sections/one/view';
+
+// ----------------------------------------------------------------------
 
 export const metadata = {
   title: 'Dashboard: One',

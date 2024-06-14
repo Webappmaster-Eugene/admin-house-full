@@ -22,14 +22,16 @@ export class RefreshKeyGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const { refreshToken, jwtSecret } = refreshKeyExtractor(context, this.configService);
+
     try {
       const { uuid } = jwt.verify(refreshToken, jwtSecret) as IJWTPayload;
+      console.log('0000,', uuid);
 
       const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
-
       if (!user) {
         return false;
       }
+      return true;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(

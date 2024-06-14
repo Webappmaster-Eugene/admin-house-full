@@ -1,4 +1,6 @@
-import SixView from 'src/widgets/six/view';
+import SixView from 'src/sections/six/view';
+
+// ----------------------------------------------------------------------
 
 export const metadata = {
   title: 'Dashboard: Six',

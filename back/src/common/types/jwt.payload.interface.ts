@@ -5,3 +5,10 @@ export interface IJWTPayload {
   iat: number;
   exp: number;
 }
+
+export interface IJWTRefreshPayload {
+  uuid: string;
+  email: string;
+  iat: number;
+  exp: number;
+}

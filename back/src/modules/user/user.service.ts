@@ -12,7 +12,7 @@ import { IRoleService } from '../roles/types/role.service.interface';
 import { KFI } from '../../common/utils/di';
 import { IHandbookService } from '../handbook/types/handbook.service.interface';
 import * as argon2 from 'argon2';
-import { AddUserToWorkspaceRequestDto } from './dto/controller/add-to-workspace.dto';
+import { UserAddToWorkspaceRequestDto } from './dto/controller/add-to-workspace.dto';
 import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
 import { CACHE_KEYS } from '../../common/consts/cache-keys';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
@@ -25,8 +25,8 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { cacheRemoverBatch } from '../../common/helpers/cashe/cache-remover.batch';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
-import { AddUserToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
-import { AddUserToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
+import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -206,7 +206,7 @@ export class UserService implements IUserService {
     const findedUser = await this.userRepository.getById(userId);
 
     if (!findedUser.memberOfWorkspaceUuid) {
-      const dtoToUpdateUser: AddUserToWorkspaceRequestDto = { uuid: userId, memberOfWorkspaceUuid: workspaceId };
+      const dtoToUpdateUser: UserAddToWorkspaceRequestDto = { uuid: userId, memberOfWorkspaceUuid: workspaceId };
 
       const updatedUser = await this.userRepository.addUserToWorkspaceById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
@@ -225,7 +225,7 @@ export class UserService implements IUserService {
     const findedUser = await this.userRepository.getById(userId);
 
     if (findedUser.memberOfWorkspaceUuid === workspaceId) {
-      const dtoToUpdateUser: AddUserToOrganizationRequestDto = { uuid: userId, memberOfOrganizationUuid: organizationId };
+      const dtoToUpdateUser: UserAddToOrganizationRequestDto = { uuid: userId, memberOfOrganizationUuid: organizationId };
 
       const updatedUser = await this.userRepository.addUserToOrganizationById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
@@ -245,7 +245,7 @@ export class UserService implements IUserService {
     const findedUser = await this.userRepository.getById(userId);
 
     if (findedUser.memberOfWorkspaceUuid === workspaceId && findedUser.memberOfOrganizationUuid === organizationId) {
-      const dtoToUpdateUser: AddUserToProjectRequestDto = { uuid: userId, memberOfProjectUuid: projectId };
+      const dtoToUpdateUser: UserAddToProjectRequestDto = { uuid: userId, memberOfProjectUuid: projectId };
 
       const updatedUser = await this.userRepository.addUserToProjectById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
