@@ -29,7 +29,6 @@ export class AuthGuard implements CanActivate {
     const roles = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]) || [];
 
     const refreshToken = context.switchToHttp().getRequest().cookies[COOKIE_KEYS.REFRESH_KEY];
-    console.log(refreshToken);
 
     if (!refreshToken) {
       this.logger.error(BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description);

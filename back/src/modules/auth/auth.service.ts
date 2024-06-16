@@ -183,7 +183,7 @@ export class AuthService implements IAuthService {
       },
       this.configService.get('JWT_KEY'),
       {
-        expiresIn: tokenType === TokenType.REFRESH ? '55s' : '40s', // 604800(7 суток), 86400(1 сутки)
+        expiresIn: tokenType === TokenType.REFRESH ? '7d' : '7d', // 604800(7 суток), 86400(1 сутки)
       },
     );
 

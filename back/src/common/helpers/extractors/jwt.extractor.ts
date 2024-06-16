@@ -11,7 +11,6 @@ export function jwtExtractor(
 } {
   const request = context.switchToHttp().getRequest();
   const authHeaderSplitted = request?.headers?.authorization?.split(' ');
-  // console.error(111111, request);
 
   const token = authHeaderSplitted[authHeaderSplitted.length - 1];
   const JWT_SECRET_KEY = configService.get('JWT_KEY');

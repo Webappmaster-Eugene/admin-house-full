@@ -25,13 +25,6 @@ async function bootstrap() {
     // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     methods: 'all',
     credentials: true,
-    // origin: [
-    //   'http://localhost:3000',
-    //   'http://localhost:8080',
-    //   'http://127.0.0.1',
-    //   'https://alibaba.hhos.ru',
-    //   'https://api.alibaba.hhos.ru',
-    // ], // your origins here
     exposedHeaders: ['set-cookie'],
   });
 
@@ -44,7 +37,7 @@ async function bootstrap() {
     .setTitle('Документация для проекта Admin House')
     .setVersion(config.get<string>('API_VERSION'))
     .setDescription('Документация REST API')
-    .setVersion('1.1.0')
+    .setVersion('1.2.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' }, 'access-token')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
