@@ -21,7 +21,6 @@
     "ts:watch": "yarn ts --watch"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^2.2.3",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",

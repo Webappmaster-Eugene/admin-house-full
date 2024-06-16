@@ -1,6 +1,9 @@
+## Технологии
+Nextjs, TS, Zustand, MaterialUI (+ шаблон Minimal), опционально - MUI X, Tailwind, axios, .
+
 ## NODE.JS
 
-- Node 16.x || 18.x
+- Node 20.x
 
 ## USING YARN (Recommend)
 
