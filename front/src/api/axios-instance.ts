@@ -9,7 +9,6 @@ import { axiosEndpoints } from 'src/utils/auth';
 import { AUTH_PATHS } from 'src/utils/auth/auth.paths';
 import { getAccessToken, getRefreshToken } from 'src/utils/auth/auth.service';
 
-import { HOST_API } from 'src/config-global';
 import { logoutUser } from 'src/api/actions/auth-actions/logout.action';
 
 type ResponseClientType = {
@@ -20,7 +19,8 @@ type ResponseClientType = {
 };
 
 const axiosOptions: CreateAxiosDefaults = {
-  baseURL: HOST_API,
+  // baseURL: HOST_API,
+  baseURL: 'https://api.alibaba.hhos.ru/api/v1.0/',
   withCredentials: true,
   // headers: {
   //   'Content-Type': 'application/json',
@@ -33,6 +33,11 @@ const axiosAuthedInstance = axios.create(axiosOptions);
 axiosAuthedInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig & { _retry?: boolean }) => {
     const clientCookieAccessToken = await getAccessToken();
+    console.log('configconfigconfigconfig', config);
+    console.log(
+      'axiosAuthedInstanceaxiosAuthedInstanceaxiosAuthedInstanceaxiosAuthedInstance',
+      axiosAuthedInstance
+    );
 
     if (!config?._retry) {
       if (config.headers && clientCookieAccessToken) {

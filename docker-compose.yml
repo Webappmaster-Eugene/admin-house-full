@@ -5,6 +5,11 @@ services:
     container_name: admin-house-front
     image: eugenenumart/admin-house-front:latest
     restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_FRONT_MODE: ${NEXT_FRONT_MODE}
+      NEXT_PUBLIC_HOST_API: https://api.alibaba.hhos.ru/api/v1.0/
+      NEXT_PUBLIC_ASSETS_API: ${NEXT_PUBLIC_ASSETS_API}
     deploy:
       restart_policy:
         condition: on-failure
