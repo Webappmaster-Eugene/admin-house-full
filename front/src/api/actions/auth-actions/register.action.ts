@@ -29,7 +29,7 @@ export async function register(data: {
     );
     if (isGoodHttpCode(response?.statusCode)) {
       cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response?.data?.accessToken}`, {
-        maxAge: 40,
+        maxAge: 604800,
         // expires: new Date(Date.now() + 40),
         // path: '/',
       });

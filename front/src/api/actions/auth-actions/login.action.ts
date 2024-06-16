@@ -26,13 +26,13 @@ export async function login(data: { email: string; password: string }) {
       cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response?.data?.accessToken}`, {
         maxAge: 604800,
         // expires: new Date(Date.now() + 40),
-        path: '/',
+        // path: '/',
       });
       cookies().set(cookieKeys.REFRESH_KEY, `${response?.data?.refreshToken}`, {
         maxAge: 604800,
         // expires: new Date(Date.now() + 604800),
-        httpOnly: true,
-        path: '/',
+        // httpOnly: true,
+        // path: '/',
       });
       return response?.data as AuthLoginCommand.ResponseEntity;
     }
