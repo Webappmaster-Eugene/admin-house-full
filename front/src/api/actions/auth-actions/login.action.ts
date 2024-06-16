@@ -21,6 +21,7 @@ export async function login(data: { email: string; password: string }) {
       axiosEndpoints.auth.login,
       data
     );
+    console.log('responseresponseresponseresponse', response);
     if (isGoodHttpCode(response?.statusCode)) {
       cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response?.data?.accessToken}`, {
         maxAge: 604800,

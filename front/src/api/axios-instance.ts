@@ -41,11 +41,15 @@ axiosAuthedInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer bad_access_token`;
       }
     }
-
+    console.log(
+      'clientCookieAccessTokenclientCookieAccessTokenclientCookieAccessToken',
+      clientCookieAccessToken
+    );
     const refreshToken = await getRefreshToken();
     if (refreshToken) {
       config.headers.Cookie = `REFRESH_KEY=${refreshToken}`;
     }
+    console.log('refreshTokenrefreshTokenrefreshToken', refreshToken);
     return config;
   }
 );
@@ -56,7 +60,7 @@ axiosAuthedInstance.interceptors.response.use(
     //   console.log('logout');
     //   await logoutUser();
     // }
-
+    console.log('res.datares.datares.datares.datares.data', res.data);
     const responseData = res.data;
     return responseData;
   },
@@ -64,7 +68,7 @@ axiosAuthedInstance.interceptors.response.use(
     const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
     const errorPath = error.request?.path;
     const responseData: ResponseClientType = error.response?.data;
-
+    console.log('responseDataresponseDataresponseDataresponseDataresponseData', responseData);
     if (
       responseData?.statusCode === 403 &&
       errorPath !== AUTH_PATHS.login &&

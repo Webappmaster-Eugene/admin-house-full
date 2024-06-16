@@ -1,4 +1,5 @@
 import { m } from 'framer-motion';
+import { redirect } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -26,14 +27,17 @@ export default function AccountPopover() {
 
   const { user } = useMockedUser();
   const loginedUser = useCurrentUserStore((state) => state.user);
+  const resetUser = useCurrentUserStore((state) => state.reset);
 
   const popover = usePopover();
 
   const handleLogout = async () => {
     try {
       await logoutUser();
+      resetUser();
       popover.onClose();
-      router.replace('/');
+      // router.replace('/');
+      redirect('/');
     } catch (error) {
       console.error(error);
     }
