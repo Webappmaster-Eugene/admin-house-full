@@ -84,7 +84,7 @@ export default function LoginView() {
         setErrorMsg(frontendFromBackendErrors[error.name] || error.name);
       } else {
         setErrorMsg(
-          typeof error === 'string' ? error : 'Неизвестная ошибка при регистрации пользователя'
+          typeof error === 'string' ? error : 'Неизвестная ошибка при входе пользователя'
         );
       }
     }
@@ -106,7 +106,7 @@ export default function LoginView() {
       </Stack>
 
       <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
+        Use email : <strong>admin@mail.ru</strong> / password :<strong> !qwertY32</strong>
       </Alert>
 
       {!!errorMsg && (
