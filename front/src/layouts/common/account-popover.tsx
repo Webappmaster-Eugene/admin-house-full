@@ -13,42 +13,25 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import { useAuthContext } from 'src/auth/hooks';
+import { AccoutPopoverLinks } from 'src/utils/const/accout-popover.links';
+
+import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
+import { logoutUser } from 'src/api/actions/auth-actions/logout.action';
 
 import { varHover } from 'src/components/animate';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
-// ----------------------------------------------------------------------
-
-const OPTIONS = [
-  {
-    label: 'Home',
-    linkTo: '/',
-  },
-  {
-    label: 'Profile',
-    linkTo: '/#1',
-  },
-  {
-    label: 'Settings',
-    linkTo: '/#2',
-  },
-];
-
-// ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const router = useRouter();
 
   const { user } = useMockedUser();
-
-  const { logout } = useAuthContext();
+  const loginedUser = useCurrentUserStore((state) => state.user);
 
   const popover = usePopover();
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logoutUser();
       popover.onClose();
       router.replace('/');
     } catch (error) {
@@ -81,32 +64,32 @@ export default function AccountPopover() {
       >
         <Avatar
           src={user?.photoURL}
-          alt={user?.displayName}
+          alt={loginedUser?.firstName}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {user?.displayName?.charAt(0).toUpperCase()}
+          {loginedUser?.firstName?.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {loginedUser?.firstName}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
+            {loginedUser?.email}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {OPTIONS.map((option) => (
+          {AccoutPopoverLinks.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
               {option.label}
             </MenuItem>

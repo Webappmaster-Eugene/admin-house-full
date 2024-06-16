@@ -22,14 +22,14 @@ export async function getAllUsers() {
       return response.data as UserGetAllCommand.ResponseEntity;
     }
 
-    console.error('Standard backend error while login', response);
+    console.error('Standard backend error while get all users by admin', response);
     if (response?.errors) {
       errorObject.error = response.errors[0];
       return errorObject;
     }
     return { errorObject: response.message };
   } catch (error: unknown) {
-    console.error('Catched frontend error while login', error);
+    console.error('Catched frontend error while get all users by admin', error);
     if (error instanceof AxiosError) {
       errorObject.error = error.message;
       return errorObject;

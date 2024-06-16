@@ -19,20 +19,20 @@ export const getCurrentUser = cache(async () => {
     const response: UserGetFullInfoCommand.Response = await axiosInstance.get(
       axiosEndpoints.users.me
     );
-    if (isGoodHttpCode(response.statusCode)) {
-      return response.data as UserGetFullInfoCommand.ResponseEntity;
+    if (isGoodHttpCode(response?.statusCode)) {
+      return response?.data as UserGetFullInfoCommand.ResponseEntity;
     }
 
     console.error('Standard backend error while get current user', response);
     if (response?.errors) {
-      errorObject.error = response.errors[0];
+      errorObject.error = response?.errors[0];
       return errorObject;
     }
-    return { errorObject: response.message };
+    return { errorObject: response?.message };
   } catch (error: unknown) {
     console.error('Catched frontend error while get current user', error);
     if (error instanceof AxiosError) {
-      errorObject.error = error.message;
+      errorObject.error = error?.message;
       return errorObject;
     }
     errorObject.error = JSON.stringify(error);

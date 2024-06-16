@@ -1,63 +1,63 @@
-import { useState, useEffect, useCallback } from 'react';
+import { redirect, usePathname } from 'next/navigation';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { PropsReactNode } from 'src/utils/types';
+
+import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
+
 import { SplashScreen } from 'src/components/loading-screen';
 
-import { useAuthContext } from '../hooks';
-
-// ----------------------------------------------------------------------
-
-const loginPaths: Record<string, string> = {
-  jwt: paths.auth.login,
-};
-
-// ----------------------------------------------------------------------
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function AuthGuard({ children }: Props) {
-  const { loading } = useAuthContext();
-
-  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>;
+export default function AuthGuard({ children }: PropsReactNode) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const userInfo = useCurrentUserStore((state) => state.user);
+  const loading = useCurrentUserStore((state) => state.loading);
+  console.log(userInfo);
+  if (!loading && !userInfo) {
+    // router.push(PATH_AFTER_LOGIN);
+    redirect(paths.auth.login);
+  }
+  if (userInfo && (pathname === paths.auth.login || pathname === paths.auth.register)) {
+    // router.push(PATH_AFTER_LOGIN);
+    redirect(paths.dashboard.root);
+  }
+  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>} </>;
 }
 
 // ----------------------------------------------------------------------
 
-function Container({ children }: Props) {
-  const router = useRouter();
-
-  const { authenticated, method } = useAuthContext();
-
-  const [checked, setChecked] = useState(false);
-
-  const check = useCallback(() => {
-    if (!authenticated) {
-      const searchParams = new URLSearchParams({
-        returnTo: window.location.pathname,
-      }).toString();
-
-      const loginPath = loginPaths[method];
-
-      const href = `${loginPath}?${searchParams}`;
-
-      router.replace(href);
-    } else {
-      setChecked(true);
-    }
-  }, [authenticated, method, router]);
-
-  useEffect(() => {
-    check();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (!checked) {
-    return null;
-  }
+function Container({ children }: PropsReactNode) {
+  // const router = useRouter();
+  // const { status } = useAuthContext();
+  //
+  // const [checked, setChecked] = useState(false);
+  //
+  // const check = useCallback(() => {
+  //   if (!authenticated) {
+  //     const searchParams = new URLSearchParams({
+  //       returnTo: window.location.pathname,
+  //     }).toString();
+  //
+  //     const loginPath = paths.auth.login;
+  //
+  //     const href = `${loginPath}?${searchParams}`;
+  //
+  //     router.replace(href);
+  //   } else {
+  //     setChecked(true);
+  //   }
+  // }, [authenticated, method, router]);
+  //
+  // useEffect(() => {
+  //   check();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+  //
+  // if (!checked) {
+  //   return null;
+  // }
 
   return <>{children}</>;
 }

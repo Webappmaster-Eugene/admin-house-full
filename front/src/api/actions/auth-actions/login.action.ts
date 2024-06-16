@@ -21,27 +21,27 @@ export async function login(data: { email: string; password: string }) {
       axiosEndpoints.auth.login,
       data
     );
-    if (isGoodHttpCode(response.statusCode)) {
-      cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response.data.accessToken}`, {
-        maxAge: 40,
+    if (isGoodHttpCode(response?.statusCode)) {
+      cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response?.data?.accessToken}`, {
+        maxAge: 604800,
         // expires: new Date(Date.now() + 40),
-        // path: '/',
+        path: '/',
       });
-      cookies().set(cookieKeys.REFRESH_KEY, `${response.data.refreshToken}`, {
+      cookies().set(cookieKeys.REFRESH_KEY, `${response?.data?.refreshToken}`, {
         maxAge: 604800,
         // expires: new Date(Date.now() + 604800),
         httpOnly: true,
-        // path: '/',
+        path: '/',
       });
-      return response.data as AuthLoginCommand.ResponseEntity;
+      return response?.data as AuthLoginCommand.ResponseEntity;
     }
 
     console.error('Standard backend error while login', response);
     if (response?.errors) {
-      errorObject.error = response.errors[0];
+      errorObject.error = response?.errors[0];
       return errorObject;
     }
-    return { errorObject: response.message };
+    return { errorObject: response?.message };
   } catch (error: unknown) {
     console.error('Catched frontend error while login', error);
     if (error instanceof AxiosError) {

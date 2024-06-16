@@ -1,6 +1,6 @@
-import { IAccessTokenInfo } from 'src/api/actions/auth-actions/get-current-tokens.action';
+import { IAccessTokenInfo } from 'src/utils/types/access-token.interface';
 
-export function isAccessTokenInfo(
+export function isAccessTokenInfoTypeGuard(
   accessTokenWithInfo: IAccessTokenInfo | unknown | null
 ): accessTokenWithInfo is IAccessTokenInfo {
   if (

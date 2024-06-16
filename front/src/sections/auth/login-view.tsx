@@ -18,10 +18,11 @@ import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { isErrorFieldType } from 'src/utils/type-guards/is-error-field.type-guard';
+import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
+import { frontendFromBackendErrors } from 'src/utils/const/frontend-from-backend.errors';
+import { isNameInErrorTypeGuard } from 'src/utils/type-guards/is-name-in-error.type-guard';
 
 import { login } from 'src/api/actions/auth-actions/login.action';
-import { getAllUsers } from 'src/api/actions/user-actions/get-all-users.action';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
@@ -74,26 +75,18 @@ export default function LoginView() {
 
     const user = await login({ email: data.email, password: data.password });
 
-    if (!isErrorFieldType(user)) {
-      console.log(user);
-      // router.push(returnTo || PATH_AFTER_LOGIN);
+    if (!isErrorFieldTypeGuard(user)) {
+      router.push(returnTo || paths.dashboard.root);
     } else {
-      console.log(user);
       const { error } = user;
-      // reset();
-      setErrorMsg(typeof error === 'string' ? error : 'Ошибка входа');
-    }
-
-    const allUsers = await getAllUsers();
-
-    if (!isErrorFieldType(allUsers)) {
-      console.log(allUsers);
-      // router.push(returnTo || PATH_AFTER_LOGIN);
-    } else {
-      console.log(allUsers);
-      const { error } = allUsers;
-      // reset();
-      setErrorMsg(typeof error === 'string' ? error : 'Ошибка поиска всех пользователей');
+      reset();
+      if (isNameInErrorTypeGuard(error)) {
+        setErrorMsg(frontendFromBackendErrors[error.name] || error.name);
+      } else {
+        setErrorMsg(
+          typeof error === 'string' ? error : 'Неизвестная ошибка при регистрации пользователя'
+        );
+      }
     }
   });
 

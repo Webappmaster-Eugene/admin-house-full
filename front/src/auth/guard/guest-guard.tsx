@@ -1,44 +1,47 @@
-import { useEffect, useCallback } from 'react';
+import { redirect, usePathname } from 'next/navigation';
 
 import { paths } from 'src/routes/paths';
-import { useRouter, useSearchParams } from 'src/routes/hooks';
+import { useRouter } from 'src/routes/hooks';
+
+import { PropsReactNode } from 'src/utils/types';
+
+import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
-import { useAuthContext } from '../hooks';
+export default function GuestGuard({ children }: PropsReactNode) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const userInfo = useCurrentUserStore((state) => state.user);
+  const loading = useCurrentUserStore((state) => state.loading);
 
-// ----------------------------------------------------------------------
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function GuestGuard({ children }: Props) {
-  const { loading } = useAuthContext();
-
-  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>;
+  if (userInfo && (pathname === `${paths.auth.login}/` || pathname === `${paths.auth.register}/`)) {
+    // router.push(PATH_AFTER_LOGIN);
+    redirect(paths.dashboard.root);
+  }
+  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>} </>;
 }
 
 // ----------------------------------------------------------------------
 
-function Container({ children }: Props) {
-  const router = useRouter();
-
-  const searchParams = useSearchParams();
-
-  const returnTo = searchParams.get('returnTo') || paths.dashboard.root;
-
-  const { authenticated } = useAuthContext();
-
-  const check = useCallback(() => {
-    if (authenticated) {
-      router.replace(returnTo);
-    }
-  }, [authenticated, returnTo, router]);
-
-  useEffect(() => {
-    check();
-  }, [check]);
+function Container({ children }: PropsReactNode) {
+  // const router = useRouter();
+  //
+  // const searchParams = useSearchParams();
+  //
+  // const returnTo = searchParams.get('returnTo') || paths.dashboard.root;
+  //
+  // const { authenticated } = useAuthContext();
+  //
+  // const check = useCallback(() => {
+  //   if (authenticated) {
+  //     router.replace(returnTo);
+  //   }
+  // }, [authenticated, returnTo, router]);
+  //
+  // useEffect(() => {
+  //   check();
+  // }, [check]);
 
   return <>{children}</>;
 }

@@ -27,24 +27,24 @@ export async function register(data: {
       axiosEndpoints.auth.register,
       data
     );
-    if (isGoodHttpCode(response.statusCode)) {
-      cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response.data.accessToken}`, {
+    if (isGoodHttpCode(response?.statusCode)) {
+      cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response?.data?.accessToken}`, {
         maxAge: 40,
         // expires: new Date(Date.now() + 40),
         // path: '/',
       });
-      cookies().set(cookieKeys.REFRESH_KEY, `${response.data.refreshToken}`, {
+      cookies().set(cookieKeys.REFRESH_KEY, `${response?.data?.refreshToken}`, {
         maxAge: 604800,
         // expires: new Date(Date.now() + 604800),
         // httpOnly: true,
         // path: '/',
       });
-      return response.data as AuthRegisterCommand.ResponseEntity;
+      return response?.data as AuthRegisterCommand.ResponseEntity;
     }
 
     console.error('Standard backend error while register', response);
     if (response?.errors) {
-      errorObject.error = response.errors[0];
+      errorObject.error = response?.errors[0];
       return errorObject;
     }
     console.error('Not standard backend error while register', response);

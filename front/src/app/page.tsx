@@ -1,19 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 
-import { useRouter } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
 
-import { PATH_AFTER_LOGIN } from 'src/config-global';
+import { SplashScreen } from 'src/components/loading-screen';
 
-// ----------------------------------------------------------------------
-
-export default function HomePage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push(PATH_AFTER_LOGIN);
-  }, [router]);
-
-  return null;
+export default function RootPage() {
+  // const router = useRouter();
+  // useEffect(() => {
+  //   router.push(PATH_AFTER_LOGIN);
+  // }, [router]);
+  redirect(paths.dashboard.root);
+  return <SplashScreen />;
 }
