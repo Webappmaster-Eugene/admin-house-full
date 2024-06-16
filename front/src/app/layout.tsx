@@ -6,13 +6,11 @@ import { cookies } from 'next/headers';
 
 import { cookieKeys } from 'src/utils/const';
 import { PropsReactNode } from 'src/utils/types';
-import AppProvider from 'src/utils/providers/app-provider';
 import GeneralProvider from 'src/utils/providers/general-provider';
 import CurrentUserProvider from 'src/utils/providers/current-user-provider';
 import { isCurrentUserTypeGuard } from 'src/utils/type-guards/current-user.type-guard';
 
 import { primaryFont } from 'src/theme/typography';
-import { getAppInfo } from 'src/api/actions/app-actions/get-app-info.action';
 import { getCurrentUser } from 'src/api/actions/auth-actions/get-current-user.action';
 
 import ProgressBar from 'src/components/progress-bar';
@@ -43,7 +41,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }: PropsReactNode) {
   let currentUserInfo;
-  const appInfo = await getAppInfo();
+  // const appInfo = await getAppInfo();
 
   if (cookies().get(cookieKeys.REFRESH_KEY)?.value) {
     currentUserInfo = await getCurrentUser();
@@ -52,34 +50,34 @@ export default async function RootLayout({ children }: PropsReactNode) {
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>
-        <AppProvider appInfo={appInfo}>
-          <CurrentUserProvider
-            currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
-          >
-            {/* <AuthProvider> */}
-            <GeneralProvider>
-              {/* <SettingsProvider */}
-              {/*  defaultSettings={{ */}
-              {/*    themeMode: 'light', // 'light' | 'dark' */}
-              {/*    themeDirection: 'ltr', //  'rtl' | 'ltr' */}
-              {/*    themeContrast: 'default', // 'default' | 'bold' */}
-              {/*    themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini' */}
-              {/*    themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red' */}
-              {/*    themeStretch: false, */}
-              {/*  }} */}
-              {/* > */}
-              {/*  <ThemeProvider> */}
-              <MotionLazy>
-                <SettingsDrawer />
-                <ProgressBar />
-                {children}
-              </MotionLazy>
-              {/*  </ThemeProvider> */}
-              {/* </SettingsProvider> */}
-            </GeneralProvider>
-            {/* </AuthProvider> */}
-          </CurrentUserProvider>
-        </AppProvider>
+        {/* <AppProvider appInfo={appInfo}> */}
+        <CurrentUserProvider
+          currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
+        >
+          {/* <AuthProvider> */}
+          <GeneralProvider>
+            {/* <SettingsProvider */}
+            {/*  defaultSettings={{ */}
+            {/*    themeMode: 'light', // 'light' | 'dark' */}
+            {/*    themeDirection: 'ltr', //  'rtl' | 'ltr' */}
+            {/*    themeContrast: 'default', // 'default' | 'bold' */}
+            {/*    themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini' */}
+            {/*    themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red' */}
+            {/*    themeStretch: false, */}
+            {/*  }} */}
+            {/* > */}
+            {/*  <ThemeProvider> */}
+            <MotionLazy>
+              <SettingsDrawer />
+              <ProgressBar />
+              {children}
+            </MotionLazy>
+            {/*  </ThemeProvider> */}
+            {/* </SettingsProvider> */}
+          </GeneralProvider>
+          {/* </AuthProvider> */}
+        </CurrentUserProvider>
+        {/* </AppProvider> */}
       </body>
     </html>
   );

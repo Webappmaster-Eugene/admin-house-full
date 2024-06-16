@@ -74,12 +74,14 @@ export default function LoginView() {
     }
 
     const user = await login({ email: data.email, password: data.password });
+    console.log('useruseruseruseruser', user);
 
     if (!isErrorFieldTypeGuard(user)) {
       router.push(returnTo || paths.dashboard.root);
     } else {
       const { error } = user;
       reset();
+      console.log('isNameInErrorTypeGuard(error)', isNameInErrorTypeGuard(error));
       if (isNameInErrorTypeGuard(error)) {
         setErrorMsg(frontendFromBackendErrors[error.name] || error.name);
       } else {
