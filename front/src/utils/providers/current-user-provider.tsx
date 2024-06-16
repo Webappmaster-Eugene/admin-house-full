@@ -1,15 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
 import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
 
-export default function CurrentUserProvider({ children }: { children: React.ReactNode }) {
-  // const currentUserInfo = await getCurrentUser();
+export default function CurrentUserProvider({
+  currentUserInfo,
+  children,
+}: {
+  currentUserInfo: UserGetFullInfoCommand.ResponseEntity | null;
+  children: React.ReactNode;
+}) {
   const setUser = useCurrentUserStore((state) => state.setCurrentUser);
-  // console.log('fefef34534r3f4', user);
-  //
-  // useEffect(() => setUser(user), [user, setUser]);
-
-  return <>{children}</>; // return
+  useEffect(() => setUser(currentUserInfo), [currentUserInfo, setUser]);
+  return <>{children}</>;
 }

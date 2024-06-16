@@ -13,7 +13,7 @@ exports.FieldOfCategoryMaterialSchema = zod_1.z.object({
     handbookUuid: zod_1.z.string().uuid(),
     unitOfMeasurementUuid: zod_1.z.string().uuid(),
     fieldTypeUuid: zod_1.z.string().uuid(),
-    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
 });

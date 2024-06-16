@@ -1,15 +1,11 @@
 'use client';
 
+import { PropsReactNode } from 'src/utils/types';
+
 import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 
-// ----------------------------------------------------------------------
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function Layout({ children }: Props) {
+export default function Layout({ children }: PropsReactNode) {
   return (
     <AuthGuard>
       <DashboardLayout>{children}</DashboardLayout>

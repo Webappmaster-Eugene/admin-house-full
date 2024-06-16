@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function updateSession(request: NextRequest) {
+export async function updateSessionOld(request: NextRequest) {
   const session = request.cookies.get('session')?.value;
   if (!session) return;
 

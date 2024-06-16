@@ -78,7 +78,6 @@ export class UserService implements IUserService {
     const cachedInfo = await cacheGetter<UserEntity[]>(this.cacheManager, CACHE_KEYS.USER_ALL);
     if (!cachedInfo) {
       const { skip, take } = queryParams;
-      console.log(skip, take);
       const allUsers = await this.userRepository.getAll(skip, take);
       await cacheSetter(this.cacheManager, CACHE_KEYS.USER_ALL, allUsers);
       return new InternalResponse(allUsers);
@@ -90,63 +89,68 @@ export class UserService implements IUserService {
     dto: UserCreateRequestDto,
     roleId?: EntityUrlParamCommand.RequestNumberParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    await cacheRemover(this.cacheManager, CACHE_KEYS.USER_ALL);
-
     const roleNumberId = roleId ? roleId : ROLE_IDS.CUSTOMER_ROLE_ID;
 
     const role = await this.roleService.getById(roleNumberId);
 
     const hashedPassword = await argon2.hash(dto.password);
     const roleUuid = dataInternalExtractor(role).uuid;
+    try {
+      const resultOfTransaction = await this.databaseService.$transaction(async transactionDbClient => {
+        const createdUser = await this.userRepository.create(dto, roleUuid, hashedPassword, transactionDbClient);
 
-    await this.databaseService.$transaction(async transactionDbClient => {
-      const createdUser = await this.userRepository.create(dto, roleUuid, hashedPassword, transactionDbClient);
-      await cacheRemoverBatch(this.cacheManager, [CACHE_KEYS.USER_ALL]);
+        await cacheRemoverBatch(this.cacheManager, [CACHE_KEYS.USER_ALL]);
 
-      if (roleNumberId === 2) {
-        const newManagerWorkspace = await this.workspaceService.create(
-          { name: null, description: null },
-          createdUser.uuid,
-          transactionDbClient,
-        );
+        if (roleNumberId === 2) {
+          const newManagerWorkspace = await this.workspaceService.create(
+            { name: null, description: null },
+            createdUser.uuid,
+            transactionDbClient,
+          );
 
-        const newWorkspaceInfo = dataInternalExtractor(newManagerWorkspace);
+          const newWorkspaceInfo = dataInternalExtractor(newManagerWorkspace);
 
-        const newManagerHandbook = await this.handbookService.create(
-          {
-            name: null,
-            description: null,
-            canCustomerView: false,
-            workspaceUuid: newWorkspaceInfo.uuid,
-          },
-          createdUser.uuid,
-          transactionDbClient,
-        );
+          const newManagerHandbook = await this.handbookService.create(
+            {
+              name: null,
+              description: null,
+              canCustomerView: false,
+              workspaceUuid: newWorkspaceInfo.uuid,
+            },
+            createdUser.uuid,
+            transactionDbClient,
+          );
 
-        const newHandbookInfo = dataInternalExtractor(newManagerHandbook);
+          const newHandbookInfo = dataInternalExtractor(newManagerHandbook);
 
-        await this.workspaceService.updateById(
-          newWorkspaceInfo.uuid,
-          {
-            handbookOfWorkspaceUuid: newHandbookInfo.uuid,
-          },
-          transactionDbClient,
-        );
+          await this.workspaceService.updateById(
+            newWorkspaceInfo.uuid,
+            {
+              handbookOfWorkspaceUuid: newHandbookInfo.uuid,
+            },
+            transactionDbClient,
+          );
 
-        await this.addExistedWorkspaceToManager(createdUser.uuid, newWorkspaceInfo.uuid, transactionDbClient);
+          await this.addExistedWorkspaceToManager(createdUser.uuid, newWorkspaceInfo.uuid, transactionDbClient);
 
-        const newUserWithWorkspaceAndHandbook = await this.addExistedHandbookToManager(
-          createdUser.uuid,
-          newHandbookInfo.uuid,
-          transactionDbClient,
-        );
-        const { data } = newUserWithWorkspaceAndHandbook;
-        return new InternalResponse(data);
-      }
-      return new InternalResponse(createdUser);
-    });
-    // проверить, в каких случаях отрабатывает это исключение
-    throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
+          const newUserWithWorkspaceAndHandbook = await this.addExistedHandbookToManager(
+            createdUser.uuid,
+            newHandbookInfo.uuid,
+            transactionDbClient,
+          );
+          const userWithWPAndHB = dataInternalExtractor(newUserWithWorkspaceAndHandbook);
+          return new InternalResponse(userWithWPAndHB);
+        }
+        return new InternalResponse(createdUser);
+      });
+      return resultOfTransaction;
+    } catch (error) {
+      console.log('create, userRepository error: ', error);
+      throw error;
+    }
+
+    //FIXME проверить, в каких случаях отрабатывает это исключение
+    // throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
   }
 
   async updateById(

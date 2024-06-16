@@ -18,8 +18,10 @@ import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { isErrorFieldType } from 'src/utils/type-guards/is-error-field.type-guard';
+
 import { login } from 'src/api/actions/auth-actions/login.action';
-import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
+import { getAllUsers } from 'src/api/actions/user-actions/get-all-users.action';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
@@ -40,8 +42,8 @@ export default function LoginView() {
   // const appInfo = useAppInfoStore((state) => state.appInfo);
   // console.log(appInfo);
 
-  const userInfo = useCurrentUserStore((state) => state.user);
-  console.log(userInfo);
+  // const userInfo = useCurrentUserStore((state) => state.user);
+  // console.log('dsfsfsdfsdfsdfsd', userInfo);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -64,20 +66,34 @@ export default function LoginView() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      // console.log('response');
-      // const response = await getAppInfo();
-      // console.log(response);
-      const user = await login({ email: data.email, password: data.password });
-      console.log('user is ', user);
-      // const allUsers = await getAllUsers();
-      // console.log(allUsers);
+  const onSubmit = handleSubmit(async (data, event) => {
+    if (event) {
+      console.log('preventDefault');
+      event?.preventDefault();
+    }
+
+    const user = await login({ email: data.email, password: data.password });
+
+    if (!isErrorFieldType(user)) {
+      console.log(user);
       // router.push(returnTo || PATH_AFTER_LOGIN);
-    } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
+    } else {
+      console.log(user);
+      const { error } = user;
+      // reset();
+      setErrorMsg(typeof error === 'string' ? error : 'Ошибка входа');
+    }
+
+    const allUsers = await getAllUsers();
+
+    if (!isErrorFieldType(allUsers)) {
+      console.log(allUsers);
+      // router.push(returnTo || PATH_AFTER_LOGIN);
+    } else {
+      console.log(allUsers);
+      const { error } = allUsers;
+      // reset();
+      setErrorMsg(typeof error === 'string' ? error : 'Ошибка поиска всех пользователей');
     }
   });
 

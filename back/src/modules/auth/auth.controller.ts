@@ -115,7 +115,7 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthRefreshKeysResponseDto)
-  // @UseGuards(RefreshKeyGuard)
+  @UseGuards(RefreshKeyGuard)
   @Post('/refresh-keys')
   async refreshKeysEP(
     // @AuthHeader() accessKey: string,
@@ -126,10 +126,8 @@ export class AuthController implements IAuthController {
     // DOC ручка для обновления пары ключей доступа
     try {
       const { ok, data } = await this.authService.refreshKeys(request, response);
-      console.log('9999', okResponseHandler(ok, data, AuthRefreshKeysEntity, this.logger));
       return okResponseHandler(ok, data, AuthRefreshKeysEntity, this.logger);
     } catch (error: unknown) {
-      console.log('rere', error);
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }
   }
@@ -153,6 +151,8 @@ export class AuthController implements IAuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthLoginResponseDto> {
     try {
+      console.log(dto);
+
       const { ok, data } = await this.authService.login(dto, response);
       return okResponseHandler(ok, data, AuthEntity, this.logger);
     } catch (error: unknown) {

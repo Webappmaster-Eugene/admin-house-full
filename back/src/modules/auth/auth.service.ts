@@ -44,6 +44,7 @@ export class AuthService implements IAuthService {
     const accessTokenResponse = dataInternalExtractor(
       await this.generateJWT(TokenType.ACCESS, registeredUser.uuid, registeredUser.email, registeredUser.roleUuid),
     );
+
     const refreshTokenResponse = dataInternalExtractor(
       await this.generateJWT(TokenType.REFRESH, registeredUser.uuid, registeredUser.email),
     );
@@ -103,11 +104,18 @@ export class AuthService implements IAuthService {
 
   async refreshKeys(request: Request, response: Response): Promise<UniversalInternalResponse<AuthRefreshKeysEntity>> {
     const refreshToken = await request.cookies[COOKIE_KEYS.REFRESH_KEY];
+    let refreshData: null | IJWTPayload = null;
+
     if (!refreshToken) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
 
-    const { email } = jwt.verify(refreshToken, this.configService.get<string>('JWT_KEY')) as IJWTPayload;
+    try {
+      refreshData = jwt.verify(refreshToken, this.configService.get<string>('JWT_KEY')) as IJWTPayload;
+    } catch (error) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.REFRESH_KEY_EXPIRED));
+    }
+    const { email } = refreshData;
 
     const existedUser = dataInternalExtractor(await this.userService.getByEmail(email));
     if (!existedUser) {

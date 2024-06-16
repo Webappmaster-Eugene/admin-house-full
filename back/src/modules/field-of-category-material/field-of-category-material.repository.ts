@@ -36,7 +36,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<FieldOfCategoryMaterialEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<FieldOfCategoryMaterialEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -54,7 +54,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<FieldOfCategoryMaterialEntity[]> {
     limitTakeHandler(take);
 
@@ -77,7 +77,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
   async getAllInCategoryMaterial(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<FieldOfCategoryMaterialEntity[]> {
     limitTakeHandler(take);
 

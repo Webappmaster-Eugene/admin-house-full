@@ -33,7 +33,7 @@ export class MaterialRepository implements IMaterialRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<MaterialEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<MaterialEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -47,7 +47,7 @@ export class MaterialRepository implements IMaterialRepository {
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<MaterialEntity[]> {
     limitTakeHandler(take);
 
@@ -62,7 +62,7 @@ export class MaterialRepository implements IMaterialRepository {
   async getAllInCategoryMaterial(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<MaterialEntity[]> {
     limitTakeHandler(take);
 

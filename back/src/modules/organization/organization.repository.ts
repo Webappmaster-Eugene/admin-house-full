@@ -51,7 +51,7 @@ export class OrganizationRepository implements IOrganizationRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<OrganizationEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<OrganizationEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -65,7 +65,7 @@ export class OrganizationRepository implements IOrganizationRepository {
   async getAllInWorkspace(
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<OrganizationEntity[]> {
     limitTakeHandler(take);
 

@@ -6,17 +6,22 @@ import { AuthLoginCommand } from '@numart/house-admin-contracts';
 
 import { cookieKeys } from 'src/utils/const';
 import { axiosEndpoints } from 'src/utils/auth';
-import { STATUS_CODES } from 'src/utils/const/status-codes';
+import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
+import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
 
 import axiosInstance from 'src/api/axios-instance';
 
 export async function login(data: { email: string; password: string }) {
+  const errorObject: ErrorFromBackend = {
+    error: null,
+  };
+
   try {
     const response: AuthLoginCommand.Response = await axiosInstance.post(
       axiosEndpoints.auth.login,
       data
     );
-    if (response.statusCode === STATUS_CODES.OK) {
+    if (isGoodHttpCode(response.statusCode)) {
       cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response.data.accessToken}`, {
         maxAge: 40,
         // expires: new Date(Date.now() + 40),
@@ -25,22 +30,25 @@ export async function login(data: { email: string; password: string }) {
       cookies().set(cookieKeys.REFRESH_KEY, `${response.data.refreshToken}`, {
         maxAge: 604800,
         // expires: new Date(Date.now() + 604800),
-        // httpOnly: true,
+        httpOnly: true,
         // path: '/',
       });
       return response.data as AuthLoginCommand.ResponseEntity;
     }
-    console.error(response.data);
+
+    console.error('Standard backend error while login', response);
     if (response?.errors) {
-      return response.errors[0];
+      errorObject.error = response.errors[0];
+      return errorObject;
     }
-    return response.message;
+    return { errorObject: response.message };
   } catch (error: unknown) {
+    console.error('Catched frontend error while login', error);
     if (error instanceof AxiosError) {
-      console.error(error.message);
-      return error.message;
+      errorObject.error = error.message;
+      return errorObject;
     }
-    console.error(error);
-    return JSON.stringify(error);
+    errorObject.error = JSON.stringify(error);
+    return errorObject;
   }
 }

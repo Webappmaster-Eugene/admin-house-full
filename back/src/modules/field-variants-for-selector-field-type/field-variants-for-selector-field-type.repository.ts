@@ -39,7 +39,7 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -57,7 +57,7 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
     limitTakeHandler(take);
 
@@ -80,7 +80,7 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
   async getAllInCategoryMaterial(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
     limitTakeHandler(take);
 
@@ -107,7 +107,7 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
   async getAllInFieldOfCategoryMaterial(
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
     limitTakeHandler(take);
 

@@ -54,7 +54,7 @@ export class HandbookRepository implements IHandbookRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<HandbookEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<HandbookEntity[]> {
     limitTakeHandler(take);
 
     try {

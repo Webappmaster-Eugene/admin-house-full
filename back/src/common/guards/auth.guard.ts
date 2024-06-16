@@ -44,8 +44,6 @@ export class AuthGuard implements CanActivate {
 
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
 
-    // console.log(refreshToken);
-
     // DOC начало проверки accessToken - старт процесса авторизации
     try {
       const verifiedAccessToken = jwt.verify(token, jwtSecret) as IJWTPayload;

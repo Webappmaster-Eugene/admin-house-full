@@ -6,7 +6,7 @@ export const CategoryMaterialSchema = z.object({
   comment: z.string().nullable().optional(),
   templateName: z.string().nullable().optional(),
   globalCategoryMaterialUuid: z.string().uuid(),
-  lastChangeByUserUuid: z.string().uuid().optional().nullable(),
+  lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

@@ -2,18 +2,23 @@ import 'src/global.css';
 
 // ----------------------------------------------------------------------
 
+import { cookies } from 'next/headers';
+
+import { cookieKeys } from 'src/utils/const';
 import { PropsReactNode } from 'src/utils/types';
 import AppProvider from 'src/utils/providers/app-provider';
+import GeneralProvider from 'src/utils/providers/general-provider';
 import CurrentUserProvider from 'src/utils/providers/current-user-provider';
+import { isCurrentUserType } from 'src/utils/type-guards/current-user.type-guard';
 
-import ThemeProvider from 'src/theme';
+import { AuthProvider } from 'src/auth/context';
 import { primaryFont } from 'src/theme/typography';
-import { AuthProvider } from 'src/auth/context/jwt';
 import { getAppInfo } from 'src/api/actions/app-actions/get-app-info.action';
+import { getCurrentUser } from 'src/api/actions/auth-actions/get-current-user.action';
 
 import ProgressBar from 'src/components/progress-bar';
+import { SettingsDrawer } from 'src/components/settings';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
-import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
 
 // ----------------------------------------------------------------------
 
@@ -39,32 +44,41 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: PropsReactNode) {
+  let currentUserInfo;
   const appInfo = await getAppInfo();
+
+  if (cookies().get(cookieKeys.REFRESH_KEY)?.value) {
+    currentUserInfo = await getCurrentUser();
+  }
 
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>
         <AppProvider appInfo={appInfo}>
-          <CurrentUserProvider>
+          <CurrentUserProvider
+            currentUserInfo={isCurrentUserType(currentUserInfo) ? currentUserInfo : null}
+          >
             <AuthProvider>
-              <SettingsProvider
-                defaultSettings={{
-                  themeMode: 'light', // 'light' | 'dark'
-                  themeDirection: 'ltr', //  'rtl' | 'ltr'
-                  themeContrast: 'default', // 'default' | 'bold'
-                  themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-                  themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-                  themeStretch: false,
-                }}
-              >
-                <ThemeProvider>
-                  <MotionLazy>
-                    <SettingsDrawer />
-                    <ProgressBar />
-                    {children}
-                  </MotionLazy>
-                </ThemeProvider>
-              </SettingsProvider>
+              <GeneralProvider>
+                {/* <SettingsProvider */}
+                {/*  defaultSettings={{ */}
+                {/*    themeMode: 'light', // 'light' | 'dark' */}
+                {/*    themeDirection: 'ltr', //  'rtl' | 'ltr' */}
+                {/*    themeContrast: 'default', // 'default' | 'bold' */}
+                {/*    themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini' */}
+                {/*    themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red' */}
+                {/*    themeStretch: false, */}
+                {/*  }} */}
+                {/* > */}
+                {/*  <ThemeProvider> */}
+                <MotionLazy>
+                  <SettingsDrawer />
+                  <ProgressBar />
+                  {children}
+                </MotionLazy>
+                {/*  </ThemeProvider> */}
+                {/* </SettingsProvider> */}
+              </GeneralProvider>
             </AuthProvider>
           </CurrentUserProvider>
         </AppProvider>

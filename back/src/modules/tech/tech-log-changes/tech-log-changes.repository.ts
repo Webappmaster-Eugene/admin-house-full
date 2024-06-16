@@ -31,7 +31,7 @@ export class TechLogChangesRepository implements ITechLogChangesRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<TechLogChangesEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<TechLogChangesEntity[]> {
     try {
       const allTechLogChangess = await this.databaseService.techLogChanges.findMany({ skip, take });
       return existenceEntityHandler(allTechLogChangess, TechLogChangesEntity, EntityName.TECH_LOG_CHANGES) as TechLogChangesEntity[];
@@ -40,7 +40,7 @@ export class TechLogChangesRepository implements ITechLogChangesRepository {
     }
   }
 
-  async getAllFromEntity(EntityNameToSearch: EntityName, skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<TechLogChangesEntity[]> {
+  async getAllFromEntity(EntityNameToSearch: EntityName, skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<TechLogChangesEntity[]> {
     try {
       const allTechLogChangess = await this.databaseService.techLogChanges.findMany({
         where: {

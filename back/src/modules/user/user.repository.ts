@@ -73,7 +73,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<UserEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<UserEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -105,6 +105,7 @@ export class UserRepository implements IUserRepository {
   ): Promise<UserEntity> {
     try {
       const { email, phone, firstName, secondName, address, info, documents, avatar } = dto;
+
       const newUser = await transactionDbClient.user.create({
         data: {
           email,
@@ -119,6 +120,7 @@ export class UserRepository implements IUserRepository {
           roleUuid,
         },
       });
+
       return existenceEntityHandler(newUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);

@@ -31,7 +31,7 @@ export class FieldTypeRepository implements IFieldTypeRepository {
       errorRepositoryHandler(error);
     }
   }
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<FieldTypeEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<FieldTypeEntity[]> {
     limitTakeHandler(take);
 
     try {

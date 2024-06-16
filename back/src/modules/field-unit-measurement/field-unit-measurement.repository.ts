@@ -37,7 +37,7 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<FieldUnitMeasurementEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<FieldUnitMeasurementEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -55,7 +55,7 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<FieldUnitMeasurementEntity[]> {
     limitTakeHandler(take);
 

@@ -36,7 +36,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<PriceChangingEntity[]> {
     limitTakeHandler(take);
 
@@ -55,7 +55,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
   async getAllInCategoryMaterial(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<PriceChangingEntity[]> {
     limitTakeHandler(take);
 
@@ -78,7 +78,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
   async getAllInMaterial(
     materialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<PriceChangingEntity[]> {
     limitTakeHandler(take);
 
@@ -90,7 +90,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<PriceChangingEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<PriceChangingEntity[]> {
     limitTakeHandler(take);
 
     try {

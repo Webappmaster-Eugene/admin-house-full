@@ -33,7 +33,7 @@ export class StatusResourceRepository implements IStatusResourceRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<StatusResourceEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<StatusResourceEntity[]> {
     limitTakeHandler(take);
 
     try {

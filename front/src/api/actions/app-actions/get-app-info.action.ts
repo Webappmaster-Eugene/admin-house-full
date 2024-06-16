@@ -4,26 +4,37 @@ import { AxiosError } from 'axios';
 import { AppInfoGetCommand } from '@numart/house-admin-contracts';
 
 import { axiosEndpoints } from 'src/utils/auth';
-import { STATUS_CODES } from 'src/utils/const/status-codes';
+import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
+import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
 
 import axiosInstance from 'src/api/axios-instance';
 
 export async function getAppInfo() {
+  const errorObject: ErrorFromBackend = {
+    error: null,
+  };
+
   try {
     const response: AppInfoGetCommand.Response = await axiosInstance.get(
       axiosEndpoints.app_info.get
     );
-    console.log(response);
-    if (response.statusCode === STATUS_CODES.OK) {
+    if (isGoodHttpCode(response.statusCode)) {
       return response.data as AppInfoGetCommand.ResponseEntity;
     }
-    console.error(response.errors, response.message);
-    return response.message;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      console.error(error.code, error.message);
-      return error.message;
+
+    console.error('Standard backend error while login', response);
+    if (response?.errors) {
+      errorObject.error = response.errors[0];
+      return errorObject;
     }
-    return error;
+    return { errorObject: response.message };
+  } catch (error: unknown) {
+    console.error('Catched frontend error while login', error);
+    if (error instanceof AxiosError) {
+      errorObject.error = error.message;
+      return errorObject;
+    }
+    errorObject.error = JSON.stringify(error);
+    return errorObject;
   }
 }

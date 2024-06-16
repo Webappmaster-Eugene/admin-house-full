@@ -25,7 +25,6 @@ export class RefreshKeyGuard implements CanActivate {
 
     try {
       const { uuid } = jwt.verify(refreshToken, jwtSecret) as IJWTPayload;
-      console.log('0000,', uuid);
 
       const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
       if (!user) {

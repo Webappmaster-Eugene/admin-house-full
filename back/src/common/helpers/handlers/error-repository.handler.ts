@@ -9,7 +9,7 @@ export function errorRepositoryHandler(error: unknown): void {
   }
 
   if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_CONFLICT_ERROR) {
-    throw new InternalResponse(new InternalError(BackendErrorNames.CONFLICT_ERROR, error));
+    throw new InternalResponse(new InternalError(BackendErrorNames.PRISMA_CONFLICT_ERROR, error));
   }
 
   if (error instanceof NotFoundException) {

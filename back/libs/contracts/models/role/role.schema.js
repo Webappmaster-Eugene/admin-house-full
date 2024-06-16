@@ -8,7 +8,7 @@ exports.RoleSchema = zod_1.z.object({
     idRole: zod_1.z.number().int().optional(),
     name: enums_1.EUserVariants,
     description: zod_1.z.string().nullable().optional(),
-    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
 });

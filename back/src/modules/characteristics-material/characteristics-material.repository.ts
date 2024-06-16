@@ -36,7 +36,7 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<CharacteristicsMaterialEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<CharacteristicsMaterialEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -54,7 +54,7 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<CharacteristicsMaterialEntity[]> {
     limitTakeHandler(take);
 
@@ -77,7 +77,7 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
   async getAllInCategoryMaterial(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<CharacteristicsMaterialEntity[]> {
     limitTakeHandler(take);
 
@@ -100,7 +100,7 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
   async getAllInMaterial(
     materialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<CharacteristicsMaterialEntity[]> {
     limitTakeHandler(take);
 

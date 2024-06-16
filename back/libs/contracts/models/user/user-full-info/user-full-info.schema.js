@@ -12,6 +12,7 @@ exports.UserFullInfoSchema = zod_1.z.object({
     phone: zod_1.z
         .string()
         .regex(/^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/, `Phone must be a valid phone number`)
+        .nullable()
         .optional(),
     email: zod_1.z.string().email(),
     password: zod_1.z.string().regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, `Password must have:
@@ -29,7 +30,7 @@ At least one special character`),
     memberOfWorkspaceUuid: zod_1.z.string().uuid().nullable().optional(),
     memberOfOrganizationUuid: zod_1.z.string().uuid().nullable().optional(),
     memberOfProjectUuid: zod_1.z.string().uuid().nullable().optional(),
-    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
     role: role_1.RoleSchema,

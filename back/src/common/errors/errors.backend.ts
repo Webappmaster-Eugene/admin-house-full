@@ -11,7 +11,6 @@ export const enum BackendPErrorCodes {
 
 export const enum BackendErrorNames {
   NOT_FOUND = 'NOT_FOUND',
-  CONFLICT_ERROR = 'CONFLICT_ERROR',
   UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS',
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
   ACCESS_KEY_EXPIRED = 'ACCESS_KEY_EXPIRED',
@@ -123,7 +122,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
         name: 'Prisma conflict error',
         description: 'Failed to create entity due to a db conflict error',
       },
-      httpCode: 404,
+      httpCode: 409,
     },
   },
 };

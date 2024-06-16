@@ -35,7 +35,7 @@ export class ProjectsRepository implements IProjectRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<ProjectEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<ProjectEntity[]> {
     limitTakeHandler(take);
 
     try {
@@ -49,7 +49,7 @@ export class ProjectsRepository implements IProjectRepository {
   async getAllInWorkspace(
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<ProjectEntity[]> {
     limitTakeHandler(take);
 
@@ -72,7 +72,7 @@ export class ProjectsRepository implements IProjectRepository {
   async getAllInOrganization(
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
-    take = QUANTITY_LIMIT.TAKE_5,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
   ): Promise<ProjectEntity[]> {
     limitTakeHandler(take);
 

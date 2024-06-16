@@ -10,10 +10,10 @@ exports.CharacteristicsMaterialSchema = zod_1.z.object({
     fieldOfCategoryMaterialUuid: zod_1.z.string().uuid(),
     handbookUuid: zod_1.z.string().uuid(),
     fieldTypeUuid: zod_1.z.string().uuid(),
-    fieldUnitMeasurementUuid: zod_1.z.string().uuid().optional().nullable(),
+    fieldUnitMeasurementUuid: zod_1.z.string().uuid().nullable().optional(),
     categoryMaterialUuid: zod_1.z.string().uuid(),
     materialUuid: zod_1.z.string().uuid(),
-    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
 });

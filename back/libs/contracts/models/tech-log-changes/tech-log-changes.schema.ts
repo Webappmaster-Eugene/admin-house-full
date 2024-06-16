@@ -1,5 +1,4 @@
 import { z } from 'zod';
-// import { json } from 'nestjs-zod/z';
 
 export const TechLogChangesSchema = z.object({
   uuid: z.string().uuid(),

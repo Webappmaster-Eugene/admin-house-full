@@ -29,7 +29,7 @@
     "@iconify/react": "^4.1.1",
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.14.20",
-    "@numart/house-admin-contracts": "^1.0.10",
+    "@numart/house-admin-contracts": "^1.0.11",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.2",
     "clsx": "^2.1.1",

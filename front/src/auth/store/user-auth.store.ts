@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
-type User = UserGetFullInfoCommand.ResponseEntity | null;
+type CurrentUserInfo = UserGetFullInfoCommand.ResponseEntity | null;
 
 interface IAuthState {
-  user: User | null;
-  setCurrentUser: (newDataUser: UserGetFullInfoCommand.ResponseEntity) => void;
+  user: CurrentUserInfo;
+  setCurrentUser: (newDataUser: UserGetFullInfoCommand.ResponseEntity | null) => void;
   reset: () => void;
 }
 

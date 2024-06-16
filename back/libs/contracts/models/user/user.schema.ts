@@ -8,6 +8,7 @@ export const UserSchema = z.object({
   phone: z
     .string()
     .regex(/^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/, `Phone must be a valid phone number`)
+    .nullable()
     .optional(),
   email: z.string().email(),
   password: z.string().regex(
@@ -28,7 +29,7 @@ At least one special character`,
   memberOfWorkspaceUuid: z.string().uuid().nullable().optional(),
   memberOfOrganizationUuid: z.string().uuid().nullable().optional(),
   memberOfProjectUuid: z.string().uuid().nullable().optional(),
-  lastChangeByUserUuid: z.string().uuid().optional().nullable(),
+  lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

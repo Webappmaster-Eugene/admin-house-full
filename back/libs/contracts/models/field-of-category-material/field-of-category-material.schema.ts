@@ -11,7 +11,7 @@ export const FieldOfCategoryMaterialSchema = z.object({
   handbookUuid: z.string().uuid(),
   unitOfMeasurementUuid: z.string().uuid(),
   fieldTypeUuid: z.string().uuid(),
-  lastChangeByUserUuid: z.string().uuid().optional().nullable(),
+  lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

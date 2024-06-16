@@ -5,10 +5,10 @@ const zod_1 = require("zod");
 exports.FieldVariantsForSelectorFieldTypeSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     value: zod_1.z.string(),
-    description: zod_1.z.string().optional().nullable(),
+    description: zod_1.z.string().nullable().optional(),
     handbookUuid: zod_1.z.string().uuid(),
     fieldOfCategoryMaterialUuid: zod_1.z.string().uuid(),
-    lastChangeByUserUuid: zod_1.z.string().uuid().optional().nullable(),
+    lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
 });

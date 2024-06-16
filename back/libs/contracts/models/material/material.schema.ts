@@ -10,8 +10,8 @@ export const MaterialSchema = z.object({
   price: z.number(),
   unitMeasurementUuid: z.string().uuid(),
   categoryUuid: z.string().uuid(),
-  responsiblePartnerUuid: z.string().uuid().optional().nullable(),
-  lastChangeByUserUuid: z.string().uuid().optional().nullable(),
+  responsiblePartnerUuid: z.string().uuid().nullable().optional(),
+  lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

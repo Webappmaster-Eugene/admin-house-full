@@ -4,12 +4,12 @@ import { ECurrencyVariants, ELanguagesVariants, EStatusVariants } from '../../en
 export const AppInfoSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
-  description: z.string(),
-  comment: z.string(),
-  status: EStatusVariants,
-  language: ELanguagesVariants,
-  currency: ECurrencyVariants,
-  lastChangeByUserUuid: z.string().uuid().optional().nullable(),
+  description: z.string().nullable().optional(),
+  comment: z.string().nullable().optional(),
+  status: EStatusVariants.nullable().optional(),
+  language: ELanguagesVariants.nullable().optional(),
+  currency: ECurrencyVariants.nullable().optional(),
+  lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

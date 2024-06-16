@@ -51,7 +51,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_5): Promise<WorkspaceEntity[]> {
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<WorkspaceEntity[]> {
     limitTakeHandler(take);
 
     try {
