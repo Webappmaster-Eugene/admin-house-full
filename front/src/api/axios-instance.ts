@@ -22,9 +22,9 @@ type ResponseClientType = {
 const axiosOptions: CreateAxiosDefaults = {
   baseURL: HOST_API,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
   maxRedirects: 5,
 };
 
@@ -68,7 +68,10 @@ axiosAuthedInstance.interceptors.response.use(
     const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
     const errorPath = error.request?.path;
     const responseData: ResponseClientType = error.response?.data;
-    console.log('responseDataresponseDataresponseDataresponseDataresponseData', responseData);
+    console.log(
+      'originalRequestoriginalRequestoriginalRequestoriginalRequestoriginalRequest',
+      originalRequest
+    );
     if (
       responseData?.statusCode === 403 &&
       errorPath !== AUTH_PATHS.login &&
@@ -93,8 +96,11 @@ axiosAuthedInstance.interceptors.response.use(
         }
       }
     }
-
-    if (responseData.statusCode) {
+    console.log(
+      'responseDataresponseDataresponseDataresponseDataresponseData22222222222222222222222222222',
+      responseData
+    );
+    if (responseData?.statusCode) {
       await logoutUser();
     }
 
