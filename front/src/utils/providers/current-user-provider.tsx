@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
-import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
+import { useCurrentUserStore } from 'src/utils/auth/store/user-auth.store';
 
 export default function CurrentUserProvider({
   currentUserInfo,

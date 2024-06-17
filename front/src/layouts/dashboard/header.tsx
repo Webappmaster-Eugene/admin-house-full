@@ -4,10 +4,9 @@ import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
-import { useOffSetTop } from 'src/hooks/use-off-set-top';
-import { useResponsive } from 'src/hooks/use-responsive';
-
-import { bgBlur } from 'src/theme/css';
+import { bgBlur } from 'src/utils/theme/css';
+import { useOffSetTop } from 'src/utils/hooks/use-off-set-top';
+import { useResponsive } from 'src/utils/hooks/use-responsive';
 
 import Logo from 'src/components/logo';
 import SvgColor from 'src/components/svg-color';

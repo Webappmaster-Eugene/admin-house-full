@@ -13,12 +13,10 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
-import { useRouter, useSearchParams } from 'src/routes/hooks';
-
-import { useBoolean } from 'src/hooks/use-boolean';
-
+import { paths } from 'src/utils/routes/paths';
+import { useBoolean } from 'src/utils/hooks/use-boolean';
+import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
+import { useSearchParams } from 'src/utils/hooks/router-hooks/use-search-params';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { frontendFromBackendErrors } from 'src/utils/const/frontend-from-backend.errors';
 import { isNameInErrorTypeGuard } from 'src/utils/type-guards/is-name-in-error.type-guard';
@@ -26,6 +24,7 @@ import { isNameInErrorTypeGuard } from 'src/utils/type-guards/is-name-in-error.t
 import { register } from 'src/api/actions/auth-actions/register.action';
 
 import Iconify from 'src/components/iconify';
+import { RouterLink } from 'src/components/router-link';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------

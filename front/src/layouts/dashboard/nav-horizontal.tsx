@@ -4,9 +4,8 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 
-import { useMockedUserData } from 'src/hooks/use-mocked-user';
-
-import { bgBlur } from 'src/theme/css';
+import { bgBlur } from 'src/utils/theme/css';
+import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 
 import Scrollbar from 'src/components/scrollbar';
 import { NavSectionHorizontal } from 'src/components/nav-section';

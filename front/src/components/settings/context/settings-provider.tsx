@@ -3,9 +3,8 @@
 import isEqual from 'lodash/isEqual';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
-import { useLocalStorage } from 'src/hooks/use-local-storage';
-
-import { localStorageGetItem } from 'src/utils/storage-available';
+import { useLocalStorage } from 'src/utils/hooks/use-local-storage';
+import { localStorageGetItem } from 'src/utils/helpers/storage-available';
 
 import { SettingsValueProps } from '../types';
 import { SettingsContext } from './settings-context';
@@ -26,13 +25,6 @@ export function SettingsProvider({ children, defaultSettings }: SettingsProvider
 
   const isArabic = localStorageGetItem('i18nextLng') === 'ar';
 
-  useEffect(() => {
-    if (isArabic) {
-      onChangeDirectionByLang('ar');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isArabic]);
-
   // Direction by lang
   const onChangeDirectionByLang = useCallback(
     (lang: string) => {
@@ -40,6 +32,12 @@ export function SettingsProvider({ children, defaultSettings }: SettingsProvider
     },
     [update]
   );
+
+  useEffect(() => {
+    if (isArabic) {
+      onChangeDirectionByLang('ar');
+    }
+  }, [isArabic, onChangeDirectionByLang]);
 
   // Drawer
   const onToggleDrawer = useCallback(() => {

@@ -1,4 +1,4 @@
-import { countries } from 'src/assets/data';
+import { countries } from 'src/utils/assets/data';
 
 import { _mock } from './_mock';
 import { _tags } from './assets';

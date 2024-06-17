@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-import { getLocalStorage } from 'src/hooks/get-local-storage';
+import { getLocalStorage } from 'src/utils/helpers/get-local-storage';
 
 // ----------------------------------------------------------------------
 

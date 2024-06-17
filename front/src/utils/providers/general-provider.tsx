@@ -1,8 +1,7 @@
 import React from 'react';
 
+import ThemeProvider from 'src/utils/theme';
 import { PropsReactNode } from 'src/utils/types';
-
-import ThemeProvider from 'src/theme';
 
 import { SettingsProvider } from 'src/components/settings';
 

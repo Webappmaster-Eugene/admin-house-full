@@ -4,9 +4,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Theme, SxProps } from '@mui/material/styles';
 
-import { useMockedUserData } from 'src/hooks/use-mocked-user';
-
-import { ForbiddenIllustration } from 'src/assets/illustrations';
+import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
+import { ForbiddenIllustration } from 'src/utils/assets/illustrations';
 
 import { varBounce, MotionContainer } from 'src/components/animate';
 

@@ -1,9 +1,8 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
-import { useMockedUserData } from 'src/hooks/use-mocked-user';
-
-import { hideScroll } from 'src/theme/css';
+import { hideScroll } from 'src/utils/theme/css';
+import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 
 import Logo from 'src/components/logo';
 import { NavSectionMini } from 'src/components/nav-section';

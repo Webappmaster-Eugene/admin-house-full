@@ -2,9 +2,7 @@ import Box from '@mui/material/Box';
 import { alpha } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 
-import { presetOptions } from 'src/theme/options/presets';
-
-// ----------------------------------------------------------------------
+import { presetOptions } from 'src/utils/theme/options/presets';
 
 type PresetsOptionsProps = {
   value: string;

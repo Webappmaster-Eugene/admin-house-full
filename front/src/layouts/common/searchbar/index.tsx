@@ -11,11 +11,10 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Dialog, { dialogClasses } from '@mui/material/Dialog';
 
-import { useRouter } from 'src/routes/hooks';
-
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
-import { useEventListener } from 'src/hooks/use-event-listener';
+import { useBoolean } from 'src/utils/hooks/use-boolean';
+import { useResponsive } from 'src/utils/hooks/use-responsive';
+import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
+import { useEventListener } from 'src/utils/hooks/use-event-listener';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';

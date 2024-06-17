@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { paths } from 'src/routes/paths';
+import { paths } from 'src/utils/routes/paths';
 
-import { ICONS } from 'src/utils/common-components/icons-app';
+import { ICONS } from 'src/components/icons-app';
 
 export function useNavData() {
   const data = useMemo(

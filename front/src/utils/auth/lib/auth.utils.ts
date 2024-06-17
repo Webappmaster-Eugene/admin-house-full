@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { paths } from 'src/routes/paths';
+import { paths } from 'src/utils/routes/paths';
 
 import { TokenType, TTokenType } from './token-type';
 import { decodeAccessToken, decodeRefreshToken } from './decode.tokens';

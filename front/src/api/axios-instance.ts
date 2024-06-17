@@ -5,9 +5,9 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-import { axiosEndpoints } from 'src/utils/auth';
-import { AUTH_PATHS } from 'src/utils/auth/auth.paths';
-import { getAccessToken, getRefreshToken } from 'src/utils/auth/auth.service';
+import { axiosEndpoints } from 'src/utils/auth/lib';
+import { AUTH_PATHS } from 'src/utils/auth/lib/auth.paths';
+import { getAccessToken, getRefreshToken } from 'src/utils/auth/lib/auth.service';
 
 import { logoutUser } from 'src/api/actions/auth-actions/logout.action';
 

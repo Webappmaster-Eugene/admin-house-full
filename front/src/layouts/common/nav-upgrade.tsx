@@ -3,9 +3,8 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
-import { useMockedUserData } from 'src/hooks/use-mocked-user';
-
-import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
+import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
+import { useCurrentUserStore } from 'src/utils/auth/store/user-auth.store';
 
 import Label from 'src/components/label';
 

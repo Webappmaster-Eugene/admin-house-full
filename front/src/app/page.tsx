@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
-import { paths } from 'src/routes/paths';
+import { paths } from 'src/utils/routes/paths';
 
 export default function RootPage() {
   // const router = useRouter();

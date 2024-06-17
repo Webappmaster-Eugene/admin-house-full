@@ -1,5 +1,5 @@
-import { paths } from '@/routes/paths';
-import { decodeAccessToken } from '@/utils/auth/decode.tokens';
+import { paths } from 'src/utils/routes/paths';
+import { decodeAccessToken } from 'src/utils/auth/lib/decode.tokens';
 
 export const isValidToken = (accessToken: string) => {
   if (!accessToken) {

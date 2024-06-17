@@ -4,7 +4,7 @@ import {
   AccessTokenData,
   RefreshTokenData,
   AccessTokenDataSchema,
-} from 'src/auth/lib/auth-store.lib';
+} from 'src/utils/auth/lib/auth-store.lib';
 
 export const decodeAccessToken = (accessToken: string) =>
   AccessTokenDataSchema.parse(jwtDecode<AccessTokenData>(accessToken));

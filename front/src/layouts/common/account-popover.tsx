@@ -10,13 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
-import { useRouter } from 'src/routes/hooks';
-
-import { useMockedUserData } from 'src/hooks/use-mocked-user';
-
+import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
+import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 import { AccoutPopoverLinks } from 'src/utils/const/accout-popover.links';
+import { useCurrentUserStore } from 'src/utils/auth/store/user-auth.store';
 
-import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
 import { logoutUser } from 'src/api/actions/auth-actions/logout.action';
 
 import { varHover } from 'src/components/animate';

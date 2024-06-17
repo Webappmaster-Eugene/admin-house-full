@@ -3,7 +3,7 @@
 import { AxiosError } from 'axios';
 import { AppInfoGetCommand } from '@numart/house-admin-contracts';
 
-import { axiosEndpoints } from 'src/utils/auth';
+import { axiosEndpoints } from 'src/utils/auth/lib';
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
 

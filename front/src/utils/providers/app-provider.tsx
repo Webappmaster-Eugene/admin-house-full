@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 
-import { useAppInfoStore } from 'src/entities/app-info/store/app-info.store';
+import { useAppInfoStore } from 'src/utils/app-info/store/app-info.store';
 
 export default function AppProvider({
   appInfo,

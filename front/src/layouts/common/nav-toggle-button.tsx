@@ -1,9 +1,8 @@
 import { useTheme } from '@mui/material/styles';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
-import { useResponsive } from 'src/hooks/use-responsive';
-
-import { bgBlur } from 'src/theme/css';
+import { bgBlur } from 'src/utils/theme/css';
+import { useResponsive } from 'src/utils/hooks/use-responsive';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';

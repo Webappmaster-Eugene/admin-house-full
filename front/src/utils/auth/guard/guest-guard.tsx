@@ -1,11 +1,9 @@
 import { redirect, usePathname } from 'next/navigation';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
+import { paths } from 'src/utils/routes/paths';
 import { PropsReactNode } from 'src/utils/types';
-
-import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
+import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
+import { useCurrentUserStore } from 'src/utils/auth/store/user-auth.store';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
