@@ -31,30 +31,30 @@ services:
     ports:
       - "8081:8081"
 
-  efr-minio:
+  s3-minio:
     container_name: admin-house-minio
     image: quay.io/minio/minio
     restart: always
     ports:
       - "9900:9000"
       - "9901:9001"
-#    volumes:
-#      - efr-minio-data:/data
+    volumes:
+      - s3-minio-data:/data
     environment:
       - MINIO_ROOT_USER=numart
       - MINIO_ROOT_PASSWORD=numart
     command: server /data --console-address ":9001"
 
-  efr-minio-create-buckets:
+  s3-minio-create-buckets:
     image: minio/mc
     depends_on:
       - efr-minio
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc alias set efr_minio http://efr-minio:9000 efr Qwerty123!;
-      /usr/bin/mc mb efr_minio/documents;
+      /usr/bin/mc alias set s3_minio http://admin-house-minio:9000 numart numart;
+      /usr/bin/mc mb s3_minio/documents;
       exit 0;
 
 volumes:
   data:
-  efr-minio-data:
+  s3-minio-data:
