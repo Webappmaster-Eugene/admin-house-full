@@ -33,11 +33,6 @@ const axiosAuthedInstance = axios.create(axiosOptions);
 axiosAuthedInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig & { _retry?: boolean }) => {
     const clientCookieAccessToken = await getAccessToken();
-    console.log('configconfigconfigconfig', config);
-    console.log(
-      'axiosAuthedInstanceaxiosAuthedInstanceaxiosAuthedInstanceaxiosAuthedInstance',
-      axiosAuthedInstance
-    );
 
     if (!config?._retry) {
       if (config.headers && clientCookieAccessToken) {
@@ -46,25 +41,17 @@ axiosAuthedInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer bad_access_token`;
       }
     }
-    console.log(
-      'clientCookieAccessTokenclientCookieAccessTokenclientCookieAccessToken',
-      clientCookieAccessToken
-    );
+    console.log('clientCookieAccessToken', clientCookieAccessToken);
     const refreshToken = await getRefreshToken();
     if (refreshToken) {
       config.headers.Cookie = `REFRESH_KEY=${refreshToken}`;
     }
-    console.log('refreshTokenrefreshTokenrefreshToken', refreshToken);
     return config;
   }
 );
 
 axiosAuthedInstance.interceptors.response.use(
   async (res) => {
-    // if (res.da._retry === true) {
-    //   console.log('logout');
-    //   await logoutUser();
-    // }
     console.log('res.datares.datares.datares.datares.data', res.data);
     const responseData = res.data;
     return responseData;
@@ -73,10 +60,6 @@ axiosAuthedInstance.interceptors.response.use(
     const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
     const errorPath = error.request?.path;
     const responseData: ResponseClientType = error.response?.data;
-    console.log(
-      'originalRequestoriginalRequestoriginalRequestoriginalRequestoriginalRequest',
-      originalRequest
-    );
     if (
       responseData?.statusCode === 403 &&
       errorPath !== AUTH_PATHS.login &&
@@ -101,10 +84,7 @@ axiosAuthedInstance.interceptors.response.use(
         }
       }
     }
-    console.log(
-      'responseDataresponseDataresponseDataresponseDataresponseData22222222222222222222222222222',
-      responseData
-    );
+    console.log('responseData onRejected', responseData);
     if (responseData?.statusCode) {
       await logoutUser();
     }

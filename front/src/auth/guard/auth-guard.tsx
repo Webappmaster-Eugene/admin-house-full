@@ -12,14 +12,13 @@ import { SplashScreen } from 'src/components/loading-screen';
 export default function AuthGuard({ children }: PropsReactNode) {
   const router = useRouter();
   const pathname = usePathname();
-  const userInfo = useCurrentUserStore((state) => state.user);
-  const loading = useCurrentUserStore((state) => state.loading);
-  console.log(userInfo);
-  if (!loading && !userInfo) {
+  const { user, loading } = useCurrentUserStore((state) => state);
+
+  if (!loading && !user) {
     // router.push(PATH_AFTER_LOGIN);
     redirect(paths.auth.login);
   }
-  if (userInfo && (pathname === paths.auth.login || pathname === paths.auth.register)) {
+  if (user && (pathname === paths.auth.login || pathname === paths.auth.register)) {
     // router.push(PATH_AFTER_LOGIN);
     redirect(paths.dashboard.root);
   }

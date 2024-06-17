@@ -43,6 +43,7 @@ export default async function RootLayout({ children }: PropsReactNode) {
   let currentUserInfo;
   // const appInfo = await getAppInfo();
 
+  // FIXME проверить
   if (cookies().get(cookieKeys.REFRESH_KEY)?.value) {
     currentUserInfo = await getCurrentUser();
   }

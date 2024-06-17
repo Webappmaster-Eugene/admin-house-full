@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useMockedUserData } from 'src/hooks/use-mocked-user';
 
 import { AccoutPopoverLinks } from 'src/utils/const/accout-popover.links';
 
@@ -25,7 +25,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 export default function AccountPopover() {
   const router = useRouter();
 
-  const { user } = useMockedUser();
+  const { mockedData } = useMockedUserData();
   const loginedUser = useCurrentUserStore((state) => state.user);
   const resetUser = useCurrentUserStore((state) => state.reset);
 
@@ -67,22 +67,22 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
-          alt={loginedUser?.firstName}
+          src={loginedUser?.avatar ? loginedUser?.avatar : mockedData?.photoURL}
+          alt={`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {loginedUser?.firstName?.charAt(0).toUpperCase()}
+          {`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
         </Avatar>
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {loginedUser?.firstName}
+            {`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>

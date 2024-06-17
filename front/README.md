@@ -1,5 +1,5 @@
 ## Технологии
-Nextjs, TS, Zustand, MaterialUI (+ шаблон Minimal), опционально - MUI X, Tailwind, axios, .
+Nextjs, TS, Zustand, MaterialUI (+ шаблон Minimal), опционально - MUI X, Tailwind, axios.
 
 ## NODE.JS
 

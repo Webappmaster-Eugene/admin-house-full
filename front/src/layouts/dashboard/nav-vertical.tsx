@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer';
 import { usePathname } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useMockedUserData } from 'src/hooks/use-mocked-user';
 
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
@@ -26,7 +26,7 @@ type Props = {
 };
 
 export default function NavVertical({ openNav, onCloseNav }: Props) {
-  const { user } = useMockedUser();
+  const { mockedData } = useMockedUserData();
 
   const pathname = usePathname();
 
@@ -57,7 +57,7 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
       <NavSectionVertical
         data={navData}
         slotProps={{
-          currentRole: user?.role,
+          currentRole: mockedData?.role,
         }}
       />
 

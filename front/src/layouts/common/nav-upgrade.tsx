@@ -1,19 +1,19 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
-import { paths } from 'src/routes/paths';
+import { useMockedUserData } from 'src/hooks/use-mocked-user';
 
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useCurrentUserStore } from 'src/auth/store/user-auth.store';
 
 import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
 export default function NavUpgrade() {
-  const { user } = useMockedUser();
+  const { mockedData } = useMockedUserData();
+  const loginedUser = useCurrentUserStore((state) => state.user);
 
   return (
     <Stack
@@ -25,8 +25,12 @@ export default function NavUpgrade() {
     >
       <Stack alignItems="center">
         <Box sx={{ position: 'relative' }}>
-          <Avatar src={user?.photoURL} alt={user?.displayName} sx={{ width: 48, height: 48 }}>
-            {user?.displayName?.charAt(0).toUpperCase()}
+          <Avatar
+            src={loginedUser?.avatar ? loginedUser?.avatar : mockedData?.photoURL}
+            alt={`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
+            sx={{ width: 48, height: 48 }}
+          >
+            {`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
           </Avatar>
 
           <Label
@@ -47,17 +51,17 @@ export default function NavUpgrade() {
 
         <Stack spacing={0.5} sx={{ mb: 2, mt: 1.5, width: 1 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
           </Typography>
 
           <Typography variant="body2" noWrap sx={{ color: 'text.disabled' }}>
-            {user?.email}
+            {loginedUser?.email}
           </Typography>
         </Stack>
 
-        <Button variant="contained" href={paths.minimalUI} target="_blank" rel="noopener">
-          Upgrade to Pro
-        </Button>
+        {/* <Button variant="contained" href={paths.minimalUI} target="_blank" rel="noopener"> */}
+        {/*  Upgrade to Pro */}
+        {/* </Button> */}
       </Stack>
     </Stack>
   );

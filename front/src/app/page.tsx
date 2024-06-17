@@ -4,13 +4,11 @@ import { redirect } from 'next/navigation';
 
 import { paths } from 'src/routes/paths';
 
-import { SplashScreen } from 'src/components/loading-screen';
-
 export default function RootPage() {
   // const router = useRouter();
   // useEffect(() => {
   //   router.push(PATH_AFTER_LOGIN);
   // }, [router]);
   redirect(paths.dashboard.root);
-  return <SplashScreen />;
+  // return <SplashScreen />;
 }

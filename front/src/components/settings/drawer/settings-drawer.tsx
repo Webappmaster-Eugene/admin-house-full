@@ -18,7 +18,6 @@ import LayoutOptions from './layout-options';
 import PresetsOptions from './presets-options';
 import StretchOptions from './stretch-options';
 import { useSettingsContext } from '../context';
-import FullScreenOption from './fullscreen-option';
 
 // ----------------------------------------------------------------------
 
@@ -179,17 +178,17 @@ export default function SettingsDrawer() {
 
           {renderContrast}
 
-          {renderDirection}
+          {/* {renderDirection} */}
 
-          {renderLayout}
+          {/* {renderLayout} */}
 
-          {renderStretch}
+          {/* {renderStretch} */}
 
           {renderPresets}
         </Stack>
       </Scrollbar>
 
-      <FullScreenOption />
+      {/* <FullScreenOption /> */}
     </Drawer>
   );
 }

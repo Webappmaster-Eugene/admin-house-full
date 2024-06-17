@@ -38,7 +38,7 @@ export default function LoginView() {
 
   const returnTo = searchParams.get('returnTo');
 
-  const password = useBoolean();
+  const isPasswordOpen = useBoolean();
 
   // const appInfo = useAppInfoStore((state) => state.appInfo);
   // console.log(appInfo);
@@ -74,14 +74,12 @@ export default function LoginView() {
     }
 
     const user = await login({ email: data.email, password: data.password });
-    console.log('useruseruseruseruser', user);
 
     if (!isErrorFieldTypeGuard(user)) {
       router.push(returnTo || paths.dashboard.root);
     } else {
       const { error } = user;
       reset();
-      console.log('isNameInErrorTypeGuard(error)', isNameInErrorTypeGuard(error));
       if (isNameInErrorTypeGuard(error)) {
         setErrorMsg(frontendFromBackendErrors[error.name] || error.name);
       } else {
@@ -124,12 +122,14 @@ export default function LoginView() {
           <RHFTextField
             name="password"
             label="Password"
-            type={password.value ? 'text' : 'password'}
+            type={isPasswordOpen.value ? 'text' : 'password'}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={password.onToggle} edge="end">
-                    <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                  <IconButton onClick={isPasswordOpen.onToggle} edge="end">
+                    <Iconify
+                      icon={isPasswordOpen.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
+                    />
                   </IconButton>
                 </InputAdornment>
               ),
