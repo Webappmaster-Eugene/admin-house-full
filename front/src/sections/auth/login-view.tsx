@@ -31,14 +31,11 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 export default function LoginView() {
   const router = useRouter();
-
   const [errorMsg, setErrorMsg] = useState('');
+  const isPasswordOpen = useBoolean();
 
   const searchParams = useSearchParams();
-
   const returnTo = searchParams.get('returnTo');
-
-  const isPasswordOpen = useBoolean();
 
   // const appInfo = useAppInfoStore((state) => state.appInfo);
   // console.log(appInfo);

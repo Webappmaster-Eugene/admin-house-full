@@ -12,10 +12,9 @@ import { SplashScreen } from 'src/components/loading-screen';
 export default function GuestGuard({ children }: PropsReactNode) {
   const router = useRouter();
   const pathname = usePathname();
-  const userInfo = useCurrentUserStore((state) => state.user);
-  const loading = useCurrentUserStore((state) => state.loading);
+  const { user, loading } = useCurrentUserStore((state) => state);
 
-  if (userInfo && (pathname === `${paths.auth.login}/` || pathname === `${paths.auth.register}/`)) {
+  if (user && (pathname === `${paths.auth.login}/` || pathname === `${paths.auth.register}/`)) {
     // router.push(PATH_AFTER_LOGIN);
     redirect(paths.dashboard.root);
   }

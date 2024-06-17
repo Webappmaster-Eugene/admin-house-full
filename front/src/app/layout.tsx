@@ -42,9 +42,9 @@ export const metadata = {
 export default async function RootLayout({ children }: PropsReactNode) {
   let currentUserInfo;
   // const appInfo = await getAppInfo();
-
+  const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
   // FIXME проверить
-  if (cookies().get(cookieKeys.REFRESH_KEY)?.value) {
+  if (refreshToken) {
     currentUserInfo = await getCurrentUser();
   }
 
@@ -55,28 +55,13 @@ export default async function RootLayout({ children }: PropsReactNode) {
         <CurrentUserProvider
           currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
         >
-          {/* <AuthProvider> */}
           <GeneralProvider>
-            {/* <SettingsProvider */}
-            {/*  defaultSettings={{ */}
-            {/*    themeMode: 'light', // 'light' | 'dark' */}
-            {/*    themeDirection: 'ltr', //  'rtl' | 'ltr' */}
-            {/*    themeContrast: 'default', // 'default' | 'bold' */}
-            {/*    themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini' */}
-            {/*    themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red' */}
-            {/*    themeStretch: false, */}
-            {/*  }} */}
-            {/* > */}
-            {/*  <ThemeProvider> */}
             <MotionLazy>
               <SettingsDrawer />
               <ProgressBar />
               {children}
             </MotionLazy>
-            {/*  </ThemeProvider> */}
-            {/* </SettingsProvider> */}
           </GeneralProvider>
-          {/* </AuthProvider> */}
         </CurrentUserProvider>
         {/* </AppProvider> */}
       </body>

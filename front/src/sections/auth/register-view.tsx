@@ -32,15 +32,12 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 export default function RegisterView() {
   const router = useRouter();
-
   const [errorMsg, setErrorMsg] = useState('');
-
-  const searchParams = useSearchParams();
-
-  const returnTo = searchParams.get('returnTo');
-
   const isPasswordOpen = useBoolean();
   const isConfirmPasswordOpen = useBoolean();
+
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get('returnTo');
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().required('First name required'),

@@ -14,7 +14,7 @@ export default function AuthGuard({ children }: PropsReactNode) {
   const pathname = usePathname();
   const { user, loading } = useCurrentUserStore((state) => state);
 
-  if (!loading && !user) {
+  if (!user) {
     // router.push(PATH_AFTER_LOGIN);
     redirect(paths.auth.login);
   }
