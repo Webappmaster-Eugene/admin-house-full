@@ -31,8 +31,8 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
       resetUser();
+      await logoutUser();
       popover.onClose();
       // router.replace('/');
       redirect('/');
@@ -73,7 +73,7 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
+          {`${loginedUser?.firstName?.charAt(0).toUpperCase()}`}
         </Avatar>
       </IconButton>
 

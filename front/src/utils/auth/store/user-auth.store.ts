@@ -24,9 +24,11 @@ export const useCurrentUserStore = create<IAuthState>(
       set({ loading: false });
     },
     reset: () => {
+      set({ loading: true });
       set({
         user: null,
       });
+      set({ loading: false });
     },
   })
   //     {
