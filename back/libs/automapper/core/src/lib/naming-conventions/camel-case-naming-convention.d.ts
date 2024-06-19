@@ -5,7 +5,7 @@ import type { NamingConvention } from '../types';
  * @example thisIsCamelCase
  */
 export declare class CamelCaseNamingConvention implements NamingConvention {
-    separatorCharacter: string;
-    splittingExpression: RegExp;
-    transformPropertyName(sourceNameParts: string[]): string;
+  separatorCharacter: string;
+  splittingExpression: RegExp;
+  transformPropertyName(sourceNameParts: string[]): string;
 }

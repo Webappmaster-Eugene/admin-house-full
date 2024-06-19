@@ -1,3 +1,3 @@
 export interface AutomapperTransformerPluginOptions {
-    modelFileNameSuffix?: string[];
+  modelFileNameSuffix?: string[];
 }

@@ -1,6 +1,11 @@
 import type { MappingConfiguration } from '../types';
-export declare function autoMap<TSource extends {
+export declare function autoMap<
+  TSource extends {
     [key in TKey]: TValue;
-}, TDestination extends {
+  },
+  TDestination extends {
     [key in TKey]: TValue;
-}, TKey extends keyof TSource & keyof TDestination, TValue extends TSource[TKey] & TDestination[TKey]>(prop: TKey): MappingConfiguration<TSource, TDestination>;
+  },
+  TKey extends keyof TSource & keyof TDestination,
+  TValue extends TSource[TKey] & TDestination[TKey],
+>(prop: TKey): MappingConfiguration<TSource, TDestination>;

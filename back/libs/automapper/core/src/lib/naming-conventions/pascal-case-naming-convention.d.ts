@@ -5,7 +5,7 @@ import type { NamingConvention } from '../types';
  * @example ThisIsPascalCase
  */
 export declare class PascalCaseNamingConvention implements NamingConvention {
-    separatorCharacter: string;
-    splittingExpression: RegExp;
-    transformPropertyName(sourceNameParts: string[]): string;
+  separatorCharacter: string;
+  splittingExpression: RegExp;
+  transformPropertyName(sourceNameParts: string[]): string;
 }
