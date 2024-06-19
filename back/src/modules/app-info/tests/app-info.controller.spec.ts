@@ -37,7 +37,7 @@ describe('AppInfoController', () => {
   //       // CqrsModule,
   //       // PrismaModule,
   //       // ConfigModule.forRoot({
-  //       //   envFilePath: `.${process.env.NODE_ENV}.env`,
+  //       //   envFilePath: `.${process.env.NODE_ENV}.env.development`,
   //       //   isGlobal: true,
   //       //   validate: config => validateConfig(config),
   //       // }),

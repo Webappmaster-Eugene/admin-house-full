@@ -1,6 +1,6 @@
 {
   "name": "@numart/house-admin-contracts",
-  "version": "1.0.11",
+  "version": "1.0.13",
   "description": "Контракты для проекта house-admin",
   "publishConfig": {
     "access": "public"
@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "numart",
   "license": "ISC",
   "dependencies": {
     "zod": "^3.23.8"

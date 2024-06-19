@@ -12,7 +12,13 @@ export default function CurrentUserProvider({
   currentUserInfo: UserGetFullInfoCommand.ResponseEntity | null;
   children: React.ReactNode;
 }) {
-  const setUser = useCurrentUserStore((state) => state.setCurrentUser);
-  useEffect(() => setUser(currentUserInfo), [currentUserInfo, setUser]);
+  const { toggleLoading, setCurrentUser } = useCurrentUserStore((state) => state);
+
+  useEffect(() => {
+    toggleLoading();
+    setCurrentUser(currentUserInfo);
+    toggleLoading();
+  }, [currentUserInfo, setCurrentUser, toggleLoading]);
+
   return <>{children}</>;
 }

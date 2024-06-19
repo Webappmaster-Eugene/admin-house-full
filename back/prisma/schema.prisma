@@ -105,6 +105,8 @@ model User {
   PriceChanging                     PriceChanging[]                     @relation("PriceChanging_changed_by")
   StatusResource                    StatusResource[]                    @relation("StatusResource_changed_by")
   User                              User[]                              @relation("User_changed_by")
+  StatusApprove                     StatusApprove[]                     @relation("StatusApprove_changed_by")
+  FileStorage                       FileStorage[]                       @relation("FileStorage_changed_by")
   createdAt                         DateTime                            @default(now()) @map("created_at")
   updatedAt                         DateTime                            @updatedAt @map("updated_at")
 
@@ -440,7 +442,22 @@ model StatusResource {
   @@map("status_resource")
 }
 
-// DOC Техническая таблица с отслеживанием всех изменений (CREATE, UPDATE, DELETE) (TechLogChangesModule) - определяются на уровне приложения (создаются автоматически, изменяться и обновляться не могут):
+// DOC Статус согласования сметы заказчиком (StatusApprove) - ПРЕДЛОЖЕНИЕ определяются на уровне приложения (создаются автоматически, изменяются администратором):
+// DOC status-approve
+model StatusApprove {
+  uuid                 String           @id @default(uuid()) @db.Uuid
+  name                 EApproveStatuses
+  nameRu               String           @map("name_ru")
+  comment              String?
+  lastChangeByUserUuid String?          @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?            @relation("StatusApprove_changed_by", fields: [lastChangeByUserUuid], references: [uuid])
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
+
+  @@map("status_approve")
+}
+
+// DOC Техническая таблица с отслеживанием всех изменений (CREATE, UPDATE, DELETE) (TechLogChanges) - определяются на уровне приложения (создаются автоматически, изменяться и обновляться не могут):
 // DOC tech-log-changes
 model TechLogChanges {
   uuid       String         @id @default(uuid()) @db.Uuid
@@ -458,6 +475,21 @@ model TechLogChanges {
   updatedAt  DateTime       @default(now()) @updatedAt @map("updated_at")
 
   @@map("tech_log_changes")
+}
+
+// DOC Техническая таблица для хранения информации о хранимых файлах (CREATE, UPDATE, DELETE) (S3Minio) - определяются на уровне приложения (непосредственно к контроллеру доступ только у админа, сервис доступен любым пользователям в нужных сущностях):
+// DOC files
+model FileStorage {
+  uuid                 String   @id @default(uuid()) @db.Uuid
+  nameFile             String   @map("name_file")
+  comment              String?
+  link                 String
+  lastChangeByUserUuid String?  @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?    @relation("FileStorage_changed_by", fields: [lastChangeByUserUuid], references: [uuid])
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("file_storage")
 }
 
 // вспомогательный enum
@@ -508,4 +540,11 @@ enum EEntityActions {
   DELETE
   UPDATE
   CREATE
+}
+
+// вспомогательный enum
+enum EApproveStatuses {
+  ONAPPROVAL
+  REFUSUAL
+  AGREED
 }

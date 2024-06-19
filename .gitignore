@@ -9,6 +9,12 @@
 /back/node_modules
 /back/build
 
+# my libs
+/back/libs/contracts/node_modules
+/back/libs/automapper/classes/node_modules
+/back/libs/automapper/core/node_modules
+/back/libs/automapper/nestjs/node_modules
+
 /front/.next
 /front/dist
 /front/node_modules

@@ -1,5 +1,4 @@
 import { m } from 'framer-motion';
-import { redirect } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -21,21 +20,17 @@ import { varHover } from 'src/components/animate';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 export default function AccountPopover() {
+  // return <button onClick={async () => logoutUser()}>Rkbr</button>;
   const router = useRouter();
 
   const { mockedData } = useMockedUserData();
-  const loginedUser = useCurrentUserStore((state) => state.user);
-  const resetUser = useCurrentUserStore((state) => state.reset);
+  const { user } = useCurrentUserStore((state) => state);
 
   const popover = usePopover();
 
   const handleLogout = async () => {
     try {
-      resetUser();
       await logoutUser();
-      popover.onClose();
-      // router.replace('/');
-      redirect('/');
     } catch (error) {
       console.error(error);
     }
@@ -65,26 +60,26 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={loginedUser?.avatar ? loginedUser?.avatar : mockedData?.photoURL}
-          alt={`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
+          src={user?.avatar ? user?.avatar : mockedData?.photoURL}
+          alt={`${user?.firstName?.charAt(0).toUpperCase()}. ${user?.secondName}`}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {`${loginedUser?.firstName?.charAt(0).toUpperCase()}`}
+          {`${user?.firstName?.charAt(0).toUpperCase()}`}
         </Avatar>
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {`${loginedUser?.firstName?.charAt(0).toUpperCase()}. ${loginedUser?.secondName}`}
+            {`${user?.firstName?.charAt(0).toUpperCase()}. ${user?.secondName}`}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {loginedUser?.email}
+            {user?.email}
           </Typography>
         </Box>
 

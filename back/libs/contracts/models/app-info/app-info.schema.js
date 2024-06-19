@@ -8,7 +8,7 @@ exports.AppInfoSchema = zod_1.z.object({
     name: zod_1.z.string(),
     description: zod_1.z.string().nullable().optional(),
     comment: zod_1.z.string().nullable().optional(),
-    status: enums_1.EStatusVariants.nullable().optional(),
+    status: enums_1.EAppStatusVariants.nullable().optional(),
     language: enums_1.ELanguagesVariants.nullable().optional(),
     currency: enums_1.ECurrencyVariants.nullable().optional(),
     lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),

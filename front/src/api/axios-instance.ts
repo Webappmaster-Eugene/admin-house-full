@@ -85,8 +85,13 @@ axiosAuthedInstance.interceptors.response.use(
       }
     }
     console.log('responseData onRejected', responseData);
-    if (responseData?.statusCode) {
+    if (
+      responseData?.statusCode &&
+      errorPath !== AUTH_PATHS.login &&
+      errorPath !== AUTH_PATHS.register
+    ) {
       await logoutUser();
+      // redirect('/');
     }
 
     console.error('Ошибка от сервера: ', responseData);

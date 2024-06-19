@@ -1,7 +1,7 @@
 'use client';
 
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -30,8 +30,9 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function RegisterView() {
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
-  const [errorMsg, setErrorMsg] = useState('');
   const isPasswordOpen = useBoolean();
   const isConfirmPasswordOpen = useBoolean();
 
@@ -64,7 +65,8 @@ export default function RegisterView() {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
+    setError,
   } = methods;
 
   const onSubmit = handleSubmit(async (data, event) => {
@@ -73,6 +75,7 @@ export default function RegisterView() {
       event?.preventDefault();
     }
 
+    // startTransition(async () => {
     const user = await register({
       email: data.email,
       password: data.password,
@@ -80,6 +83,9 @@ export default function RegisterView() {
       firstName: data.firstName,
       secondName: data.lastName,
     });
+    console.log(`rootrootrootrootroot${user}`);
+    // все операции должны располагаться ниже здесь
+    // });
 
     if (!isErrorFieldTypeGuard(user)) {
       console.log(user);
@@ -88,11 +94,12 @@ export default function RegisterView() {
       const { error } = user;
       reset();
       if (isNameInErrorTypeGuard(error)) {
-        setErrorMsg(frontendFromBackendErrors[error.name] || error.name);
+        setError('root', { message: frontendFromBackendErrors[error.name] || error.name });
       } else {
-        setErrorMsg(
-          typeof error === 'string' ? error : 'Неизвестная ошибка при регистрации пользователя'
-        );
+        setError('root', {
+          message:
+            typeof error === 'string' ? error : 'Неизвестная ошибка при регистрации пользователя',
+        });
       }
     }
   });
@@ -112,11 +119,11 @@ export default function RegisterView() {
         </Stack>
       </Stack>
 
-      {!!errorMsg && (
-        <Alert severity="error" sx={{ m: 3 }}>
-          {errorMsg}
-        </Alert>
-      )}
+      {/* {!!errors.root?.message && ( */}
+      <Alert severity="error" sx={{ m: 3 }}>
+        {errors.root?.message}
+      </Alert>
+      {/* )} */}
 
       {/* render form register */}
       <FormProvider methods={methods} onSubmit={onSubmit}>

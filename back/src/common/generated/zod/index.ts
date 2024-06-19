@@ -50,6 +50,8 @@ export const PriceChangingScalarFieldEnumSchema = z.enum(['uuid','newPrice','old
 
 export const StatusResourceScalarFieldEnumSchema = z.enum(['uuid','name','comment','lastChangeByUserUuid','createdAt','updatedAt']);
 
+export const StatusApproveScalarFieldEnumSchema = z.enum(['uuid','name','nameRu','comment','lastChangeByUserUuid','createdAt','updatedAt']);
+
 export const TechLogChangesScalarFieldEnumSchema = z.enum(['uuid','name','entity','comment','action','oldInfo','newInfo','updateInfo','createdAt','updatedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
@@ -85,6 +87,10 @@ export type EGlobalCategoryMaterialVariantsType = `${z.infer<typeof EGlobalCateg
 export const EEntityActionsSchema = z.enum(['DELETE','UPDATE','CREATE']);
 
 export type EEntityActionsType = `${z.infer<typeof EEntityActionsSchema>}`
+
+export const EApproveStatusesSchema = z.enum(['ONAPPROVAL','REFUSUAL','AGREED']);
+
+export type EApproveStatusesType = `${z.infer<typeof EApproveStatusesSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -651,6 +657,33 @@ export const StatusResourceOptionalDefaultsSchema = StatusResourceSchema.merge(z
 }))
 
 export type StatusResourceOptionalDefaults = z.infer<typeof StatusResourceOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// STATUS APPROVE SCHEMA
+/////////////////////////////////////////
+
+export const StatusApproveSchema = z.object({
+  name: EApproveStatusesSchema,
+  uuid: z.string(),
+  nameRu: z.string(),
+  comment: z.string().nullish(),
+  lastChangeByUserUuid: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type StatusApprove = z.infer<typeof StatusApproveSchema>
+
+// STATUS APPROVE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const StatusApproveOptionalDefaultsSchema = StatusApproveSchema.merge(z.object({
+  uuid: z.string().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type StatusApproveOptionalDefaults = z.infer<typeof StatusApproveOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // TECH LOG CHANGES SCHEMA

@@ -1,6 +1,11 @@
 import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
-export type AuthStateType = {
+type CurrentUserInfo = UserGetFullInfoCommand.ResponseEntity | null;
+
+export interface IAuthState {
+  user: CurrentUserInfo | null;
   loading: boolean;
-  user: UserGetFullInfoCommand.ResponseEntity | null;
-};
+  toggleLoading: () => void;
+  setCurrentUser: (newDataUser: UserGetFullInfoCommand.ResponseEntity | null) => void;
+  reset: () => void;
+}

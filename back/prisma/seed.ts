@@ -1,6 +1,7 @@
 import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../src/common/helpers/regex/fieldOfCategoryMaterialRegexGenerator';
 import { templateNameMaterialGenerator } from '../src/common/helpers/regex/regexNameMaterialGenerator';
 import { PrismaClient } from '.prisma/client';
+import { EApproveStatuses } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -244,6 +245,30 @@ async function main() {
     data: {
       name: 'Готово',
       comment: 'Статус ресурса - готово',
+    },
+  });
+
+  const APPROVE_STATUS_ONAPPROVAL = await prisma?.statusApprove?.create({
+    data: {
+      name: EApproveStatuses.ONAPPROVAL,
+      nameRu: 'На согласовании',
+      comment: 'На согласовании с заказчиком',
+    },
+  });
+
+  const APPROVE_STATUS_REFUSUAL = await prisma?.statusApprove?.create({
+    data: {
+      name: EApproveStatuses.REFUSUAL,
+      nameRu: 'Отказано',
+      comment: 'Заказчик отказал в согласованиии сметы',
+    },
+  });
+
+  const APPROVE_STATUS_AGREED = await prisma?.statusApprove?.create({
+    data: {
+      name: EApproveStatuses.AGREED,
+      nameRu: 'Согласовано',
+      comment: 'Заказчик одобрил смету',
     },
   });
 

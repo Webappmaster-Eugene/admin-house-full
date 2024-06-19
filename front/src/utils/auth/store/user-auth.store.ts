@@ -1,14 +1,6 @@
 import { create } from 'zustand';
-import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
-type CurrentUserInfo = UserGetFullInfoCommand.ResponseEntity | null;
-
-interface IAuthState {
-  user: CurrentUserInfo | null;
-  loading: boolean;
-  setCurrentUser: (newDataUser: UserGetFullInfoCommand.ResponseEntity | null) => void;
-  reset: () => void;
-}
+import { IAuthState } from 'src/utils/auth/lib';
 
 export const useCurrentUserStore = create<IAuthState>(
   // devtools(
@@ -16,12 +8,14 @@ export const useCurrentUserStore = create<IAuthState>(
   (set, get) => ({
     user: null,
     loading: false,
+    toggleLoading: () => {
+      const { loading } = get();
+      set({ loading: !loading });
+    },
     setCurrentUser: (newCurrentUser) => {
-      set({ loading: true });
       set({
         user: newCurrentUser,
       });
-      set({ loading: false });
     },
     reset: () => {
       set({ loading: true });

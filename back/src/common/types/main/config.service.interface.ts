@@ -8,4 +8,10 @@ export interface IConfigService {
   API_PREFIX: string;
   API_VERSION: string;
   APP_PORT: number;
+  MINIO_ENDPOINT: string;
+  MINIO_PORT: number;
+  MINIO_ACCESS_KEY: string;
+  MINIO_SECRET_KEY: string;
+  MINIO_USE_SSL: string;
+  MINIO_BUCKET_NAME: string;
 }
