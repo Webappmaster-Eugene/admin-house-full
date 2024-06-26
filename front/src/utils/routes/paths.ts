@@ -3,6 +3,7 @@
 const ROOTS = {
   AUTH: '/auth',
   DASHBOARD: '/dashboard',
+  PROFILE: '/profile',
 };
 
 // ----------------------------------------------------------------------
@@ -16,13 +17,13 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
-    one: `${ROOTS.DASHBOARD}/one`,
-    two: `${ROOTS.DASHBOARD}/two`,
-    three: `${ROOTS.DASHBOARD}/three`,
-    group: {
-      root: `${ROOTS.DASHBOARD}/group`,
-      five: `${ROOTS.DASHBOARD}/group/five`,
-      six: `${ROOTS.DASHBOARD}/group/six`,
-    },
+    materials: `${ROOTS.DASHBOARD}/materials`,
+    fields: `${ROOTS.DASHBOARD}/fields`,
+    characteristics: `${ROOTS.DASHBOARD}/characteristics`,
+  },
+  profile: {
+    profile: `${ROOTS.PROFILE}`,
+    admin: `${ROOTS.PROFILE}/admin`,
+    settings: `${ROOTS.PROFILE}/settings`,
   },
 };

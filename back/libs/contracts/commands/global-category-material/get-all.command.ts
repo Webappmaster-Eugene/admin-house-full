@@ -24,7 +24,7 @@ export namespace GlobalCategoryMaterialGetAllCommand {
   export type RequestQuery = z.infer<typeof RequestQuerySchema>;
 
   export const ResponseSchema = GlobalCategoryMaterialGetAllResponseSchema;
-  export type Request = z.infer<typeof ResponseSchema>;
+  export type Response = z.infer<typeof ResponseSchema>;
 
   export const ResponseEntitySchema = GlobalCategoryMaterialGetAllResponseEntitySchema;
   export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;

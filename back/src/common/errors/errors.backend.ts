@@ -6,6 +6,7 @@ export type BackendError = {
 
 export const enum BackendPErrorCodes {
   PRISMA_CONFLICT_ERROR = 'P2002',
+  PRISMA_INVALID_UUID = 'P2023',
   PRISMA_NOT_FOUND_ERROR = 'P2025',
 }
 
@@ -20,6 +21,7 @@ export const enum BackendErrorNames {
   WORKSPACE_MISMATCH = 'WORKSPACE_MISMATCH',
   SKIP_TAKES_TOO_MUCH = 'SKIP_TAKES_TOO_MUCH',
   PRISMA_CONFLICT_ERROR = 'PRISMA_CONFLICT_ERROR',
+  PRISMA_INVALID_INPUT = 'PRISMA_INVALID_INPUT',
 }
 
 export type BackendArrayErrors = {
@@ -36,6 +38,7 @@ export type BackendArrayErrors = {
   };
   PRISMA_ERRORS: {
     [BackendErrorNames.PRISMA_CONFLICT_ERROR]: BackendError;
+    [BackendErrorNames.PRISMA_INVALID_INPUT]: BackendError;
   };
 };
 
@@ -120,9 +123,17 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       innerCode: 'P001',
       error: {
         name: 'Prisma conflict error',
-        description: 'Failed to create entity due to a db conflict error',
+        description: 'Failed to create entities due to a db conflict error',
       },
       httpCode: 409,
+    },
+    [BackendErrorNames.PRISMA_INVALID_INPUT]: {
+      innerCode: 'P002',
+      error: {
+        name: 'Prisma invalid input',
+        description: 'Failed to get a requested entities to an error in input UUID - db search error',
+      },
+      httpCode: 400,
     },
   },
 };
@@ -147,12 +158,13 @@ export class InternalError implements IInternalError {
       this.innerError = BACKEND_ERRORS.PRISMA_ERRORS[errorName];
     }
 
-    if (errorDescription && typeof errorDescription === 'string') {
+    if (!this.innerError.error.description && errorDescription && typeof errorDescription === 'string') {
       this.innerError.error.description = errorDescription;
     }
 
-    this.innerError.error.description = errorDescription ? JSON.stringify(errorDescription) : this.innerError.error.description;
-
+    if (!this.innerError.error.description) {
+      this.innerError.error.description = errorDescription ? JSON.stringify(errorDescription) : this.innerError.error.description;
+    }
     return this;
   }
 }

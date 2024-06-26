@@ -47,6 +47,39 @@ export class AuthGuard implements CanActivate {
     try {
       const verifiedAccessToken = jwt.verify(token, jwtSecret) as IJWTPayload;
     } catch (error) {
+      if (error.message === 'jwt malformed') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'invalid token') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'invalid signature') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
       if (error.name === 'TokenExpiredError') {
         this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description}`, error);
         const response = new ExternalResponse(
@@ -65,6 +98,39 @@ export class AuthGuard implements CanActivate {
     try {
       const verifiedRefreshToken = jwt.verify(refreshToken, jwtSecret) as IJWTRefreshPayload;
     } catch (error) {
+      if (error.message === 'jwt malformed') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'invalid token') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'invalid signature') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
       if (error.name === 'TokenExpiredError') {
         this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
         const response = new ExternalResponse(
@@ -83,17 +149,35 @@ export class AuthGuard implements CanActivate {
       const { uuid } = jwt.decode(token) as IJWTPayload;
 
       const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
-
       if (!user) {
-        return false;
+        // return false;
+        throw Error('Login under the user with the appropriate role');
       }
 
       if (roles?.length === 0) {
         return true;
       }
 
-      return !!roles.includes(user.role['name']);
+      if (!roles.includes(user.role['name'])) {
+        throw Error('Login under the user with the appropriate role');
+      }
+      return true;
+      // return !!roles.includes(user.role['name']);
     } catch (error) {
+      if (error.message === 'Login under the user with the appropriate role') {
+        const errorRoles = {
+          name: 'Your role have not got access rights',
+          message: 'Login under the user with the appropriate role',
+        };
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description}`, errorRoles);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
+          [errorRoles],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(
           null,
@@ -103,10 +187,8 @@ export class AuthGuard implements CanActivate {
         );
         throw new HttpException(response, response.statusCode);
       }
-      this.logger.error(error);
+      this.logger.error(JSON.stringify(error));
       return false;
     }
-
-    return true;
   }
 }

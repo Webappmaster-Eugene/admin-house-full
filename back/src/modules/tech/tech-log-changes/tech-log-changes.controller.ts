@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseEnumPipe, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../../../common/guards/auth.guard';
 import { ITechLogChangesService } from './types/tech-log-changes.service.interface';
@@ -17,6 +17,7 @@ import { IQueryParams, QueryParams } from '../../../common/decorators/query-para
 import { KFI } from 'src/common/utils/di';
 import { TechLogChangesGetAllCommand, TechLogChangesGetCommand } from '@numart/house-admin-contracts';
 import { IUrlParams, UrlParams } from 'src/common/decorators/url-params.decorator';
+import { EUserTypeVariants } from '.prisma/client';
 
 @ApiTags('Работа с технической таблицей для логгирования действий всех пользователей')
 @Controller('tech-log-changes')
@@ -86,8 +87,9 @@ export class TechLogChangesController implements ITechLogChangesController {
   //endregion
   @UseGuards(AuthGuard)
   @ZodSerializerDto(TechLogChangesGetAllResponseDto)
-  @Get()
+  @Get('/:entityName')
   async getAllFromEntityEP(
+    @Param('entityName', new ParseEnumPipe(EntityName))
     EntityNameToSearch: EntityName,
     @UrlParams() urlParams: IUrlParams,
     @QueryParams() queryParams?: IQueryParams,

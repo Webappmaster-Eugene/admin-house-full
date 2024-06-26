@@ -11,6 +11,8 @@ const UserAddToProjectResponseEntitySchema = models_1.UserSchema.omit({
 });
 const UserAddToProjectRequestSchema = models_1.UserSchema.pick({
     uuid: true,
+    //DOC это поле специально здесь, потому что dtoToUpdateUser формируется в сервисе userService на этапе добавления
+    //пользователя в организацию (не в исходном входном dto, поступившего из контроллера, там только userId)
     memberOfProjectUuid: true,
 });
 const UserAddToProjectResponseSchema = zod_1.z

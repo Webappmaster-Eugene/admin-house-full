@@ -34,7 +34,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Handbook')
-@Controller('workspace/:workspaceId/handbook')
+@Controller('handbook')
 export class HandbookController implements IHandbookController {
   constructor(
     @Inject(KFI.HANDBOOK_SERVICE)
@@ -52,7 +52,7 @@ export class HandbookController implements IHandbookController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(HandbookGetResponseDto)
-  @Get('/:handbookId')
+  @Get('workspace/:workspaceId/handbook/:handbookId')
   async getByIdEP(
     @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -106,13 +106,13 @@ export class HandbookController implements IHandbookController {
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(HandbookCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId')
   async createEP(
     @Body() dto: HandbookCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
     @User() userInfoFromJWT: IJWTPayload,
   ): Promise<HandbookCreateResponseDto> {
-    // в create нужно передать id пользователя, для которого создается handbook
+    // DOC в create нужно передать id пользователя, для которого создается handbook
     try {
       const { ok, data } = await this.handbookService.create(dto, userInfoFromJWT.uuid);
       return okResponseHandler(ok, data, HandbookEntity, this.logger);
@@ -134,7 +134,7 @@ export class HandbookController implements IHandbookController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(HandbookUpdateResponseDto)
-  @Put('/:handbookId')
+  @Put('workspace/:workspaceId/handbook/:handbookId')
   async updateByIdEP(
     @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -162,7 +162,7 @@ export class HandbookController implements IHandbookController {
   @ZodSerializerDto(HandbookDeleteResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
-  @Delete('/:handbookId')
+  @Delete('workspace/:workspaceId/handbook/:handbookId')
   async deleteByIdEP(
     @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,

@@ -33,7 +33,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Projects')
-@Controller('workspace/:workspaceId/organization/:organizationId/project')
+@Controller('project')
 export class ProjectController {
   constructor(
     @Inject(KFI.PROJECT_SERVICE)
@@ -51,7 +51,7 @@ export class ProjectController {
   //endregion
   @ZodSerializerDto(ProjectGetResponseDto)
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
-  @Get('/:projectId')
+  @Get('workspace/:workspaceId/organization/:organizationId/project/:projectId')
   async getByIdEP(
     @Param('projectId') projectId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
@@ -101,7 +101,7 @@ export class ProjectController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(ProjectGetAllResponseDto)
-  @Get('/in-workspace')
+  @Get('workspace/:workspaceId/get-all-in-workspace')
   async getAllInWorkspaceEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('workspaceId') workspaceId: EntityUrlParamCommand.RequestUuidParam,
@@ -128,7 +128,7 @@ export class ProjectController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(ProjectGetAllResponseDto)
-  @Get('/in-organization')
+  @Get('workspace/:workspaceId/organization/:organizationId//get-all-in-organization')
   async getAllInOrganizationEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('organizationId') organizationId: EntityUrlParamCommand.RequestUuidParam,
@@ -155,7 +155,7 @@ export class ProjectController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(ProjectCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/organization/:organizationId')
   async create(
     @Body() dto: ProjectCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -184,7 +184,7 @@ export class ProjectController {
   //endregion
   @ZodSerializerDto(ProjectUpdateResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Put('/:projectId')
+  @Put('workspace/:workspaceId/organization/:organizationId/project/:projectId')
   async updateIdEP(
     @Body() dto: ProjectUpdateRequestDto,
     @Param('projectId', ParseUUIDPipe)
@@ -211,7 +211,7 @@ export class ProjectController {
   //endregion
   @ZodSerializerDto(ProjectDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:projectId')
+  @Delete('workspace/:workspaceId/organization/:organizationId/project/:projectId')
   async deleteByIdEP(
     @Param('projectId', ParseUUIDPipe)
     projectId: EntityUrlParamCommand.RequestUuidParam,

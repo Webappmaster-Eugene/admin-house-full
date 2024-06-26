@@ -5,11 +5,10 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-import { axiosEndpoints } from 'src/utils/auth/lib';
-import { AUTH_PATHS } from 'src/utils/auth/lib/auth.paths';
-import { getAccessToken, getRefreshToken } from 'src/utils/auth/lib/auth.service';
-
-import { logoutUser } from 'src/api/actions/auth-actions/logout.action';
+import { axiosEndpoints } from 'src/entities/auth/lib';
+import { AUTH_PATHS } from 'src/entities/auth/lib/auth.paths';
+import { logoutUser } from 'src/api/actions/auth/logout.action';
+import { getAccessToken, getRefreshToken } from 'src/entities/auth/lib/auth.service';
 
 type ResponseClientType = {
   statusCode: number;
@@ -19,8 +18,8 @@ type ResponseClientType = {
 };
 
 const axiosOptions: CreateAxiosDefaults = {
-  // baseURL: HOST_API,
-  baseURL: 'https://api.alibaba.hhos.ru/api/v1.0/',
+  baseURL: process.env.NEXT_PUBLIC_HOST_API,
+  // baseURL: 'https://api.alibaba.hhos.ru/api/v1.0/',
   withCredentials: true,
   // headers: {
   //   'Content-Type': 'application/json',
@@ -41,7 +40,6 @@ axiosAuthedInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer bad_access_token`;
       }
     }
-    console.log('clientCookieAccessToken', clientCookieAccessToken);
     const refreshToken = await getRefreshToken();
     if (refreshToken) {
       config.headers.Cookie = `REFRESH_KEY=${refreshToken}`;
@@ -52,7 +50,6 @@ axiosAuthedInstance.interceptors.request.use(
 
 axiosAuthedInstance.interceptors.response.use(
   async (res) => {
-    console.log('res.datares.datares.datares.datares.data', res.data);
     const responseData = res.data;
     return responseData;
   },

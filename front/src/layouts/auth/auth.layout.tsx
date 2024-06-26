@@ -1,12 +1,11 @@
+import Logo from '@/shared/logo';
+import { bgGradient } from '@/utils/theme/css';
+import { useResponsive } from '@/utils/hooks/use-responsive';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
-
-import { bgGradient } from 'src/utils/theme/css';
-import { useResponsive } from 'src/utils/hooks/use-responsive';
-
-import Logo from 'src/components/logo';
 
 // ----------------------------------------------------------------------
 

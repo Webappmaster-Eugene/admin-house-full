@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -48,7 +48,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
-import { AuthInterceptor } from 'src/common/interceptors/auth.interceptor';
+import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')
@@ -69,7 +69,7 @@ export class UserController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
   @ZodSerializerDto(UserGetResponseDto)
-  @Get('/byId/:userId')
+  @Get('by-id/:userId')
   async getByIdEP(
     @Param('userId', ParseUUIDPipe)
     userId: EntityUrlParamCommand.RequestUuidParam,
@@ -115,7 +115,7 @@ export class UserController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceAffiliationGuard)
   @ZodSerializerDto(UserGetResponseDto)
-  @Get('/byEmail/:email')
+  @Get('by-email/:email')
   async getByEmailEP(
     @Param('email') userEmail: EntityUrlParamCommand.RequestEmailParam,
     @UrlParams() urlParams: IUrlParams,
@@ -146,7 +146,6 @@ export class UserController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<UserGetAllResponseDto> {
     try {
       const { ok, data } = await this.userService.getAll(queryParams);
-
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -169,7 +168,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Post()
   async createEP(@Body() dto: UserCreateRequestDto, @UrlParams() urlParams: IUrlParams): Promise<UserCreateResponseDto> {
-    // через эту ручку можно зарегистрировать только user с дефолтной ролью
+    // DOC через эту ручку можно зарегистрировать только user с дефолтной ролью
     try {
       const { ok, data } = await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID);
       return okResponseHandler(ok, data, UserEntity, this.logger);
@@ -241,13 +240,14 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserGetResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @ZodSerializerDto(UserGetResponseDto)
+  @ZodSerializerDto(UserGetFullInfoResponseDto)
   @UseGuards(AuthGuard)
   // @UseInterceptors(AuthInterceptor)
-  @Get('/me')
-  async getCurrentUserEP(@User() userInfoFromJWT: IJWTPayload, @UrlParams() urlParams: IUrlParams): Promise<UserGetResponseDto> {
+  @Get('me')
+  async getCurrentUserEP(@User() userInfoFromJWT: IJWTPayload, @UrlParams() urlParams: IUrlParams): Promise<UserGetFullInfoResponseDto> {
     try {
-      const { ok, data } = await this.userService.getById(userInfoFromJWT.uuid);
+      console.log('Пользователь находится в системе: ' + JSON.stringify(userInfoFromJWT));
+      const { ok, data } = await this.userService.getFullInfoById(userInfoFromJWT.uuid);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -264,17 +264,18 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserAddToWorkspaceResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
+  @ZodSerializerDto(UserGetResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Put('/add-to-workspace/workspace/:workspaceId')
+  @Put('add-to-workspace/workspace/:workspaceId')
   // DOC добавить в workspace обычного пользователя
   async addUserToManagerWorkspaceEP(
     @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
+    @Body() dto: UserAddToWorkspaceRequestDto,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<UserAddToWorkspaceResponseDto> {
     try {
-      const { ok, data } = await this.userService.addUserToWorkspace(workspaceId, dto.userId);
+      const { ok, data } = await this.userService.addUserToWorkspace(workspaceId, dto.uuid);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -291,19 +292,20 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserAddToOrganizationResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
+  @ZodSerializerDto(UserGetResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Put('/add-to-organization/workspace/:workspaceId/organization/:organizationId')
+  @Put('add-to-organization/workspace/:workspaceId/organization/:organizationId')
   // DOC добавить в organization обычного пользователя
   async addUserToManagerOrganizationEP(
-    @Param('workspace', ParseUUIDPipe)
+    @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    @Param('organization', ParseUUIDPipe)
+    @Param('organizationId', ParseUUIDPipe)
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
+    @Body() dto: UserAddToOrganizationRequestDto,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<UserAddToOrganizationResponseDto> {
     try {
-      const { ok, data } = await this.userService.addUserToOrganization(workspaceId, organizationId, dto.userId);
+      const { ok, data } = await this.userService.addUserToOrganization(workspaceId, organizationId, dto.uuid);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
@@ -320,21 +322,22 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserAddToProjectResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
+  @ZodSerializerDto(UserGetResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Put('/add-to-project/workspace/:workspaceId/organization/:organizationId/project/:projectId')
+  @Put('add-to-project/workspace/:workspaceId/organization/:organizationId/project/:projectId')
   // DOC добавить в project обычного пользователя
   async addUserToManagerProjectEP(
-    @Param('workspace', ParseUUIDPipe)
+    @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
-    @Param('organization', ParseUUIDPipe)
+    @Param('organizationId', ParseUUIDPipe)
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    @Param('project', ParseUUIDPipe)
+    @Param('projectId', ParseUUIDPipe)
     projectId: EntityUrlParamCommand.RequestUuidParam,
-    @Body() dto: { userId: EntityUrlParamCommand.RequestUuidParam },
+    @Body() dto: UserAddToProjectRequestDto,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<UserAddToProjectResponseDto> {
     try {
-      const { ok, data } = await this.userService.addUserToProject(workspaceId, organizationId, projectId, dto.userId);
+      const { ok, data } = await this.userService.addUserToProject(workspaceId, organizationId, projectId, dto.uuid);
       return okResponseHandler(ok, data, UserEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);

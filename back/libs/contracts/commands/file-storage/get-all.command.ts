@@ -25,7 +25,7 @@ export namespace FileStorageGetAllCommand {
   export type RequestQuery = z.infer<typeof RequestQuerySchema>;
 
   export const ResponseSchema = FileStorageGetAllResponseSchema;
-  export type Request = z.infer<typeof ResponseSchema>;
+  export type Response = z.infer<typeof ResponseSchema>;
 
   export const ResponseEntitySchema = FileStorageGetAllResponseEntitySchema;
   export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;

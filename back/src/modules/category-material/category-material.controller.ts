@@ -35,7 +35,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с CategoryMaterial')
-@Controller('workspace/:workspaceId/handbook/:handbookId/category-material')
+@Controller('category-material')
 export class CategoryMaterialController implements ICategoryMaterialController {
   constructor(
     @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
@@ -53,7 +53,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CategoryMaterialGetResponseDto)
-  @Get('/:categoryMaterialId')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId')
   async getByIdEP(
     @Param('categoryMaterialId', ParseUUIDPipe)
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -111,7 +111,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CategoryMaterialGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -138,7 +138,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(CategoryMaterialCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId')
   async createEP(
     @Body() dto: CategoryMaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -168,7 +168,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(CategoryMaterialUpdateResponseDto)
-  @Put('/:categoryMaterialId')
+  @Put('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId')
   async updateByIdEP(
     @Param('categoryMaterialId', ParseUUIDPipe)
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -195,7 +195,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   //endregion
   @ZodSerializerDto(CategoryMaterialDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:categoryMaterialId')
+  @Delete('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId')
   async deleteByIdEP(
     @Param('categoryMaterialId', ParseUUIDPipe)
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpException, Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
@@ -10,6 +10,8 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
 import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { BACKEND_ERRORS, BackendErrorNames } from 'src/common/errors/errors.backend';
+import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
 
 @Injectable()
 export class WorkspaceAffiliationGuard implements CanActivate {
@@ -23,32 +25,77 @@ export class WorkspaceAffiliationGuard implements CanActivate {
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
 
     try {
-      // достаем uuid from токен
+      // DOC достаем uuid from токен
       const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
 
       const findedUser = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
 
       if (!findedUser) {
-        return false;
+        throw Error('Login under the user with the appropriate rights to perform this action');
+        // return false;
       }
 
-      // какой id у рассматриваемого пользователя
+      // DOC какой id у рассматриваемого пользователя
       const inputUuid = context.switchToHttp().getRequest().params['userId'];
 
-      // или действие совершает ADMIN
-      // или пользователь сам себя редактирует/смотрит
+      // DOC или действие совершает ADMIN
+      // DOC или пользователь сам себя редактирует/смотрит
       if (findedUser.role['idRole'] === ROLE_IDS.ADMIN_ROLE_ID || inputUuid === uuid) {
         return true;
       }
 
-      // или действие совершает менеджер Workspace, в котором находится пользователь
+      // DOC или действие совершает менеджер Workspace, в котором находится пользователь
       if (findedUser.role['idRole'] === ROLE_IDS.MANAGER_ROLE_ID) {
         const manager = findedUser;
         const selectedUser = dataInternalExtractor(await this.userService.getFullInfoById(inputUuid));
-        return selectedUser.memberOfWorkspaceUuid === manager.creatorOfWorkspaceUuid;
+        if (selectedUser.memberOfWorkspaceUuid === manager.creatorOfWorkspaceUuid) {
+          return true;
+        }
       }
-      return false;
+
+      throw Error('Login under the user with the appropriate rights to perform this action');
+
+      // return false;
     } catch (error) {
+      if (error.message === 'Login under the user with the appropriate rights to perform this action') {
+        const errorTypeUser = {
+          name: 'You have not got access rights',
+          message: 'Login under the user with the appropriate rights to perform this action',
+        };
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.WORKSPACE_MISMATCH].error.description}`, errorTypeUser);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.WORKSPACE_MISMATCH].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.WORKSPACE_MISMATCH].error.description,
+          [errorTypeUser],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'Login under the user with the appropriate role') {
+        const errorRoles = {
+          name: 'Your role have not got access rights',
+          message: 'Login under the user with the appropriate role',
+        };
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description}`, errorRoles);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
+          [errorRoles],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+      if (error.name === 'TokenExpiredError') {
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
       this.logger.error(JSON.stringify(error));
       return false;
     }

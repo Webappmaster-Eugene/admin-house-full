@@ -39,7 +39,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldOfCategoryMaterial')
-@Controller('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material')
+@Controller('field-of-category-material')
 export class FieldOfCategoryMaterialController implements IFieldOfCategoryMaterialController {
   constructor(
     @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE)
@@ -57,7 +57,9 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialGetResponseDto)
-  @Get('/:fieldOfCategoryMaterialId')
+  @Get(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+  )
   async getByIdEP(
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -115,7 +117,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -145,7 +147,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
-  @Get('/in-category-material')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('сategoryMaterialId', ParseUUIDPipe)
@@ -173,7 +175,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   @ApiResponse({ status: 201, type: FieldOfCategoryMaterialCreateResponseDto })
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId')
   async createEP(
     @Body() dto: FieldOfCategoryMaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -204,7 +206,9 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialUpdateResponseDto)
-  @Put('/:fieldOfCategoryMaterialId')
+  @Put(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+  )
   async updateByIdEP(
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -231,7 +235,9 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @ZodSerializerDto(FieldOfCategoryMaterialDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
-  @Delete('/:fieldOfCategoryMaterialId')
+  @Delete(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+  )
   async deleteByIdEP(
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

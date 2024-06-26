@@ -12,6 +12,11 @@ export function errorRepositoryHandler(error: unknown): void {
     throw new InternalResponse(new InternalError(BackendErrorNames.PRISMA_CONFLICT_ERROR, error));
   }
 
+  if (error instanceof PrismaClientKnownRequestError && error.code === BackendPErrorCodes.PRISMA_INVALID_UUID) {
+    console.log('errorerrorerrorerrorerrorerrorerror', error);
+    throw new InternalResponse(new InternalError(BackendErrorNames.PRISMA_INVALID_INPUT, error));
+  }
+
   if (error instanceof NotFoundException) {
     throw new InternalResponse(new InternalError(BackendErrorNames.NOT_FOUND, error));
   }

@@ -27,7 +27,6 @@ export class AuthInterceptor implements NestInterceptor {
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
     const oldRefreshToken = request.cookies[COOKIE_KEYS.REFRESH_KEY];
     console.log('AuthInterceptor used');
-    console.log(token);
     if (oldRefreshToken) {
       try {
         jwt.verify(oldRefreshToken, jwtSecret) as IJWTPayload; // верификация refreshToken

@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpException, Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { IJWTPayload } from '../types/jwt.payload.interface';
@@ -11,6 +11,8 @@ import { IUserService } from '../../modules/user/types/user.service.interface';
 import { IWorkspaceService } from '../../modules/workspace/types/workspace.service.interface';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
 import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { BACKEND_ERRORS, BackendErrorNames } from 'src/common/errors/errors.backend';
+import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
 
 @Injectable()
 export class WorkspaceCreatorGuard implements CanActivate {
@@ -25,29 +27,57 @@ export class WorkspaceCreatorGuard implements CanActivate {
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
 
     try {
-      // достаем uuid from токен
+      // DOC достаем uuid from токен
       const { uuid } = jwt.verify(token, jwtSecret) as IJWTPayload;
 
-      // кто совершает действие
+      // DOC кто совершает действие
       const findedUser = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
 
       if (!findedUser) {
-        return false;
+        throw Error('Login under the user with the appropriate role');
+        // return false;
       }
 
-      // или действие совершает ADMIN
-      if (findedUser.role['idRole'] === ROLE_IDS.CUSTOMER_ROLE_ID) {
+      // DOC или действие совершает ADMIN
+      if (findedUser.role['idRole'] === ROLE_IDS.ADMIN_ROLE_ID) {
         return true;
       }
 
-      // какой id у рассматриваемого workspace
+      // DOC какой id у рассматриваемого workspace
       const inputWorkspaceUuid = context.switchToHttp().getRequest().params['workspaceId'];
 
       const selectedWorkspace = dataInternalExtractor(await this.workspaceService.getById(inputWorkspaceUuid));
 
-      // или действие совершает менеджер самого Workspace
-      return findedUser.creatorOfWorkspaceUuid === selectedWorkspace.uuid;
+      // DOC или действие совершает менеджер самого Workspace
+      if (findedUser.creatorOfWorkspaceUuid === selectedWorkspace.uuid) {
+        return true;
+      }
+      throw Error('Login under the user with the appropriate role');
     } catch (error) {
+      if (error.message === 'Login under the user with the appropriate role') {
+        const errorRoles = {
+          name: 'Your role have not got access rights',
+          message: 'Login under the user with the appropriate role',
+        };
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description}`, errorRoles);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
+          [errorRoles],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+      if (error.name === 'TokenExpiredError') {
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
       this.logger.error(JSON.stringify(error));
       return false;
     }

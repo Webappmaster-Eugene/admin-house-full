@@ -10,6 +10,7 @@ import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { UserAddToOrganizationResponseDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
 import { UserAddToProjectResponseDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
 
 export interface IUserController
   extends IControllerCommon<
@@ -35,7 +36,7 @@ export interface IUserController
     urlParams: IUrlParams,
   ) => Promise<UserUpdateResponseDto>;
   deleteByIdEP: (userId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<UserDeleteResponseDto>;
-  getCurrentUserEP: (userInfoFromJWT: IJWTPayload, urlParams: IUrlParams) => Promise<UserGetResponseDto>;
+  getCurrentUserEP: (userInfoFromJWT: IJWTPayload, urlParams: IUrlParams) => Promise<UserGetFullInfoResponseDto>;
   addUserToWorkspaceEP: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     dto: { userId: EntityUrlParamCommand.RequestUuidParam },

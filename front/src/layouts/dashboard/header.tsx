@@ -1,3 +1,7 @@
+import Logo from '@/shared/logo';
+import SvgColor from '@/shared/svg-color';
+import { useSettingsContext } from '@/shared/settings';
+
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,13 +12,10 @@ import { bgBlur } from 'src/utils/theme/css';
 import { useOffSetTop } from 'src/utils/hooks/use-off-set-top';
 import { useResponsive } from 'src/utils/hooks/use-responsive';
 
-import Logo from 'src/components/logo';
-import SvgColor from 'src/components/svg-color';
-import { useSettingsContext } from 'src/components/settings';
+import SettingsButton from 'src/features/settings-button';
+import AccountPopover from 'src/features/account-popover';
 
 import { NAV, HEADER } from '../config-layout';
-import SettingsButton from '../common/settings-button';
-import AccountPopover from '../common/account-popover';
 
 // ----------------------------------------------------------------------
 

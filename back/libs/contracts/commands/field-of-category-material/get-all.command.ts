@@ -29,7 +29,7 @@ export namespace FieldOfCategoryMaterialGetAllCommand {
   export type RequestQuery = z.infer<typeof RequestQuerySchema>;
 
   export const ResponseSchema = FieldOfCategoryMaterialGetAllResponseSchema;
-  export type Request = z.infer<typeof ResponseSchema>;
+  export type Response = z.infer<typeof ResponseSchema>;
 
   export const ResponseEntitySchema = FieldOfCategoryMaterialGetAllResponseEntitySchema;
   export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;

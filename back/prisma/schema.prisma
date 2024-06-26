@@ -18,6 +18,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// DOC Ключ для регистрации пользователя с ролью менеджера, работника или админа (RegisterWithRoleKey) - определяется на уровне приложения (создается автоматически сидами, изменяется (обновляется) админом):
+// DOC auth/strict-admin-key
+model RegisterWithRoleKey {
+  uuid                 String   @id @default(uuid()) @db.Uuid
+  key                  String   @unique
+  lastChangeByUserUuid String?  @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?    @relation("RegisterWithRoleKey_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("register_with_role_key")
+}
+
 // DOC Информация о приложении (App-Info) - определяются на уровне приложения (создаются автоматически сидами, изменяются админом):
 // DOC app-info
 model AppInfo {
@@ -113,19 +126,6 @@ model User {
   @@map("user")
 }
 
-// DOC Ключ для регистрации пользователя с ролью менеджера, работника или админа (RegisterWithRoleKey) - определяется на уровне приложения (создается автоматически сидами, изменяется (обновляется) админом):
-// DOC auth/strict-admin-key
-model RegisterWithRoleKey {
-  uuid                 String   @id @default(uuid()) @db.Uuid
-  key                  String   @unique
-  lastChangeByUserUuid String?  @map("last_change_by_user_uuid") @db.Uuid
-  lastChangeByUser     User?    @relation("RegisterWithRoleKey_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("register_with_role_key")
-}
-
 // DOC Информационное пространство (Workspaces) - определяются на уровне приложения (создаются автоматически при создании пользователя-менеджера):
 // DOC workspace
 model Workspace {
@@ -147,7 +147,7 @@ model Workspace {
 }
 
 // DOC Справочник (Handbook) - определяются на уровне приложения (создаются автоматически при создании пользователя-менеджера):
-// DOC workspace/:workspaceId/handbook
+// DOC handbook
 model Handbook {
   uuid                         String                              @id @default(uuid()) @db.Uuid
   name                         String
@@ -173,7 +173,7 @@ model Handbook {
 }
 
 // DOC Организации (Organization) - определяются на уровне workspace (создаются менеджером workspace):
-// DOC workspace/:workspaceId/organization/
+// DOC organization
 model Organization {
   uuid                   String    @id @default(uuid()) @db.Uuid
   name                   String
@@ -193,7 +193,7 @@ model Organization {
 }
 
 // DOC Проекты (Project) - определяются на уровне workspace (создаются менеджером workspace):
-// DOC workspace/:workspaceId/organization/:organizationId/project/
+// DOC project
 model Project {
   uuid                   String       @id @default(uuid()) @db.Uuid
   name                   String
@@ -249,7 +249,7 @@ model GlobalCategoryMaterial {
 }
 
 // DOC Категории материалов (CategoryMaterial) - определяются на уровне workspace (создаются членами workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/category-material
+// DOC category-material
 model CategoryMaterial {
   uuid                       String                    @id @default(uuid()) @db.Uuid
   name                       String
@@ -271,7 +271,7 @@ model CategoryMaterial {
 }
 
 // DOC Единица измерения для полей (FieldUnitMeasurement) - определяются на уровне workspace (создаются членами workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/field-unit-measurement
+// DOC field-unit-measurement
 model FieldUnitMeasurement {
   uuid                      String                    @id @default(uuid()) @db.Uuid
   name                      String
@@ -290,7 +290,7 @@ model FieldUnitMeasurement {
 }
 
 // DOC Само поле в материале (FieldOfCategoryMaterial) - определяются на уровне workspace (создаются членами workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/
+// DOC field-of-category-material
 model FieldOfCategoryMaterial {
   uuid                              String                              @id @default(uuid()) @db.Uuid
   name                              String
@@ -317,7 +317,7 @@ model FieldOfCategoryMaterial {
 }
 
 // DOC Варианты списка для конкретного типа поля (селектора) - определяются на уровне workspace (создаются членами workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants
+// DOC field-variants
 model FieldVariantsForSelectorFieldType {
   uuid                        String                  @id @default(uuid()) @db.Uuid
   value                       String
@@ -335,7 +335,7 @@ model FieldVariantsForSelectorFieldType {
 }
 
 // DOC Поставщик/производитель работ (ResponsiblePartnerProducer) - определяется на уровне workspace (создаются членами Workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer
+// DOC responsible-partner-producer
 model ResponsiblePartnerProducer {
   uuid                 String     @id @default(uuid()) @db.Uuid
   name                 String
@@ -355,7 +355,7 @@ model ResponsiblePartnerProducer {
 }
 
 // DOC Материалы (Material) - определяются на уровне workspace (создаются членами workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material
+// DOC material
 model Material {
   uuid                    String                      @id @default(uuid()) @db.Uuid
   name                    String
@@ -382,7 +382,7 @@ model Material {
 }
 
 // DOC Характеристики материала (CharacteristicsMaterial) - определяются на уровне workspace (создаются членами workspace):
-// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/use-field-category-material/:fieldCategoryMaterialId/characteristics-material
+// DOC characteristics-material
 model CharacteristicsMaterial {
   uuid                        String                  @id @default(uuid()) @db.Uuid
   name                        String
@@ -411,7 +411,7 @@ model CharacteristicsMaterial {
 }
 
 // DOC Изменение цены на материал (PriceChanging) - определяются на уровне workspace (создаются автоматически при любом изменении (с сохранением) цены материала):
-// DOC workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing
+// DOC price-changing
 model PriceChanging {
   uuid                 String   @id @default(uuid()) @db.Uuid
   newPrice             Float    @map("new_price")

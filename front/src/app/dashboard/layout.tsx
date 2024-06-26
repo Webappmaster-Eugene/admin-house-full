@@ -1,7 +1,8 @@
 'use client';
 
+import { AuthGuard } from '@/entities/auth/guard';
+
 import { PropsReactNode } from 'src/utils/types';
-import { AuthGuard } from 'src/utils/auth/guard';
 
 import DashboardLayout from 'src/layouts/dashboard';
 

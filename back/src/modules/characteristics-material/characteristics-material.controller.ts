@@ -39,9 +39,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с CharacteristicsMaterial')
-@Controller(
-  'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/use-field-category-material/:fieldCategoryMaterialId/use-field-category-material/:fieldCategoryMaterialId/characteristics-material',
-)
+@Controller('characteristics-material')
 export class CharacteristicsMaterialController implements ICharacteristicsMaterialController {
   constructor(
     @Inject(KFI.CHARACTERISTICS_MATERIAL_SERVICE)
@@ -59,7 +57,9 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetResponseDto)
-  @Get('/:characteristicsMaterialId')
+  @Get(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristics-material/:characteristicsMaterialId',
+  )
   async getByIdEP(
     @Param('characteristicsMaterialId', ParseUUIDPipe)
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -117,7 +117,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -147,7 +147,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
-  @Get('/in-category-material')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('categoryMaterialId', ParseUUIDPipe)
@@ -177,7 +177,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialGetAllResponseDto)
-  @Get('/in-material')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/get-all-in-material')
   async getAllInMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('materialId', ParseUUIDPipe)
@@ -205,7 +205,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   @ApiResponse({ status: 201, type: CharacteristicsMaterialCreateResponseDto })
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId')
   async createEP(
     @Body() dto: CharacteristicsMaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -247,7 +247,9 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialUpdateResponseDto)
-  @Put('/:characteristicsMaterialId')
+  @Put(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristic-material/:characteristicsMaterialId',
+  )
   async updateByIdEP(
     @Param('characteristicsMaterialId', ParseUUIDPipe)
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -274,7 +276,9 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   //endregion
   @ZodSerializerDto(CharacteristicsMaterialDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
-  @Delete('/:characteristicsMaterialId')
+  @Delete(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristic-material/:characteristicsMaterialId',
+  )
   async deleteByIdEP(
     @Param('characteristicsMaterialId', ParseUUIDPipe)
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,

@@ -1,5 +1,3 @@
-import OneView from 'src/sections/one/view';
-
 // ----------------------------------------------------------------------
 
 export const metadata = {
@@ -11,5 +9,7 @@ export default async function DashboardPage() {
   // if (!user) {
   //   redirect(PATH_AFTER_LOGIN);
   // }
-  return <OneView />;
+
+  // redirect(paths.dashboard.materials);
+  return <h1>Dashboard</h1>;
 }

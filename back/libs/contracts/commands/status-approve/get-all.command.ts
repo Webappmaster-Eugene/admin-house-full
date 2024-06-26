@@ -25,7 +25,7 @@ export namespace StatusApproveGetAllCommand {
   export type RequestQuery = z.infer<typeof RequestQuerySchema>;
 
   export const ResponseSchema = StatusApproveGetAllResponseSchema;
-  export type Request = z.infer<typeof ResponseSchema>;
+  export type Response = z.infer<typeof ResponseSchema>;
 
   export const ResponseEntitySchema = StatusApproveGetAllResponseEntitySchema;
   export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;

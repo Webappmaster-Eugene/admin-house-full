@@ -36,6 +36,7 @@ import { okResponseHandler } from '../../common/helpers/handlers/ok-response.han
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
+//DOC 'workspace'
 @ApiTags('Работа с Workspace пользователей')
 @Controller('workspace')
 export class WorkspaceController implements IWorkspaceController {
@@ -58,11 +59,11 @@ export class WorkspaceController implements IWorkspaceController {
   @Get('/:workspaceId')
   async getByIdEP(
     @Param('workspaceId', ParseUUIDPipe)
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<WorkspaceGetResponseDto> {
     try {
-      const { ok, data } = await this.workspaceService.getById(id);
+      const { ok, data } = await this.workspaceService.getById(workspaceId);
       return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
@@ -113,7 +114,7 @@ export class WorkspaceController implements IWorkspaceController {
     @UrlParams() urlParams: IUrlParams,
     @User() userInfo: IJWTPayload,
   ): Promise<WorkspaceCreateResponseDto> {
-    // в create нужно передать id пользователя, для которого создается workspace
+    //DOC в create нужно передать id пользователя, для которого создается workspace
     try {
       const { ok, data } = await this.workspaceService.create(dto, userInfo.uuid);
       return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
@@ -138,13 +139,13 @@ export class WorkspaceController implements IWorkspaceController {
   @Put('/:workspaceId')
   async updateByIdEP(
     @Param('workspaceId', ParseUUIDPipe)
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     @Body() dto: WorkspaceUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,
     // @User() user: IJWTPayload,
   ): Promise<WorkspaceUpdateResponseDto> {
     try {
-      const { ok, data } = await this.workspaceService.updateById(id, dto);
+      const { ok, data } = await this.workspaceService.updateById(workspaceId, dto);
       return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
@@ -165,11 +166,11 @@ export class WorkspaceController implements IWorkspaceController {
   @Delete('/:workspaceId')
   async deleteByIdEP(
     @Param('workspaceId', ParseUUIDPipe)
-    id: EntityUrlParamCommand.RequestUuidParam,
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<WorkspaceDeleteResponseDto> {
     try {
-      const { ok, data } = await this.workspaceService.deleteById(id);
+      const { ok, data } = await this.workspaceService.deleteById(workspaceId);
       return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
@@ -192,9 +193,9 @@ export class WorkspaceController implements IWorkspaceController {
   @ZodSerializerDto(WorkspaceGetResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard, IsManagerInBodyGuard)
-  @Put('/change-owner/:workspaceId')
-  //изменить owner id на новый (переданный в body запроса)
-  // Этого мало, нужно еще у старого пользователя все поменять, а новому передать handbook и следить за истинностью данных. Для этого нужно будет перенести в Users данную ручку (чтобы избежать кольцевых зависимостей)
+  @Put('change-owner/:workspaceId')
+  //FIXME изменить owner id на новый (переданный в body запроса)
+  //FIXME Этого мало, нужно еще у старого пользователя все поменять, а новому передать handbook и следить за истинностью данных. Для этого нужно будет перенести в Users данную ручку (чтобы избежать кольцевых зависимостей)
   async changeWorkspaceOwnerEP(
     @Param('workspaceId', ParseUUIDPipe)
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

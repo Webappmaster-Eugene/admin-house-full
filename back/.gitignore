@@ -5,6 +5,9 @@
 
 # Папка (npm-пакет) с контрактами
 /libs/contracts/node_modules
+/libs/automapper/classes/node_modules
+/libs/automapper/core/node_modules
+/libs/automapper/nestjs/node_modules
 
 # Logs
 logs

@@ -1,4 +1,4 @@
-import RegisterView from 'src/sections/auth/register-view';
+import RegisterView from 'src/widgets/auth/register-view';
 
 export const metadata = {
   title: 'Auth: Register',

@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, HttpException, Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
-import { IJWTPayload } from '../types/jwt.payload.interface';
+import { IJWTPayload, IJWTRefreshPayload } from '../types/jwt.payload.interface';
 import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { KFI } from '../utils/di';
@@ -21,22 +21,58 @@ export class RefreshKeyGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const { refreshToken, jwtSecret } = refreshKeyExtractor(context, this.configService);
-
     try {
-      const { uuid } = jwt.verify(refreshToken, jwtSecret) as IJWTPayload;
-
+      const { refreshToken, jwtSecret } = refreshKeyExtractor(context, this.configService);
+      const { uuid } = jwt.verify(refreshToken, jwtSecret) as IJWTRefreshPayload;
       const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
       if (!user) {
-        return false;
+        throw Error('Login under the user with the appropriate role');
+        // return false;
       }
       return true;
     } catch (error) {
+      if (error.message === 'Login under the user with the appropriate role') {
+        const errorRelogin = {
+          name: 'Your role have not got access rights',
+          message: 'Login under the user with the appropriate role',
+        };
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description}`, errorRelogin);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
+          [errorRelogin],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'invalid token') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
+      if (error.message === 'invalid signature') {
+        this.logger.error(`${BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description}`, error);
+        const response = new ExternalResponse(
+          null,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
+          [error],
+        );
+        throw new HttpException(response, response.statusCode);
+      }
+
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(
           null,
-          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].httpCode,
-          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].httpCode,
+          BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
         throw new HttpException(response, response.statusCode);

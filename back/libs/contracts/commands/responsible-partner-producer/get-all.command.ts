@@ -28,7 +28,7 @@ export namespace ResponsiblePartnerProducerGetAllCommand {
   export type RequestQuery = z.infer<typeof RequestQuerySchema>;
 
   export const ResponseSchema = ResponsiblePartnerProducerGetAllResponseSchema;
-  export type Request = z.infer<typeof ResponseSchema>;
+  export type Response = z.infer<typeof ResponseSchema>;
 
   export const ResponseEntitySchema = ResponsiblePartnerProducerGetAllResponseEntitySchema;
   export type ResponseEntity = z.infer<typeof ResponseEntitySchema>;

@@ -1,9 +1,9 @@
+import { useSettingsContext } from '@/shared/settings';
+
 import Box from '@mui/material/Box';
 
 import { useBoolean } from 'src/utils/hooks/use-boolean';
 import { useResponsive } from 'src/utils/hooks/use-responsive';
-
-import { useSettingsContext } from 'src/components/settings';
 
 import Main from './main';
 import Header from './header';

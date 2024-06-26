@@ -1,4 +1,4 @@
-import LoginView from 'src/sections/auth/login-view';
+import LoginView from 'src/widgets/auth/login-view';
 
 export const metadata = {
   title: 'Auth: Login',

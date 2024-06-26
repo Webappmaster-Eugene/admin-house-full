@@ -34,7 +34,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с Material')
-@Controller('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material')
+@Controller('material')
 export class MaterialController implements IMaterialController {
   constructor(
     @Inject(KFI.MATERIAL_SERVICE)
@@ -52,7 +52,7 @@ export class MaterialController implements IMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialGetResponseDto)
-  @Get('/:materialId')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId')
   async getByIdEP(
     @Param('materialId', ParseUUIDPipe)
     materialId: EntityUrlParamCommand.RequestUuidParam,
@@ -74,7 +74,7 @@ export class MaterialController implements IMaterialController {
     schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все Materials',
+    summary: 'Получить все materials',
   })
   @ApiResponse({ status: 200, type: [MaterialGetAllResponseDto] })
   @ApiBearerAuth('access-token')
@@ -100,14 +100,14 @@ export class MaterialController implements IMaterialController {
     schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все Materials внутри Material',
+    summary: 'Получить все materials внутри Material',
   })
   @ApiResponse({ status: 200, type: [MaterialGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -129,14 +129,14 @@ export class MaterialController implements IMaterialController {
     schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
   })
   @ApiOperation({
-    summary: 'Получить все Materials внутри CategoryMaterial',
+    summary: 'Получить все materials внутри CategoryMaterial',
   })
   @ApiResponse({ status: 200, type: [MaterialGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialGetAllResponseDto)
-  @Get('/in-category-material/')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -163,7 +163,7 @@ export class MaterialController implements IMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(MaterialCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId')
   async createEP(
     @Body() dto: MaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -194,7 +194,7 @@ export class MaterialController implements IMaterialController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(MaterialUpdateResponseDto)
-  @Put('/:materialId')
+  @Put('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId')
   async updateByIdEP(
     @Param('materialId', ParseUUIDPipe)
     materialId: EntityUrlParamCommand.RequestUuidParam,
@@ -222,7 +222,7 @@ export class MaterialController implements IMaterialController {
   //endregion
   @ZodSerializerDto(MaterialDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:materialId')
+  @Delete('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId')
   async deleteByIdEP(
     @Param('materialId', ParseUUIDPipe)
     materialId: EntityUrlParamCommand.RequestUuidParam,

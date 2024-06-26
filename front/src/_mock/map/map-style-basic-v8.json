@@ -443,7 +443,6 @@
         "symbol-placement": "line",
         "text-field": "{name_en}",
         "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-        "text-transform": "uppercase",
         "text-letter-spacing": 0.1,
         "text-size": {
           "base": 1.4,

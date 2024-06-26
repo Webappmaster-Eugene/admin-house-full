@@ -462,7 +462,7 @@ export const _taskNames = [
   'Conduct Customer Satisfaction Survey',
   'Design Email Newsletter Template',
   'Monitor Server Logs for Errors',
-  'Create Training Materials',
+  'Create Training materials',
   'Plan and Execute Marketing Campaign',
   'Develop Mobile Application',
   'Coordinate Project Meetings',

@@ -1,6 +1,11 @@
-import { User } from '.prisma/client';
+import { Handbook, Organization, Project, Role, User, Workspace } from '.prisma/client';
 import { RoleSchema, WorkspaceSchema } from '@numart/house-admin-contracts';
 
+// class PersonWithRoleName {
+//   public roleName: string;
+// }
+
+// export class UserAllInfoEntity extends PersonWithRoleName implements User {
 export class UserAllInfoEntity implements User {
   uuid: string;
   firstName: string;
@@ -21,9 +26,15 @@ export class UserAllInfoEntity implements User {
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  role: typeof RoleSchema;
-  creatorOfWorkspace: typeof WorkspaceSchema;
-  memberOfWorkspace: typeof WorkspaceSchema;
+  roleName?: string;
+  role?: Role;
+  creatorOfWorkspace?: Workspace;
+  memberOfWorkspace?: Workspace;
+  memberOfOrganization?: Organization;
+  leaderOfOrganizations?: Organization[];
+  memberOfProject?: Project;
+  responsibleManagerOfProjects?: Project[];
+  handbookManager?: Handbook;
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);

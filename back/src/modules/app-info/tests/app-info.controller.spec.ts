@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { AppInfoService } from '../app-info.service';
 import { AppInfoController } from '../app-info.controller';
-import { MethodName } from '../../../common/types/method.enum';
+import { METHODS } from 'src/common/api-description/method.enum';
 import { KFI } from '../../../common/utils/di';
 import { AppInfoRepository } from '../app-info.repository';
 import { QUERIES } from '../query';
@@ -56,7 +56,7 @@ describe('AppInfoController', () => {
     //   expect(
     //     await appInfoController.getEP({
     //       url: '/app-info',
-    //       method: MethodName.GET,
+    //       method: METHODS.GET,
     //     }),
     //   ).toBeDefined();
     // });

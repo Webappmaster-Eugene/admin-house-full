@@ -18,6 +18,10 @@ export class InternalResponse<TResponseDto> implements UniversalInternalResponse
 
   constructor(public data: TResponseDto | InternalError) {
     this.ok = !!isOk<TResponseDto>(this.data);
+    if (isOk<TResponseDto>(this.data)) {
+      const dat = this.data as TResponseDto;
+    }
+
     return this;
   }
 }

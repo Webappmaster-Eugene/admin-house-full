@@ -20,6 +20,9 @@
 /front/node_modules
 /front/build
 
+# Data of s3-minio-data
+/s3-minio-data
+
 # Logs
 logs
 *.log

@@ -1,15 +1,13 @@
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 
-import Header from '../common/header-simple';
+import { PropsReactNode } from 'src/utils/types';
+
+import Header from 'src/layouts/dashboard/header';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function CompactLayout({ children }: Props) {
+export default function CompactLayout({ children }: PropsReactNode) {
   return (
     <>
       <Header />

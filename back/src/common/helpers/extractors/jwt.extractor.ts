@@ -11,9 +11,13 @@ export function jwtExtractor(
 } {
   const request = context.switchToHttp().getRequest();
   const authHeaderSplitted = request?.headers?.authorization?.split(' ');
+  const JWT_SECRET_KEY = configService.get<string>('JWT_KEY');
 
-  const token = authHeaderSplitted[authHeaderSplitted.length - 1];
-  const JWT_SECRET_KEY = configService.get('JWT_KEY');
+  if (authHeaderSplitted) {
+    const token = authHeaderSplitted[authHeaderSplitted?.length - 1];
 
-  return { token: token, jwtSecret: JWT_SECRET_KEY };
+    return { token: token, jwtSecret: JWT_SECRET_KEY };
+  } else {
+    return { token: 'bad_token', jwtSecret: JWT_SECRET_KEY };
+  }
 }

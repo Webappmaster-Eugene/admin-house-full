@@ -1,6 +1,6 @@
 {
   "name": "@numart/house-admin-contracts",
-  "version": "1.0.13",
+  "version": "1.0.17",
   "description": "Контракты для проекта house-admin",
   "publishConfig": {
     "access": "public"

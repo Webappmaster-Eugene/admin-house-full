@@ -1,4 +1,4 @@
-export const enum EntityName {
+export enum EntityName {
   APP_INFO = 'APP_INFO',
   ROLE = 'ROLE',
   USER = 'USER',
@@ -18,5 +18,7 @@ export const enum EntityName {
   MATERIAL = 'MATERIAL',
   PRICE_CHANGING = 'PRICE_CHANGING',
   STATUS_RESOURCE = 'STATUS_RESOURCE',
+  STATUS_APPROVE = 'STATUS_APPROVE',
   TECH_LOG_CHANGES = 'TECH_LOG_CHANGES',
+  FILE_STORAGE = 'FILE_STORAGE',
 }

@@ -57,11 +57,12 @@ export class UserService implements IUserService {
   async getFullInfoById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<UserAllInfoEntity>> {
     const cachedInfo = await cacheGetter<UserAllInfoEntity>(this.cacheManager, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`);
     if (!cachedInfo) {
-      const concreteUser = await this.userRepository.getFullInfoById(userId);
+      const concreteUser: UserAllInfoEntity = await this.userRepository.getFullInfoById(userId);
       await cacheSetter(this.cacheManager, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, concreteUser);
-      return new InternalResponse(concreteUser);
+      return new InternalResponse<UserAllInfoEntity>(concreteUser);
+    } else {
+      return new InternalResponse(cachedInfo);
     }
-    return new InternalResponse(cachedInfo);
   }
 
   async getByEmail(userEmail: EntityUrlParamCommand.RequestEmailParam): Promise<UniversalInternalResponse<UserEntity>> {
@@ -150,7 +151,7 @@ export class UserService implements IUserService {
     }
 
     //FIXME проверить, в каких случаях отрабатывает это исключение
-    // throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
+    //throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
   }
 
   async updateById(
@@ -230,7 +231,6 @@ export class UserService implements IUserService {
 
     if (findedUser.memberOfWorkspaceUuid === workspaceId) {
       const dtoToUpdateUser: UserAddToOrganizationRequestDto = { uuid: userId, memberOfOrganizationUuid: organizationId };
-
       const updatedUser = await this.userRepository.addUserToOrganizationById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
 

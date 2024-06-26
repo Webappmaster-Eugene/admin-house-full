@@ -1,4 +1,6 @@
 import { memo } from 'react';
+import Scrollbar from '@/shared/scrollbar';
+import { NavSectionHorizontal } from '@/shared/nav-section';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,12 +9,8 @@ import { useTheme } from '@mui/material/styles';
 import { bgBlur } from 'src/utils/theme/css';
 import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 
-import Scrollbar from 'src/components/scrollbar';
-import { NavSectionHorizontal } from 'src/components/nav-section';
-
 import { HEADER } from '../config-layout';
 import { useNavData } from './config-navigation';
-import HeaderShadow from '../common/header-shadow';
 
 // ----------------------------------------------------------------------
 

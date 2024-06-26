@@ -1,7 +1,7 @@
 {
   "name": "Admin House - frontend",
   "author": "LUCHI",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Admin House - frontend",
   "private": true,
   "scripts": {
@@ -21,13 +21,14 @@
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@hookform/resolvers": "^3.3.2",
     "@iconify/react": "^4.1.1",
     "@mui/lab": "^5.0.0-alpha.155",
-    "@mui/material": "^5.14.20",
-    "@numart/house-admin-contracts": "^1.0.11",
+    "@mui/material": "^5.15.20",
+    "@mui/x-data-grid": "^7.7.0",
+    "@numart/house-admin-contracts": "^1.0.17",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.2",
     "clsx": "^2.1.1",

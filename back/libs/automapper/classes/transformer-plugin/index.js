@@ -391,7 +391,7 @@ ModelVisitor.isCommonJS = false;
 const version$1 = 881;
 
 const defaultOptions = {
-  modelFileNameSuffix: ['.entity.ts', '.model.ts', '.dto.ts', '.vm.ts'],
+  modelFileNameSuffix: ['.entities.ts', '.model.ts', '.dto.ts', '.vm.ts'],
 };
 /**
  * Remember to increase the version whenever transformer's content is changed. This is to inform Jest to not reuse

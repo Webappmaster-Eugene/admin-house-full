@@ -1,9 +1,9 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { MethodName } from '../types/method.enum';
+import { METHODS } from 'src/common/api-description/method.enum';
 
 export interface IUrlParams {
   url: string;
-  method: MethodName;
+  method: METHODS;
 }
 
 export const UrlParams = createParamDecorator((data: unknown, context: ExecutionContext) => {

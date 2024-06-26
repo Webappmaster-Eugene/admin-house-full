@@ -1,6 +1,5 @@
-import { paths } from 'src/utils/routes/paths';
-
-import { ICONS } from 'src/components/icons-app';
+import { ICONS } from '@/shared/icons-app';
+import { paths } from '@/utils/routes/paths';
 
 export function useNavData() {
   const data = [
@@ -8,11 +7,11 @@ export function useNavData() {
     {
       subheader: 'Основное меню',
       items: [
-        { title: 'Справочник материалов', path: paths.dashboard.root, icon: ICONS.analytics },
-        { title: 'Справочник категорий', path: paths.dashboard.two, icon: ICONS.file },
+        { title: 'Материалы', path: paths.dashboard.materials, icon: ICONS.analytics },
+        { title: 'Поля материалов', path: paths.dashboard.fields, icon: ICONS.file },
         {
-          title: 'Справочник полей',
-          path: paths.dashboard.three,
+          title: 'Характеристики материалов',
+          path: paths.dashboard.characteristics,
           icon: ICONS.folder,
         },
       ],
@@ -24,12 +23,12 @@ export function useNavData() {
       items: [
         {
           title: 'Личный кабинет',
-          path: paths.dashboard.group.root,
+          path: paths.profile.profile,
           icon: ICONS.user,
           children: [
-            { title: 'Настройки профиля', path: paths.dashboard.group.root },
-            { title: 'Админ-возможности', path: paths.dashboard.group.five },
-            { title: 'Информация о ПО', path: paths.dashboard.group.six },
+            { title: 'Мой профиль', path: paths.profile.profile },
+            { title: 'Админ-панель', path: paths.profile.admin },
+            { title: 'Настройки', path: paths.profile.settings },
           ],
         },
       ],

@@ -39,7 +39,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с FieldUnitMeasurement')
-@Controller('/workspace/:workspaceId/handbook/:handbookId/field-unit-measurement')
+@Controller('field-unit-measurement')
 export class FieldUnitMeasurementController implements IFieldUnitMeasurementController {
   constructor(
     @Inject(KFI.FIELD_UNIT_MEASUREMENT_SERVICE)
@@ -57,7 +57,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetResponseDto)
-  @Get('/:fieldUnitMeasurementId')
+  @Get('workspace/:workspaceId/handbook/:handbookId/field-unit-measurement/:fieldUnitMeasurementId')
   async getByIdEP(
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
@@ -113,9 +113,9 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   @ApiResponse({ status: 200, type: [FieldUnitMeasurementGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldUnitMeasurementGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -143,7 +143,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldUnitMeasurementCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId')
   async createEP(
     @Body() dto: FieldUnitMeasurementCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -174,7 +174,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldUnitMeasurementUpdateResponseDto)
-  @Put('/:fieldUnitMeasurementId')
+  @Put('workspace/:workspaceId/handbook/:handbookId/field-unit-measurement/:fieldUnitMeasurementId')
   async updateByIdEP(
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
@@ -201,7 +201,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   //endregion
   @ZodSerializerDto(FieldUnitMeasurementDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:fieldUnitMeasurementId')
+  @Delete('workspace/:workspaceId/handbook/:handbookId/field-unit-measurement/:fieldUnitMeasurementId')
   async deleteByIdEP(
     @Param('fieldUnitMeasurementId', ParseUUIDPipe)
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,

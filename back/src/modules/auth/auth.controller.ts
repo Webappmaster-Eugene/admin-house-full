@@ -53,10 +53,11 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthRegisterResponseDto)
-  @Post('/register')
+  @Post('register')
   async registerEP(
     @Body() dto: AuthRegisterRequestDto,
     @UrlParams() urlParams: IUrlParams,
+    // DOC response нужен только для установки авторизационных кук в ответе
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthRegisterResponseDto> {
     try {
@@ -81,7 +82,7 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthRegisterWithRoleResponseDto)
-  @Post('/register/with-role/:roleId/:registerWithRoleKey')
+  @Post('register/with-role/:roleId/:registerWithRoleKey')
   async registerWithRoleEP(
     @Body() dto: AuthRegisterWithRoleRequestDto,
     @Param('roleId', ParseIntPipe) roleId: number,
@@ -116,7 +117,7 @@ export class AuthController implements IAuthController {
   @HttpCode(200)
   @ZodSerializerDto(AuthRefreshKeysResponseDto)
   @UseGuards(RefreshKeyGuard)
-  @Post('/refresh-keys')
+  @Post('refresh-keys')
   async refreshKeysEP(
     // @AuthHeader() accessKey: string,
     @UrlParams() urlParams: IUrlParams,
@@ -144,15 +145,13 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @ZodSerializerDto(AuthLoginResponseDto)
-  @Post('/login')
+  @Post('login')
   async loginEP(
     @Body() dto: AuthLoginRequestDto,
     @UrlParams() urlParams: IUrlParams,
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthLoginResponseDto> {
     try {
-      console.log(dto);
-
       const { ok, data } = await this.authService.login(dto, response);
       return okResponseHandler(ok, data, AuthEntity, this.logger);
     } catch (error: unknown) {
@@ -175,7 +174,7 @@ export class AuthController implements IAuthController {
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(AuthGenerateKeyResponseDto)
-  @Post('/strict-admin-key/generate')
+  @Post('strict-admin-key/generate')
   async generateStrictAdminKeyEP(
     @Body() dto: AuthGenerateKeyRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -204,13 +203,12 @@ export class AuthController implements IAuthController {
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(AuthGetKeyResponseDto)
-  @Get('/strict-admin-key')
+  @Get('strict-admin-key/get')
   async getStrictAdminKeyEP(@UrlParams() urlParams: IUrlParams): Promise<AuthGetKeyResponseDto> {
     // DOC получение ключа для регистрации с ролью
     // DOC каждый раз при вызове запись берется из БД таблицы registerWithRoleKey
     try {
       const { ok, data } = await this.authService.getStrictAdminKey();
-      console.log(ok, data);
       if (ok) {
         return new ExternalResponse<{ key: string }>(data as { key: string });
       }

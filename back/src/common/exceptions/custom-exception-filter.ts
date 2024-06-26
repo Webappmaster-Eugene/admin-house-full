@@ -19,6 +19,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
+    console.error('Исключение обработано на верхнем уровне: ', exception);
+
     if (exception instanceof ForbiddenException) {
       return response.status(status).json({
         data: null,

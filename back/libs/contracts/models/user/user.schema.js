@@ -31,4 +31,5 @@ At least one special character`),
     lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),
+    roleName: zod_1.z.string(),
 });

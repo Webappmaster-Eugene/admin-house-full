@@ -55,8 +55,9 @@ export class RolesController implements IRoleController {
   //endregion
   @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleGetResponseDto)
-  @Get('/:roleId')
+  @Get('/by-id/:roleId')
   async getByIdEP(
+    // DOC это именно получение по id (1,2,3,4), а не по uuid
     @Param('roleId', ParseIntPipe) roleId: EntityUrlParamCommand.RequestNumberParam,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<RoleGetResponseDto> {
@@ -76,14 +77,14 @@ export class RolesController implements IRoleController {
   //endregion
   @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleGetResponseDto)
-  @Get('/name/:nameRole')
+  @Get('/by-name/:roleName')
   async getByValueEP(
-    @Param('nameRole', new ParseEnumPipe(EUserTypeVariants))
-    value: EUserTypeVariants,
+    @Param('roleName', new ParseEnumPipe(EUserTypeVariants))
+    roleName: EUserTypeVariants,
     @UrlParams() urlParams: IUrlParams,
   ): Promise<RoleGetResponseDto> {
     try {
-      const { ok, data } = await this.rolesService.getByValue(value);
+      const { ok, data } = await this.rolesService.getByValue(roleName);
       return okResponseHandler(ok, data, RoleEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
@@ -150,7 +151,7 @@ export class RolesController implements IRoleController {
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
-  @ZodSerializerDto(RoleGetResponseDto)
+  @ZodSerializerDto(RoleUpdateResponseDto)
   @Put('/:roleUuid')
   async updateByIdEP(
     @Param('roleUuid', ParseUUIDPipe)

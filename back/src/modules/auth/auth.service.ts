@@ -22,7 +22,7 @@ import { TokenType } from '../../common/types/token-type.enum';
 import { IConfigService } from 'src/common/types/main/config.service.interface';
 import { KFI } from 'src/common/utils/di';
 import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
-import { IJWTPayload } from 'src/common/types/jwt.payload.interface';
+import { IJWTPayload, IJWTRefreshPayload } from 'src/common/types/jwt.payload.interface';
 import { AuthRefreshKeysEntity } from 'src/modules/auth/entities/auth-refresh-keys.entity';
 
 @Injectable()
@@ -55,6 +55,10 @@ export class AuthService implements IAuthService {
       accessToken: accessTokenResponse,
       refreshToken: refreshTokenResponse,
     };
+    const frontendDomain = this.configService.get<string>('FRONTEND_DOMAIN');
+    response.cookie(COOKIE_KEYS.NEW_ACCESS_KEY, `Bearer ${accessTokenResponse}`, { domain: frontendDomain });
+    response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { httpOnly: true, domain: frontendDomain });
+
     const user = new AuthEntity(outputEntity);
     return new InternalResponse(user);
   }
@@ -87,6 +91,9 @@ export class AuthService implements IAuthService {
         accessToken: accessTokenResponse,
         refreshToken: refreshTokenResponse,
       };
+      const frontendDomain = this.configService.get<string>('FRONTEND_DOMAIN');
+      response.cookie(COOKIE_KEYS.NEW_ACCESS_KEY, `Bearer ${accessTokenResponse}`, { domain: frontendDomain });
+      response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { httpOnly: true, domain: frontendDomain });
 
       const generateKeyDto = {
         key: this.configService.get('KEY_SECRET_FOR_STRICT_ADMIN_KEY'),
@@ -104,14 +111,14 @@ export class AuthService implements IAuthService {
 
   async refreshKeys(request: Request, response: Response): Promise<UniversalInternalResponse<AuthRefreshKeysEntity>> {
     const refreshToken = await request.cookies[COOKIE_KEYS.REFRESH_KEY];
-    let refreshData: null | IJWTPayload = null;
+    let refreshData: null | IJWTRefreshPayload = null;
 
     if (!refreshToken) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
 
     try {
-      refreshData = jwt.verify(refreshToken, this.configService.get<string>('JWT_KEY')) as IJWTPayload;
+      refreshData = jwt.verify(refreshToken, this.configService.get<string>('JWT_KEY')) as IJWTRefreshPayload;
     } catch (error) {
       throw new InternalResponse(new InternalError(BackendErrorNames.REFRESH_KEY_EXPIRED));
     }
@@ -133,9 +140,10 @@ export class AuthService implements IAuthService {
     };
     const frontendDomain = this.configService.get<string>('FRONTEND_DOMAIN');
     // response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { httpOnly: true, domain: frontendDomain, secure: true });
-    response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { domain: frontendDomain });
+    // response.cookie(COOKIE_KEYS.LAST_INTERCEPTOR_UPDATE, new Date().toJSON(), { domain: frontendDomain });
     response.cookie(COOKIE_KEYS.NEW_ACCESS_KEY, `Bearer ${accessTokenResponse}`, { domain: frontendDomain });
-    response.cookie(COOKIE_KEYS.LAST_INTERCEPTOR_UPDATE, new Date().toJSON(), { domain: frontendDomain });
+    response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { httpOnly: true, domain: frontendDomain });
+
     return new InternalResponse(outputEntity);
   }
 
@@ -165,6 +173,7 @@ export class AuthService implements IAuthService {
     };
 
     const frontendDomain = this.configService.get<string>('FRONTEND_DOMAIN');
+    response.cookie(COOKIE_KEYS.NEW_ACCESS_KEY, `Bearer ${accessTokenResponse}`, { domain: frontendDomain });
     response.cookie(COOKIE_KEYS.REFRESH_KEY, refreshTokenResponse, { httpOnly: true, domain: frontendDomain });
     return new InternalResponse(outputEntity);
   }
@@ -192,7 +201,7 @@ export class AuthService implements IAuthService {
 
   async generateStrictAdminKey(dto: AuthGenerateKeyRequestDto): Promise<UniversalInternalResponse<{ key: string }>> {
     const { key } = dto;
-    if (key === this.configService.get('KEY_SECRET_FOR_STRICT_ADMIN_KEY')) {
+    if (key === this.configService.get<string>('KEY_SECRET_FOR_STRICT_ADMIN_KEY')) {
       const str = `adminHouse-${key}-strict-admin-key`;
       const token = await argon2.hash(str);
       const finalToken = token.replace(tokenRegex, '');

@@ -32,8 +32,9 @@ import { okResponseHandler } from '../../common/helpers/handlers/ok-response.han
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
+// DOC 'workspace/:workspaceId/organization'
 @ApiTags('Работа с Organization пользователей')
-@Controller('workspace/:workspaceId/organization')
+@Controller('organization')
 export class OrganizationController {
   constructor(
     @Inject(KFI.ORGANIZATION_SERVICE)
@@ -51,7 +52,7 @@ export class OrganizationController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(OrganizationGetResponseDto)
-  @Get('/:organizationId')
+  @Get('workspace/:workspaceId/organization/:organizationId')
   async getByIdEP(
     @Param('organizationId')
     organizationId: EntityUrlParamCommand.RequestUuidParam,
@@ -102,10 +103,9 @@ export class OrganizationController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(OrganizationGetAllResponseDto)
-  @Get('/in-workspace')
+  @Get('workspace/:workspaceId/get-all-in-workspace')
   async getAllInWorkspaceEP(
     @UrlParams() urlParams: IUrlParams,
-
     @Param('workspaceId')
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     @QueryParams() queryParams?: IQueryParams,
@@ -131,7 +131,7 @@ export class OrganizationController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(OrganizationCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId')
   async createEP(
     @Body() dto: OrganizationCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -139,7 +139,7 @@ export class OrganizationController {
     @Param('workspaceId')
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<OrganizationCreateResponseDto> {
-    // в param create передается автоматически id Workspace, в котором создается Organization
+    // DOC в param create передается автоматически id Workspace, в котором создается Organization
     try {
       const { ok, data } = await this.organizationService.create(dto, userInfoFromJWT.uuid, workspaceId);
       return okResponseHandler(ok, data, OrganizationEntity, this.logger);
@@ -161,7 +161,7 @@ export class OrganizationController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(OrganizationUpdateResponseDto)
-  @Put('/:organizationId')
+  @Put('workspace/:workspaceId/organization/:organizationId')
   async updateByIdEP(
     @Body() dto: OrganizationUpdateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -187,7 +187,7 @@ export class OrganizationController {
   @ApiBearerAuth('access-token')
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:organizationId')
+  @Delete('workspace/:workspaceId/organization/:organizationId')
   async deleteByIdEP(
     @Param('organizationId', ParseUUIDPipe)
     organizationId: EntityUrlParamCommand.RequestUuidParam,

@@ -38,7 +38,7 @@ import { errorResponseHandler } from '../../common/helpers/handlers/error-respon
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с ResponsiblePartnerProducer')
-@Controller('workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer')
+@Controller('responsible-partner-producer')
 export class ResponsiblePartnerProducerController implements IResponsiblePartnerProducerController {
   constructor(
     @Inject(KFI.RESPONSIBLE_PARTNER_PRODUCER_SERVICE)
@@ -56,7 +56,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerGetResponseDto)
-  @Get('/:responsiblePartnerProducerId')
+  @Get('workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId')
   async getByIdEP(
     @Param('responsiblePartnerProducerId', ParseUUIDPipe)
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
@@ -121,7 +121,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -151,7 +151,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId')
   async createEP(
     @Body() dto: ResponsiblePartnerProducerCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -184,7 +184,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerUpdateResponseDto)
-  @Put('/:responsiblePartnerProducerId')
+  @Put('workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId')
   async updateByIdEP(
     @Param('responsiblePartnerProducerId', ParseUUIDPipe)
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
@@ -214,7 +214,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   //endregion
   @ZodSerializerDto(ResponsiblePartnerProducerDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:responsiblePartnerProducerId')
+  @Delete('workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId')
   async deleteByIdEP(
     @Param('responsiblePartnerProducerId', ParseUUIDPipe)
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,

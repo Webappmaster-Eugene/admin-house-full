@@ -33,7 +33,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 
 @ApiTags('Работа с PriceChanging')
-@Controller('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing')
+@Controller('price-changing')
 export class PriceChangingController implements IPriceChangingController {
   constructor(
     @Inject(KFI.PRICE_CHANGING_SERVICE)
@@ -51,7 +51,9 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetResponseDto)
-  @Get('/:priceChangingId')
+  @Get(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing/:priceChangingId',
+  )
   async getByIdEP(
     @Param('priceChangingId', ParseUUIDPipe)
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,
@@ -106,7 +108,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
-  @Get('/in-handbook')
+  @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
@@ -136,7 +138,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
-  @Get('/in-category-material')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('categoryMaterialId', ParseUUIDPipe)
@@ -166,7 +168,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingGetAllResponseDto)
-  @Get('/in-material')
+  @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/get-all-in-material')
   async getAllInMaterialEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('materialId', ParseUUIDPipe)
@@ -194,7 +196,7 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(PriceChangingCreateResponseDto)
-  @Post()
+  @Post('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId')
   async createEP(
     @Body() dto: PriceChangingCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -224,7 +226,9 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(PriceChangingUpdateResponseDto)
-  @Put('/:priceChangingId')
+  @Put(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing/:priceChangingId',
+  )
   async updateByIdEP(
     @Param('priceChangingId', ParseUUIDPipe)
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,
@@ -251,7 +255,9 @@ export class PriceChangingController implements IPriceChangingController {
   //endregion
   @ZodSerializerDto(PriceChangingDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  @Delete('/:priceChangingId')
+  @Delete(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/price-changing/:priceChangingId',
+  )
   async deleteByIdEP(
     @Param('priceChangingId', ParseUUIDPipe)
     priceChangingId: EntityUrlParamCommand.RequestUuidParam,

@@ -1,4 +1,7 @@
+import Logo from '@/shared/logo';
 import { useEffect } from 'react';
+import Scrollbar from '@/shared/scrollbar';
+import { NavSectionVertical } from '@/shared/nav-section';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -8,14 +11,11 @@ import { useResponsive } from 'src/utils/hooks/use-responsive';
 import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 import { usePathname } from 'src/utils/hooks/router-hooks/use-pathname';
 
-import Logo from 'src/components/logo';
-import Scrollbar from 'src/components/scrollbar';
-import { NavSectionVertical } from 'src/components/nav-section';
+import NavLeft from 'src/features/nav-left';
+import NavToggleButton from 'src/features/nav-toggle-button';
 
 import { NAV } from '../config-layout';
-import NavUpgrade from '../common/nav-upgrade';
 import { useNavData } from './config-navigation';
-import NavToggleButton from '../common/nav-toggle-button';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <NavUpgrade />
+      <NavLeft />
     </Scrollbar>
   );
 
