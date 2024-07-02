@@ -12,7 +12,7 @@ const MaterialCreateResponseEntitySchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-    categoryUuid: true,
+    categoryMaterialUuid: true,
     handbookUuid: true,
     lastChangeByUserUuid: true,
     uuid: true,
@@ -25,7 +25,7 @@ const MaterialCreateRequestSchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-});
+}).merge(models_1.MaterialRelatedEntitiesSchema);
 const MaterialCreateResponseSchema = zod_1.z
     .object({
     data: MaterialCreateResponseEntitySchema,

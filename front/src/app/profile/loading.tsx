@@ -1,9 +1,7 @@
-'use client';
-
 import { LoadingScreen } from '@/shared/loading-screen';
 
 // ----------------------------------------------------------------------
 
-export default function Loading() {
+export default function ProfileLoading() {
   return <LoadingScreen />;
 }

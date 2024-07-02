@@ -91,11 +91,10 @@ export class UserService implements IUserService {
     roleId?: EntityUrlParamCommand.RequestNumberParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
     const roleNumberId = roleId ? roleId : ROLE_IDS.CUSTOMER_ROLE_ID;
-
-    const role = await this.roleService.getById(roleNumberId);
+    const role = dataInternalExtractor(await this.roleService.getById(roleNumberId));
 
     const hashedPassword = await argon2.hash(dto.password);
-    const roleUuid = dataInternalExtractor(role).uuid;
+    const roleUuid = role.uuid;
     try {
       const resultOfTransaction = await this.databaseService.$transaction(async transactionDbClient => {
         const createdUser = await this.userRepository.create(dto, roleUuid, hashedPassword, transactionDbClient);

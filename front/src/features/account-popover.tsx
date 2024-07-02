@@ -1,3 +1,5 @@
+'use client';
+
 import { m } from 'framer-motion';
 import { varHover } from '@/shared/animate';
 import { logoutUser } from '@/api/actions/auth/logout.action';
@@ -14,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { UserRoles } from 'src/utils/const/user-roles.enum';
 import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
 import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 
@@ -84,11 +87,14 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {AccountPopoverLinks.map((option) => (
-            <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
-              {option.label}
-            </MenuItem>
-          ))}
+          {AccountPopoverLinks.map(
+            (option) =>
+              (!option?.userRoles || option.userRoles.includes(user?.roleName as UserRoles)) && (
+                <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
+                  {option.label}
+                </MenuItem>
+              )
+          )}
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />

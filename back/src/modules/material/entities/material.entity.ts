@@ -1,6 +1,23 @@
-import { Material } from '.prisma/client';
+import {
+  CategoryMaterial,
+  CharacteristicsMaterial,
+  FieldUnitMeasurement,
+  Handbook,
+  Material,
+  PriceChanging,
+  ResponsiblePartnerProducer,
+} from '.prisma/client';
 
-export class MaterialEntity implements Material {
+export interface MaterialRelatedEntities {
+  responsiblePartner: ResponsiblePartnerProducer;
+  unitMeasurement: FieldUnitMeasurement;
+  handbook: Handbook;
+  categoryMaterial: CategoryMaterial;
+  characteristicsMaterial: CharacteristicsMaterial[];
+  priceChanges: PriceChanging[];
+}
+
+export class MaterialEntity implements Material, MaterialRelatedEntities {
   uuid: string;
   name: string;
   sourceInfo: string;
@@ -14,6 +31,12 @@ export class MaterialEntity implements Material {
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
+  responsiblePartner: ResponsiblePartnerProducer;
+  unitMeasurement: FieldUnitMeasurement;
+  handbook: Handbook;
+  categoryMaterial: CategoryMaterial;
+  characteristicsMaterial: CharacteristicsMaterial[];
+  priceChanges: PriceChanging[];
 
   constructor(material: Partial<Material>) {
     Object.assign(this, material);

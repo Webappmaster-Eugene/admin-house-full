@@ -5,22 +5,11 @@ import { alpha } from '@mui/material/styles';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
+import { SearchbarProps } from 'src/features/searchbar/searchbar.props';
+
 // ----------------------------------------------------------------------
 
-type Props = {
-  title: {
-    text: string;
-    highlight: boolean;
-  }[];
-  path: {
-    text: string;
-    highlight: boolean;
-  }[];
-  groupLabel: string;
-  onClickItem: VoidFunction;
-};
-
-export default function ResultItem({ title, path, groupLabel, onClickItem }: Props) {
+export default function ResultItem({ title, path, groupLabel, onClickItem }: SearchbarProps) {
   return (
     <ListItemButton
       onClick={onClickItem}

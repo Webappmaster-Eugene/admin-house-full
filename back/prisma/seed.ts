@@ -1024,7 +1024,7 @@ async function main() {
     },
   });
 
-  const MATERIAL_0 = await prisma?.material?.create({
+  const MATERIAL_UNIT_0 = await prisma?.material?.create({
     data: {
       name: 'Саморез 6×70 (черновик)',
       comment: 'Это те винты, которыми мы крепим доски обвязки к фундаменту',
@@ -1037,7 +1037,7 @@ async function main() {
     },
   });
 
-  const MATERIAL_1 = await prisma?.material?.create({
+  const MATERIAL_UNIT_1 = await prisma?.material?.create({
     data: {
       name: 'Фанера Берёзовая ФСФ 18×1220×2440 4/4 (черновик)',
       comment: 'Это ...',
@@ -1050,7 +1050,7 @@ async function main() {
     },
   });
 
-  const MATERIAL_2 = await prisma?.material?.create({
+  const MATERIAL_UNIT_2 = await prisma?.material?.create({
     data: {
       name: 'Болт сантехнический 10×70 (черновик)',
       comment: 'Это ...',
@@ -1070,7 +1070,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_GLUHAR_0 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_0.name,
-      materialUuid: MATERIAL_0.uuid,
+      materialUuid: MATERIAL_UNIT_0.uuid,
       value: '6',
       comment: 'там нестабильный диаметр, надо проверять',
       handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -1084,7 +1084,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_GLUHAR_1 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_1.name,
-      materialUuid: MATERIAL_0.uuid,
+      materialUuid: MATERIAL_UNIT_0.uuid,
       value: '30',
       comment: 'no comments',
       handbookUuid: MANAGER_HANDBOOK.uuid,
@@ -1098,7 +1098,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_GLUHAR_2 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_2.name,
-      materialUuid: MATERIAL_0.uuid,
+      materialUuid: MATERIAL_UNIT_0.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_0.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
@@ -1111,7 +1111,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_BOLT_0 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_0.name,
-      materialUuid: MATERIAL_2.uuid,
+      materialUuid: MATERIAL_UNIT_2.uuid,
       value: '10',
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
@@ -1124,7 +1124,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_BOLT_1 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_1.name,
-      materialUuid: MATERIAL_2.uuid,
+      materialUuid: MATERIAL_UNIT_2.uuid,
       value: '70',
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
@@ -1137,7 +1137,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_BOLT_2 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_2.name,
-      materialUuid: MATERIAL_2.uuid,
+      materialUuid: MATERIAL_UNIT_2.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_3.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
@@ -1150,7 +1150,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_0 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_3.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
@@ -1163,7 +1163,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_1 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_3.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
@@ -1176,7 +1176,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_2 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_4.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
@@ -1189,7 +1189,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_3 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_5.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: '18',
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
@@ -1202,7 +1202,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_4 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_6.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: '1220',
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
@@ -1215,7 +1215,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_5 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_7.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: '2440',
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.uuid,
@@ -1228,7 +1228,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_6 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_8.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_8.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
@@ -1241,7 +1241,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_7 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_9.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
@@ -1254,7 +1254,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_8 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_9.name,
-      materialUuid: MATERIAL_1.uuid,
+      materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
@@ -1325,17 +1325,17 @@ async function main() {
     return templateNameOfCategoryHandler(allFieldsOfMaterialUuids);
   }
 
-  //FIXME - проверить внимательно работу этой функции
-  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED, MATERIAL_0);
+  //FIXME - проверить внимательно работу этой функции - сейчас не работает
+  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED, MATERIAL_UNIT_0);
 
-  const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
-    where: {
-      uuid: MATERIAL_0.uuid,
-    },
-    data: {
-      name: newNameGluhar,
-    },
-  });
+  // const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
+  //   where: {
+  //     uuid: MATERIAL_UNIT_0.uuid,
+  //   },
+  //   data: {
+  //     name: newNameGluhar,
+  //   },
+  // });
 }
 
 main()

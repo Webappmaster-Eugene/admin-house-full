@@ -1,40 +1,19 @@
 import { StackProps } from '@mui/material/Stack';
+import { ListItemButtonProps } from '@mui/material';
 import { Theme, SxProps } from '@mui/material/styles';
-import { ListItemButtonProps } from '@mui/material/ListItemButton';
 
-// ----------------------------------------------------------------------
+import { UserRoles } from 'src/utils/const/user-roles.enum';
 
-export type SlotProps = {
-  gap?: number;
-  rootItem?: SxProps<Theme>;
-  subItem?: SxProps<Theme>;
-  subheader?: SxProps<Theme>;
-  currentRole?: string;
-};
+export type NavItemStateProps = { depth?: number; open?: boolean; active?: boolean };
 
-export type NavItemStateProps = {
-  depth?: number;
-  open?: boolean;
-  active?: boolean;
-  hasChild?: boolean;
-  currentRole?: string;
-  externalLink?: boolean;
-};
-
-export type NavItemBaseProps = {
-  title: string;
-  path: string;
-  icon?: React.ReactElement;
-  info?: React.ReactElement;
-  caption?: string;
-  disabled?: boolean;
-  roles?: string[];
-  children?: any;
-};
-
-export type NavItemProps = ListItemButtonProps &
-  NavItemStateProps &
-  NavItemBaseProps & {
+export type NavItemProps = NavItemBaseProps &
+  ListItemButtonProps & {
+    depth?: number;
+    open?: boolean;
+    active?: boolean;
+    hasChild?: boolean;
+    currentRole?: UserRoles;
+    externalLink?: boolean;
     slotProps?: SlotProps;
   };
 
@@ -56,8 +35,28 @@ export type NavGroupProps = {
   slotProps?: SlotProps;
 };
 
+export type NavItemBaseProps = {
+  title: string;
+  path: string;
+  icon?: React.ReactElement;
+  info?: React.ReactElement;
+  caption?: string;
+  disabled?: boolean;
+  roles?: UserRoles[];
+  children?: any;
+};
+
+export type SlotProps = {
+  gap?: number;
+  rootItem?: SxProps<Theme>;
+  subItem?: SxProps<Theme>;
+  subheader?: SxProps<Theme>;
+  currentRole?: UserRoles;
+};
+
 export type NavProps = StackProps & {
   data: {
+    roles?: UserRoles[];
     subheader: string;
     items: NavItemBaseProps[];
   }[];

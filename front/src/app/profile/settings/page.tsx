@@ -6,6 +6,6 @@ export const metadata = {
   title: 'Dashboard: Settings',
 };
 
-export default function Page() {
+export default async function Page() {
   return <SettingsView />;
 }

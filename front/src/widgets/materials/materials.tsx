@@ -4,8 +4,9 @@ import { useSettingsContext } from '@/shared/settings';
 
 import { DataGrid } from '@mui/x-data-grid';
 import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 
-import { allUsersTablesColumns } from 'src/utils/tables-schemas/user/all-users.schema';
+import { allMaterialsTableColumns } from 'src/utils/tables-schemas/material/material.schema';
 
 import { MaterialsProps } from 'src/widgets/materials/material.props';
 
@@ -14,11 +15,11 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      {/* <Typography variant="h4"> Справочник </Typography> */}
+      <Typography variant="h4"> Справочник материалов</Typography>
       <div style={{ width: '100%', maxWidth: '100vw' }}>
         <DataGrid
           rows={materialsInfo}
-          columns={allUsersTablesColumns}
+          columns={allMaterialsTableColumns}
           getRowId={(row) => row.uuid}
           autoHeight
 

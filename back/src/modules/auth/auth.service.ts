@@ -70,8 +70,9 @@ export class AuthService implements IAuthService {
   ): Promise<UniversalInternalResponse<AuthEntity>> {
     const { roleId, registerWithRoleKey } = paramDto;
 
-    const { data } = await this.getStrictAdminKey();
-    const key = 'key' in data ? data.key : 'wrong key';
+    const { key } = dataInternalExtractor(await this.getStrictAdminKey());
+
+    // console.log("ROLEKEY",key, registerWithRoleKey);
 
     if (registerWithRoleKey === key) {
       const registeredUser = dataInternalExtractor(await this.userService.create(dto, roleId));

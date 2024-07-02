@@ -12,11 +12,11 @@ const MaterialUpdateResponseEntitySchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-    categoryUuid: true,
+    categoryMaterialUuid: true,
     handbookUuid: true,
     lastChangeByUserUuid: true,
     uuid: true,
-});
+}).merge(models_1.MaterialRelatedEntitiesSchema);
 const MaterialUpdateRequestSchema = models_1.MaterialSchema.pick({
     name: true,
     price: true,

@@ -1,8 +1,6 @@
-import { NavProps, NavItemBaseProps } from '@/shared/nav-section';
+import { flattenArray } from '@/utils/helpers/flatten-array';
 
-import { flattenArray } from 'src/utils/helpers/flatten-array';
-
-// ----------------------------------------------------------------------
+import { NavProps, NavItemBaseProps } from 'src/shared/nav-section/types';
 
 type ItemProps = {
   group: string;

@@ -1,3 +1,5 @@
+'use client';
+
 import { m } from 'framer-motion';
 import Iconify from '@/shared/iconify';
 import Scrollbar from '@/shared/scrollbar';

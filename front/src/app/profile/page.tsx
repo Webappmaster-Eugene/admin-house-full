@@ -6,6 +6,6 @@ export const metadata = {
   title: 'Dashboard: Profile',
 };
 
-export default function Page() {
+export default async function Page() {
   return <ProfileView />;
 }

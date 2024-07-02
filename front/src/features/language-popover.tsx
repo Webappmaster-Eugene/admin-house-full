@@ -1,3 +1,5 @@
+'use client';
+
 import { m } from 'framer-motion';
 import { useCallback } from 'react';
 import Iconify from '@/shared/iconify';

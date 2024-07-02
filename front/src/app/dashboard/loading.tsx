@@ -1,9 +1,10 @@
-'use client';
-
-import { LoadingScreen } from '@/shared/loading-screen';
+// 'use client';
 
 // ----------------------------------------------------------------------
 
-export default function Loading() {
-  return <LoadingScreen />;
+import { StyledProgressBar } from 'src/shared/progress-bar';
+
+export default function DashboardLoading() {
+  // return <LoadingScreen />;
+  return <StyledProgressBar />;
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { MaterialSchema } from '../../models';
+import { MaterialRelatedEntitiesSchema, MaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const MaterialDeleteResponseEntitySchema = MaterialSchema.pick({
@@ -11,11 +11,11 @@ const MaterialDeleteResponseEntitySchema = MaterialSchema.pick({
   sourceInfo: true,
   unitMeasurementUuid: true,
   responsiblePartnerUuid: true,
-  categoryUuid: true,
+  categoryMaterialUuid: true,
   handbookUuid: true,
   lastChangeByUserUuid: true,
   uuid: true,
-});
+}).merge(MaterialRelatedEntitiesSchema);
 
 const MaterialDeleteResponseSchema = z
   .object({

@@ -1,1 +1,1 @@
-export { default } from './nav-section-vertical';
+export { default } from 'src/shared/nav-section/vertical/nav-menu-vertical';

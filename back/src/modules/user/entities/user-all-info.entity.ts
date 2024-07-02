@@ -1,11 +1,5 @@
 import { Handbook, Organization, Project, Role, User, Workspace } from '.prisma/client';
-import { RoleSchema, WorkspaceSchema } from '@numart/house-admin-contracts';
 
-// class PersonWithRoleName {
-//   public roleName: string;
-// }
-
-// export class UserAllInfoEntity extends PersonWithRoleName implements User {
 export class UserAllInfoEntity implements User {
   uuid: string;
   firstName: string;

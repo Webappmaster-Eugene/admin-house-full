@@ -1,5 +1,3 @@
-import { CurrentUserInfo } from '@/entities/auth/lib';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
@@ -8,14 +6,14 @@ import Typography from '@mui/material/Typography';
 import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 
 import Label from 'src/shared/label';
+import { CurrentUserInfo } from 'src/entities/auth/lib';
 import { useCurrentUserStore } from 'src/store/auth/user-auth.store';
 
 // ----------------------------------------------------------------------
 
-export default function NavLeft() {
+export default function NavLeftBottom() {
   const { mockedData } = useMockedUserData();
   const loginedUser: CurrentUserInfo = useCurrentUserStore((state) => state.user);
-  console.log(loginedUser);
 
   return (
     <Stack
@@ -61,8 +59,8 @@ export default function NavLeft() {
           </Typography>
         </Stack>
 
-        {/* <Button variant="contained" href={paths.minimalUI} target="_blank" rel="noopener"> */}
-        {/*  Upgrade to Pro */}
+        {/*  <Button variant="contained" href={paths.profile.profile} target="_blank" rel="noopener"> */}
+        {/*  My profile */}
         {/* </Button> */}
       </Stack>
     </Stack>

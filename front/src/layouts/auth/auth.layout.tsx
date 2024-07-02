@@ -1,3 +1,5 @@
+'use client';
+
 import Logo from '@/shared/logo';
 import { bgGradient } from '@/utils/theme/css';
 import { useResponsive } from '@/utils/hooks/use-responsive';
@@ -7,15 +9,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
+import { AuthLayoutProps } from 'src/layouts/auth/auth.props';
+
 // ----------------------------------------------------------------------
 
-type Props = {
-  title?: string;
-  image?: string;
-  children: React.ReactNode;
-};
-
-export default function AuthLayout({ children, image, title }: Props) {
+export default function AuthLayout({ children, image, title }: AuthLayoutProps) {
   const theme = useTheme();
 
   const mdUp = useResponsive('up', 'md');
@@ -62,7 +60,7 @@ export default function AuthLayout({ children, image, title }: Props) {
       }}
     >
       <Typography variant="h3" sx={{ maxWidth: 480, textAlign: 'center' }}>
-        {title || 'Hi, Welcome back'}
+        {title || 'Добро пожаловать в Лучи'}
       </Typography>
 
       <Box

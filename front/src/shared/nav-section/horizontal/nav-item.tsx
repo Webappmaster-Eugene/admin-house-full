@@ -7,8 +7,9 @@ import Tooltip from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
 
+import { NavItemProps, NavItemStateProps } from 'src/shared/nav-section/types';
+
 import Iconify from '../../iconify';
-import { NavItemProps, NavItemStateProps } from '../types';
 
 // ----------------------------------------------------------------------
 

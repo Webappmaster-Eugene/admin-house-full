@@ -55,7 +55,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
     [BackendErrorNames.UNAUTHORIZED_ACCESS]: {
       innerCode: 'S002',
       error: {
-        name: 'Forbidden error',
+        name: 'Error error',
         description: 'Failed to get requesting info - you have not got required access rights',
       },
       httpCode: 403,
@@ -63,7 +63,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
     [BackendErrorNames.ACCESS_KEY_EXPIRED]: {
       innerCode: 'S003',
       error: {
-        name: 'Forbidden error (access jwt expired)',
+        name: 'Error error (access jwt expired)',
         description: 'Your Access JWT-key is expired. Relogin or refresh your pair of tokens.',
       },
       httpCode: 403,
@@ -71,7 +71,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
     [BackendErrorNames.REFRESH_KEY_EXPIRED]: {
       innerCode: 'S004',
       error: {
-        name: 'Forbidden error (refresh jwt expired)',
+        name: 'Error error (refresh jwt expired)',
         description: 'Your Refresh JWT key is expired. Relogin please.',
       },
       httpCode: 403,

@@ -86,6 +86,7 @@ export class MaterialController implements IMaterialController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAll(queryParams);
+      console.log('data', data);
       return okResponseHandler(ok, data, MaterialEntity, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
@@ -110,6 +111,7 @@ export class MaterialController implements IMaterialController {
   @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     @QueryParams() queryParams?: IQueryParams,
   ): Promise<MaterialGetAllResponseDto> {
@@ -139,6 +141,7 @@ export class MaterialController implements IMaterialController {
   @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
+    @Param('categoryMaterialId', ParseUUIDPipe)
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     @QueryParams() queryParams?: IQueryParams,
   ): Promise<MaterialGetAllResponseDto> {

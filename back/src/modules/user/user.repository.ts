@@ -151,7 +151,7 @@ export class UserRepository implements IUserRepository {
         },
       });
 
-      const findedUser = await this.databaseService.user.findUnique({
+      const findedUser = await transactionDbClient.user.findUnique({
         where: {
           uuid: newUser.uuid,
         },
@@ -161,6 +161,7 @@ export class UserRepository implements IUserRepository {
           memberOfWorkspace: true,
         },
       });
+
       const userInfo = findedUser as UserEntity;
       userInfo.roleName = findedUser.role?.name;
 

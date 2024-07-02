@@ -1,61 +1,17 @@
-'use client';
-
-import { SplashScreen } from '@/shared/loading-screen';
-import { redirect, usePathname } from 'next/navigation';
-import { useCurrentUserStore } from '@/store/auth/user-auth.store';
+import { redirect } from 'next/navigation';
 
 import { paths } from 'src/utils/routes/paths';
 import { PropsReactNode } from 'src/utils/types';
-import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
+import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
-export default function AuthGuard({ children }: PropsReactNode) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { user, loading } = useCurrentUserStore((state) => state);
+import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 
-  if (!user) {
-    // router.push(PATH_AFTER_LOGIN);
+export default async function AuthGuard({ children }: PropsReactNode) {
+  const currentUser = await getCurrentUser();
+
+  if (currentUser && isErrorFieldTypeGuard(currentUser)) {
     redirect(paths.auth.login);
   }
-  if (user && (pathname === paths.auth.login || pathname === paths.auth.register)) {
-    // router.push(PATH_AFTER_LOGIN);
-    redirect(paths.dashboard.root);
-  }
-  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>} </>;
-}
-
-// ----------------------------------------------------------------------
-
-function Container({ children }: PropsReactNode) {
-  // const router = useRouter();
-  // const { status } = useAuthContext();
-  //
-  // const [checked, setChecked] = useState(false);
-  //
-  // const check = useCallback(() => {
-  //   if (!authenticated) {
-  //     const searchParams = new URLSearchParams({
-  //       returnTo: window.location.pathname,
-  //     }).toString();
-  //
-  //     const loginPath = paths.auth.login;
-  //
-  //     const href = `${loginPath}?${searchParams}`;
-  //
-  //     router.replace(href);
-  //   } else {
-  //     setChecked(true);
-  //   }
-  // }, [authenticated, method, router]);
-  //
-  // useEffect(() => {
-  //   check();
-  //   // eslint-disable-next-line react-router-hooks/exhaustive-deps
-  // }, []);
-  //
-  // if (!checked) {
-  //   return null;
-  // }
 
   return <>{children}</>;
 }

@@ -3,6 +3,7 @@
 import isEqual from 'lodash/isEqual';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
+import { useResponsive } from 'src/utils/hooks/use-responsive';
 import { useLocalStorage } from 'src/utils/hooks/use-local-storage';
 import { localStorageGetItem } from 'src/utils/helpers/storage-available';
 
@@ -11,19 +12,18 @@ import { SettingsContext } from './settings-context';
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'settings';
-
 type SettingsProviderProps = {
   children: React.ReactNode;
   defaultSettings: SettingsValueProps;
 };
 
 export function SettingsProvider({ children, defaultSettings }: SettingsProviderProps) {
-  const { state, update, reset } = useLocalStorage(STORAGE_KEY, defaultSettings);
+  const { state, update, reset } = useLocalStorage('settings', defaultSettings);
 
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const isArabic = localStorageGetItem('i18nextLng') === 'ar';
+  const isMediaMoreThanLg = useResponsive('up', 'lg');
 
   // Direction by lang
   const onChangeDirectionByLang = useCallback(
@@ -32,6 +32,14 @@ export function SettingsProvider({ children, defaultSettings }: SettingsProvider
     },
     [update]
   );
+
+  useEffect(() => {
+    if (!isMediaMoreThanLg) {
+      update('themeLayout', 'mini');
+    } else {
+      update('themeLayout', 'vertical');
+    }
+  }, [isMediaMoreThanLg, update]);
 
   useEffect(() => {
     if (isArabic) {

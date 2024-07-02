@@ -1,24 +1,44 @@
 // ----------------------------------------------------------------------
 
 import Materials from '@/widgets/materials/materials';
-import { MaterialGetAllCommand } from '@numart/house-admin-contracts';
+import {
+  WorkspaceGetCommand,
+  MaterialGetAllCommand,
+  UserGetFullInfoCommand,
+} from '@numart/house-admin-contracts';
 
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
-import { getAllMaterials } from 'src/api/actions/material/get-all-materials.action';
+import { Error } from 'src/shared/error/error';
+import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
+import { getAllMaterialsInHandbook } from 'src/api/actions/material/get-all-materials-in-handbook.action';
 
 export const metadata = {
-  title: 'Dashboard: Materials',
+  title: 'Dashboard: DashboardMain',
 };
 
 export default async function Page() {
-  let allMaterials = await getAllMaterials();
-  if (!isErrorFieldTypeGuard(allMaterials)) {
-    allMaterials = allMaterials as MaterialGetAllCommand.ResponseEntity;
+  const currentUser = (await getCurrentUser()) as UserGetFullInfoCommand.ResponseEntity;
+  // if (!isErrorFieldTypeGuard(currentUser)) {
+  //   currentUser = currentUser as UserGetFullInfoCommand.ResponseEntity;
+  // }
+  const workspaceToSearch = (currentUser.memberOfWorkspace ||
+    currentUser.creatorOfWorkspace) as WorkspaceGetCommand.ResponseEntity;
+  const handbookToSearch = workspaceToSearch?.handbookOfWorkspaceUuid as string;
+
+  let allMaterialsInCurrentHandbook = await getAllMaterialsInHandbook(
+    workspaceToSearch.uuid,
+    handbookToSearch
+  );
+
+  if (!isErrorFieldTypeGuard(allMaterialsInCurrentHandbook)) {
+    allMaterialsInCurrentHandbook =
+      allMaterialsInCurrentHandbook as MaterialGetAllCommand.ResponseEntity;
   }
-  return isErrorFieldTypeGuard(allMaterials) ? (
-    <p>ooops...</p>
+
+  return isErrorFieldTypeGuard(allMaterialsInCurrentHandbook) ? (
+    <Error />
   ) : (
-    <Materials materialsInfo={allMaterials} />
+    <Materials materialsInfo={allMaterialsInCurrentHandbook} />
   );
 }

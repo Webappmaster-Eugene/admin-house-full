@@ -1,15 +1,11 @@
-'use client';
+'use server';
 
 import { PropsReactNode } from '@/utils/types';
 import { AuthGuard } from '@/entities/auth/guard';
-import DashboardLayout from '@/layouts/dashboard';
 
-export default function Layout({ children }: PropsReactNode) {
-  // const user = await getCurrentUser();
-  // if (!user) {
-  //   redirect('/');
-  //   return notFound();
-  // }
+import DashboardLayout from 'src/layouts/dashboard/dashboard-general.layout';
+
+export default async function ProfileLayout({ children }: PropsReactNode) {
   return (
     <AuthGuard>
       <DashboardLayout>{children}</DashboardLayout>

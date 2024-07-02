@@ -40,7 +40,7 @@ export default function SettingsDrawer() {
       sx={{ py: 2, pr: 1, pl: 2.5 }}
     >
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        Settings
+        Настройки
       </Typography>
 
       <Tooltip title="Reset">
@@ -60,7 +60,7 @@ export default function SettingsDrawer() {
   const renderMode = (
     <div>
       <Typography variant="caption" component="div" sx={{ ...labelStyles }}>
-        Mode
+        Тема
       </Typography>
 
       <BaseOptions
@@ -75,7 +75,7 @@ export default function SettingsDrawer() {
   const renderContrast = (
     <div>
       <Typography variant="caption" component="div" sx={{ ...labelStyles }}>
-        Contrast
+        Контраст
       </Typography>
 
       <BaseOptions
@@ -143,7 +143,7 @@ export default function SettingsDrawer() {
   const renderPresets = (
     <div>
       <Typography variant="caption" component="div" sx={{ ...labelStyles }}>
-        Presets
+        Цвет темы
       </Typography>
 
       <PresetsOptions

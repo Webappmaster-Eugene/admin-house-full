@@ -9,6 +9,6 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const allUsers = await getAllUsers();
+  const allCharacteristics = await getAllUsers();
   return <Characteristics />;
 }

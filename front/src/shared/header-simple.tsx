@@ -1,5 +1,3 @@
-import Logo from '@/shared/logo';
-
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
@@ -9,9 +7,10 @@ import { useTheme } from '@mui/material/styles';
 import { bgBlur } from 'src/utils/theme/css';
 import { useOffSetTop } from 'src/utils/hooks/use-off-set-top';
 
-import { HEADER } from '../config-layout';
-import HeaderShadow from './header-shadow';
-import SettingsButton from './settings-button';
+import Logo from 'src/shared/logo';
+import { HEADER } from 'src/layouts/config-layout';
+import HeaderShadow from 'src/shared/header-shadow';
+import SettingsButton from 'src/shared/settings-button';
 
 // ----------------------------------------------------------------------
 

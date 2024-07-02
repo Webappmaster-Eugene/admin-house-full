@@ -13,11 +13,11 @@ const MaterialDeleteResponseEntitySchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-    categoryUuid: true,
+    categoryMaterialUuid: true,
     handbookUuid: true,
     lastChangeByUserUuid: true,
     uuid: true,
-});
+}).merge(models_1.MaterialRelatedEntitiesSchema);
 const MaterialDeleteResponseSchema = zod_1.z
     .object({
     data: MaterialDeleteResponseEntitySchema,

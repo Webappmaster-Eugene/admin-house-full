@@ -7,6 +7,9 @@ import { useSettingsContext } from '@/shared/settings';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeOptions, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 
+import { PropsReactNode } from 'src/utils/types';
+import { useResponsive } from 'src/utils/hooks/use-responsive';
+
 // system
 import { palette } from './palette';
 import { shadows } from './shadows';
@@ -19,18 +22,13 @@ import { createPresets } from './options/presets';
 import { createContrast } from './options/contrast';
 import NextAppDirEmotionCacheProvider from './next-emotion-cache';
 
-// ----------------------------------------------------------------------
-
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function ThemeProvider({ children }: Props) {
+export default function ThemeProvider({ children }: PropsReactNode) {
   const settings = useSettingsContext();
 
   const presets = createPresets(settings.themeColorPresets);
 
   const contrast = createContrast(settings.themeContrast, settings.themeMode);
+  const lgUp = useResponsive('up', 'lg');
 
   const memoizedValue = useMemo(
     () => ({

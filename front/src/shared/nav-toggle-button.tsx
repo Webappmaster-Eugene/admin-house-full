@@ -1,5 +1,3 @@
-import { useSettingsContext } from '@/shared/settings';
-
 import { useTheme } from '@mui/material/styles';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
@@ -8,6 +6,7 @@ import { useResponsive } from 'src/utils/hooks/use-responsive';
 
 import Iconify from 'src/shared/iconify';
 import { NAV } from 'src/layouts/config-layout';
+import { useSettingsContext } from 'src/shared/settings';
 
 // ----------------------------------------------------------------------
 

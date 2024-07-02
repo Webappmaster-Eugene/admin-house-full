@@ -1,3 +1,5 @@
+'use client';
+
 import { m } from 'framer-motion';
 import Label from '@/shared/label';
 import Iconify from '@/shared/iconify';

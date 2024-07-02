@@ -25,6 +25,14 @@ export class MaterialRepository implements IMaterialRepository {
         where: {
           uuid: materialId,
         },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
+        },
       });
 
       return existenceEntityHandler(findedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
@@ -37,7 +45,19 @@ export class MaterialRepository implements IMaterialRepository {
     limitTakeHandler(take);
 
     try {
-      const allMaterials = await this.databaseService.material.findMany({ skip, take });
+      const allMaterials = await this.databaseService.material.findMany({
+        skip,
+        take,
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
+        },
+      });
+      console.log('allMaterials', allMaterials);
       return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -52,7 +72,20 @@ export class MaterialRepository implements IMaterialRepository {
     limitTakeHandler(take);
 
     try {
-      const allMaterials = await this.databaseService.material.findMany({ where: { handbookUuid: handbookId }, skip, take });
+      const allMaterials = await this.databaseService.material.findMany({
+        where: { handbookUuid: handbookId },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
+        },
+        skip,
+        take,
+      });
+      console.log('allMaterials', allMaterials);
       return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -69,6 +102,14 @@ export class MaterialRepository implements IMaterialRepository {
     try {
       const allMaterials = await this.databaseService.material.findMany({
         where: { categoryMaterialUuid: categoryMaterialId },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
+        },
         skip,
         take,
       });
@@ -96,6 +137,14 @@ export class MaterialRepository implements IMaterialRepository {
           handbookUuid: handbookId,
           categoryMaterialUuid: categoryMaterialId,
         },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
+        },
       });
       return existenceEntityHandler(newMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
     } catch (error: unknown) {
@@ -116,6 +165,14 @@ export class MaterialRepository implements IMaterialRepository {
           comment,
           price,
         },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
+        },
       });
 
       return existenceEntityHandler(updatedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
@@ -129,6 +186,14 @@ export class MaterialRepository implements IMaterialRepository {
       const deletedMaterial = await this.databaseService.material.delete({
         where: {
           uuid: id,
+        },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: true,
+          priceChanges: true,
         },
       });
 

@@ -1,12 +1,15 @@
+'use client';
+
 import { m } from 'framer-motion';
-import Iconify from '@/shared/iconify';
-import { varHover } from '@/shared/animate';
-import { useSettingsContext } from '@/shared/settings';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { Theme, SxProps } from '@mui/material/styles';
 import Badge, { badgeClasses } from '@mui/material/Badge';
+
+import Iconify from 'src/shared/iconify';
+import { varHover } from 'src/shared/animate';
+import { useSettingsContext } from 'src/shared/settings';
 
 // ----------------------------------------------------------------------
 

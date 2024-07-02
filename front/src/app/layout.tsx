@@ -2,26 +2,26 @@ import 'src/global.css';
 
 // ----------------------------------------------------------------------
 
+import { Suspense } from 'react';
 import { cookies } from 'next/headers';
-import ProgressBar from '@/shared/progress-bar';
 import { SettingsDrawer } from '@/shared/settings';
-import { MotionLazy } from '@/shared/animate/motion-lazy';
 
 import { cookieKeys } from 'src/utils/const';
 import { PropsReactNode } from 'src/utils/types';
 import { primaryFont } from 'src/utils/theme/typography';
 import { isCurrentUserTypeGuard } from 'src/utils/type-guards/current-user.type-guard';
 
+import { StyledProgressBar } from 'src/shared/progress-bar';
 import GeneralProvider from 'src/providers/general-provider';
 import CurrentUserProvider from 'src/providers/current-user-provider';
 import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 
-export const viewport = {
-  themeColor: '#000000',
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-};
+// export const viewport = {
+//   themeColor: '#000000',
+//   width: 'device-width',
+//   initialScale: 1,
+//   maximumScale: 1,
+// };
 
 export const metadata = {
   title: 'Лучи',
@@ -51,11 +51,8 @@ export default async function RootLayout({ children }: PropsReactNode) {
           currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
         >
           <GeneralProvider>
-            <MotionLazy>
-              <SettingsDrawer />
-              <ProgressBar />
-              {children}
-            </MotionLazy>
+            <SettingsDrawer />
+            <Suspense fallback={<StyledProgressBar />}>{children}</Suspense>
           </GeneralProvider>
         </CurrentUserProvider>
         {/* </AppProvider> */}

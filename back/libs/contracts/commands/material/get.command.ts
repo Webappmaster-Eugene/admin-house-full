@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MaterialSchema } from '../../models';
+import { MaterialRelatedEntitiesSchema, MaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const MaterialGetResponseEntitySchema = MaterialSchema.pick({
@@ -10,11 +10,11 @@ const MaterialGetResponseEntitySchema = MaterialSchema.pick({
   sourceInfo: true,
   unitMeasurementUuid: true,
   responsiblePartnerUuid: true,
-  categoryUuid: true,
+  categoryMaterialUuid: true,
   handbookUuid: true,
   lastChangeByUserUuid: true,
   uuid: true,
-});
+}).merge(MaterialRelatedEntitiesSchema);
 
 const MaterialGetResponseSchema = z
   .object({

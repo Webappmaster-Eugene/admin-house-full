@@ -82,7 +82,6 @@ export default function RegisterView() {
       firstName: data.firstName,
       secondName: data.lastName,
     });
-    console.log(`rootrootrootrootroot${user}`);
     // все операции должны располагаться ниже здесь
     // });
 
@@ -105,38 +104,38 @@ export default function RegisterView() {
 
   return (
     <>
-      {/* renderHead */}
+      {/* render head */}
       <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-        <Typography variant="h4">Get started absolutely free</Typography>
+        <Typography variant="h4">Начать пользоваться можно бесплатно</Typography>
 
         <Stack direction="row" spacing={0.5}>
-          <Typography variant="body2"> Already have an account? </Typography>
+          <Typography variant="body2"> Уже есть аккаунт? </Typography>
 
           <Link href={paths.auth.login} component={RouterLink} variant="subtitle2">
-            Sign in
+            Войти
           </Link>
         </Stack>
       </Stack>
 
-      {/* {!!errors.root?.message && ( */}
-      <Alert severity="error" sx={{ m: 3 }}>
-        {errors.root?.message}
-      </Alert>
-      {/* )} */}
+      {!!errors.root?.message && (
+        <Alert severity="error" sx={{ m: 3 }}>
+          {errors.root?.message}
+        </Alert>
+      )}
 
       {/* render form register */}
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack spacing={2.5}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <RHFTextField name="firstName" label="First name" />
-            <RHFTextField name="lastName" label="Last name" />
+            <RHFTextField name="firstName" label="Имя" />
+            <RHFTextField name="lastName" label="Фамилия" />
           </Stack>
 
-          <RHFTextField name="email" label="Email address" />
+          <RHFTextField name="email" label="Почта" />
 
           <RHFTextField
             name="password"
-            label="Password"
+            label="Пароль"
             type={isPasswordOpen.value ? 'text' : 'password'}
             InputProps={{
               endAdornment: (
@@ -153,7 +152,7 @@ export default function RegisterView() {
 
           <RHFTextField
             name="confirmPassword"
-            label="Confirm assword"
+            label="Подтвердите пароль"
             type={isConfirmPasswordOpen.value ? 'text' : 'password'}
             InputProps={{
               endAdornment: (
@@ -178,7 +177,7 @@ export default function RegisterView() {
             variant="contained"
             loading={isSubmitting}
           >
-            Create account
+            Создать аккаунт
           </LoadingButton>
         </Stack>
       </FormProvider>
@@ -193,13 +192,13 @@ export default function RegisterView() {
           color: 'text.secondary',
         }}
       >
-        {'By signing up, I agree to '}
+        {'Регистрируясь, вы соглашаетесь с '}
         <Link underline="always" color="text.primary">
-          Terms of Service
+          Соглашение об использовании
         </Link>
         {' and '}
         <Link underline="always" color="text.primary">
-          Privacy Policy
+          Политика конфиденциальности
         </Link>
         .
       </Typography>

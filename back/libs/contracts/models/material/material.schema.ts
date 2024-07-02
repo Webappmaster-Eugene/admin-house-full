@@ -9,7 +9,7 @@ export const MaterialSchema = z.object({
   handbookUuid: z.string().uuid(),
   price: z.number(),
   unitMeasurementUuid: z.string().uuid(),
-  categoryUuid: z.string().uuid(),
+  categoryMaterialUuid: z.string().uuid(),
   responsiblePartnerUuid: z.string().uuid().nullable().optional(),
   lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),

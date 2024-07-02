@@ -11,7 +11,6 @@ export interface IAPI_ROUTE_CLASSIC {
   GUARDS: GUARDS[];
   TYPE_RENDER: TYPE_RENDER;
   SERVER_ACTIONS: string[];
-  ADDITIONS: [];
   EFFECTS: [];
 }
 
@@ -22,91 +21,131 @@ export interface IAPI_ROUTE extends IAPI_ROUTE_CLASSIC {
 export interface IAPI_PATHS {
   ROOT_PATH: string;
   DESCRIPTION: string;
+  FEATURES: FEATURES[];
+  ROLES_CAN_ACCESS: USER_ROLES[];
+  GUARDS: GUARDS[];
+  TYPE_RENDER: TYPE_RENDER;
+  SERVER_ACTIONS: string[];
+  EFFECTS: [];
   PAGES: { [key: string]: IAPI_ROUTE };
 }
 
 export const API_PATHS: IAPI_PATHS = {
+  // DOC /
   ROOT_PATH: 'https://alibaba.hhos.ru',
   DESCRIPTION: 'Все роуты на фронте приложения House Admin',
+  ROLES_CAN_ACCESS: [],
+  GUARDS: [GUARDS.AUTH_GUARD],
+  TYPE_RENDER: TYPE_RENDER.SERVER,
+  SERVER_ACTIONS: [],
+  FEATURES: [FEATURES.NEXT_REDIRECT],
+  EFFECTS: [],
   PAGES: {
-    // DOC /
+    // DOC dashboard
     DASHBOARD: {
       FULL_PATH: '/dashboard',
-      DESCRIPTION: 'Главная страница дашборда',
+      DESCRIPTION: 'Главная страница дашбордов',
       ROLES_CAN_ACCESS: [],
-      GUARDS: [],
+      GUARDS: [GUARDS.AUTH_GUARD],
       TYPE_RENDER: TYPE_RENDER.SERVER,
       SERVER_ACTIONS: [],
       FEATURES: [],
-      ADDITIONS: [],
       EFFECTS: [],
       SUB_PAGES: {
         MATERIALS: {
           FULL_PATH: '/dashboard/materials',
           DESCRIPTION: 'Получить информацию о материалах',
           ROLES_CAN_ACCESS: [],
-          GUARDS: [],
+          GUARDS: [GUARDS.AUTH_GUARD],
           TYPE_RENDER: TYPE_RENDER.SERVER,
-          SERVER_ACTIONS: [],
+          SERVER_ACTIONS: ['getAllMaterials'],
           FEATURES: [],
-          ADDITIONS: [],
           EFFECTS: [],
         },
         FIELDS: {
           FULL_PATH: '/dashboard/fields',
           DESCRIPTION: 'Получить информацию о полях для категорий материалов',
           ROLES_CAN_ACCESS: [],
-          GUARDS: [],
+          GUARDS: [GUARDS.AUTH_GUARD],
           TYPE_RENDER: TYPE_RENDER.SERVER,
-          SERVER_ACTIONS: [],
+          SERVER_ACTIONS: ['getAllFields'],
           FEATURES: [],
-          ADDITIONS: [],
           EFFECTS: [],
         },
         CHARACTERISTICS: {
           FULL_PATH: '/dashboard/characteristics',
           DESCRIPTION: 'Получить информацию о характеристиках материала',
           ROLES_CAN_ACCESS: [],
-          GUARDS: [],
+          GUARDS: [GUARDS.AUTH_GUARD],
           TYPE_RENDER: TYPE_RENDER.SERVER,
-          SERVER_ACTIONS: [],
+          SERVER_ACTIONS: ['getAllCharacteristics'],
           FEATURES: [],
-          ADDITIONS: [],
           EFFECTS: [],
         },
       },
     },
+    // DOC dashboard
     PROFILE: {
       FULL_PATH: '/profile',
       DESCRIPTION: 'Получить информацию о профиле',
       ROLES_CAN_ACCESS: [],
-      GUARDS: [],
+      GUARDS: [GUARDS.AUTH_GUARD],
       TYPE_RENDER: TYPE_RENDER.SERVER,
-      SERVER_ACTIONS: [],
+      SERVER_ACTIONS: ['getCurrentUser'],
       FEATURES: [],
-      ADDITIONS: [],
       EFFECTS: [],
       SUB_PAGES: {
         SETTINGS: {
           FULL_PATH: '/profile/settings',
           DESCRIPTION: 'Настройки приложения',
           ROLES_CAN_ACCESS: [],
-          GUARDS: [],
+          GUARDS: [GUARDS.AUTH_GUARD],
           TYPE_RENDER: TYPE_RENDER.SERVER,
           SERVER_ACTIONS: [],
           FEATURES: [],
-          ADDITIONS: [],
           EFFECTS: [],
         },
         ADMIN: {
           FULL_PATH: '/profile/admin',
           DESCRIPTION: 'Админ-часть приложения',
           ROLES_CAN_ACCESS: [],
-          GUARDS: [],
+          GUARDS: [GUARDS.AUTH_GUARD],
           TYPE_RENDER: TYPE_RENDER.SERVER,
-          SERVER_ACTIONS: [],
+          SERVER_ACTIONS: ['getAllUsers'],
           FEATURES: [],
-          ADDITIONS: [],
+          EFFECTS: [],
+        },
+      },
+    },
+    // DOC auth
+    AUTH: {
+      FULL_PATH: '/auth',
+      DESCRIPTION: 'Логин и вход',
+      ROLES_CAN_ACCESS: [],
+      GUARDS: [GUARDS.GUEST_GUARD],
+      TYPE_RENDER: TYPE_RENDER.SERVER,
+      SERVER_ACTIONS: [],
+      FEATURES: [FEATURES.NEXT_REDIRECT],
+      EFFECTS: [],
+      SUB_PAGES: {
+        LOGIN: {
+          FULL_PATH: '/auth/login',
+          DESCRIPTION: 'Войти в приложение',
+          ROLES_CAN_ACCESS: [],
+          GUARDS: [GUARDS.GUEST_GUARD],
+          TYPE_RENDER: TYPE_RENDER.SERVER,
+          SERVER_ACTIONS: ['login'],
+          FEATURES: [FEATURES.CHANGING_COOKIE],
+          EFFECTS: [],
+        },
+        REGISTER: {
+          FULL_PATH: '/auth/register',
+          DESCRIPTION: 'Регистрация в приложении',
+          ROLES_CAN_ACCESS: [],
+          GUARDS: [GUARDS.AUTH_GUARD],
+          TYPE_RENDER: TYPE_RENDER.SERVER,
+          SERVER_ACTIONS: ['register'],
+          FEATURES: [FEATURES.CHANGING_COOKIE],
           EFFECTS: [],
         },
       },

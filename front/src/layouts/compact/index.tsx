@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 
 import { PropsReactNode } from 'src/utils/types';
 
-import Header from 'src/layouts/dashboard/header';
+import Header from 'src/layouts/dashboard/header/header';
 
 // ----------------------------------------------------------------------
 

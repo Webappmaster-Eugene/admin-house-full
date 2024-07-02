@@ -1,25 +1,26 @@
 import { memo } from 'react';
-import Scrollbar from '@/shared/scrollbar';
-import { NavSectionHorizontal } from '@/shared/nav-section';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 
 import { bgBlur } from 'src/utils/theme/css';
-import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
+import { NavData } from 'src/utils/const/data/nav-data';
+import { UserRoles } from 'src/utils/const/user-roles.enum';
 
-import { HEADER } from '../config-layout';
-import { useNavData } from './config-navigation';
+import Scrollbar from 'src/shared/scrollbar';
+import { HEADER } from 'src/layouts/config-layout';
+import HeaderShadow from 'src/shared/header-shadow';
+import { CurrentUserInfo } from 'src/entities/auth/lib';
+import { useCurrentUserStore } from 'src/store/auth/user-auth.store';
+import NavSectionHorizontal from 'src/shared/nav-section/horizontal';
 
 // ----------------------------------------------------------------------
 
 function NavHorizontal() {
   const theme = useTheme();
 
-  const { mockedData } = useMockedUserData();
-
-  const navData = useNavData();
+  const loginedUser: CurrentUserInfo = useCurrentUserStore((state) => state.user);
 
   return (
     <AppBar
@@ -43,9 +44,9 @@ function NavHorizontal() {
           }}
         >
           <NavSectionHorizontal
-            data={navData}
+            data={NavData}
             slotProps={{
-              currentRole: mockedData?.role,
+              currentRole: loginedUser?.roleName as UserRoles,
             }}
             sx={{
               ...theme.mixins.toolbar,

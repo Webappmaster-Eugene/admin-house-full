@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MaterialSchema, RequestGetAllQuerySchema } from '../../models';
+import { MaterialRelatedEntitiesSchema, MaterialSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const MaterialGetAllResponseEntitySchema = z.array(
@@ -11,11 +11,11 @@ const MaterialGetAllResponseEntitySchema = z.array(
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-    categoryUuid: true,
+    categoryMaterialUuid: true,
     handbookUuid: true,
     lastChangeByUserUuid: true,
     uuid: true,
-  }),
+  }).merge(MaterialRelatedEntitiesSchema),
 );
 
 const MaterialGetAllResponseSchema = z

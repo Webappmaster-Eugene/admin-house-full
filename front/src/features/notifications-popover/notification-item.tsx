@@ -12,19 +12,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 
 import { fToNow } from 'src/utils/helpers/format-time';
 
-// ----------------------------------------------------------------------
-
-type NotificationItemProps = {
-  notification: {
-    id: string;
-    title: string;
-    category: string;
-    createdAt: Date;
-    isUnRead: boolean;
-    type: string;
-    avatarUrl: string | null;
-  };
-};
+import { NotificationItemProps } from 'src/features/notifications-popover/notification-item.props';
 
 export default function NotificationItem({ notification }: NotificationItemProps) {
   const renderAvatar = (

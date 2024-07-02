@@ -14,7 +14,10 @@ export default function Characteristics() {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Typography variant="h4"> Page Two </Typography>
+      <Typography variant="h4"> Характеристики материала Material#2 </Typography>
+      <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+        Демо-данные
+      </Typography>
 
       <Box
         sx={{

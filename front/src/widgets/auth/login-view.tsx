@@ -87,20 +87,20 @@ export default function LoginView() {
   return (
     <>
       <Stack spacing={2} sx={{ mb: 5 }}>
-        <Typography variant="h4">Sign in to Minimal</Typography>
+        <Typography variant="h4">Войти в приложение</Typography>
 
         <Stack direction="row" spacing={0.5}>
-          <Typography variant="body2">New user?</Typography>
+          <Typography variant="body2">Вы здесь впервые?</Typography>
 
           {/* <Link component={RouterLink} href={paths.auth.register} variant="subtitle2"> */}
           <Link href={paths.auth.register} variant="subtitle2">
-            Create an account
+            Создать аккаунт
           </Link>
         </Stack>
       </Stack>
 
       <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>admin@mail.ru</strong> / password :<strong> !qwertY32</strong>
+        Почта : <strong>admin@mail.ru</strong> / пароль :<strong> !qwertY32</strong>
       </Alert>
 
       {!!errorMsg && (
@@ -111,11 +111,11 @@ export default function LoginView() {
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack spacing={2.5}>
-          <RHFTextField name="email" label="Email address" />
+          <RHFTextField name="email" label="Почта" />
 
           <RHFTextField
             name="password"
-            label="Password"
+            label="Пароль"
             type={isPasswordOpen.value ? 'text' : 'password'}
             InputProps={{
               endAdornment: (
@@ -131,7 +131,7 @@ export default function LoginView() {
           />
 
           <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
-            Forgot password?
+            Забыли пароль?
           </Link>
 
           <LoadingButton
@@ -142,7 +142,7 @@ export default function LoginView() {
             variant="contained"
             loading={isSubmitting}
           >
-            Login
+            Войти
           </LoadingButton>
         </Stack>
       </FormProvider>

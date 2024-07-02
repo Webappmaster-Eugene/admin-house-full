@@ -15,30 +15,9 @@ export default function Main({ children, sx, ...other }: BoxProps) {
 
   const lgUp = useResponsive('up', 'lg');
 
-  const isNavHorizontal = settings.themeLayout === 'horizontal';
+  // const isNavHorizontal = settings.themeLayout === 'horizontal';
 
-  const isNavMini = settings.themeLayout === 'mini';
-
-  if (isNavHorizontal) {
-    return (
-      <Box
-        component="main"
-        sx={{
-          minHeight: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          pt: `${HEADER.H_MOBILE + 24}px`,
-          pb: 10,
-          ...(lgUp && {
-            pt: `${HEADER.H_MOBILE * 2 + 40}px`,
-            pb: 15,
-          }),
-        }}
-      >
-        {children}
-      </Box>
-    );
-  }
+  const isNavVertical = settings.themeLayout === 'vertical';
 
   return (
     <Box
@@ -48,14 +27,13 @@ export default function Main({ children, sx, ...other }: BoxProps) {
         minHeight: 1,
         display: 'flex',
         flexDirection: 'column',
-        py: `${HEADER.H_MOBILE + SPACING}px`,
-        ...(lgUp && {
-          px: 2,
-          py: `${HEADER.H_DESKTOP + SPACING}px`,
+        // py: `${HEADER.H_MOBILE + SPACING}px`,
+        px: 2,
+        py: `${HEADER.H_DESKTOP + SPACING}px`,
+        ml: lgUp ? 0 : `88px`,
+        width: `calc(100% - ${NAV.W_MINI}px)`,
+        ...(isNavVertical && {
           width: `calc(100% - ${NAV.W_VERTICAL}px)`,
-          ...(isNavMini && {
-            width: `calc(100% - ${NAV.W_MINI}px)`,
-          }),
         }),
         ...sx,
       }}

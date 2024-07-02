@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid';
 
-export const allUsersTablesColumns: GridColDef[] = [
+export const allUsersTableColumns: GridColDef[] = [
   { field: 'uuid', headerName: 'id', width: 190 },
   { field: 'firstName', headerName: 'Имя', width: 150 },
   { field: 'secondName', headerName: 'Фамилия', width: 230 },
