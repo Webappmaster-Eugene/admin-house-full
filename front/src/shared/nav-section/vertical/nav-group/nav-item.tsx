@@ -6,6 +6,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { alpha, styled } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
 
+import { UserRoles } from 'src/utils/const/user-roles.enum';
+
 import Iconify from 'src/shared/iconify';
 import { RouterLink } from 'src/shared/router-link';
 import { NavItemProps, NavItemStateProps } from 'src/shared/nav-section/types';
@@ -90,7 +92,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
     );
 
     // Hidden item by role
-    if (roles && !roles.includes(`${currentRole}`)) {
+    if (roles && !roles.includes(currentRole as UserRoles)) {
       return null;
     }
 
