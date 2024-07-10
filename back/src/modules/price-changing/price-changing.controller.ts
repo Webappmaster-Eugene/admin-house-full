@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { PriceChangingGetResponseDto } from './dto/controller/get-price-changing.dto';
 import { PriceChangingCreateRequestDto, PriceChangingCreateResponseDto } from './dto/controller/create-price-changing.dto';
@@ -19,7 +19,7 @@ import {
   PriceChangingGetAllCommand,
   PriceChangingGetCommand,
   PriceChangingUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { PriceChangingEntity } from './entities/price-changing.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -61,7 +61,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingGetResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.getById(priceChangingId);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -87,7 +87,7 @@ export class PriceChangingController implements IPriceChangingController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<PriceChangingGetAllResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.getAll();
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -117,7 +117,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingGetAllResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -147,7 +147,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingGetAllResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -177,7 +177,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingGetAllResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.getAllInMaterial(materialId, queryParams);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -205,7 +205,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingCreateResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.create(dto, userInfoFromJWT.uuid, materialId);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -237,7 +237,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingUpdateResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.updateById(priceChangingId, dto);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }
@@ -265,7 +265,7 @@ export class PriceChangingController implements IPriceChangingController {
   ): Promise<PriceChangingDeleteResponseDto> {
     try {
       const { ok, data } = await this.priceChangingService.deleteById(priceChangingId);
-      return okResponseHandler(ok, data, PriceChangingEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
     }

@@ -10,8 +10,8 @@ import {
   WorkspaceGetAllCommand,
   WorkspaceGetCommand,
   WorkspaceUpdateCommand,
-} from '@numart/house-admin-contracts';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+} from 'libs/contracts/';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { WorkspaceGetResponseDto } from './dto/controller/get-workspace.dto';
 import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from './dto/controller/create-workspace.dto';
@@ -22,7 +22,7 @@ import { WorkspaceChangeOwnerRequestDto, WorkspaceChangeOwnerResponseDto } from 
 import { IWorkspaceController } from './types/workspace.controller.interface';
 import { IWorkspaceService } from './types/workspace.service.interface';
 import { KFI } from '../../common/utils/di';
-import { WorkspaceChangeOwnerCommand } from '@numart/house-admin-contracts';
+import { WorkspaceChangeOwnerCommand } from 'libs/contracts';
 import { WorkspaceEntity } from './entities/workspace.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -64,7 +64,7 @@ export class WorkspaceController implements IWorkspaceController {
   ): Promise<WorkspaceGetResponseDto> {
     try {
       const { ok, data } = await this.workspaceService.getById(workspaceId);
-      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
@@ -88,7 +88,8 @@ export class WorkspaceController implements IWorkspaceController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<WorkspaceGetAllResponseDto> {
     try {
       const { ok, data } = await this.workspaceService.getAll(queryParams);
-      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
@@ -117,7 +118,7 @@ export class WorkspaceController implements IWorkspaceController {
     //DOC в create нужно передать id пользователя, для которого создается workspace
     try {
       const { ok, data } = await this.workspaceService.create(dto, userInfo.uuid);
-      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
@@ -146,7 +147,7 @@ export class WorkspaceController implements IWorkspaceController {
   ): Promise<WorkspaceUpdateResponseDto> {
     try {
       const { ok, data } = await this.workspaceService.updateById(workspaceId, dto);
-      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
@@ -171,7 +172,7 @@ export class WorkspaceController implements IWorkspaceController {
   ): Promise<WorkspaceDeleteResponseDto> {
     try {
       const { ok, data } = await this.workspaceService.deleteById(workspaceId);
-      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }
@@ -204,7 +205,7 @@ export class WorkspaceController implements IWorkspaceController {
   ): Promise<WorkspaceChangeOwnerResponseDto> {
     try {
       const { ok, data } = await this.workspaceService.changeWorkspaceOwner(workspaceId, dto);
-      return okResponseHandler(ok, data, WorkspaceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.WORKSPACE, urlParams);
     }

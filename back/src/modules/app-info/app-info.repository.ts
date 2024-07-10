@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IAppInfoRepository } from './types/app-info.repository.interface';
 import { AppInfoUpdateRequestDto } from './dto/controller/update-app-info.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { AppInfoEntity } from './entities/app-info.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

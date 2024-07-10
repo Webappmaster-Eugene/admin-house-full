@@ -1,21 +1,15 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { FieldTypeSchema } from '../../models';
+import { FieldTypeBusinessValueSchema, FieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldTypeDeleteResponseEntitySchema = FieldTypeSchema.pick({
-  name: true,
-  description: true,
-  jsType: true,
-  lastChangeByUserUuid: true,
-  uuid: true,
-});
+const FieldTypeDeleteResponseEntitySchema = FieldTypeBusinessValueSchema;
 
 const FieldTypeDeleteResponseSchema = z
   .object({
     data: FieldTypeDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldTypeDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

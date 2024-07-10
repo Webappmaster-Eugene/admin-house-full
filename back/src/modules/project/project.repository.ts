@@ -3,7 +3,7 @@ import { ProjectCreateRequestDto } from './dto/controller/create-project.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IProjectRepository } from './types/project.repository.interface';
 import { ProjectUpdateRequestDto } from './dto/controller/update-project.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { ProjectEntity } from './entities/project.entity';
 import { KFI } from '../../common/utils/di';
@@ -27,6 +27,12 @@ export class ProjectsRepository implements IProjectRepository {
         where: {
           uuid: projectId,
         },
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
+        },
       });
 
       return existenceEntityHandler(concreteProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
@@ -39,7 +45,16 @@ export class ProjectsRepository implements IProjectRepository {
     limitTakeHandler(take);
 
     try {
-      const allProjects = await this.databaseService.project.findMany({ take, skip });
+      const allProjects = await this.databaseService.project.findMany({
+        take,
+        skip,
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
+        },
+      });
       return existenceEntityHandler(allProjects, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -62,6 +77,12 @@ export class ProjectsRepository implements IProjectRepository {
         },
         take,
         skip,
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
+        },
       });
       return existenceEntityHandler(allProjectsInWorkspace, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
     } catch (error: unknown) {
@@ -83,6 +104,12 @@ export class ProjectsRepository implements IProjectRepository {
         },
         take,
         skip,
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
+        },
       });
       return existenceEntityHandler(allProjectsInOrganization, ProjectEntity, EntityName.PROJECT) as ProjectEntity[];
     } catch (error: unknown) {
@@ -120,6 +147,12 @@ export class ProjectsRepository implements IProjectRepository {
           responsibleManagerUuid: managerId,
           customerUuid: managerId,
         },
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
+        },
       });
       return existenceEntityHandler(newProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
     } catch (error: unknown) {
@@ -141,6 +174,12 @@ export class ProjectsRepository implements IProjectRepository {
           customerMail,
           customerUuid,
         },
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
+        },
       });
 
       return existenceEntityHandler(updatedProject, ProjectEntity, EntityName.PROJECT) as ProjectEntity;
@@ -154,6 +193,12 @@ export class ProjectsRepository implements IProjectRepository {
       const deletedProject = await this.databaseService.project.delete({
         where: {
           uuid: projectId,
+        },
+        include: {
+          organization: true,
+          projectMembers: true,
+          customer: true,
+          responsibleManager: true,
         },
       });
 

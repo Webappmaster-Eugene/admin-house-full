@@ -1,4 +1,4 @@
 import { createZodDto } from 'nestjs-zod';
-import { TechLogChangesGetAllCommand } from '@numart/house-admin-contracts';
+import { TechLogChangesGetAllCommand } from 'libs/contracts';
 
 export class TechLogChangesGetAllResponseDto extends createZodDto(TechLogChangesGetAllCommand.ResponseSchema) {}

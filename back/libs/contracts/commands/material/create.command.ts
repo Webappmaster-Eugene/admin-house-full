@@ -1,20 +1,8 @@
 import { z } from 'zod';
-import { MaterialRelatedEntitiesSchema, MaterialSchema } from '../../models';
+import { MaterialBusinessValueSchema, MaterialRelatedEntitiesSchema, MaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const MaterialCreateResponseEntitySchema = MaterialSchema.pick({
-  name: true,
-  price: true,
-  comment: true,
-  namePublic: true,
-  sourceInfo: true,
-  unitMeasurementUuid: true,
-  responsiblePartnerUuid: true,
-  categoryMaterialUuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-  uuid: true,
-});
+const MaterialCreateResponseEntitySchema = MaterialBusinessValueSchema.merge(MaterialRelatedEntitiesSchema.strict());
 
 const MaterialCreateRequestSchema = MaterialSchema.pick({
   name: true,
@@ -24,13 +12,13 @@ const MaterialCreateRequestSchema = MaterialSchema.pick({
   sourceInfo: true,
   unitMeasurementUuid: true,
   responsiblePartnerUuid: true,
-}).merge(MaterialRelatedEntitiesSchema);
+});
 
 const MaterialCreateResponseSchema = z
   .object({
     data: MaterialCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace MaterialCreateCommand {
   export const RequestSchema = MaterialCreateRequestSchema;

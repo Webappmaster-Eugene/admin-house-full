@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { AuthStrictKeySchema, CategoryMaterialSchema } from '../../models';
+import { AuthStrictKeyBusinessValueSchema, CategoryMaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const AuthGenerateKeyResponseEntitySchema = AuthStrictKeySchema;
+const AuthGenerateKeyResponseEntitySchema = AuthStrictKeyBusinessValueSchema;
 
 const AuthGenerateKeyRequestSchema = z.object({
   key: z.string(),
@@ -12,7 +12,7 @@ const AuthGenerateKeyResponseSchema = z
   .object({
     data: AuthGenerateKeyResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace AuthGenerateKeyCommand {
   export const RequestSchema = AuthGenerateKeyRequestSchema;

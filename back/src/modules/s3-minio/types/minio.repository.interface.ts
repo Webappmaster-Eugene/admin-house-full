@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
 import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
 

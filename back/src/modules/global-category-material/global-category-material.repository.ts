@@ -3,7 +3,7 @@ import { GlobalCategoryMaterialCreateRequestDto } from './dto/controller/create-
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IGlobalCategoryMaterialRepository } from './types/global-category-material.repository.interface';
 import { GlobalCategoryMaterialUpdateRequestDto } from './dto/controller/update-global-category-material.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { GlobalCategoryMaterialEntity } from './entities/global-category-material.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

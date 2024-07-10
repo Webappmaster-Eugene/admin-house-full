@@ -15,3 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./characteristics-material.schema"), exports);
+__exportStar(require("./characteristics-material-business-value.schema"), exports);
+__exportStar(require("./characteristics-material-related-entities.schema"), exports);

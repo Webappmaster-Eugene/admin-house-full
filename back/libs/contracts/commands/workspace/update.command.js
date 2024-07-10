@@ -4,10 +4,7 @@ exports.WorkspaceUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const WorkspaceUpdateResponseEntitySchema = models_1.WorkspaceSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-});
+const WorkspaceUpdateResponseEntitySchema = models_1.WorkspaceBusinessValueSchema.merge(models_1.WorkspaceRelatedEntitiesSchema);
 const WorkspaceUpdateRequestSchema = models_1.WorkspaceSchema.pick({
     name: true,
     description: true,

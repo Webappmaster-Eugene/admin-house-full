@@ -9,12 +9,15 @@ import { SettingsDrawer } from '@/shared/settings';
 import { cookieKeys } from 'src/utils/const';
 import { PropsReactNode } from 'src/utils/types';
 import { primaryFont } from 'src/utils/theme/typography';
-import { isCurrentUserTypeGuard } from 'src/utils/type-guards/current-user.type-guard';
+import { isCurrentUserTypeGuard } from 'src/utils/type-guards/is-current-user.type-guard';
 
 import { StyledProgressBar } from 'src/shared/progress-bar';
 import GeneralProvider from 'src/providers/general-provider';
 import CurrentUserProvider from 'src/providers/current-user-provider';
+import { AppState } from 'src/api/realisation-requests/app-state.type';
+import WorkspaceInfoProvider from 'src/providers/workspace-info-provider';
 import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
+import { getFullWorkspaceInfo } from 'src/api/realisation-requests/workspace.global-getter.realisation';
 
 // export const viewport = {
 //   themeColor: '#000000',
@@ -38,9 +41,13 @@ export const metadata = {
 
 export default async function RootLayout({ children }: PropsReactNode) {
   let currentUserInfo;
+  let workspaceInfo: AppState | null = null;
   const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
   if (refreshToken) {
     currentUserInfo = await getCurrentUser();
+  }
+  if (isCurrentUserTypeGuard(currentUserInfo)) {
+    workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
   }
 
   return (
@@ -50,10 +57,12 @@ export default async function RootLayout({ children }: PropsReactNode) {
         <CurrentUserProvider
           currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
         >
-          <GeneralProvider>
-            <SettingsDrawer />
-            <Suspense fallback={<StyledProgressBar />}>{children}</Suspense>
-          </GeneralProvider>
+          <WorkspaceInfoProvider workspaceInfo={workspaceInfo}>
+            <GeneralProvider>
+              <SettingsDrawer />
+              <Suspense fallback={<StyledProgressBar />}>{children}</Suspense>
+            </GeneralProvider>
+          </WorkspaceInfoProvider>
         </CurrentUserProvider>
         {/* </AppProvider> */}
       </body>

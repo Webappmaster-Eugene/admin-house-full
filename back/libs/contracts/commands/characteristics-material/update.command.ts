@@ -1,19 +1,14 @@
 import { z } from 'zod';
-import { CharacteristicsMaterialSchema, ResponseClientSchema } from '../../models';
+import {
+  CharacteristicsMaterialBusinessValueSchema,
+  CharacteristicsMaterialRelatedEntitiesSchema,
+  CharacteristicsMaterialSchema,
+  ResponseClientSchema,
+} from '../../models';
 
-const CharacteristicsMaterialUpdateResponseEntitySchema = CharacteristicsMaterialSchema.pick({
-  uuid: true,
-  value: true,
-  name: true,
-  comment: true,
-  fieldOfCategoryMaterialUuid: true,
-  fieldUnitMeasurementUuid: true,
-  fieldTypeUuid: true,
-  handbookUuid: true,
-  categoryMaterialUuid: true,
-  materialUuid: true,
-  lastChangeByUserUuid: true,
-});
+const CharacteristicsMaterialUpdateResponseEntitySchema = CharacteristicsMaterialBusinessValueSchema.merge(
+  CharacteristicsMaterialRelatedEntitiesSchema.strict(),
+);
 
 const CharacteristicsMaterialUpdateRequestSchema = CharacteristicsMaterialSchema.pick({
   name: true,
@@ -25,7 +20,7 @@ const CharacteristicsMaterialUpdateResponseSchema = z
   .object({
     data: CharacteristicsMaterialUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace CharacteristicsMaterialUpdateCommand {
   export const RequestSchema = CharacteristicsMaterialUpdateRequestSchema;

@@ -1,12 +1,8 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models';
+import { UserBusinessValueSchema, UserRelatedEntitiesSchema, UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const UserAddToProjectResponseEntitySchema = UserSchema.omit({
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const UserAddToProjectResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema.strict());
 
 const UserAddToProjectRequestSchema = UserSchema.pick({
   uuid: true,
@@ -19,7 +15,7 @@ const UserAddToProjectResponseSchema = z
   .object({
     data: UserAddToProjectResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserAddToProjectCommand {
   export const RequestSchema = UserAddToProjectRequestSchema;

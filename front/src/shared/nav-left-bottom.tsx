@@ -45,7 +45,7 @@ export default function NavLeftBottom() {
               borderBottomLeftRadius: 2,
             }}
           >
-            {(loginedUser && loginedUser?.roleName) || 'USER'}
+            {(loginedUser && loginedUser?.role.name) || 'USER'}
           </Label>
         </Box>
 

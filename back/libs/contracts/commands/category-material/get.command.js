@@ -4,14 +4,7 @@ exports.CategoryMaterialGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const CategoryMaterialGetResponseEntitySchema = models_1.CategoryMaterialSchema.pick({
-    name: true,
-    templateName: true,
-    comment: true,
-    uuid: true,
-    globalCategoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-});
+const CategoryMaterialGetResponseEntitySchema = models_1.CategoryMaterialBusinessValueSchema.merge(models_1.CategoryMaterialRelatedEntitiesSchema);
 const CategoryMaterialGetResponseSchema = zod_1.z
     .object({
     data: CategoryMaterialGetResponseEntitySchema,

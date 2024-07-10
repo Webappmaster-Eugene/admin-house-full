@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { CategoryMaterialGetResponseDto } from './dto/controller/get-category-material.dto';
 import { CategoryMaterialCreateRequestDto, CategoryMaterialCreateResponseDto } from './dto/controller/create-category-material.dto';
@@ -21,7 +21,7 @@ import {
   CategoryMaterialGetCommand,
   CategoryMaterialUpdateCommand,
   FieldVariantsForSelectorFieldTypeGetAllCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { CategoryMaterialEntity } from './entities/category-material.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -61,7 +61,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ): Promise<CategoryMaterialGetResponseDto> {
     try {
       const { ok, data } = await this.categoryMaterialService.getById(categoryMaterialId);
-      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
@@ -90,7 +90,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ): Promise<CategoryMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.categoryMaterialService.getAll(queryParams);
-      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
@@ -120,7 +120,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ): Promise<CategoryMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.categoryMaterialService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
@@ -147,7 +147,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ): Promise<CategoryMaterialCreateResponseDto> {
     try {
       const { ok, data } = await this.categoryMaterialService.create(dto, handbookId);
-      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
@@ -177,7 +177,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ): Promise<CategoryMaterialUpdateResponseDto> {
     try {
       const { ok, data } = await this.categoryMaterialService.updateById(categoryMaterialId, dto);
-      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
@@ -203,7 +203,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ): Promise<CategoryMaterialDeleteResponseDto> {
     try {
       const { ok, data } = await this.categoryMaterialService.deleteById(categoryMaterialId);
-      return okResponseHandler(ok, data, CategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }

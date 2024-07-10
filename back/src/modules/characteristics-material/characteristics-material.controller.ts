@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { KFI } from '../../common/utils/di';
 import {
@@ -13,7 +13,7 @@ import {
   CharacteristicsMaterialGetAllCommand,
   CharacteristicsMaterialGetCommand,
   CharacteristicsMaterialUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -67,7 +67,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialGetResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.getById(characteristicsMaterialId);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -96,7 +96,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.getAll(queryParams);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -126,7 +126,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -156,7 +156,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -186,7 +186,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.getAllInMaterial(materialId, queryParams);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -205,7 +205,9 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   @ApiResponse({ status: 201, type: CharacteristicsMaterialCreateResponseDto })
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(CharacteristicsMaterialCreateResponseDto)
-  @Post('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId')
+  @Post(
+    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/related-to-field-category-material/:fieldCategoryMaterialId',
+  )
   async createEP(
     @Body() dto: CharacteristicsMaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -228,7 +230,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
         fieldCategoryMaterialId,
         userInfoFromJWT.uuid,
       );
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -258,7 +260,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialUpdateResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.updateById(characteristicsMaterialId, dto);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }
@@ -286,7 +288,7 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ): Promise<CharacteristicsMaterialDeleteResponseDto> {
     try {
       const { ok, data } = await this.characteristicsMaterialService.deleteById(characteristicsMaterialId);
-      return okResponseHandler(ok, data, CharacteristicsMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CHARACTERISTICS_MATERIAL, urlParams);
     }

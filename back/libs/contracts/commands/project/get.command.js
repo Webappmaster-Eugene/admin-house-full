@@ -4,18 +4,7 @@ exports.ProjectGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const ProjectGetResponseEntitySchema = models_1.ProjectSchema.pick({
-    name: true,
-    description: true,
-    customerMail: true,
-    customerUuid: true,
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
-    responsibleManagerUuid: true,
-    organizationUuid: true,
-    lastChangeByUserUuid: true,
-});
+const ProjectGetResponseEntitySchema = models_1.ProjectBusinessValueSchema.merge(models_1.ProjectRelatedEntitiesSchema);
 const ProjectSchemaGetRequestSchema = models_1.ProjectSchema.pick({
     uuid: true,
 });

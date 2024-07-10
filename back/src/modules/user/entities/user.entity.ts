@@ -1,6 +1,15 @@
 import { Role, User, Workspace } from '.prisma/client';
+import { RoleEntity } from 'src/modules/roles/entities/role.entity';
+import { WorkspaceEntity } from 'src/modules/workspace/entities/workspace.entity';
 
-export class UserEntity implements User {
+export interface UserRelatedEntities {
+  // roleName?: string;
+  role: RoleEntity;
+  creatorOfWorkspace: WorkspaceEntity;
+  memberOfWorkspace: WorkspaceEntity;
+}
+
+export class UserEntity implements User, UserRelatedEntities {
   uuid: string;
   firstName: string;
   secondName: string;
@@ -20,10 +29,10 @@ export class UserEntity implements User {
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  roleName?: string;
-  role?: Role;
-  creatorOfWorkspace?: Workspace;
-  memberOfWorkspace?: Workspace;
+  // roleName?: string;
+  role: RoleEntity;
+  creatorOfWorkspace: WorkspaceEntity;
+  memberOfWorkspace: WorkspaceEntity;
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);

@@ -1,9 +1,4 @@
 import { z } from 'zod';
-import { RoleSchema } from '../../role';
-import { WorkspaceSchema } from '../../workspace';
-import { OrganizationSchema } from '../../organization';
-import { ProjectSchema } from '../../project';
-import { HandbookSchema } from '../../handbook';
 
 export const UserFullInfoSchema = z.object({
   uuid: z.string().uuid(),
@@ -37,13 +32,4 @@ At least one special character`,
   lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  roleName: z.string(),
-  role: RoleSchema,
-  creatorOfWorkspace: WorkspaceSchema.nullable().optional(),
-  memberOfWorkspace: WorkspaceSchema.nullable().optional(),
-  memberOfOrganization: OrganizationSchema.nullable().optional(),
-  leaderOfOrganizations: z.array(OrganizationSchema.nullable().optional()),
-  memberOfProject: ProjectSchema.nullable().optional(),
-  responsibleManagerOfProjects: z.array(ProjectSchema.nullable().optional()),
-  handbookManager: HandbookSchema.nullable().optional(),
 });

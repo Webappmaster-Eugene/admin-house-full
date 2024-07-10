@@ -1,15 +1,7 @@
 import { z } from 'zod';
-import { ResponseClientSchema, StatusApproveSchema } from '../../models';
+import { ResponseClientSchema, StatusApproveBusinessValueSchema, StatusApproveSchema } from '../../models';
 
-const StatusApproveUpdateResponseEntitySchema = StatusApproveSchema.pick({
-  name: true,
-  nameRu: true,
-  comment: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const StatusApproveUpdateResponseEntitySchema = StatusApproveBusinessValueSchema;
 
 const StatusApproveUpdateRequestSchema = StatusApproveSchema.pick({
   name: true,
@@ -21,7 +13,7 @@ const StatusApproveUpdateResponseSchema = z
   .object({
     data: StatusApproveUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace StatusApproveUpdateCommand {
   export const RequestSchema = StatusApproveUpdateRequestSchema;

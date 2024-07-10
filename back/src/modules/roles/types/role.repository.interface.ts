@@ -2,7 +2,7 @@ import { RoleCreateRequestDto } from '../dto/controller/create-role.dto';
 import { RoleUpdateRequestDto } from '../dto/controller/update-role.dto';
 import { EUserTypeVariants } from '.prisma/client';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
 import { RoleEntity } from '../entities/role.entity';
 

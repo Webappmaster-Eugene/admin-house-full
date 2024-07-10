@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { ResponseClientSchema } from '../../models';
-import { AuthStrictKeySchema } from '../../models';
+import { AuthStrictKeyBusinessValueSchema } from '../../models';
 
-const AuthGetKeyResponseEntitySchema = AuthStrictKeySchema;
+const AuthGetKeyResponseEntitySchema = AuthStrictKeyBusinessValueSchema;
 
 const AuthGetKeyResponseSchema = z
   .object({
     data: AuthGetKeyResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace AuthGetKeyCommand {
   export const ResponseSchema = AuthGetKeyResponseSchema;

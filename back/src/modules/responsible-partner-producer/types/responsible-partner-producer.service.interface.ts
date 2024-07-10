@@ -3,7 +3,7 @@ import { ResponsiblePartnerProducerCreateRequestDto } from '../dto/controller/cr
 import { ResponsiblePartnerProducerUpdateRequestDto } from '../dto/controller/update-responsible-partner-producer.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { ResponsiblePartnerProducerEntity } from '../entities/responsible-partner-producer.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
 export interface IResponsiblePartnerProducerService

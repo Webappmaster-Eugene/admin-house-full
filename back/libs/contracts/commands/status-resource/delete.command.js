@@ -5,14 +5,7 @@ const zod_1 = require("zod");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const StatusResourceDeleteResponseEntitySchema = models_1.StatusResourceSchema.pick({
-    name: true,
-    comment: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const StatusResourceDeleteResponseEntitySchema = models_1.StatusResourceBusinessValueSchema;
 const StatusResourceDeleteResponseSchema = zod_1.z
     .object({
     data: StatusResourceDeleteResponseEntitySchema,

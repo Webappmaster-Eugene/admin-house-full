@@ -1,19 +1,14 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema, WorkspaceSchema } from '../../models';
+import { RequestGetAllQuerySchema, WorkspaceBusinessValueSchema, WorkspaceRelatedEntitiesSchema, WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const WorkspaceGetAllResponseEntitySchema = z.array(
-  WorkspaceSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-  }),
-);
+const WorkspaceGetAllResponseEntitySchema = z.array(WorkspaceBusinessValueSchema.merge(WorkspaceRelatedEntitiesSchema.strict()));
 
 const WorkspaceGetAllResponseSchema = z
   .object({
     data: WorkspaceGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace WorkspaceGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

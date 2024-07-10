@@ -1,21 +1,13 @@
 import { z } from 'zod';
-import { ResponseClientSchema, FileStorageSchema } from '../../models';
+import { ResponseClientSchema, FileStorageSchema, FileStorageBusinessValueSchema } from '../../models';
 
-const FileStorageGetResponseEntitySchema = FileStorageSchema.pick({
-  nameFile: true,
-  link: true,
-  comment: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const FileStorageGetResponseEntitySchema = FileStorageBusinessValueSchema;
 
 const FileStorageGetResponseSchema = z
   .object({
     data: FileStorageGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FileStorageGetCommand {
   export const ResponseSchema = FileStorageGetResponseSchema;

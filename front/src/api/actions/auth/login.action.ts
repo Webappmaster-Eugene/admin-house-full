@@ -42,7 +42,8 @@ export async function login(data: { email: string; password: string }) {
       errorObject.error = response?.errors[0];
       return errorObject;
     }
-    return { errorObject: response?.message };
+    errorObject.error = response?.message;
+    return errorObject;
   } catch (error: unknown) {
     console.error('Catched frontend error while login', error);
     if (error instanceof AxiosError) {

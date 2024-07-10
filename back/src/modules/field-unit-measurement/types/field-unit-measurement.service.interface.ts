@@ -3,7 +3,7 @@ import { FieldUnitMeasurementCreateRequestDto } from '../dto/controller/create-f
 import { FieldUnitMeasurementUpdateRequestDto } from '../dto/controller/update-field-unit-measurement.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { FieldUnitMeasurementEntity } from '../entities/field-unit-measurement.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
 export interface IFieldUnitMeasurementService

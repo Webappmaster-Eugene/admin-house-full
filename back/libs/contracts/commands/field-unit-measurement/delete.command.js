@@ -5,13 +5,7 @@ const zod_1 = require("zod");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const FieldUnitMeasurementDeleteResponseEntitySchema = models_1.FieldUnitMeasurementSchema.pick({
-    name: true,
-    comment: true,
-    uuid: true,
-    handbookUuid: true,
-    lastChangeByUserUuid: true,
-});
+const FieldUnitMeasurementDeleteResponseEntitySchema = models_1.FieldUnitMeasurementBusinessValueSchema.merge(models_1.FieldUnitMeasurementRelatedEntitiesSchema);
 const FieldUnitMeasurementDeleteResponseSchema = zod_1.z
     .object({
     data: FieldUnitMeasurementDeleteResponseEntitySchema,

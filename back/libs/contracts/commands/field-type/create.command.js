@@ -4,13 +4,7 @@ exports.FieldTypeCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const FieldTypeCreateResponseEntitySchema = models_1.FieldTypeSchema.pick({
-    name: true,
-    description: true,
-    jsType: true,
-    lastChangeByUserUuid: true,
-    uuid: true,
-});
+const FieldTypeCreateResponseEntitySchema = models_1.FieldTypeBusinessValueSchema;
 const FieldTypeCreateRequestSchema = models_1.FieldTypeSchema.pick({
     name: true,
     description: true,

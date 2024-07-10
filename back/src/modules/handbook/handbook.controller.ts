@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { HandbookGetResponseDto } from './dto/controller/get-handbook.dto';
 import { HandbookCreateRequestDto, HandbookCreateResponseDto } from './dto/controller/create-handbook.dto';
@@ -20,7 +20,7 @@ import {
   HandbookGetAllCommand,
   HandbookGetCommand,
   HandbookUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { HandbookEntity } from './entities/handbook.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -60,7 +60,7 @@ export class HandbookController implements IHandbookController {
   ): Promise<HandbookGetResponseDto> {
     try {
       const { ok, data } = await this.handbookService.getById(handbookId);
-      return okResponseHandler(ok, data, HandbookEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.HANDBOOK, urlParams);
     }
@@ -86,7 +86,7 @@ export class HandbookController implements IHandbookController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<HandbookGetAllResponseDto> {
     try {
       const { ok, data } = await this.handbookService.getAll(queryParams);
-      return okResponseHandler(ok, data, HandbookEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.HANDBOOK, urlParams);
     }
@@ -115,7 +115,7 @@ export class HandbookController implements IHandbookController {
     // DOC в create нужно передать id пользователя, для которого создается handbook
     try {
       const { ok, data } = await this.handbookService.create(dto, userInfoFromJWT.uuid);
-      return okResponseHandler(ok, data, HandbookEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.HANDBOOK, urlParams);
     }
@@ -143,7 +143,7 @@ export class HandbookController implements IHandbookController {
   ): Promise<HandbookUpdateResponseDto> {
     try {
       const { ok, data } = await this.handbookService.updateById(handbookId, dto);
-      return okResponseHandler(ok, data, HandbookEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.HANDBOOK, urlParams);
     }
@@ -170,7 +170,7 @@ export class HandbookController implements IHandbookController {
   ): Promise<HandbookDeleteResponseDto> {
     try {
       const { ok, data } = await this.handbookService.deleteById(handbookId);
-      return okResponseHandler(ok, data, HandbookEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.HANDBOOK, urlParams);
     }

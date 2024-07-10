@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { ICharacteristicsMaterialRepository } from './types/characteristics-material.repository.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../common/utils/di';
 import { CharacteristicsMaterialEntity } from './entities/characteristics-material.entity';
 import { CharacteristicsMaterialCreateRequestDto } from './dto/controller/create-characteristics-material.dto';
@@ -24,6 +24,13 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
         where: {
           uuid: characteristicsMaterialId,
         },
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          fieldUnitMeasurement: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -40,7 +47,17 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
     limitTakeHandler(take);
 
     try {
-      const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({ take, skip });
+      const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({
+        take,
+        skip,
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          fieldUnitMeasurement: true,
+        },
+      });
       return existenceEntityHandler(
         allCharacteristicsMaterials,
         CharacteristicsMaterialEntity,
@@ -63,6 +80,13 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
         where: { handbookUuid: handbookId },
         take,
         skip,
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          fieldUnitMeasurement: true,
+        },
       });
       return existenceEntityHandler(
         allCharacteristicsMaterials,
@@ -83,7 +107,18 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
 
     try {
       const allCharacteristicsMaterials = await this.databaseService.characteristicsMaterial.findMany({
-        where: { categoryMaterialUuid: categoryMaterialId },
+        where: {
+          material: {
+            categoryMaterialUuid: categoryMaterialId,
+          },
+        },
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          fieldUnitMeasurement: true,
+        },
         take,
         skip,
       });
@@ -109,6 +144,13 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
         where: { materialUuid: materialId },
         take,
         skip,
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          fieldUnitMeasurement: true,
+        },
       });
       return existenceEntityHandler(
         allCharacteristicsMaterials,
@@ -126,7 +168,7 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
     fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    fieldTypeUuid: EntityUrlParamCommand.RequestUuidParam,
+    fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
     unitOfMeasurementUuid: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<CharacteristicsMaterialEntity> {
@@ -136,13 +178,19 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
         data: {
           name,
           comment,
-          fieldUnitMeasurementUuid: unitOfMeasurementUuid,
-          fieldTypeUuid,
-          fieldOfCategoryMaterialUuid: fieldCategoryMaterialId,
           value,
-          categoryMaterialUuid: categoryMaterialId,
+          fieldUnitMeasurementUuid: unitOfMeasurementUuid,
+          fieldTypeUuid: fieldTypeId,
+          fieldOfCategoryMaterialUuid: fieldCategoryMaterialId,
           materialUuid: materialId,
           handbookUuid: handbookId,
+        },
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          fieldUnitMeasurement: true,
         },
       });
 

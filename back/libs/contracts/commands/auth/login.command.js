@@ -1,16 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthLoginCommand = exports.PasswordSchema = void 0;
+exports.AuthLoginCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
 const AuthLoginResponseEntitySchema = models_1.AuthSchema;
-exports.PasswordSchema = zod_1.z.object({
-    password: zod_1.z.string(),
-});
 const AuthLoginRequestSchema = models_1.UserSchema.pick({
     email: true,
-}).merge(exports.PasswordSchema);
+}).merge(models_1.PasswordSchema);
 const AuthLoginResponseSchema = zod_1.z
     .object({
     data: AuthLoginResponseEntitySchema,

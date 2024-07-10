@@ -1,12 +1,8 @@
 import { z } from 'zod';
-import { UserSchema, WorkspaceSchema } from '../../models';
+import { UserSchema, WorkspaceBusinessValueSchema, WorkspaceRelatedEntitiesSchema, WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const WorkspaceChangeOwnerResponseEntitySchema = WorkspaceSchema.pick({
-  uuid: true,
-  name: true,
-  workspaceCreatorUuid: true,
-});
+const WorkspaceChangeOwnerResponseEntitySchema = WorkspaceBusinessValueSchema.merge(WorkspaceRelatedEntitiesSchema.strict());
 
 const WorkspaceChangeOwnerRequestSchema = UserSchema.pick({
   uuid: true,
@@ -16,7 +12,7 @@ const WorkspaceChangeOwnerResponseSchema = z
   .object({
     data: WorkspaceChangeOwnerResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace WorkspaceChangeOwnerCommand {
   export const RequestSchema = WorkspaceChangeOwnerRequestSchema;

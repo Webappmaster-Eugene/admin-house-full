@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldOfCategoryMaterialCreateRequestDto } from '../dto/controller/create-field-of-category-material.dto';
 import { FieldOfCategoryMaterialUpdateRequestDto } from '../dto/controller/update-field-of-category-material.dto';
 import { FieldOfCategoryMaterialEntity } from '../entities/field-of-category-material.entity';

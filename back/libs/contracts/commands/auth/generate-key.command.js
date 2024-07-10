@@ -4,7 +4,7 @@ exports.AuthGenerateKeyCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const AuthGenerateKeyResponseEntitySchema = models_1.AuthStrictKeySchema;
+const AuthGenerateKeyResponseEntitySchema = models_1.AuthStrictKeyBusinessValueSchema;
 const AuthGenerateKeyRequestSchema = zod_1.z.object({
     key: zod_1.z.string(),
 });

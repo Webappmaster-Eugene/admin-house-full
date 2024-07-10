@@ -1,18 +1,15 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { WorkspaceSchema } from '../../models';
+import { WorkspaceBusinessValueSchema, WorkspaceRelatedEntitiesSchema, WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const WorkspaceDeleteResponseEntitySchema = WorkspaceSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-});
+const WorkspaceDeleteResponseEntitySchema = WorkspaceBusinessValueSchema.merge(WorkspaceRelatedEntitiesSchema.strict());
 
 const WorkspaceDeleteResponseSchema = z
   .object({
     data: WorkspaceDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace WorkspaceDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

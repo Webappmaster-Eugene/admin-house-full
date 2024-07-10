@@ -1,22 +1,21 @@
 import { z } from 'zod';
-import { FieldUnitMeasurementSchema, RequestGetAllQuerySchema } from '../../models';
+import {
+  FieldUnitMeasurementBusinessValueSchema,
+  FieldUnitMeasurementRelatedEntitiesSchema,
+  FieldUnitMeasurementSchema,
+  RequestGetAllQuerySchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const FieldUnitMeasurementGetAllResponseEntitySchema = z.array(
-  FieldUnitMeasurementSchema.pick({
-    name: true,
-    comment: true,
-    uuid: true,
-    handbookUuid: true,
-    lastChangeByUserUuid: true,
-  }),
+  FieldUnitMeasurementBusinessValueSchema.merge(FieldUnitMeasurementRelatedEntitiesSchema.strict()),
 );
 
 const FieldUnitMeasurementGetAllResponseSchema = z
   .object({
     data: FieldUnitMeasurementGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldUnitMeasurementGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

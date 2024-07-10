@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { RoleSchema, StatusResourceSchema } from '../../models';
+import { RoleBusinessValueSchema, RoleSchema, StatusResourceSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models';
 
-const RoleUpdateResponseEntitySchema = RoleSchema;
+const RoleUpdateResponseEntitySchema = RoleBusinessValueSchema;
 
 const RoleUpdateRequestSchema = RoleSchema.pick({ description: true });
 
@@ -11,7 +11,7 @@ const RoleUpdateResponseSchema = z
   .object({
     data: RoleUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace RoleUpdateCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

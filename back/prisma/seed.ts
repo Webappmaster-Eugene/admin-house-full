@@ -1,11 +1,15 @@
-import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../src/common/helpers/regex/fieldOfCategoryMaterialRegexGenerator';
-import { templateNameMaterialGenerator } from '../src/common/helpers/regex/regexNameMaterialGenerator';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { PrismaClient } from '.prisma/client';
 import { EApproveStatuses } from '@prisma/client';
+import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../src/common/helpers/regex/fieldOfCategoryMaterialRegexGenerator';
+import { templateNameMapper } from '../src/common/helpers/handlers/template-name-mapper.handler';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  //DOC ROLES - создаем все роли
+  //region ROLES
   const ADMIN_ROLE = await prisma?.role?.create({
     data: {
       name: 'ADMIN',
@@ -33,7 +37,10 @@ async function main() {
       description: 'Заказчик, покупатель',
     },
   });
+  //endregion
 
+  //DOC USERS - создаем всех пользователей кроме менеджера
+  //region USERS
   const ADMIN_USER = await prisma?.user?.create({
     data: {
       email: 'admin@mail.ru',
@@ -69,7 +76,10 @@ async function main() {
       info: 'Standard information',
     },
   });
+  //endregion
 
+  //DOC MANAGER_USER AND INFRASTRUCTURE - создаем менеджера и для него - воркспейс, организацию и проект
+  //region MANAGER_USER AND INFRASTRUCTURE
   const MANAGER_USER = await prisma?.user?.create({
     data: {
       email: 'manager@mail.ru',
@@ -118,7 +128,10 @@ async function main() {
       organizationUuid: MANAGER_ORGANIZATION.uuid,
     },
   });
+  //endregion
 
+  //DOC UPDATED_MANAGER_WORKSPACE - обновляем WORKSPACE менеджера после создания HANDBOOK
+  //region UPDATED_MANAGER_WORKSPACE
   const UPDATED_MANAGER_WORKSPACE = await prisma?.workspace?.update({
     where: {
       uuid: MANAGER_WORKSPACE.uuid,
@@ -127,7 +140,10 @@ async function main() {
       handbookOfWorkspaceUuid: MANAGER_HANDBOOK.uuid,
     },
   });
+  //endregion
 
+  //DOC UPDATED_USERS - обновляем пользователей - добаяляем их в только что созданный WORKSPACE
+  //region UPDATED_USERS
   const UPDATED_MANAGER_USER = await prisma?.user?.update({
     where: {
       uuid: MANAGER_USER.uuid,
@@ -159,7 +175,10 @@ async function main() {
       memberOfProjectUuid: MANAGER_PROJECT.uuid,
     },
   });
+  //endregion
 
+  //DOC APP_SETTINGS - создаем глобальные настройки приложения
+  //region APP_SETTINGS
   const APP_SETTINGS = await prisma?.appInfo?.create({
     data: {
       name: 'Admin House - SaaS для эффективного контроля и составления сметной документации',
@@ -170,7 +189,10 @@ async function main() {
       language: 'RUSSIAN',
     },
   });
+  //endregion
 
+  //DOC GLOBAL_CATEGORIES - создаем глобальные категории материалов
+  //region GLOBAL_CATEGORIES
   const GLOBAL_CATEGORY_PEOPLE = await prisma?.globalCategoryMaterial?.create({
     data: {
       name: 'PEOPLE',
@@ -206,13 +228,19 @@ async function main() {
       color: '#00BFFF',
     },
   });
+  //endregion
 
+  //DOC REGISTER_WITH_ROLE_KEY - создаем ключ для регистрации пользователя с ролью
+  //region REGISTER_WITH_ROLE_KEY
   const REGISTER_WITH_ROLE_KEY = await prisma?.registerWithRoleKey?.create({
     data: {
       key: process.env.STRICT_ADMIN_KEY,
     },
   });
+  //endregion
 
+  //DOC RESOURCE_STATUSES - создаем статусы ресурсов
+  //region RESOURCE_STATUSES
   const RESOURCE_STATUS_DRAFT = await prisma?.statusResource?.create({
     data: {
       name: 'Черновик',
@@ -247,7 +275,10 @@ async function main() {
       comment: 'Статус ресурса - готово',
     },
   });
+  //endregion
 
+  //DOC FIELD_UNIT_MEASUREMENTS - создаем единицы измерения
+  //region APPROVE_STATUSES
   const APPROVE_STATUS_ONAPPROVAL = await prisma?.statusApprove?.create({
     data: {
       name: EApproveStatuses.ONAPPROVAL,
@@ -271,7 +302,10 @@ async function main() {
       comment: 'Заказчик одобрил смету',
     },
   });
+  //endregion
 
+  //DOC RESPONSIBLE_PARTNER_PRODUCERS - создаем поставщиков
+  //region RESPONSIBLE_PARTNER_PRODUCERS
   const RESPONSIBLE_PARTNER_PRODUCER_0 = await prisma?.responsiblePartnerProducer?.create({
     data: {
       name: 'ООО Лучи',
@@ -304,7 +338,10 @@ async function main() {
       phone: '+79996054569',
     },
   });
+  //endregion
 
+  //DOC FIELD_UNIT_MEASUREMENTS - создаем единицы измерения
+  //region FIELD_UNIT_MEASUREMENTS
   const FIELD_UNIT_MEASUREMENT_0 = await prisma?.fieldUnitMeasurement?.create({
     data: {
       name: 'м3',
@@ -440,7 +477,10 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
     },
   });
+  //endregion
 
+  //DOC FIELD_TYPES - создаем типы полей
+  //region FIELD_TYPES
   const FIELD_TYPE_0 = await prisma?.fieldType?.create({
     data: {
       name: 'Текст',
@@ -464,7 +504,10 @@ async function main() {
       jsType: 'array',
     },
   });
+  //endregion
 
+  //DOC CATEGORY_MATERIALS - создаем категории материалов
+  //region CATEGORY_MATERIALS
   const CATEGORY_MATERIAL_0 = await prisma?.categoryMaterial?.create({
     data: {
       name: 'Листовые',
@@ -554,7 +597,10 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
     },
   });
+  //endregion
 
+  //DOC FIELD_OF_CATEGORY_MATERIALS - создаем поля категорий материалов
+  //region FIELD_OF_CATEGORY_MATERIALS
   const FIELD_OF_CATEGORY_MATERIAL_0 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'Диаметр метиза',
@@ -606,18 +652,6 @@ async function main() {
 
   const FIELD_OF_CATEGORY_MATERIAL_4 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
-      name: 'Подтип листового материала',
-      comment: 'Подтип листового материала (список)',
-      isRequired: true,
-      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
-      fieldTypeUuid: FIELD_TYPE_2.uuid,
-      handbookUuid: MANAGER_HANDBOOK.uuid,
-    },
-  });
-
-  const FIELD_OF_CATEGORY_MATERIAL_5 = await prisma?.fieldOfCategoryMaterial?.create({
-    data: {
       name: 'Материал изготовления листового материала',
       comment: 'Материал изготовления листового материала (список)',
       isRequired: true,
@@ -628,7 +662,7 @@ async function main() {
     },
   });
 
-  const FIELD_OF_CATEGORY_MATERIAL_6 = await prisma?.fieldOfCategoryMaterial?.create({
+  const FIELD_OF_CATEGORY_MATERIAL_5 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'Толщина листового материала',
       comment: 'Толщина листового материала',
@@ -640,7 +674,7 @@ async function main() {
     },
   });
 
-  const FIELD_OF_CATEGORY_MATERIAL_7 = await prisma?.fieldOfCategoryMaterial?.create({
+  const FIELD_OF_CATEGORY_MATERIAL_6 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'Ширина листового материала',
       comment: 'Ширина листового материала',
@@ -652,7 +686,7 @@ async function main() {
     },
   });
 
-  const FIELD_OF_CATEGORY_MATERIAL_8 = await prisma?.fieldOfCategoryMaterial?.create({
+  const FIELD_OF_CATEGORY_MATERIAL_7 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'Длина листового материала',
       comment: 'Длина листового материала',
@@ -664,31 +698,19 @@ async function main() {
     },
   });
 
+  const FIELD_OF_CATEGORY_MATERIAL_8 = await prisma?.fieldOfCategoryMaterial?.create({
+    data: {
+      name: 'Сорт листового материала',
+      comment: 'Сорт листового материала (список)',
+      isRequired: true,
+      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
+      handbookUuid: MANAGER_HANDBOOK.uuid,
+    },
+  });
+
   const FIELD_OF_CATEGORY_MATERIAL_9 = await prisma?.fieldOfCategoryMaterial?.create({
-    data: {
-      name: 'Сорт листового материала',
-      comment: 'Сорт листового материала (список)',
-      isRequired: true,
-      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
-      fieldTypeUuid: FIELD_TYPE_2.uuid,
-      handbookUuid: MANAGER_HANDBOOK.uuid,
-    },
-  });
-
-  const FIELD_OF_CATEGORY_MATERIAL_10 = await prisma?.fieldOfCategoryMaterial?.create({
-    data: {
-      name: 'Сорт листового материала',
-      comment: 'Сорт листового материала (список)',
-      isRequired: true,
-      unitOfMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
-      fieldTypeUuid: FIELD_TYPE_2.uuid,
-      handbookUuid: MANAGER_HANDBOOK.uuid,
-    },
-  });
-
-  const FIELD_OF_CATEGORY_MATERIAL_11 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'Марка листового материала',
       comment: 'Марка листового материала (список)',
@@ -701,7 +723,7 @@ async function main() {
     },
   });
 
-  const FIELD_OF_CATEGORY_MATERIAL_12 = await prisma?.fieldOfCategoryMaterial?.create({
+  const FIELD_OF_CATEGORY_MATERIAL_10 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'ГОСТ листового материала',
       comment: 'ГОСТ листового материала (ТУ или без требований) (список)',
@@ -714,7 +736,7 @@ async function main() {
     },
   });
 
-  const FIELD_OF_CATEGORY_MATERIAL_13 = await prisma?.fieldOfCategoryMaterial?.create({
+  const FIELD_OF_CATEGORY_MATERIAL_11 = await prisma?.fieldOfCategoryMaterial?.create({
     data: {
       name: 'Вид шины',
       comment: 'Вид шины (список)',
@@ -726,13 +748,16 @@ async function main() {
       lastChangeByUserUuid: MANAGER_USER.uuid,
     },
   });
+  //endregion
 
+  //DOC UPDATED_FIELDS_OF_CATEGORY_MATERIAL - обновляем поля категорий материалов информацией о шаблоне
+  //region UPDATED_FIELDS_OF_CATEGORY_MATERIAL
   const UPDATED_FIELD_OF_CATEGORY_MATERIAL_0 = await prisma?.fieldOfCategoryMaterial?.update({
     where: {
       uuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_0.name)}_${FIELD_OF_CATEGORY_MATERIAL_0.uuid}_${CATEGORY_MATERIAL_3.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_0.name)}_${FIELD_OF_CATEGORY_MATERIAL_0.uuid}_${FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid}}}`,
     },
   });
 
@@ -741,7 +766,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#$${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_1.name)}_${FIELD_OF_CATEGORY_MATERIAL_1.uuid}_${CATEGORY_MATERIAL_3.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_1.name)}_${FIELD_OF_CATEGORY_MATERIAL_1.uuid}_${FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid}}}`,
     },
   });
 
@@ -750,7 +775,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_2.name)}_${FIELD_OF_CATEGORY_MATERIAL_2.uuid}_${CATEGORY_MATERIAL_3.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_2.name)}_${FIELD_OF_CATEGORY_MATERIAL_2.uuid}_${FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid}}}`,
     },
   });
 
@@ -759,7 +784,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_3.name)}_${CATEGORY_MATERIAL_0.uuid}_}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_3.name)}_${FIELD_OF_CATEGORY_MATERIAL_3.uuid}_${FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid}}}`,
     },
   });
 
@@ -768,7 +793,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_4.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_4.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_4.name)}_${FIELD_OF_CATEGORY_MATERIAL_4.uuid}_${FIELD_OF_CATEGORY_MATERIAL_4.categoryMaterialUuid}}}`,
     },
   });
 
@@ -777,7 +802,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_5.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_5.name)}_${FIELD_OF_CATEGORY_MATERIAL_5.uuid}_${FIELD_OF_CATEGORY_MATERIAL_5.categoryMaterialUuid}}}`,
     },
   });
 
@@ -786,7 +811,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_6.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_6.name)}_${FIELD_OF_CATEGORY_MATERIAL_6.uuid}_${FIELD_OF_CATEGORY_MATERIAL_6.categoryMaterialUuid}}}`,
     },
   });
 
@@ -795,7 +820,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_7.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_7.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_7.name)}_${FIELD_OF_CATEGORY_MATERIAL_7.uuid}_${FIELD_OF_CATEGORY_MATERIAL_7.categoryMaterialUuid}}}`,
     },
   });
 
@@ -804,7 +829,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_8.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_8.name)}_${FIELD_OF_CATEGORY_MATERIAL_8.uuid}_${FIELD_OF_CATEGORY_MATERIAL_8.categoryMaterialUuid}}}`,
     },
   });
 
@@ -813,7 +838,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_9.name)}_${CATEGORY_MATERIAL_0.uuid}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_9.name)}_${FIELD_OF_CATEGORY_MATERIAL_9.uuid}_${FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid}}}`,
     },
   });
 
@@ -822,7 +847,7 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_10.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_10.name)}_${CATEGORY_MATERIAL_0}}}`,
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_10.name)}_${FIELD_OF_CATEGORY_MATERIAL_10.uuid}_${FIELD_OF_CATEGORY_MATERIAL_10.categoryMaterialUuid}}}`,
     },
   });
 
@@ -831,16 +856,21 @@ async function main() {
       uuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
     },
     data: {
-      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_11.name)}_${CATEGORY_MATERIAL_8}}}`,
+      //DOC - заменяем в названии все "_" и " " на "-" (а также делаем lowercase) с помощью регулярки. Формат (FIELD_OF_CATEGORY_MATERIAL: {{#название-поля-категории_uuid-поля-категории-материала_uuid-категории-материала_данного_поля
+      //DOC - превращаем в такой шаблон {{#подтип-метиза_ef792f21-a262-4e5a-90ea-1b23007e7812_ee02ad1b-b113-4048-a4cc-e30ac0244e5e}} {{#диаметр-метиза_abb883fb-7837-47e6-b092-c2a8228432b7_ee02ad1b-b113-4048-a4cc-e30ac0244e5e}}×{{#длина-метиза_53f359d8-3889-421a-9149-a2c341e06b46_ee02ad1b-b113-4048-a4cc-e30ac0244e5e}}'
+      uniqueNameForTemplate: `{{#${regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator(FIELD_OF_CATEGORY_MATERIAL_11.name)}_${FIELD_OF_CATEGORY_MATERIAL_11.uuid}_${FIELD_OF_CATEGORY_MATERIAL_11.categoryMaterialUuid}}}`,
     },
   });
+  //endregion
 
+  //DOC UPDATED_CATEGORY_MATERIAL - обновляем название шаблонов категорий после создания полей категории
+  //region UPDATED_CATEGORY_MATERIAL
   const CATEGORY_MATERIAL_COVER_UPDATED = await prisma?.categoryMaterial?.update({
     where: {
       uuid: CATEGORY_MATERIAL_0.uuid,
     },
     data: {
-      templateName: `${FIELD_OF_CATEGORY_MATERIAL_3.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_4.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_9.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_5.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIAL_6.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIAL_7.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_8.uniqueNameForTemplate}`,
+      templateName: `${UPDATED_FIELD_OF_CATEGORY_MATERIAL_3?.uniqueNameForTemplate} ${UPDATED_FIELD_OF_CATEGORY_MATERIAL_4?.uniqueNameForTemplate} ${UPDATED_FIELD_OF_CATEGORY_MATERIAL_9?.uniqueNameForTemplate} ${UPDATED_FIELD_OF_CATEGORY_MATERIAL_5?.uniqueNameForTemplate}×${UPDATED_FIELD_OF_CATEGORY_MATERIAL_6?.uniqueNameForTemplate}×${UPDATED_FIELD_OF_CATEGORY_MATERIAL_7?.uniqueNameForTemplate} ${UPDATED_FIELD_OF_CATEGORY_MATERIAL_8?.uniqueNameForTemplate}`,
     },
   });
 
@@ -849,10 +879,13 @@ async function main() {
       uuid: CATEGORY_MATERIAL_3.uuid,
     },
     data: {
-      templateName: `${FIELD_OF_CATEGORY_MATERIAL_2?.uniqueNameForTemplate} ${FIELD_OF_CATEGORY_MATERIAL_0?.uniqueNameForTemplate}×${FIELD_OF_CATEGORY_MATERIAL_1?.uniqueNameForTemplate}`,
+      templateName: `${UPDATED_FIELD_OF_CATEGORY_MATERIAL_2?.uniqueNameForTemplate} ${UPDATED_FIELD_OF_CATEGORY_MATERIAL_0?.uniqueNameForTemplate}×${UPDATED_FIELD_OF_CATEGORY_MATERIAL_1?.uniqueNameForTemplate}`,
     },
   });
+  //endregion
 
+  // DOC CREATE FIELD_VARIANTS создаем все варианты полей селектора
+  //region FIELD_VARIANTS
   const FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_0 = await prisma?.fieldVariantsForSelectorFieldType?.create({
     data: {
       value: 'Саморез',
@@ -1023,7 +1056,13 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
     },
   });
+  //endregion
 
+  // FIXME при создании материала нужно проверять - а заполнил ли пользователь все обязательные поля
+  // FIXME для конкретной категории, к которой принадлежит материал. То есть отношение каткгория материала - поля материала
+  // FIXME и характеристики материала - поле категории материала
+  // DOC CREATE materials создаем все materials (как в excel) доступные изначально
+  //region MATERIALS
   const MATERIAL_UNIT_0 = await prisma?.material?.create({
     data: {
       name: 'Саморез 6×70 (черновик)',
@@ -1062,11 +1101,10 @@ async function main() {
       responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_0.uuid,
     },
   });
+  //endregion
 
-  // FIXME при создании материала нужно проверять - а заполнил ли пользователь все обязательные поля
-  // для конкретной категории, к которой принадлежит материал. То есть отношение каткгория материала - поля материала
-  // и характеристики материала - поле категории материала
-
+  // DOC CREATE CHARACTERISTICS_MATERIAL создаем все характеристики для materials по полям категории
+  //region CHARACTERISTICS_MATERIAL
   const CHARACTERISTICS_MATERIAL_OF_GLUHAR_0 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_0.name,
@@ -1076,7 +1114,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_0.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_0.unitOfMeasurementUuid,
     },
   });
@@ -1090,7 +1128,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
     },
   });
@@ -1103,7 +1141,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_2.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_2.unitOfMeasurementUuid,
     },
   });
@@ -1116,7 +1154,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_0.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_0.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_0.unitOfMeasurementUuid,
     },
   });
@@ -1129,7 +1167,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
     },
   });
@@ -1142,7 +1180,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_2.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_2.unitOfMeasurementUuid,
     },
   });
@@ -1155,7 +1193,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
     },
   });
@@ -1168,7 +1206,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
     },
   });
@@ -1181,7 +1219,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
     },
   });
@@ -1194,7 +1232,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_5.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_5.unitOfMeasurementUuid,
     },
   });
@@ -1207,7 +1245,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_6.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_6.unitOfMeasurementUuid,
     },
   });
@@ -1220,7 +1258,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_7.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_7.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_7.unitOfMeasurementUuid,
     },
   });
@@ -1233,7 +1271,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_8.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_8.unitOfMeasurementUuid,
     },
   });
@@ -1246,7 +1284,7 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
+      // categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
     },
   });
@@ -1259,83 +1297,27 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
-      categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
+      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
     },
   });
+  //endregion
 
-  async function templateNameMapper(
-    categoryMaterial: {
-      uuid: string;
-      name: string;
-      comment?: string;
-      templateName?: string;
-      globalCategoryMaterialUuid: string;
-      createdAt: Date;
-      updatedAt: Date;
+  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED, MATERIAL_UNIT_0, prisma);
+
+  // DOC UPDATE MATERIAL создаем все характеристики для materials по полям категории
+  // region UPDATED_MATERIAL
+  const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
+    where: {
+      uuid: MATERIAL_UNIT_0.uuid,
     },
-    material: {
-      uuid: string;
-      name: string;
-      comment?: string;
-      namePublic?: string;
-      sourceInfo?: string;
-      handbookUuid: string;
-      price: number;
-      unitMeasurementUuid: string;
-      categoryMaterialUuid: string;
-      responsiblePartnerUuid: string;
-      createdAt: Date;
-      updatedAt: Date;
+    data: {
+      name: newNameGluhar,
     },
-  ) {
-    const allFieldsOfConcreteMaterial = await prisma?.fieldOfCategoryMaterial?.findMany({
-      where: {
-        categoryMaterialUuid: categoryMaterial.uuid,
-      },
-    });
+  });
+  //endregion
 
-    const allCharacteristicsOfConcreteMaterial = await prisma?.characteristicsMaterial?.findMany({
-      where: {
-        materialUuid: material.uuid,
-      },
-    });
-
-    const mapAllCharacteristicsOfConcreteMaterial = allCharacteristicsOfConcreteMaterial.reduce((acc, curValue) => {
-      acc[curValue.fieldOfCategoryMaterialUuid] = curValue.value;
-      return acc;
-    }, {});
-
-    const allFieldsOfMaterialUuids = allFieldsOfConcreteMaterial.map(elem => {
-      return elem.uuid;
-    });
-
-    // `{{#подтип-метиза_0a23cdfdsfsdff45f45f45f4_0a23cdfdsfsdff45f45f45f4}}}` `{{длина-метиза_0a23cdfdsfsdff45f45f45f4_0a23cdfdsfsdff45f45f45f4}}`×`{{#диаметр-метиза_0a23cdfdsfsdff45f45f45f4_0a23cdfdsfsdff45f45f45f4}}`
-    const templateNameOfCategory = categoryMaterial.templateName;
-
-    function templateNameOfCategoryHandler(mapAllFields: string[]) {
-      mapAllFields.forEach(elem => {
-        if (elem in mapAllCharacteristicsOfConcreteMaterial) {
-          templateNameOfCategory.replace(templateNameMaterialGenerator(elem), mapAllCharacteristicsOfConcreteMaterial[elem]);
-        }
-      });
-      return templateNameOfCategory;
-    }
-
-    return templateNameOfCategoryHandler(allFieldsOfMaterialUuids);
-  }
-
-  //FIXME - проверить внимательно работу этой функции - сейчас не работает
-  const newNameGluhar = await templateNameMapper(CATEGORY_MATERIAL_HARDWARE_UPDATED, MATERIAL_UNIT_0);
-
-  // const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
-  //   where: {
-  //     uuid: MATERIAL_UNIT_0.uuid,
-  //   },
-  //   data: {
-  //     name: newNameGluhar,
-  //   },
-  // });
+  console.log('UPDATED_MATERIAL_GLUHAR', UPDATED_MATERIAL_GLUHAR);
 }
 
 main()

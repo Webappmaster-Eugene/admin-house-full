@@ -89,7 +89,7 @@ export default function AccountPopover() {
         <Stack sx={{ p: 1 }}>
           {AccountPopoverLinks.map(
             (option) =>
-              (!option?.userRoles || option.userRoles.includes(user?.roleName as UserRoles)) && (
+              (!option?.userRoles || option.userRoles.includes(user?.role.name as UserRoles)) && (
                 <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
                   {option.label}
                 </MenuItem>

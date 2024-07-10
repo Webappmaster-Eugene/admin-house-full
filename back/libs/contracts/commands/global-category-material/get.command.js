@@ -3,15 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GlobalCategoryMaterialGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const models_2 = require("../../models");
-const GlobalCategoryMaterialGetResponseEntitySchema = models_2.GlobalCategoryMaterialSchema.pick({
-    name: true,
-    nameRu: true,
-    comment: true,
-    color: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-});
+const GlobalCategoryMaterialGetResponseEntitySchema = models_1.GlobalCategoryMaterialBusinessValueSchema;
 const GlobalCategoryMaterialGetResponseSchema = zod_1.z
     .object({
     data: GlobalCategoryMaterialGetResponseEntitySchema,

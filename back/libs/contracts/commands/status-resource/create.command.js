@@ -4,14 +4,7 @@ exports.StatusResourceCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const StatusResourceCreateResponseEntitySchema = models_1.StatusResourceSchema.pick({
-    name: true,
-    comment: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const StatusResourceCreateResponseEntitySchema = models_1.StatusResourceBusinessValueSchema;
 const StatusResourceCreateRequestSchema = models_1.StatusResourceSchema.pick({
     name: true,
     comment: true,

@@ -1,7 +1,7 @@
 import { AbstractClassType } from '../../types/abstract.class';
 
-export function toEntityArray<EntityType>(arrayFromDB: Array<EntityType>, classEntity: AbstractClassType): EntityType[] {
+export function toEntityArray<EntityType>(arrayFromDB: Array<EntityType>, ClassEntity: AbstractClassType): EntityType[] {
   return arrayFromDB.map((elem, index) => {
-    return new classEntity(elem);
+    return new ClassEntity(elem);
   });
 }

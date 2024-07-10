@@ -261,7 +261,7 @@ model CategoryMaterial {
   materials                  Material[]
   handbookUuid               String                    @map("handbook_uuid") @db.Uuid
   handbook                   Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)
-  characteristicsMaterial    CharacteristicsMaterial[]
+  // characteristicsMaterial    CharacteristicsMaterial[]
   lastChangeByUserUuid       String?                   @map("last_change_by_user_uuid") @db.Uuid
   lastChangeByUser           User?                     @relation("CategoryMaterial_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt                  DateTime                  @default(now()) @map("created_at")
@@ -396,8 +396,8 @@ model CharacteristicsMaterial {
   fieldType                   FieldType               @relation(fields: [fieldTypeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   fieldUnitMeasurementUuid    String?                 @map("field_unit_measurement_uuid") @db.Uuid
   fieldUnitMeasurement        FieldUnitMeasurement?   @relation(fields: [fieldUnitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  categoryMaterialUuid        String                  @map("category_material_uuid") @db.Uuid
-  categoryMaterial            CategoryMaterial        @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  // categoryMaterialUuid        String                  @map("category_material_uuid") @db.Uuid
+  // categoryMaterial            CategoryMaterial        @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   materialUuid                String                  @map("material_uuid") @db.Uuid
   material                    Material                @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   lastChangeByUserUuid        String?                 @map("last_change_by_user_uuid") @db.Uuid

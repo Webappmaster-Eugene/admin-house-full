@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { KFI } from '../../common/utils/di';
 import {
@@ -13,7 +13,7 @@ import {
   FieldTypeGetAllCommand,
   FieldTypeGetCommand,
   FieldTypeUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -58,7 +58,7 @@ export class FieldTypeController implements IFieldTypeController {
   ): Promise<FieldTypeGetResponseDto> {
     try {
       const { ok, data } = await this.fieldTypeService.getById(fieldTypeId);
-      return okResponseHandler(ok, data, FieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
     }
@@ -83,7 +83,7 @@ export class FieldTypeController implements IFieldTypeController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<FieldTypeGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldTypeService.getAll(queryParams);
-      return okResponseHandler(ok, data, FieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
     }
@@ -112,7 +112,7 @@ export class FieldTypeController implements IFieldTypeController {
     // в create нужно передать id пользователя, для которого создается field-type
     try {
       const { ok, data } = await this.fieldTypeService.create(dto, userInfoFromJWT.uuid);
-      return okResponseHandler(ok, data, FieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
     }
@@ -141,7 +141,7 @@ export class FieldTypeController implements IFieldTypeController {
   ): Promise<FieldTypeUpdateResponseDto> {
     try {
       const { ok, data } = await this.fieldTypeService.updateById(fieldTypeId, dto);
-      return okResponseHandler(ok, data, FieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
     }
@@ -168,7 +168,7 @@ export class FieldTypeController implements IFieldTypeController {
   ): Promise<FieldTypeDeleteResponseDto> {
     try {
       const { ok, data } = await this.fieldTypeService.deleteById(fieldTypeId);
-      return okResponseHandler(ok, data, FieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_TYPE, urlParams);
     }

@@ -1,21 +1,21 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { FieldUnitMeasurementSchema } from '../../models';
+import {
+  FieldUnitMeasurementBusinessValueSchema,
+  FieldUnitMeasurementRelatedEntitiesSchema,
+  FieldUnitMeasurementSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldUnitMeasurementDeleteResponseEntitySchema = FieldUnitMeasurementSchema.pick({
-  name: true,
-  comment: true,
-  uuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-});
+const FieldUnitMeasurementDeleteResponseEntitySchema = FieldUnitMeasurementBusinessValueSchema.merge(
+  FieldUnitMeasurementRelatedEntitiesSchema.strict(),
+);
 
 const FieldUnitMeasurementDeleteResponseSchema = z
   .object({
     data: FieldUnitMeasurementDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldUnitMeasurementDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

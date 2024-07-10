@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldTypeGetCommand } from '@numart/house-admin-contracts';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { FieldTypeGetCommand } from 'libs/contracts';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 
 export type FieldTypeGetRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 

@@ -1,15 +1,8 @@
 import { z } from 'zod';
-import { OrganizationSchema } from '../../models';
+import { OrganizationBusinessValueSchema, OrganizationRelatedEntitiesSchema, OrganizationSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const OrganizationUpdateResponseEntitySchema = OrganizationSchema.pick({
-  uuid: true,
-  name: true,
-  description: true,
-  organizationLeaderUuid: true,
-  workspaceUuid: true,
-  lastChangeByUserUuid: true,
-});
+const OrganizationUpdateResponseEntitySchema = OrganizationBusinessValueSchema.merge(OrganizationRelatedEntitiesSchema.strict());
 
 const OrganizationUpdateRequestSchema = OrganizationSchema.pick({
   name: true,
@@ -20,7 +13,7 @@ const OrganizationUpdateResponseSchema = z
   .object({
     data: OrganizationUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace OrganizationUpdateCommand {
   export const RequestSchema = OrganizationUpdateRequestSchema;

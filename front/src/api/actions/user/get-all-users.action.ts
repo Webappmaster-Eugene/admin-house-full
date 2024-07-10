@@ -29,7 +29,8 @@ export async function getAllUsers() {
       errorObject.error = response.errors[0];
       return errorObject;
     }
-    return { errorObject: response.message };
+    errorObject.error = response?.message;
+    return errorObject;
   } catch (error: unknown) {
     console.error('Catched frontend error while get all users by admin', error);
     if (error instanceof AxiosError) {

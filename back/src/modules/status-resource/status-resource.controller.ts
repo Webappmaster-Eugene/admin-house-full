@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { StatusResourceGetResponseDto } from './dto/controller/get-status-resource.dto';
 import { StatusResourceCreateRequestDto, StatusResourceCreateResponseDto } from './dto/controller/create-status-resource.dto';
 import { StatusResourceGetAllResponseDto } from './dto/controller/get-all-status-resources.dto';
@@ -18,7 +18,7 @@ import {
   StatusResourceGetAllCommand,
   StatusResourceGetCommand,
   StatusResourceUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { StatusResourceEntity } from './entities/status-resource.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -57,7 +57,7 @@ export class StatusResourceController implements IStatusResourceController {
   ): Promise<StatusResourceGetResponseDto> {
     try {
       const { ok, data } = await this.statusResourceService.getById(statusResourceId);
-      return okResponseHandler(ok, data, StatusResourceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -82,7 +82,7 @@ export class StatusResourceController implements IStatusResourceController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<StatusResourceGetAllResponseDto> {
     try {
       const { ok, data } = await this.statusResourceService.getAll(queryParams);
-      return okResponseHandler(ok, data, StatusResourceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -109,7 +109,7 @@ export class StatusResourceController implements IStatusResourceController {
   ): Promise<StatusResourceCreateResponseDto> {
     try {
       const { ok, data } = await this.statusResourceService.create(dto);
-      return okResponseHandler(ok, data, StatusResourceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -138,7 +138,7 @@ export class StatusResourceController implements IStatusResourceController {
   ): Promise<StatusResourceUpdateResponseDto> {
     try {
       const { ok, data } = await this.statusResourceService.updateById(statusResourceId, dto);
-      return okResponseHandler(ok, data, StatusResourceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -165,7 +165,7 @@ export class StatusResourceController implements IStatusResourceController {
   ): Promise<StatusResourceDeleteResponseDto> {
     try {
       const { ok, data } = await this.statusResourceService.deleteById(statusResourceId);
-      return okResponseHandler(ok, data, StatusResourceEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }

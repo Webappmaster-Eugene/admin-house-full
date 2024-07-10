@@ -5,11 +5,7 @@ const zod_1 = require("zod");
 const models_1 = require("../../models");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_2 = require("../../models");
-const UserUpdateResponseEntitySchema = models_1.UserSchema.omit({
-    password: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const UserUpdateResponseEntitySchema = models_1.UserBusinessValueSchema.merge(models_1.UserRelatedEntitiesSchema);
 const UserUpdateRequestSchema = models_1.UserSchema.pick({
     avatar: true,
     info: true,

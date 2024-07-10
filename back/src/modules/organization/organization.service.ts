@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationEntity } from './entities/organization.entity';
 import { KFI } from '../../common/utils/di';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { IOrganizationRepository } from './types/organization.repository.interface';
 import { IOrganizationService } from './types/organization.service.interface';

@@ -1,26 +1,15 @@
 import { z } from 'zod';
-import { TechLogChangesSchema } from '../../models';
+import { TechLogChangesBusinessValueSchema, TechLogChangesSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models';
 
-const TechLogChangesGetResponseEntitySchema = TechLogChangesSchema.pick({
-  name: true,
-  entity: true,
-  comment: true,
-  oldInfo: true,
-  newInfo: true,
-  updateInfo: true,
-  action: true,
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const TechLogChangesGetResponseEntitySchema = TechLogChangesBusinessValueSchema;
 
 const TechLogChangesGetResponseSchema = z
   .object({
     data: TechLogChangesGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace TechLogChangesGetCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

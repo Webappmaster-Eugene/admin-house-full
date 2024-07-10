@@ -1,27 +1,21 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common';
-import { FieldOfCategoryMaterialSchema } from '../../models';
+import {
+  FieldOfCategoryMaterialBusinessValueSchema,
+  FieldOfCategoryMaterialRelatedEntitiesSchema,
+  FieldOfCategoryMaterialSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldOfCategoryMaterialDeleteResponseEntitySchema = FieldOfCategoryMaterialSchema.pick({
-  name: true,
-  comment: true,
-  uniqueNameForTemplate: true,
-  defaultValue: true,
-  isRequired: true,
-  unitOfMeasurementUuid: true,
-  fieldTypeUuid: true,
-  categoryMaterialUuid: true,
-  lastChangeByUserUuid: true,
-  handbookUuid: true,
-  uuid: true,
-});
+const FieldOfCategoryMaterialDeleteResponseEntitySchema = FieldOfCategoryMaterialBusinessValueSchema.merge(
+  FieldOfCategoryMaterialRelatedEntitiesSchema.strict(),
+);
 
 const FieldOfCategoryMaterialDeleteResponseSchema = z
   .object({
     data: FieldOfCategoryMaterialDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldOfCategoryMaterialDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

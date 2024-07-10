@@ -1,22 +1,17 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { CategoryMaterialSchema } from '../../models';
+import { CategoryMaterialBusinessValueSchema, CategoryMaterialRelatedEntitiesSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const CategoryMaterialDeleteResponseEntitySchema = CategoryMaterialSchema.pick({
-  name: true,
-  templateName: true,
-  comment: true,
-  uuid: true,
-  globalCategoryMaterialUuid: true,
-  lastChangeByUserUuid: true,
-});
+const CategoryMaterialDeleteResponseEntitySchema = CategoryMaterialBusinessValueSchema.merge(
+  CategoryMaterialRelatedEntitiesSchema.strict(),
+);
 
 const CategoryMaterialDeleteResponseSchema = z
   .object({
     data: CategoryMaterialDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace CategoryMaterialDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

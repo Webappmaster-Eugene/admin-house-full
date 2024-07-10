@@ -1,5 +1,5 @@
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IServiceCommon } from '../../../common/types/main/slices/service.interface';
 import { PriceChangingCreateRequestDto } from '../dto/controller/create-price-changing.dto';
 import { PriceChangingUpdateRequestDto } from '../dto/controller/update-price-changing.dto';

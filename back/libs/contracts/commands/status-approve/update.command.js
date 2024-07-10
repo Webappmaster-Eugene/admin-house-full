@@ -3,15 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatusApproveUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const StatusApproveUpdateResponseEntitySchema = models_1.StatusApproveSchema.pick({
-    name: true,
-    nameRu: true,
-    comment: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const StatusApproveUpdateResponseEntitySchema = models_1.StatusApproveBusinessValueSchema;
 const StatusApproveUpdateRequestSchema = models_1.StatusApproveSchema.pick({
     name: true,
     nameRu: true,

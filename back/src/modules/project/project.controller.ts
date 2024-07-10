@@ -6,20 +6,14 @@ import { User } from '../../common/decorators/user.decorator';
 import { ProjectEntity } from './entities/project.entity';
 import { KFI } from '../../common/utils/di';
 import { IProjectService } from './types/project.service.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ProjectGetAllResponseDto } from './dto/controller/get-all-projects.dto';
 import { ProjectGetResponseDto } from './dto/controller/get-project.dto';
 import { ProjectCreateRequestDto, ProjectCreateResponseDto } from './dto/controller/create-project.dto';
 import { ProjectUpdateRequestDto, ProjectUpdateResponseDto } from './dto/controller/update-project.dto';
-import {
-  ProjectCreateCommand,
-  ProjectDeleteCommand,
-  ProjectGetAllCommand,
-  ProjectGetCommand,
-  ProjectUpdateCommand,
-} from '@numart/house-admin-contracts';
+import { ProjectCreateCommand, ProjectDeleteCommand, ProjectGetAllCommand, ProjectGetCommand, ProjectUpdateCommand } from 'libs/contracts';
 import { ProjectDeleteResponseDto } from './dto/controller/delete-project.dto';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -58,7 +52,7 @@ export class ProjectController {
   ): Promise<ProjectGetResponseDto> {
     try {
       const { ok, data } = await this.projectService.getById(projectId);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
@@ -82,7 +76,7 @@ export class ProjectController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<ProjectGetAllResponseDto> {
     try {
       const { ok, data } = await this.projectService.getAll(queryParams);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
@@ -109,7 +103,7 @@ export class ProjectController {
   ): Promise<ProjectGetAllResponseDto> {
     try {
       const { ok, data } = await this.projectService.getAllInWorkspace(workspaceId, queryParams);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
@@ -136,7 +130,7 @@ export class ProjectController {
   ): Promise<ProjectGetAllResponseDto> {
     try {
       const { ok, data } = await this.projectService.getAllInOrganization(organizationId, queryParams);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
@@ -165,7 +159,7 @@ export class ProjectController {
   ): Promise<ProjectCreateResponseDto> {
     try {
       const { ok, data } = await this.projectService.create(dto, userInfoFromJWT, organizationId);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
@@ -193,7 +187,7 @@ export class ProjectController {
   ): Promise<ProjectUpdateResponseDto> {
     try {
       const { ok, data } = await this.projectService.updateById(projectId, dto);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }
@@ -219,7 +213,7 @@ export class ProjectController {
   ): Promise<ProjectDeleteResponseDto> {
     try {
       const { ok, data } = await this.projectService.deleteById(projectId);
-      return okResponseHandler(ok, data, ProjectEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PROJECT, urlParams);
     }

@@ -9,7 +9,7 @@ import {
 } from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
 import { StatusApproveGetResponseDto } from 'src/modules/status-approve/dto/controller/get-status-approve.dto';
 import { StatusApproveGetAllResponseDto } from 'src/modules/status-approve/dto/controller/get-all-status-approve.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { StatusApproveDeleteResponseDto } from 'src/modules/status-approve/dto/controller/delete-status-approve.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

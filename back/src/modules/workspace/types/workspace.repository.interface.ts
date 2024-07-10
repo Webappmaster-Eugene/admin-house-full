@@ -1,7 +1,7 @@
 import { WorkspaceCreateRequestDto } from '../dto/controller/create-workspace.dto';
 import { WorkspaceUpdateRequestDto } from '../dto/controller/update-workspace.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
 import { WorkspaceEntity } from '../entities/workspace.entity';
 import { WorkspaceChangeOwnerRequestDto } from '../dto/controller/change-owner-workspace.dto';

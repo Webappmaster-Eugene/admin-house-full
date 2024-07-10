@@ -1,24 +1,14 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema, StatusResourceSchema } from '../../models';
+import { FileStorageBusinessValueSchema, RequestGetAllQuerySchema, StatusResourceSchema } from '../../models';
 import { ResponseClientSchema, FileStorageSchema } from '../../models';
 
-const FileStorageGetAllResponseEntitySchema = z.array(
-  FileStorageSchema.pick({
-    nameFile: true,
-    link: true,
-    comment: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    createdAt: true,
-    updatedAt: true,
-  }),
-);
+const FileStorageGetAllResponseEntitySchema = z.array(FileStorageBusinessValueSchema);
 
 const FileStorageGetAllResponseSchema = z
   .object({
     data: FileStorageGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FileStorageGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

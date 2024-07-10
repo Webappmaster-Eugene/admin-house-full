@@ -62,7 +62,7 @@ export default function NavVertical({ isOpenedNav, onCloseNav }: NavVerticalProp
           <NavMenuVertical
             data={NavData}
             slotProps={{
-              currentRole: loginedUser?.roleName as UserRoles,
+              currentRole: loginedUser?.role.name as UserRoles,
             }}
           />
 

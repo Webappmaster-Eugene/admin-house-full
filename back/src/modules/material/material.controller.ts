@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { MaterialGetResponseDto } from './dto/controller/get-material.dto';
 import { MaterialCreateRequestDto, MaterialCreateResponseDto } from './dto/controller/create-material.dto';
@@ -20,8 +20,7 @@ import {
   MaterialGetAllCommand,
   MaterialGetCommand,
   MaterialUpdateCommand,
-} from '@numart/house-admin-contracts';
-import { MaterialEntity } from './entities/material.entity';
+} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -60,7 +59,7 @@ export class MaterialController implements IMaterialController {
   ): Promise<MaterialGetResponseDto> {
     try {
       const { ok, data } = await this.materialService.getById(materialId);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }
@@ -86,8 +85,9 @@ export class MaterialController implements IMaterialController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAll(queryParams);
-      console.log('data', data);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      //console.log('data', data);
+
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }
@@ -117,7 +117,7 @@ export class MaterialController implements IMaterialController {
   ): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }
@@ -147,7 +147,7 @@ export class MaterialController implements IMaterialController {
   ): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }
@@ -178,7 +178,7 @@ export class MaterialController implements IMaterialController {
   ): Promise<MaterialCreateResponseDto> {
     try {
       const { ok, data } = await this.materialService.create(dto, handbookId, categoryMaterialId);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }
@@ -207,7 +207,7 @@ export class MaterialController implements IMaterialController {
   ): Promise<MaterialUpdateResponseDto> {
     try {
       const { ok, data } = await this.materialService.updateById(materialId, dto, userInfoFromJWT.uuid);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }
@@ -233,7 +233,7 @@ export class MaterialController implements IMaterialController {
   ): Promise<MaterialDeleteResponseDto> {
     try {
       const { ok, data } = await this.materialService.deleteById(materialId);
-      return okResponseHandler(ok, data, MaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
     }

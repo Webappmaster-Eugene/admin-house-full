@@ -11,7 +11,7 @@ exports.CharacteristicsMaterialSchema = zod_1.z.object({
     handbookUuid: zod_1.z.string().uuid(),
     fieldTypeUuid: zod_1.z.string().uuid(),
     fieldUnitMeasurementUuid: zod_1.z.string().uuid().nullable().optional(),
-    categoryMaterialUuid: zod_1.z.string().uuid(),
+    // categoryMaterialUuid: z.string().uuid(),
     materialUuid: zod_1.z.string().uuid(),
     lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),

@@ -3,7 +3,7 @@ import { ProjectCreateRequestDto, ProjectCreateResponseDto } from '../dto/contro
 import { ProjectUpdateRequestDto, ProjectUpdateResponseDto } from '../dto/controller/update-project.dto';
 import { ProjectGetResponseDto } from '../dto/controller/get-project.dto';
 import { ProjectGetAllResponseDto } from '../dto/controller/get-all-projects.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { ProjectDeleteResponseDto } from '../dto/controller/delete-project.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

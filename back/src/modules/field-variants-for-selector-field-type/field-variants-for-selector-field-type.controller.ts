@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldVariantsForSelectorFieldTypeGetResponseDto } from './dto/controller/get-field-variants-for-selector-field-type.dto';
 import {
   FieldVariantsForSelectorFieldTypeCreateRequestDto,
@@ -24,7 +24,7 @@ import {
   FieldVariantsForSelectorFieldTypeGetAllCommand,
   FieldVariantsForSelectorFieldTypeGetCommand,
   FieldVariantsForSelectorFieldTypeUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { FieldVariantsForSelectorFieldTypeEntity } from './entities/field-variants-for-selector-field-type.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -71,7 +71,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeGetResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getById(fieldVariantsForSelectorFieldTypeId);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -103,7 +103,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getAll(queryParams);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -136,7 +136,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -169,7 +169,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -207,7 +207,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
         fieldOfCategoryMaterialId,
         queryParams,
       );
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -242,7 +242,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeCreateResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.create(dto, handbookId, fieldOfCategoryMaterialId);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -277,7 +277,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeUpdateResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.updateById(fieldVariantsForSelectorFieldTypeId, dto);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }
@@ -308,7 +308,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ): Promise<FieldVariantsForSelectorFieldTypeDeleteResponseDto> {
     try {
       const { ok, data } = await this.fieldVariantsForSelectorFieldTypeService.deleteById(fieldVariantsForSelectorFieldTypeId);
-      return okResponseHandler(ok, data, FieldVariantsForSelectorFieldTypeEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE, urlParams);
     }

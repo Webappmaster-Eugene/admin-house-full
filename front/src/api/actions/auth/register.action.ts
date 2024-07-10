@@ -48,7 +48,8 @@ export async function register(data: {
       return errorObject;
     }
     console.error('Not standard backend error while register', response);
-    return { errorObject: response.message };
+    errorObject.error = response?.message;
+    return errorObject;
   } catch (error: unknown) {
     console.error('Catched frontend error while register', error);
     if (error instanceof AxiosError) {

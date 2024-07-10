@@ -1,19 +1,8 @@
 import { z } from 'zod';
-import { ProjectSchema } from '../../models';
+import { ProjectBusinessValueSchema, ProjectRelatedEntitiesSchema, ProjectSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ProjectGetResponseEntitySchema = ProjectSchema.pick({
-  name: true,
-  description: true,
-  customerMail: true,
-  customerUuid: true,
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  responsibleManagerUuid: true,
-  organizationUuid: true,
-  lastChangeByUserUuid: true,
-});
+const ProjectGetResponseEntitySchema = ProjectBusinessValueSchema.merge(ProjectRelatedEntitiesSchema.strict());
 
 const ProjectSchemaGetRequestSchema = ProjectSchema.pick({
   uuid: true,
@@ -23,7 +12,7 @@ const ProjectSchemaGetResponseSchema = z
   .object({
     data: ProjectGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace ProjectGetCommand {
   export const RequestSchema = ProjectSchemaGetRequestSchema;

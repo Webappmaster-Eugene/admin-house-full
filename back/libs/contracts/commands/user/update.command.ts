@@ -1,13 +1,9 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models';
+import { UserBusinessValueSchema, UserRelatedEntitiesSchema, UserSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models';
 
-const UserUpdateResponseEntitySchema = UserSchema.omit({
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const UserUpdateResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema.strict());
 
 const UserUpdateRequestSchema = UserSchema.pick({
   avatar: true,
@@ -23,7 +19,7 @@ const UserUpdateResponseSchema = z
   .object({
     data: UserUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserUpdateCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

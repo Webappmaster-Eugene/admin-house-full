@@ -1,9 +1,8 @@
 import { z } from 'zod';
-import { AuthSchema, AuthStrictKeySchema, UserSchema } from '../../models';
+import { ConfirmPasswordBusinessValueSchema, RegisterBusinessValueSchema, UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
-import { ConfirmPasswordSchema } from '../../models';
 
-const AuthRegisterResponseEntitySchema = AuthSchema;
+const AuthRegisterResponseEntitySchema = RegisterBusinessValueSchema;
 
 const AuthRegisterRequestSchema = UserSchema.pick({
   email: true,
@@ -16,9 +15,9 @@ const AuthRegisterRequestSchema = UserSchema.pick({
   phone: true,
   avatar: true,
 })
-  .merge(ConfirmPasswordSchema)
+  .merge(ConfirmPasswordBusinessValueSchema.strict())
   .refine(
-    data => {
+    (data: { password: any; confirmPassword: any }) => {
       return data.password === data.confirmPassword;
     },
     {
@@ -31,7 +30,7 @@ const AuthRegisterResponseSchema = z
   .object({
     data: AuthRegisterResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace AuthRegisterCommand {
   export const RequestSchema = AuthRegisterRequestSchema;

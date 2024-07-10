@@ -1,22 +1,15 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema } from '../../models';
+import { GlobalCategoryMaterialBusinessValueSchema, ResponseClientSchema } from '../../models';
 import { GlobalCategoryMaterialSchema } from '../../models';
 
-const GlobalCategoryMaterialDeleteResponseEntitySchema = GlobalCategoryMaterialSchema.pick({
-  name: true,
-  nameRu: true,
-  comment: true,
-  color: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-});
+const GlobalCategoryMaterialDeleteResponseEntitySchema = GlobalCategoryMaterialBusinessValueSchema;
 
 const GlobalCategoryMaterialDeleteResponseSchema = z
   .object({
     data: GlobalCategoryMaterialDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace GlobalCategoryMaterialDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

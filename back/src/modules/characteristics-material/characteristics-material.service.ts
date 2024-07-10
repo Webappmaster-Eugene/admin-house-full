@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { CharacteristicsMaterialEntity } from './entities/characteristics-material.entity';
@@ -8,8 +8,8 @@ import { ICharacteristicsMaterialService } from './types/characteristics-materia
 import { CharacteristicsMaterialUpdateRequestDto } from './dto/controller/update-characteristics-material.dto';
 import { CharacteristicsMaterialCreateRequestDto } from './dto/controller/create-characteristics-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
-import { IFieldOfCategoryMaterialService } from 'src/modules/field-of-category-material/types/field-of-category-material.service.interface';
-import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
+import { IFieldOfCategoryMaterialService } from '../../modules/field-of-category-material/types/field-of-category-material.service.interface';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 
 @Injectable()
 export class CharacteristicsMaterialService implements ICharacteristicsMaterialService {

@@ -1,1 +1,1 @@
-export * from './auth-confirm-password';
+export * from './auth-confirm-password-business-value.schema';

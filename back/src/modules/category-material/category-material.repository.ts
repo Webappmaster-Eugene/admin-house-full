@@ -3,7 +3,7 @@ import { CategoryMaterialCreateRequestDto } from './dto/controller/create-catego
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { ICategoryMaterialRepository } from './types/category-material.repository.interface';
 import { CategoryMaterialUpdateRequestDto } from './dto/controller/update-category-material.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CategoryMaterialEntity } from './entities/category-material.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -25,6 +25,12 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         where: {
           uuid: categoryMaterialId,
         },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
       });
 
       return existenceEntityHandler(findedCategoryMaterial, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity;
@@ -37,7 +43,16 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     limitTakeHandler(take);
 
     try {
-      const allCategoryMaterials = await this.databaseService.categoryMaterial.findMany({ take, skip });
+      const allCategoryMaterials = await this.databaseService.categoryMaterial.findMany({
+        take,
+        skip,
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
+      });
       return existenceEntityHandler(allCategoryMaterials, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -56,6 +71,12 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         where: { handbookUuid: handbookId },
         take,
         skip,
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
       });
       return existenceEntityHandler(allCategoryMaterials, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity[];
     } catch (error: unknown) {
@@ -68,6 +89,12 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
       const { name, templateName, comment, globalCategoryMaterialUuid } = dto;
       const newCategoryMaterial = await this.databaseService.categoryMaterial.create({
         data: { name, templateName, comment, globalCategoryMaterialUuid, handbookUuid: handbookId },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
       });
       return existenceEntityHandler(newCategoryMaterial, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity;
     } catch (error: unknown) {
@@ -89,6 +116,12 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
           templateName,
           comment,
         },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -106,6 +139,12 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
       const deletedCategoryMaterial = await this.databaseService.categoryMaterial.delete({
         where: {
           uuid: categoryMaterialId,
+        },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          globalCategoryMaterial: true,
+          handbook: true,
         },
       });
 

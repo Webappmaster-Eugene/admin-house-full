@@ -1,14 +1,14 @@
 import { z } from 'zod';
-import { FieldUnitMeasurementSchema } from '../../models';
+import {
+  FieldUnitMeasurementBusinessValueSchema,
+  FieldUnitMeasurementRelatedEntitiesSchema,
+  FieldUnitMeasurementSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldUnitMeasurementUpdateResponseEntitySchema = FieldUnitMeasurementSchema.pick({
-  name: true,
-  comment: true,
-  uuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-});
+const FieldUnitMeasurementUpdateResponseEntitySchema = FieldUnitMeasurementBusinessValueSchema.merge(
+  FieldUnitMeasurementRelatedEntitiesSchema.strict(),
+);
 
 const FieldUnitMeasurementUpdateRequestSchema = FieldUnitMeasurementSchema.pick({
   name: true,
@@ -19,7 +19,7 @@ const FieldUnitMeasurementUpdateResponseSchema = z
   .object({
     data: FieldUnitMeasurementUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldUnitMeasurementUpdateCommand {
   export const RequestSchema = FieldUnitMeasurementUpdateRequestSchema;

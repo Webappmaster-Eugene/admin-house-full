@@ -1,4 +1,4 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldUnitMeasurementGetAllCommand } from '@numart/house-admin-contracts';
+import { FieldUnitMeasurementGetAllCommand } from 'libs/contracts';
 
 export class FieldUnitMeasurementGetAllResponseDto extends createZodDto(FieldUnitMeasurementGetAllCommand.ResponseSchema) {}

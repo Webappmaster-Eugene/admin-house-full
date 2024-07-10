@@ -2,7 +2,7 @@ import { IServiceCommon } from '../../../common/types/main/slices/service.interf
 import { FieldOfCategoryMaterialCreateRequestDto } from '../dto/controller/create-field-of-category-material.dto';
 import { FieldOfCategoryMaterialUpdateRequestDto } from '../dto/controller/update-field-of-category-material.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldOfCategoryMaterialEntity } from '../entities/field-of-category-material.entity';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 

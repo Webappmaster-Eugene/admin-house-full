@@ -3,7 +3,7 @@ import { OrganizationCreateRequestDto, OrganizationCreateResponseDto } from '../
 import { OrganizationUpdateRequestDto, OrganizationUpdateResponseDto } from '../dto/controller/update-organization.dto';
 import { OrganizationGetResponseDto } from '../dto/controller/get-organization.dto';
 import { OrganizationGetAllResponseDto } from '../dto/controller/get-all-organizations.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { OrganizationDeleteResponseDto } from '../dto/controller/delete-organization.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

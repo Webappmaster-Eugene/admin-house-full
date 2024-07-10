@@ -1,11 +1,8 @@
 import { z } from 'zod';
-import { WorkspaceSchema } from '../../models';
+import { WorkspaceBusinessValueSchema, WorkspaceRelatedEntitiesSchema, WorkspaceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const WorkspaceCreateResponseEntitySchema = WorkspaceSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-});
+const WorkspaceCreateResponseEntitySchema = WorkspaceBusinessValueSchema.merge(WorkspaceRelatedEntitiesSchema.strict());
 
 const WorkspaceCreateRequestSchema = WorkspaceSchema.pick({
   name: true,
@@ -16,7 +13,7 @@ const WorkspaceCreateResponseSchema = z
   .object({
     data: WorkspaceCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace WorkspaceCreateCommand {
   export const RequestSchema = WorkspaceCreateRequestSchema;

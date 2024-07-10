@@ -1,11 +1,7 @@
 import { z } from 'zod';
-import { ResponseClientSchema, UserSchema } from '../../models';
+import { ResponseClientSchema, UserBusinessValueSchema, UserRelatedEntitiesSchema, UserSchema } from '../../models';
 
-const UserCreateResponseEntitySchema = UserSchema.omit({
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const UserCreateResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema.strict());
 
 const UserCreateRequestSchema = UserSchema.pick({
   avatar: true,
@@ -23,7 +19,7 @@ const UserCreateResponseSchema = z
   .object({
     data: UserCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserCreateCommand {
   export const RequestSchema = UserCreateRequestSchema;

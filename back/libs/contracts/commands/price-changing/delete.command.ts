@@ -1,23 +1,15 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { PriceChangingSchema } from '../../models';
+import { PriceChangingBusinessValueSchema, PriceChangingRelatedEntitiesSchema, PriceChangingSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const PriceChangingDeleteResponseEntitySchema = PriceChangingSchema.pick({
-  oldPrice: true,
-  comment: true,
-  newPrice: true,
-  source: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  materialUuid: true,
-});
+const PriceChangingDeleteResponseEntitySchema = PriceChangingBusinessValueSchema.merge(PriceChangingRelatedEntitiesSchema.strict());
 
 const PriceChangingDeleteResponseSchema = z
   .object({
     data: PriceChangingDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace PriceChangingDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

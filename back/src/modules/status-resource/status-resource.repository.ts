@@ -3,7 +3,7 @@ import { StatusResourceCreateRequestDto } from './dto/controller/create-status-r
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IStatusResourceRepository } from './types/status-resource.repository.interface';
 import { StatusResourceUpdateRequestDto } from './dto/controller/update-status-resource.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { StatusResourceEntity } from './entities/status-resource.entity';
 import { KFI } from '../../common/utils/di';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';

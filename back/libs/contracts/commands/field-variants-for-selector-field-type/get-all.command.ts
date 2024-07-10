@@ -1,23 +1,20 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema, ResponseClientSchema } from '../../models';
-import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
+import {
+  FieldVariantsForSelectorFieldTypeBusinessValueSchema,
+  FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema,
+  RequestGetAllQuerySchema,
+  ResponseClientSchema,
+} from '../../models';
 
 const FieldVariantsForSelectorFieldTypeGetAllResponseEntitySchema = z.array(
-  FieldVariantsForSelectorFieldTypeSchema.pick({
-    description: true,
-    value: true,
-    handbookUuid: true,
-    uuid: true,
-    fieldOfCategoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-  }),
+  FieldVariantsForSelectorFieldTypeBusinessValueSchema.merge(FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema.strict()),
 );
 
 const FieldVariantsForSelectorFieldTypeGetAllResponseSchema = z
   .object({
     data: FieldVariantsForSelectorFieldTypeGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldVariantsForSelectorFieldTypeGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

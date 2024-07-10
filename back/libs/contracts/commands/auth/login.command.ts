@@ -1,22 +1,18 @@
 import { z } from 'zod';
-import { AuthSchema, UserSchema } from '../../models';
+import { AuthSchema, LoginBusinessValueSchema, PasswordSchema, UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const AuthLoginResponseEntitySchema = AuthSchema;
 
-export const PasswordSchema = z.object({
-  password: z.string(),
-});
-
 const AuthLoginRequestSchema = UserSchema.pick({
   email: true,
-}).merge(PasswordSchema);
+}).merge(PasswordSchema.strict());
 
 const AuthLoginResponseSchema = z
   .object({
     data: AuthLoginResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace AuthLoginCommand {
   export const RequestSchema = AuthLoginRequestSchema;

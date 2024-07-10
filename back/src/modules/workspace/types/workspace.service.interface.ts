@@ -3,7 +3,7 @@ import { WorkspaceCreateRequestDto } from '../dto/controller/create-workspace.dt
 import { WorkspaceUpdateRequestDto } from '../dto/controller/update-workspace.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { WorkspaceEntity } from '../entities/workspace.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { WorkspaceChangeOwnerRequestDto } from '../dto/controller/change-owner-workspace.dto';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';

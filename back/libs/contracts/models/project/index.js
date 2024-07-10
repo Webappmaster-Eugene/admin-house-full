@@ -15,3 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./project.schema"), exports);
+__exportStar(require("./project-related-entities.schema"), exports);
+__exportStar(require("./project-business-value.schema"), exports);

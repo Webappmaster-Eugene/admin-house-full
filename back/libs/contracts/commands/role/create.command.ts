@@ -1,29 +1,25 @@
 import { z } from 'zod';
-import { RoleSchema } from '../../models';
+import { RoleBusinessValueSchema, RoleSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const RoleCreateResponseEntitySchema = RoleSchema.pick({
-  uuid: true,
-  idRole: true,
-  name: true,
-  description: true,
-  lastChangeByUserUuid: true,
-});
+const RoleCreateResponseEntitySchema = RoleBusinessValueSchema;
 
 const RoleCreateRequestSchema = RoleSchema.pick({
   name: true,
   description: true,
 }).merge(
-  z.object({
-    key: z.string(),
-  }),
+  z
+    .object({
+      key: z.string(),
+    })
+    .strict(),
 );
 
 const RoleCreateResponseSchema = z
   .object({
     data: RoleCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace RoleCreateCommand {
   export const RequestSchema = RoleCreateRequestSchema;

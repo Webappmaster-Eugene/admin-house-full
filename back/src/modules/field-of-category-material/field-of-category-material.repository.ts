@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldOfCategoryMaterialRepository } from './types/field-of-category-material.repository.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../common/utils/di';
 import { FieldOfCategoryMaterialEntity } from './entities/field-of-category-material.entity';
 import { FieldOfCategoryMaterialCreateRequestDto } from './dto/controller/create-field-of-category-material.dto';
@@ -24,6 +24,13 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
         where: {
           uuid: fieldOfCategoryMaterialId,
         },
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -40,7 +47,17 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
     limitTakeHandler(take);
 
     try {
-      const allFieldOfCategoryMaterials = await this.databaseService.fieldOfCategoryMaterial.findMany({ take, skip });
+      const allFieldOfCategoryMaterials = await this.databaseService.fieldOfCategoryMaterial.findMany({
+        take,
+        skip,
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
+        },
+      });
       return existenceEntityHandler(
         allFieldOfCategoryMaterials,
         FieldOfCategoryMaterialEntity,
@@ -63,13 +80,24 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
         where: { handbookUuid: handbookId },
         take,
         skip,
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
+        },
       });
+      console.log('allFieldOfCategoryMaterials', allFieldOfCategoryMaterials);
+
       return existenceEntityHandler(
         allFieldOfCategoryMaterials,
         FieldOfCategoryMaterialEntity,
         EntityName.FIELD_OF_CATEGORY_MATERIAL,
       ) as FieldOfCategoryMaterialEntity[];
     } catch (error: unknown) {
+      console.log('ERRORallFieldOfCategoryMaterials', error);
+
       errorRepositoryHandler(error);
     }
   }
@@ -86,6 +114,13 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
         where: { categoryMaterialUuid: categoryMaterialId },
         take,
         skip,
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
+        },
       });
       return existenceEntityHandler(
         allFieldOfCategoryMaterials,
@@ -117,6 +152,13 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           uniqueNameForTemplate,
           handbookUuid: handbookId,
         },
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
+        },
       });
       return existenceEntityHandler(
         newFieldOfCategoryMaterial,
@@ -144,6 +186,13 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           defaultValue,
           unitOfMeasurementUuid,
         },
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -161,6 +210,13 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
       const deletedFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.delete({
         where: {
           uuid: fieldOfCategoryMaterialId,
+        },
+        include: {
+          categoryMaterial: true,
+          handbook: true,
+          fieldType: true,
+          unitOfMeasurement: true,
+          fieldVariantsForSelectorFieldType: true,
         },
       });
 

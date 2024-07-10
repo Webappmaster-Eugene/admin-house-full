@@ -1,22 +1,14 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema, FileStorageSchema } from '../../models';
+import { ResponseClientSchema, FileStorageSchema, FileStorageBusinessValueSchema } from '../../models';
 
-const FileStorageDeleteResponseEntitySchema = FileStorageSchema.pick({
-  nameFile: true,
-  link: true,
-  comment: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const FileStorageDeleteResponseEntitySchema = FileStorageBusinessValueSchema;
 
 const FileStorageDeleteResponseSchema = z
   .object({
     data: FileStorageDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FileStorageDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

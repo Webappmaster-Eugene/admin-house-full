@@ -4,19 +4,7 @@ exports.FieldOfCategoryMaterialUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const FieldOfCategoryMaterialUpdateResponseEntitySchema = models_1.FieldOfCategoryMaterialSchema.pick({
-    name: true,
-    comment: true,
-    uniqueNameForTemplate: true,
-    defaultValue: true,
-    isRequired: true,
-    unitOfMeasurementUuid: true,
-    fieldTypeUuid: true,
-    categoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-    handbookUuid: true,
-    uuid: true,
-});
+const FieldOfCategoryMaterialUpdateResponseEntitySchema = models_1.FieldOfCategoryMaterialBusinessValueSchema.merge(models_1.FieldOfCategoryMaterialRelatedEntitiesSchema);
 const FieldOfCategoryMaterialUpdateRequestSchema = models_1.FieldOfCategoryMaterialSchema.pick({
     name: true,
     comment: true,

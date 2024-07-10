@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldVariantsForSelectorFieldTypeCreateCommand } from '@numart/house-admin-contracts';
+import { FieldVariantsForSelectorFieldTypeCreateCommand } from 'libs/contracts';
 
 export class FieldVariantsForSelectorFieldTypeCreateRequestDto extends createZodDto(
   FieldVariantsForSelectorFieldTypeCreateCommand.RequestSchema,

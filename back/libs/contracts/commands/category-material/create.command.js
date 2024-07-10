@@ -3,16 +3,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryMaterialCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const models_2 = require("../../models");
-const CategoryMaterialCreateResponseEntitySchema = models_2.CategoryMaterialSchema.pick({
+const objSchema = zod_1.z.object({
+    materials: zod_1.z.array(models_1.MaterialBusinessValueSchema).nullable().optional(),
+    fieldsOfCategoryMaterials: zod_1.z.array(models_1.FieldOfCategoryMaterialBusinessValueSchema).nullable().optional(),
+    globalCategoryMaterial: models_1.GlobalCategoryMaterialBusinessValueSchema,
+    handbook: models_1.HandbookBusinessValueSchema,
+});
+const CategoryMaterialCreateResponseEntitySchema = models_1.CategoryMaterialSchema.pick({
     name: true,
     templateName: true,
     comment: true,
     uuid: true,
     globalCategoryMaterialUuid: true,
     lastChangeByUserUuid: true,
-});
-const CategoryMaterialCreateRequestSchema = models_2.CategoryMaterialSchema.pick({
+}).merge(objSchema);
+const CategoryMaterialCreateRequestSchema = models_1.CategoryMaterialSchema.pick({
     name: true,
     comment: true,
     templateName: true,

@@ -1,16 +1,15 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models';
+import {
+  FieldVariantsForSelectorFieldTypeBusinessValueSchema,
+  FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema,
+  ResponseClientSchema,
+} from '../../models';
 import {} from '../../models/field-variants-for-selector-field-type';
 import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
-const FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema = FieldVariantsForSelectorFieldTypeSchema.pick({
-  description: true,
-  value: true,
-  handbookUuid: true,
-  uuid: true,
-  fieldOfCategoryMaterialUuid: true,
-  lastChangeByUserUuid: true,
-});
+const FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema = FieldVariantsForSelectorFieldTypeBusinessValueSchema.merge(
+  FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema.strict(),
+);
 
 const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.pick({
   description: true,
@@ -21,7 +20,7 @@ const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = z
   .object({
     data: FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldVariantsForSelectorFieldTypeUpdateCommand {
   export const RequestSchema = FieldVariantsForSelectorFieldTypeUpdateRequestSchema;

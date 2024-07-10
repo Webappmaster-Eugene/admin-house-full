@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CharacteristicsMaterialCreateRequestDto } from '../dto/controller/create-characteristics-material.dto';
 import { CharacteristicsMaterialUpdateRequestDto } from '../dto/controller/update-characteristics-material.dto';
 import { CharacteristicsMaterialEntity } from '../entities/characteristics-material.entity';
@@ -33,8 +33,8 @@ export interface ICharacteristicsMaterialRepository
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
     fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    fieldTypeUuid: EntityUrlParamCommand.RequestUuidParam,
-    unitOfMeasurementUuid: EntityUrlParamCommand.RequestUuidParam,
+    fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
+    unitOfMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<CharacteristicsMaterialEntity>;
   updateById: (

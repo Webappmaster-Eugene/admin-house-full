@@ -4,15 +4,11 @@ exports.UserAddToOrganizationCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const UserAddToOrganizationResponseEntitySchema = models_1.UserSchema.omit({
-    password: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const UserAddToOrganizationResponseEntitySchema = models_1.UserBusinessValueSchema.merge(models_1.UserRelatedEntitiesSchema);
 const UserAddToOrganizationRequestSchema = models_1.UserSchema.pick({
     uuid: true,
     //DOC это поле специально здесь, потому что dtoToUpdateUser формируется в сервисе userService на этапе добавления
-    //пользователя в организацию (не в исходном входном dto, поступившего из контроллера, там только userId)
+    //пользователя в организацию (не в исходном входном dto, поступившем из контроллера, там только userId)
     memberOfOrganizationUuid: true,
 });
 const UserAddToOrganizationResponseSchema = zod_1.z

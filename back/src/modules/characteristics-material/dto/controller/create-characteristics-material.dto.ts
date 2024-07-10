@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { CharacteristicsMaterialCreateCommand } from '@numart/house-admin-contracts';
+import { CharacteristicsMaterialCreateCommand } from 'libs/contracts';
 
 export class CharacteristicsMaterialCreateRequestDto extends createZodDto(CharacteristicsMaterialCreateCommand.RequestSchema) {}
 

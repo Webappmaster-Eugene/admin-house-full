@@ -4,7 +4,7 @@ import { ITechLogChangesService } from 'src/modules/tech/tech-log-changes/types/
 import { TechLogChangesCreateRequestDto } from 'src/modules/tech/tech-log-changes/dto/controller/create-tech-log-changes.dto';
 import { ITechLogChangesRepository } from 'src/modules/tech/tech-log-changes/types/tech-log-changes.repository.interface';
 import { InternalResponse, UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../../common/utils/di';
 import { IQueryParams } from 'src/common/decorators/query-params.decorator';
 import { EntityName } from 'src/common/types/entity.enum';

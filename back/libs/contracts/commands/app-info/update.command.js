@@ -4,15 +4,7 @@ exports.AppInfoUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const AppInfoUpdateResponseEntitySchema = models_2.AppInfoSchema.pick({
-    status: true,
-    comment: true,
-    language: true,
-    currency: true,
-    name: true,
-    description: true,
-    lastChangeByUserUuid: true,
-});
+const AppInfoUpdateResponseEntitySchema = models_1.AppInfoBusinessValueSchema;
 const AppInfoUpdateRequestSchema = models_2.AppInfoSchema.omit({
     uuid: true,
 })

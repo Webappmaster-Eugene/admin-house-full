@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import {
   GlobalCategoryMaterialCreateRequestDto,
   GlobalCategoryMaterialCreateResponseDto,
@@ -23,7 +23,7 @@ import {
   GlobalCategoryMaterialGetAllCommand,
   GlobalCategoryMaterialGetCommand,
   GlobalCategoryMaterialUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { GlobalCategoryMaterialEntity } from './entities/global-category-material.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -61,7 +61,7 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   ): Promise<GlobalCategoryMaterialGetResponseDto> {
     try {
       const { ok, data } = await this.globalCategoryMaterialService.getById(globalCategoryMaterialId);
-      return okResponseHandler(ok, data, GlobalCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.GLOBAL_CATEGORY_MATERIAL, urlParams);
     }
@@ -86,7 +86,7 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   async getAllEP(@UrlParams() urlParams: IUrlParams): Promise<GlobalCategoryMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.globalCategoryMaterialService.getAll();
-      return okResponseHandler(ok, data, GlobalCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.GLOBAL_CATEGORY_MATERIAL, urlParams);
     }
@@ -113,7 +113,7 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   ): Promise<GlobalCategoryMaterialCreateResponseDto> {
     try {
       const { ok, data } = await this.globalCategoryMaterialService.create(dto);
-      return okResponseHandler(ok, data, GlobalCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.GLOBAL_CATEGORY_MATERIAL, urlParams);
     }
@@ -144,7 +144,7 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   ): Promise<GlobalCategoryMaterialUpdateResponseDto> {
     try {
       const { ok, data } = await this.globalCategoryMaterialService.updateById(globalCategoryMaterialId, dto);
-      return okResponseHandler(ok, data, GlobalCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.GLOBAL_CATEGORY_MATERIAL, urlParams);
     }
@@ -171,7 +171,7 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   ): Promise<GlobalCategoryMaterialDeleteResponseDto> {
     try {
       const { ok, data } = await this.globalCategoryMaterialService.deleteById(globalCategoryMaterialId);
-      return okResponseHandler(ok, data, GlobalCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.GLOBAL_CATEGORY_MATERIAL, urlParams);
     }

@@ -18,14 +18,14 @@ import { AuthGuard } from '../../common/guards/auth.guard';
 import { RoleCreateRequestDto, RoleCreateResponseDto } from './dto/controller/create-role.dto';
 import { IRoleService } from './types/role.service.interface';
 import { RoleUpdateRequestDto, RoleUpdateResponseDto } from './dto/controller/update-role.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { RoleGetResponseDto } from './dto/controller/get-role.dto';
 import { RoleGetAllResponseDto } from './dto/controller/get-all-roles.dto';
 import { RoleDeleteResponseDto } from './dto/controller/delete-role.dto';
 import { EUserTypeVariants } from '.prisma/client';
 import { KFI } from '../../common/utils/di';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { RoleCreateCommand, RoleDeleteCommand, RoleGetAllCommand, RoleGetCommand, RoleUpdateCommand } from '@numart/house-admin-contracts';
+import { RoleCreateCommand, RoleDeleteCommand, RoleGetAllCommand, RoleGetCommand, RoleUpdateCommand } from 'libs/contracts';
 import { RoleEntity } from './entities/role.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -63,7 +63,7 @@ export class RolesController implements IRoleController {
   ): Promise<RoleGetResponseDto> {
     try {
       const { ok, data } = await this.rolesService.getById(roleId);
-      return okResponseHandler(ok, data, RoleEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
     }
@@ -85,7 +85,7 @@ export class RolesController implements IRoleController {
   ): Promise<RoleGetResponseDto> {
     try {
       const { ok, data } = await this.rolesService.getByValue(roleName);
-      return okResponseHandler(ok, data, RoleEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
     }
@@ -108,7 +108,7 @@ export class RolesController implements IRoleController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<RoleGetAllResponseDto> {
     try {
       const { ok, data } = await this.rolesService.getAll(queryParams);
-      return okResponseHandler(ok, data, RoleEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
     }
@@ -132,7 +132,7 @@ export class RolesController implements IRoleController {
   async createEP(@Body() dto: RoleCreateRequestDto, @UrlParams() urlParams: IUrlParams): Promise<RoleCreateResponseDto> {
     try {
       const { ok, data } = await this.rolesService.create(dto);
-      return okResponseHandler(ok, data, RoleEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
     }
@@ -161,7 +161,7 @@ export class RolesController implements IRoleController {
   ): Promise<RoleUpdateResponseDto> {
     try {
       const { ok, data } = await this.rolesService.updateById(roleUuid, dto);
-      return okResponseHandler(ok, data, RoleEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
     }
@@ -186,7 +186,7 @@ export class RolesController implements IRoleController {
   ): Promise<RoleDeleteResponseDto> {
     try {
       const { ok, data } = await this.rolesService.deleteById(roleUuid);
-      return okResponseHandler(ok, data, RoleEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ROLE, urlParams);
     }

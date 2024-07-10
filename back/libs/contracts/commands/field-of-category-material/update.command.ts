@@ -1,20 +1,14 @@
 import { z } from 'zod';
-import { FieldOfCategoryMaterialSchema } from '../../models';
+import {
+  FieldOfCategoryMaterialBusinessValueSchema,
+  FieldOfCategoryMaterialRelatedEntitiesSchema,
+  FieldOfCategoryMaterialSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldOfCategoryMaterialUpdateResponseEntitySchema = FieldOfCategoryMaterialSchema.pick({
-  name: true,
-  comment: true,
-  uniqueNameForTemplate: true,
-  defaultValue: true,
-  isRequired: true,
-  unitOfMeasurementUuid: true,
-  fieldTypeUuid: true,
-  categoryMaterialUuid: true,
-  lastChangeByUserUuid: true,
-  handbookUuid: true,
-  uuid: true,
-});
+const FieldOfCategoryMaterialUpdateResponseEntitySchema = FieldOfCategoryMaterialBusinessValueSchema.merge(
+  FieldOfCategoryMaterialRelatedEntitiesSchema.strict(),
+);
 
 const FieldOfCategoryMaterialUpdateRequestSchema = FieldOfCategoryMaterialSchema.pick({
   name: true,
@@ -31,7 +25,7 @@ const FieldOfCategoryMaterialUpdateResponseSchema = z
   .object({
     data: FieldOfCategoryMaterialUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldOfCategoryMaterialUpdateCommand {
   export const RequestSchema = FieldOfCategoryMaterialUpdateRequestSchema;

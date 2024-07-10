@@ -32,5 +32,4 @@ At least one special character`,
   lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  roleName: z.string(),
 });

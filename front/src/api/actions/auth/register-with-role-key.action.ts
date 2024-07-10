@@ -24,8 +24,6 @@ export async function registerWithRoleKey(data: {
     error: null,
   };
 
-  console.log('data', data);
-
   try {
     const response: AuthRegisterWithRoleCommand.Response = await axiosInstance.post(
       axiosEndpoints.auth.register_with_role_key
@@ -33,7 +31,6 @@ export async function registerWithRoleKey(data: {
         .replace(':secretKey', data.secretKey),
       data
     );
-    console.log('register_with_role_key', response);
 
     if (isGoodHttpCode(response?.statusCode)) {
       cookies().set(cookieKeys.USED_ACCESS_KEY, `Bearer ${response?.data?.accessToken}`, {
@@ -51,7 +48,8 @@ export async function registerWithRoleKey(data: {
       return errorObject;
     }
     console.error('Not standard backend error while register', response);
-    return { errorObject: response.message };
+    errorObject.error = response?.message;
+    return errorObject;
   } catch (error: unknown) {
     console.error('Catched frontend error while register', error);
     if (error instanceof AxiosError) {

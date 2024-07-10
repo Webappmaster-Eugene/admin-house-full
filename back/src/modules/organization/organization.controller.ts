@@ -2,13 +2,8 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put,
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrganizationEntity } from './entities/organization.entity';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import {
-  OrganizationCreateCommand,
-  OrganizationGetAllCommand,
-  OrganizationGetCommand,
-  OrganizationUpdateCommand,
-} from '@numart/house-admin-contracts';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { OrganizationCreateCommand, OrganizationGetAllCommand, OrganizationGetCommand, OrganizationUpdateCommand } from 'libs/contracts';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../common/utils/di';
 import { IOrganizationService } from './types/organization.service.interface';
 import { OrganizationGetAllResponseDto } from './dto/controller/get-all-organizations.dto';
@@ -16,7 +11,7 @@ import { OrganizationGetResponseDto } from './dto/controller/get-organization.dt
 import { OrganizationDeleteResponseDto } from './dto/controller/delete-organization.dto';
 import { OrganizationUpdateRequestDto, OrganizationUpdateResponseDto } from './dto/controller/update-organization.dto';
 import { OrganizationCreateRequestDto, OrganizationCreateResponseDto } from './dto/controller/create-organization.dto';
-import { OrganizationDeleteCommand } from '@numart/house-admin-contracts';
+import { OrganizationDeleteCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
@@ -60,7 +55,8 @@ export class OrganizationController {
   ): Promise<OrganizationGetResponseDto> {
     try {
       const { ok, data } = await this.organizationService.getById(organizationId);
-      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
@@ -84,7 +80,7 @@ export class OrganizationController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<OrganizationGetAllResponseDto> {
     try {
       const { ok, data } = await this.organizationService.getAll(queryParams);
-      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
@@ -112,7 +108,7 @@ export class OrganizationController {
   ): Promise<OrganizationGetAllResponseDto> {
     try {
       const { ok, data } = await this.organizationService.getAllInWorkspace(workspaceId, queryParams);
-      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
@@ -142,7 +138,7 @@ export class OrganizationController {
     // DOC в param create передается автоматически id Workspace, в котором создается Organization
     try {
       const { ok, data } = await this.organizationService.create(dto, userInfoFromJWT.uuid, workspaceId);
-      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
@@ -170,7 +166,7 @@ export class OrganizationController {
   ): Promise<OrganizationUpdateResponseDto> {
     try {
       const { ok, data } = await this.organizationService.updateById(organizationId, dto);
-      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }
@@ -195,7 +191,7 @@ export class OrganizationController {
   ): Promise<OrganizationDeleteResponseDto> {
     try {
       const { ok, data } = await this.organizationService.deleteById(organizationId);
-      return okResponseHandler(ok, data, OrganizationEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.ORGANIZATION, urlParams);
     }

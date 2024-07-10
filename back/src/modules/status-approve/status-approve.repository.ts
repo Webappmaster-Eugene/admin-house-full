@@ -3,7 +3,7 @@ import { StatusApproveCreateRequestDto } from 'src/modules/status-approve/dto/co
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IStatusApproveRepository } from './types/status-approve.repository.interface';
 import { StatusApproveUpdateRequestDto } from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { KFI } from '../../common/utils/di';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

@@ -1,5 +1,5 @@
 export * from './auth.utils';
-export * from './auth-state-type';
+export * from 'src/store/auth/auth-state-type';
 export * from './auth-general-layout.props';
 export * from './token-type';
 export * from './decode.tokens';

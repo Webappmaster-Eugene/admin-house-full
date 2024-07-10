@@ -16,7 +16,7 @@ const OrganizationSchemaDeleteManyResponseSchema = z
       count: z.number(),
     }),
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace OrganizationSchemaDeleteManyCommand {
   export const RequestSchema = OrganizationSchemaDeleteManyRequestSchema;

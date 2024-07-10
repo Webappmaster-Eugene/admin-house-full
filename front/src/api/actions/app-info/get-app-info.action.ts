@@ -26,7 +26,8 @@ export async function getAppInfo() {
       errorObject.error = response?.errors[0];
       return errorObject;
     }
-    return { errorObject: response?.message };
+    errorObject.error = response?.message;
+    return errorObject;
   } catch (error: unknown) {
     console.error('Catched frontend error while get app-info at start of the app', error);
     if (error instanceof AxiosError) {

@@ -1,20 +1,14 @@
 import { z } from 'zod';
-import { FieldTypeSchema } from '../../models';
+import { FieldTypeBusinessValueSchema, FieldTypeSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldTypeGetResponseEntitySchema = FieldTypeSchema.pick({
-  name: true,
-  description: true,
-  jsType: true,
-  lastChangeByUserUuid: true,
-  uuid: true,
-});
+const FieldTypeGetResponseEntitySchema = FieldTypeBusinessValueSchema;
 
 const FieldTypeGetResponseSchema = z
   .object({
     data: FieldTypeGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldTypeGetCommand {
   export const ResponseSchema = FieldTypeGetResponseSchema;

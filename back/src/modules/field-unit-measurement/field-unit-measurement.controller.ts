@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldUnitMeasurementGetResponseDto } from './dto/controller/get-field-unit-measurement.dto';
 import {
   FieldUnitMeasurementCreateRequestDto,
@@ -25,7 +25,7 @@ import {
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementUpdateCommand,
   FieldVariantsForSelectorFieldTypeGetAllCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { FieldUnitMeasurementEntity } from './entities/field-unit-measurement.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
@@ -65,7 +65,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ): Promise<FieldUnitMeasurementGetResponseDto> {
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.getById(fieldUnitMeasurementId);
-      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
     }
@@ -94,7 +94,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ): Promise<FieldUnitMeasurementGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.getAll(queryParams);
-      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
     }
@@ -124,7 +124,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ): Promise<FieldUnitMeasurementGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
     }
@@ -153,7 +153,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
     // в create нужно передать id пользователя, для которого создается field-unit-measurement
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.create(dto, handbookId);
-      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
     }
@@ -183,7 +183,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ): Promise<FieldUnitMeasurementUpdateResponseDto> {
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.updateById(fieldUnitMeasurementId, dto);
-      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
     }
@@ -209,7 +209,7 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ): Promise<FieldUnitMeasurementDeleteResponseDto> {
     try {
       const { ok, data } = await this.fieldUnitMeasurementService.deleteById(fieldUnitMeasurementId);
-      return okResponseHandler(ok, data, FieldUnitMeasurementEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_UNIT_MEASUREMENT, urlParams);
     }

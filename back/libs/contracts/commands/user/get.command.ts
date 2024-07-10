@@ -1,18 +1,14 @@
 import { z } from 'zod';
-import { ResponseClientSchema, UserSchema } from '../../models';
+import { ResponseClientSchema, UserBusinessValueSchema, UserRelatedEntitiesSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 
-const UserGetResponseEntitySchema = UserSchema.omit({
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const UserGetResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema.strict());
 
 const UserGetResponseSchema = z
   .object({
     data: UserGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserGetCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

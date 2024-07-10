@@ -1,15 +1,7 @@
 import { z } from 'zod';
-import { ResponseClientSchema, FileStorageSchema } from '../../models';
+import { ResponseClientSchema, FileStorageSchema, FileStorageBusinessValueSchema } from '../../models';
 
-const FileStorageCreateResponseEntitySchema = FileStorageSchema.pick({
-  nameFile: true,
-  link: true,
-  comment: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const FileStorageCreateResponseEntitySchema = FileStorageBusinessValueSchema;
 
 const FileStorageCreateRequestSchema = FileStorageSchema.pick({
   nameFile: true,
@@ -21,7 +13,7 @@ const FileStorageCreateResponseSchema = z
   .object({
     data: FileStorageCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FileStorageCreateCommand {
   export const RequestSchema = FileStorageCreateRequestSchema;

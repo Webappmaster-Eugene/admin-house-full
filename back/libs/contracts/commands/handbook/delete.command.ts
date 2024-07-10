@@ -1,23 +1,15 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { HandbookSchema } from '../../models';
+import { HandbookBusinessValueSchema, HandbookRelatedEntitiesSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const HandbookDeleteResponseEntitySchema = HandbookSchema.pick({
-  name: true,
-  description: true,
-  canCustomerView: true,
-  uuid: true,
-  responsibleManagerUuid: true,
-  workspaceUuid: true,
-  lastChangeByUserUuid: true,
-});
+const HandbookDeleteResponseEntitySchema = HandbookBusinessValueSchema.merge(HandbookRelatedEntitiesSchema.strict());
 
 const HandbookDeleteResponseSchema = z
   .object({
     data: HandbookDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace HandbookDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

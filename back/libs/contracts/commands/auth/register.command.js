@@ -4,8 +4,7 @@ exports.AuthRegisterCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const models_3 = require("../../models");
-const AuthRegisterResponseEntitySchema = models_1.AuthSchema;
+const AuthRegisterResponseEntitySchema = models_1.RegisterBusinessValueSchema;
 const AuthRegisterRequestSchema = models_1.UserSchema.pick({
     email: true,
     password: true,
@@ -17,8 +16,8 @@ const AuthRegisterRequestSchema = models_1.UserSchema.pick({
     phone: true,
     avatar: true,
 })
-    .merge(models_3.ConfirmPasswordSchema)
-    .refine(data => {
+    .merge(models_1.ConfirmPasswordBusinessValueSchema)
+    .refine((data) => {
     return data.password === data.confirmPassword;
 }, {
     message: "Passwords don't match",

@@ -3,15 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileStorageCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const FileStorageCreateResponseEntitySchema = models_1.FileStorageSchema.pick({
-    nameFile: true,
-    link: true,
-    comment: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const FileStorageCreateResponseEntitySchema = models_1.FileStorageBusinessValueSchema;
 const FileStorageCreateRequestSchema = models_1.FileStorageSchema.pick({
     nameFile: true,
     link: true,

@@ -3,7 +3,7 @@ import { ResponsiblePartnerProducerCreateRequestDto } from './dto/controller/cre
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IResponsiblePartnerProducerRepository } from './types/responsible-partner-producer.repository.interface';
 import { ResponsiblePartnerProducerUpdateRequestDto } from './dto/controller/update-responsible-partner-producer.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { ResponsiblePartnerProducerEntity } from './entities/responsible-partner-producer.entity';
 import { KFI } from '../../common/utils/di';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
@@ -25,6 +25,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
         where: {
           uuid: responsiblePartnerProducerId,
         },
+        include: {
+          handbook: true,
+          materials: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -41,7 +45,14 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
     limitTakeHandler(take);
 
     try {
-      const allResponsiblePartnerProducers = await this.databaseService.responsiblePartnerProducer.findMany({ take, skip });
+      const allResponsiblePartnerProducers = await this.databaseService.responsiblePartnerProducer.findMany({
+        take,
+        skip,
+        include: {
+          handbook: true,
+          materials: true,
+        },
+      });
       return existenceEntityHandler(
         allResponsiblePartnerProducers,
         ResponsiblePartnerProducerEntity,
@@ -64,6 +75,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
         where: { handbookUuid: handbookId },
         take,
         skip,
+        include: {
+          handbook: true,
+          materials: true,
+        },
       });
       return existenceEntityHandler(
         allResponsiblePartnerProducers,
@@ -83,6 +98,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
       const { name, comment, email, info, phone } = dto;
       const newResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.create({
         data: { name, comment, email, info, phone, handbookUuid: handbookId },
+        include: {
+          handbook: true,
+          materials: true,
+        },
       });
       return existenceEntityHandler(
         newResponsiblePartnerProducer,
@@ -112,6 +131,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
           info,
           phone,
         },
+        include: {
+          handbook: true,
+          materials: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -129,6 +152,10 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
       const deletedResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.delete({
         where: {
           uuid: responsiblePartnerProducerId,
+        },
+        include: {
+          handbook: true,
+          materials: true,
         },
       });
 

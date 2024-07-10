@@ -128,6 +128,22 @@ import {
 } from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
 import { StatusApproveCreateResponseDto } from 'src/modules/status-approve/dto/controller/create-status-approve.dto';
 import { StatusApproveDeleteResponseDto } from 'src/modules/status-approve/dto/controller/delete-status-approve.dto';
+import { MaterialGetResponseDto } from 'src/modules/material/dto/controller/get-material.dto';
+import { MaterialGetAllResponseDto } from 'src/modules/material/dto/controller/get-all-materials.dto';
+import { MaterialCreateRequestDto, MaterialCreateResponseDto } from 'src/modules/material/dto/controller/create-material.dto';
+import { MaterialUpdateRequestDto, MaterialUpdateResponseDto } from 'src/modules/material/dto/controller/update-material.dto';
+import { MaterialDeleteResponseDto } from 'src/modules/material/dto/controller/delete-material.dto';
+import { CharacteristicsMaterialGetResponseDto } from 'src/modules/characteristics-material/dto/controller/get-characteristics-material.dto';
+import { CharacteristicsMaterialGetAllResponseDto } from 'src/modules/characteristics-material/dto/controller/get-all-characteristics-materials.dto';
+import {
+  CharacteristicsMaterialCreateRequestDto,
+  CharacteristicsMaterialCreateResponseDto,
+} from 'src/modules/characteristics-material/dto/controller/create-characteristics-material.dto';
+import {
+  CharacteristicsMaterialUpdateRequestDto,
+  CharacteristicsMaterialUpdateResponseDto,
+} from 'src/modules/characteristics-material/dto/controller/update-characteristics-material.dto';
+import { CharacteristicsMaterialDeleteResponseDto } from 'src/modules/characteristics-material/dto/controller/delete-characteristics-material.dto';
 
 interface IAPI_ROUTE {
   METHOD: METHODS;
@@ -1551,7 +1567,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
       },
     },
-    //DOC category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId'
+    //DOC responsible-partner-producer/workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId'
     RESPONSIBLE_PARTNER_PRODUCER: {
       ROOT_PATH: 'responsible-partner-producer',
       DESCRIPTION_ENTITY: 'Роуты для работы с поставщиками/производителями',
@@ -2142,7 +2158,360 @@ export const API_PATHS: IAPI_PATHS = {
         },
       },
     },
-    //DOC global-category-material/:globalCategoryMaterialId
+    //DOC field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
+    MATERIALS: {
+      ROOT_PATH: 'materials',
+      DESCRIPTION_ENTITY: 'Роуты для работы с материалами',
+      FEATURES: [],
+      ROUTES: {
+        GET: {
+          METHOD: METHODS.GET,
+          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+          DESCRIPTION: 'Получить один материал',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['materialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialGetResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL: {
+          METHOD: METHODS.GET,
+          FULL_PATH: 'materials',
+          DESCRIPTION: 'Получить все материалы в приложении',
+          ROLES: [USER_ROLES.ADMIN],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: [],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialGetAllResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL_IN_HANDBOOK: {
+          METHOD: METHODS.GET,
+          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
+          DESCRIPTION: 'Получить все материалы внутри handbook',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['handbookId'],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialGetAllResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL_IN_CATEGORY_MATERIAL: {
+          METHOD: METHODS.GET,
+          FULL_PATH:
+            'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
+          DESCRIPTION: 'Получить все материалы внутри category-material внутри handbook',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['categoryMaterialId'],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialGetAllResponseDto,
+          EFFECTS: [],
+        },
+        CREATE: {
+          METHOD: METHODS.POST,
+          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
+          DESCRIPTION: 'Создать один вариант значения SELECTOR в handbook в fieldOfCategoryMaterialId в приложении',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_CREATOR_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['handbookId', 'categoryMaterialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: true,
+            BODY: MaterialCreateRequestDto,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialCreateResponseDto,
+          EFFECTS: [],
+        },
+        UPDATE: {
+          METHOD: METHODS.PUT,
+          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+          DESCRIPTION: 'Обновить один материал в приложении',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_CREATOR_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['materialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: true,
+            BODY: MaterialUpdateRequestDto,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialUpdateResponseDto,
+          EFFECTS: [],
+        },
+        DELETE: {
+          METHOD: METHODS.DELETE,
+          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+          DESCRIPTION: 'Удалить один материал в приложении',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_CREATOR_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['materialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: MaterialDeleteResponseDto,
+          EFFECTS: [],
+        },
+      },
+    },
+    //DOC characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
+    CHARACTERISTICS_MATERIAL: {
+      ROOT_PATH: 'characteristics-material',
+      DESCRIPTION_ENTITY: 'Роуты для работы с характеристиками материала',
+      FEATURES: [],
+      ROUTES: {
+        GET: {
+          METHOD: METHODS.GET,
+          FULL_PATH:
+            'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristics-material/:characteristicsMaterialId',
+          DESCRIPTION: 'Получить одну характеристику',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['characteristicsMaterialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialGetResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL: {
+          METHOD: METHODS.GET,
+          FULL_PATH: 'characteristics-material',
+          DESCRIPTION: 'Получить все характеристики приложения',
+          ROLES: [USER_ROLES.ADMIN],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: [],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialGetAllResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL_IN_HANDBOOK: {
+          METHOD: METHODS.GET,
+          FULL_PATH: 'characteristics-material/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
+          DESCRIPTION: 'Получить все значения характеристик внутри handbook',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['handbookId'],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialGetAllResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL_IN_CATEGORY_MATERIAL: {
+          METHOD: METHODS.GET,
+          FULL_PATH:
+            'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
+          DESCRIPTION: 'Получить все характеристики внутри category-material внутри handbook',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['categoryMaterialId'],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialGetAllResponseDto,
+          EFFECTS: [],
+        },
+        GET_ALL_IN_MATERIAL: {
+          METHOD: METHODS.GET,
+          FULL_PATH:
+            'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/get-all-in-material',
+          DESCRIPTION: 'Получить все характеристики внутри material внутри category-material внутри handbook',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['materialId'],
+            QUERY_PARAMS: [QueryParamsAll],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: FieldVariantsForSelectorFieldTypeGetAllResponseDto,
+          EFFECTS: [],
+        },
+        CREATE: {
+          METHOD: METHODS.POST,
+          FULL_PATH:
+            'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/related-field-category-material/:fieldCategoryMaterialId',
+          DESCRIPTION: 'Создать характеристику материала в приложении',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['handbookId', 'categoryMaterialId', 'materialId', 'fieldCategoryMaterialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: true,
+            BODY: CharacteristicsMaterialCreateRequestDto,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS, ADDITIONAL_INFO.RELATED_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialCreateResponseDto,
+          EFFECTS: [],
+        },
+        UPDATE: {
+          METHOD: METHODS.PUT,
+          FULL_PATH:
+            'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristic-material/:characteristicsMaterialId',
+          DESCRIPTION: 'Обновить характеристику материала в приложении',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['characteristicsMaterialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: false,
+            BODY: CharacteristicsMaterialUpdateRequestDto,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialUpdateResponseDto,
+          EFFECTS: [],
+        },
+        DELETE: {
+          METHOD: METHODS.DELETE,
+          FULL_PATH:
+            'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristic-material/:characteristicsMaterialId',
+          DESCRIPTION: 'Удалить одну характеристику материала в приложении',
+          ROLES: [],
+          MIDDLEWARES: {
+            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_CREATOR_GUARD],
+            INTERCEPTORS: [],
+            PIPES: [],
+            FILTERS: [],
+          },
+          REQUEST_INFO: {
+            HEADERS: [],
+            PARAMS: ['characteristicsMaterialId'],
+            QUERY_PARAMS: [],
+            USER_FROM_JWT: false,
+            BODY: null,
+            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
+          },
+          RESPONSE: CharacteristicsMaterialDeleteResponseDto,
+          EFFECTS: [],
+        },
+      },
+    },
+    //DOC status-resource/:statusResourceId
     STATUS_RESOURCE: {
       ROOT_PATH: 'status-resource',
       DESCRIPTION_ENTITY: 'Роуты для работы со статусами ресурсов приложения',
@@ -2260,6 +2629,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
       },
     },
+    //DOC status-approve/:statusApproveId
     STATUS_APPROVE: {
       ROOT_PATH: 'status-approve',
       DESCRIPTION_ENTITY: 'Роуты для работы со статусами утверждения сметы заказчиками',

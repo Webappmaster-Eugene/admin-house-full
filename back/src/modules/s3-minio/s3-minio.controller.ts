@@ -13,6 +13,8 @@ import {
   FileTypeValidator,
   MaxFileSizeValidator,
   UploadedFiles,
+  UseFilters,
+  HttpException,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { RolesSetting } from 'src/common/decorators/roles.decorator';
@@ -35,7 +37,9 @@ import { FileNameInterceptor } from 'src/common/interceptors/file-name.intercept
 import { FileStorageControllerCreateRequestDto } from 'src/modules/s3-minio/dto/controller/upload-file.dto';
 import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
 import { FileStorageDeleteResponseDto } from 'src/modules/s3-minio/dto/service/delete-file.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { ProcessExceptionsFilter } from 'src/common/filters/process-exceptions.filter';
+import { ErrorCode, ServiceError } from 'src/common/errors';
 
 @ApiTags('Работа с Files')
 @Controller('files')
@@ -54,6 +58,7 @@ export class S3MinioController implements IFileStorageController {
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard)
   @ZodSerializerDto(FileStorageGetResponseDto)
+  @UseFilters(ProcessExceptionsFilter)
   @Get('get/:fileId')
   async getFileByIdEP(
     @Param('fileId') fileId: EntityUrlParamCommand.RequestUuidParam,
@@ -61,8 +66,10 @@ export class S3MinioController implements IFileStorageController {
   ): Promise<FileStorageGetResponseDto> {
     try {
       const { ok, data } = await this.minioService.getFileById(fileId);
-      return okResponseHandler(ok, data, FileStorageEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
+      throw new ServiceError(ErrorCode.InternalServerError, 400, 'error with get file', 'Проблема с получением файла');
+      // throw new HttpException({ hello: 'World' }, 400);
       errorResponseHandler(this.logger, error, EntityName.FILE_STORAGE, urlParams);
     }
   }
@@ -90,7 +97,7 @@ export class S3MinioController implements IFileStorageController {
     try {
       await this.minioService.createBucketIfNotExists();
       const { ok, data } = await this.minioService.uploadFile(dto, file);
-      return okResponseHandler(ok, data, FileStorageEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FILE_STORAGE, urlParams);
     }
@@ -98,7 +105,7 @@ export class S3MinioController implements IFileStorageController {
 
   @Post('upload-many')
   @UseInterceptors(FilesInterceptor('files'))
-  uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+  uploadFilesManyEP(@UploadedFiles() files: Array<Express.Multer.File>) {
     console.log(files);
   }
 
@@ -117,7 +124,7 @@ export class S3MinioController implements IFileStorageController {
   ): Promise<FileStorageDeleteResponseDto> {
     try {
       const { ok, data } = await this.minioService.deleteById(fileId);
-      return okResponseHandler(ok, data, FileStorageEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FILE_STORAGE, urlParams);
     }

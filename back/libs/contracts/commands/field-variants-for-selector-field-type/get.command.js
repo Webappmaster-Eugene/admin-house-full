@@ -3,15 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldVariantsForSelectorFieldTypeGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const models_2 = require("../../models");
-const FieldVariantsForSelectorFieldTypeGetResponseEntitySchema = models_2.FieldVariantsForSelectorFieldTypeSchema.pick({
-    description: true,
-    value: true,
-    handbookUuid: true,
-    uuid: true,
-    fieldOfCategoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-});
+const FieldVariantsForSelectorFieldTypeGetResponseEntitySchema = models_1.FieldVariantsForSelectorFieldTypeBusinessValueSchema.merge(models_1.FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema);
 const FieldVariantsForSelectorFieldTypeGetResponseSchema = zod_1.z
     .object({
     data: FieldVariantsForSelectorFieldTypeGetResponseEntitySchema,

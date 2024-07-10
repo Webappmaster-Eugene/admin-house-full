@@ -4,7 +4,7 @@ exports.AuthRegisterWithRoleCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const AuthRegisterWithRoleResponseEntitySchema = models_1.AuthSchema;
+const AuthRegisterWithRoleResponseEntitySchema = models_1.RegisterBusinessValueSchema;
 const AuthRegisterWithRoleRequestParamSchema = zod_1.z.object({
     roleId: zod_1.z.number().gte(1).lte(4),
     registerWithRoleKey: zod_1.z.string(),
@@ -20,8 +20,8 @@ const AuthRegisterWithRoleRequestSchema = models_1.UserSchema.pick({
     phone: true,
     avatar: true,
 })
-    .merge(models_1.ConfirmPasswordSchema)
-    .refine(data => {
+    .merge(models_1.ConfirmPasswordBusinessValueSchema)
+    .refine((data) => {
     return data.password === data.confirmPassword;
 }, {
     message: "Passwords don't match",

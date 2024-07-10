@@ -1,23 +1,14 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema, ResponseClientSchema } from '../../models';
+import { GlobalCategoryMaterialBusinessValueSchema, RequestGetAllQuerySchema, ResponseClientSchema } from '../../models';
 import { GlobalCategoryMaterialSchema } from '../../models';
 
-const GlobalCategoryMaterialGetAllResponseEntitySchema = z.array(
-  GlobalCategoryMaterialSchema.pick({
-    name: true,
-    nameRu: true,
-    comment: true,
-    color: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-  }),
-);
+const GlobalCategoryMaterialGetAllResponseEntitySchema = z.array(GlobalCategoryMaterialBusinessValueSchema);
 
 const GlobalCategoryMaterialGetAllResponseSchema = z
   .object({
     data: GlobalCategoryMaterialGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace GlobalCategoryMaterialGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

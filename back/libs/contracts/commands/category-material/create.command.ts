@@ -1,6 +1,14 @@
 import { z } from 'zod';
-import { CharacteristicsMaterialSchema, ResponseClientSchema } from '../../models';
-import { CategoryMaterialSchema } from '../../models';
+import {
+  CategoryMaterialBusinessValueSchema,
+  ResponseClientSchema,
+  CategoryMaterialRelatedEntitiesSchema,
+  CategoryMaterialSchema,
+  MaterialBusinessValueSchema,
+  FieldOfCategoryMaterialBusinessValueSchema,
+  GlobalCategoryMaterialBusinessValueSchema,
+  HandbookBusinessValueSchema,
+} from '../../models';
 
 const CategoryMaterialCreateResponseEntitySchema = CategoryMaterialSchema.pick({
   name: true,
@@ -9,7 +17,7 @@ const CategoryMaterialCreateResponseEntitySchema = CategoryMaterialSchema.pick({
   uuid: true,
   globalCategoryMaterialUuid: true,
   lastChangeByUserUuid: true,
-});
+}).merge(CategoryMaterialBusinessValueSchema.strict());
 
 const CategoryMaterialCreateRequestSchema = CategoryMaterialSchema.pick({
   name: true,
@@ -22,7 +30,7 @@ const CategoryMaterialCreateResponseSchema = z
   .object({
     data: CategoryMaterialCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace CategoryMaterialCreateCommand {
   export const RequestSchema = CategoryMaterialCreateRequestSchema;

@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { AuthRegisterWithRoleCommand } from '@numart/house-admin-contracts';
+import { AuthRegisterWithRoleCommand } from 'libs/contracts';
 
 export class AuthRegisterWithRoleRequestDto extends createZodDto(AuthRegisterWithRoleCommand.RequestSchema) {}
 

@@ -18,3 +18,6 @@ __exportStar(require("./auth.schema"), exports);
 __exportStar(require("./auth-strict-key"), exports);
 __exportStar(require("./auth-confirm-password"), exports);
 __exportStar(require("./auth-refresh-keys"), exports);
+__exportStar(require("./login"), exports);
+__exportStar(require("./password"), exports);
+__exportStar(require("./register"), exports);

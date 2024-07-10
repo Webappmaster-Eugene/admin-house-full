@@ -1,22 +1,14 @@
 import { z } from 'zod';
-import { PriceChangingSchema } from '../../models';
+import { PriceChangingBusinessValueSchema, PriceChangingRelatedEntitiesSchema, PriceChangingSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const PriceChangingGetResponseEntitySchema = PriceChangingSchema.pick({
-  oldPrice: true,
-  comment: true,
-  newPrice: true,
-  source: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  materialUuid: true,
-});
+const PriceChangingGetResponseEntitySchema = PriceChangingBusinessValueSchema.merge(PriceChangingRelatedEntitiesSchema.strict());
 
 const PriceChangingGetResponseSchema = z
   .object({
     data: PriceChangingGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace PriceChangingGetCommand {
   export const ResponseSchema = PriceChangingGetResponseSchema;

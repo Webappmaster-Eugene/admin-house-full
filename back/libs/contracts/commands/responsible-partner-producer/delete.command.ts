@@ -1,26 +1,21 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponsiblePartnerProducerSchema } from '../../models';
+import {
+  ResponsiblePartnerProducerBusinessValueSchema,
+  ResponsiblePartnerProducerRelatedEntitiesSchema,
+  ResponsiblePartnerProducerSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ResponsiblePartnerProducerDeleteResponseEntitySchema = ResponsiblePartnerProducerSchema.pick({
-  name: true,
-  comment: true,
-  info: true,
-  email: true,
-  phone: true,
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-});
+const ResponsiblePartnerProducerDeleteResponseEntitySchema = ResponsiblePartnerProducerBusinessValueSchema.merge(
+  ResponsiblePartnerProducerRelatedEntitiesSchema.strict(),
+);
 
 const ResponsiblePartnerProducerDeleteResponseSchema = z
   .object({
     data: ResponsiblePartnerProducerDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace ResponsiblePartnerProducerDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

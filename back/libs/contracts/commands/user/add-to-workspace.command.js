@@ -3,11 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserAddToWorkspaceCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const UserAddToWorkspaceResponseEntitySchema = models_1.UserSchema.omit({
-    password: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const UserAddToWorkspaceResponseEntitySchema = models_1.UserBusinessValueSchema.merge(models_1.UserRelatedEntitiesSchema);
 const UserAddToWorkspaceRequestSchema = models_1.UserSchema.pick({
     uuid: true,
     //DOC это поле специально здесь, потому что dtoToUpdateUser формируется в сервисе userService на этапе добавления

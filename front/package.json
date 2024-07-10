@@ -28,7 +28,7 @@
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.15.20",
     "@mui/x-data-grid": "^7.7.0",
-    "@numart/house-admin-contracts": "^1.0.18",
+    "@numart/house-admin-contracts": "^1.0.29",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.2",
     "clsx": "^2.1.1",

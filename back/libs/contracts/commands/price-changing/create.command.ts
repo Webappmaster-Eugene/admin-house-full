@@ -1,16 +1,8 @@
 import { z } from 'zod';
-import { PriceChangingSchema, ProjectSchema } from '../../models';
+import { PriceChangingBusinessValueSchema, PriceChangingRelatedEntitiesSchema, PriceChangingSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const PriceChangingCreateResponseEntitySchema = PriceChangingSchema.pick({
-  oldPrice: true,
-  comment: true,
-  newPrice: true,
-  source: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  materialUuid: true,
-});
+const PriceChangingCreateResponseEntitySchema = PriceChangingBusinessValueSchema.merge(PriceChangingRelatedEntitiesSchema.strict());
 
 const PriceChangingCreateRequestSchema = PriceChangingSchema.pick({
   oldPrice: true,
@@ -23,7 +15,7 @@ const PriceChangingCreateResponseSchema = z
   .object({
     data: PriceChangingCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace PriceChangingCreateCommand {
   export const RequestSchema = PriceChangingCreateRequestSchema;

@@ -1,22 +1,21 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common';
-import { ResponseClientSchema } from '../../models';
+import {
+  FieldVariantsForSelectorFieldTypeBusinessValueSchema,
+  FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema,
+  ResponseClientSchema,
+} from '../../models';
 import { FieldVariantsForSelectorFieldTypeSchema } from '../../models';
 
-const FieldVariantsForSelectorFieldTypeDeleteResponseEntitySchema = FieldVariantsForSelectorFieldTypeSchema.pick({
-  description: true,
-  value: true,
-  handbookUuid: true,
-  uuid: true,
-  fieldOfCategoryMaterialUuid: true,
-  lastChangeByUserUuid: true,
-});
+const FieldVariantsForSelectorFieldTypeDeleteResponseEntitySchema = FieldVariantsForSelectorFieldTypeBusinessValueSchema.merge(
+  FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema.strict(),
+);
 
 const FieldVariantsForSelectorFieldTypeDeleteResponseSchema = z
   .object({
     data: FieldVariantsForSelectorFieldTypeDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldVariantsForSelectorFieldTypeDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

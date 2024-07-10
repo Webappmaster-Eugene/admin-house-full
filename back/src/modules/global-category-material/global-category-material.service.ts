@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GlobalCategoryMaterialEntity } from './entities/global-category-material.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { GlobalCategoryMaterialUpdateRequestDto } from './dto/controller/update-global-category-material.dto';
 import { IGlobalCategoryMaterialService } from './types/global-category-material.service.interface';

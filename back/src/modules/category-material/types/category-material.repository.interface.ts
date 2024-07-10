@@ -1,7 +1,7 @@
 import { CategoryMaterialCreateRequestDto } from '../dto/controller/create-category-material.dto';
 import { CategoryMaterialUpdateRequestDto } from '../dto/controller/update-category-material.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CategoryMaterialEntity } from '../entities/category-material.entity';
 
 export interface ICategoryMaterialRepository

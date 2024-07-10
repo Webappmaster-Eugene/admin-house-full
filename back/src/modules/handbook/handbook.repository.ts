@@ -3,7 +3,7 @@ import { HandbookCreateRequestDto } from './dto/controller/create-handbook.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IHandbookRepository } from './types/handbook.repository.interface';
 import { HandbookUpdateRequestDto } from './dto/controller/update-handbook.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { HandbookEntity } from './entities/handbook.entity';
 import { DEFAULT_HANDBOOK_DESCRIPTION, DEFAULT_HANDBOOK_NAME } from './lib/consts/handbook.default-data';
@@ -29,6 +29,20 @@ export class HandbookRepository implements IHandbookRepository {
         where: {
           uuid: handbookId,
         },
+        include: {
+          categoryMaterials: true,
+          fieldUnitMeasurements: true,
+          responsibleManager: true,
+          responsiblePartnerProducers: true,
+          workspace: {
+            include: {
+              workspaceMembers: true,
+              organizations: true,
+            },
+          },
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+        },
       });
 
       return existenceEntityHandler(findedHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
@@ -42,6 +56,20 @@ export class HandbookRepository implements IHandbookRepository {
       const findedHandbook = await this.databaseService.handbook.findUnique({
         where: {
           responsibleManagerUuid: managerId,
+        },
+        include: {
+          categoryMaterials: true,
+          fieldUnitMeasurements: true,
+          responsibleManager: true,
+          responsiblePartnerProducers: true,
+          workspace: {
+            include: {
+              workspaceMembers: true,
+              organizations: true,
+            },
+          },
+          materials: true,
+          fieldsOfCategoryMaterials: true,
         },
       });
 
@@ -58,7 +86,24 @@ export class HandbookRepository implements IHandbookRepository {
     limitTakeHandler(take);
 
     try {
-      const allHandbooks = await this.databaseService.handbook.findMany({ skip, take });
+      const allHandbooks = await this.databaseService.handbook.findMany({
+        skip,
+        take,
+        include: {
+          categoryMaterials: true,
+          fieldUnitMeasurements: true,
+          responsibleManager: true,
+          responsiblePartnerProducers: true,
+          workspace: {
+            include: {
+              workspaceMembers: true,
+              organizations: true,
+            },
+          },
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+        },
+      });
       return existenceEntityHandler(allHandbooks, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -93,6 +138,20 @@ export class HandbookRepository implements IHandbookRepository {
           responsibleManagerUuid: managerId,
           workspaceUuid,
         },
+        include: {
+          categoryMaterials: true,
+          fieldUnitMeasurements: true,
+          responsibleManager: true,
+          responsiblePartnerProducers: true,
+          workspace: {
+            include: {
+              workspaceMembers: true,
+              organizations: true,
+            },
+          },
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+        },
       });
       return existenceEntityHandler(newHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
     } catch (error: unknown) {
@@ -113,6 +172,20 @@ export class HandbookRepository implements IHandbookRepository {
           name,
           description,
         },
+        include: {
+          categoryMaterials: true,
+          fieldUnitMeasurements: true,
+          responsibleManager: true,
+          responsiblePartnerProducers: true,
+          workspace: {
+            include: {
+              workspaceMembers: true,
+              organizations: true,
+            },
+          },
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+        },
       });
 
       return existenceEntityHandler(updatedHandbook, HandbookEntity, EntityName.HANDBOOK) as HandbookEntity;
@@ -126,6 +199,20 @@ export class HandbookRepository implements IHandbookRepository {
       const deletedHandbook = await this.databaseService.handbook.delete({
         where: {
           uuid: handbookId,
+        },
+        include: {
+          categoryMaterials: true,
+          fieldUnitMeasurements: true,
+          responsibleManager: true,
+          responsiblePartnerProducers: true,
+          workspace: {
+            include: {
+              workspaceMembers: true,
+              organizations: true,
+            },
+          },
+          materials: true,
+          fieldsOfCategoryMaterials: true,
         },
       });
 

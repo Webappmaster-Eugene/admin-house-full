@@ -3,11 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const UserCreateResponseEntitySchema = models_1.UserSchema.omit({
-    password: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const UserCreateResponseEntitySchema = models_1.UserBusinessValueSchema.merge(models_1.UserRelatedEntitiesSchema);
 const UserCreateRequestSchema = models_1.UserSchema.pick({
     avatar: true,
     info: true,

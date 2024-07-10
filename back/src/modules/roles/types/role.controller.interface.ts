@@ -4,7 +4,7 @@ import { RoleCreateRequestDto, RoleCreateResponseDto } from '../dto/controller/c
 import { RoleUpdateRequestDto, RoleUpdateResponseDto } from '../dto/controller/update-role.dto';
 import { RoleGetResponseDto } from '../dto/controller/get-role.dto';
 import { RoleGetAllResponseDto } from '../dto/controller/get-all-roles.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { RoleDeleteResponseDto } from '../dto/controller/delete-role.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';

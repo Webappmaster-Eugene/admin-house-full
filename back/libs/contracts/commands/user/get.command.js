@@ -4,11 +4,7 @@ exports.UserGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
-const UserGetResponseEntitySchema = models_1.UserSchema.omit({
-    password: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const UserGetResponseEntitySchema = models_1.UserBusinessValueSchema.merge(models_1.UserRelatedEntitiesSchema);
 const UserGetResponseSchema = zod_1.z
     .object({
     data: UserGetResponseEntitySchema,

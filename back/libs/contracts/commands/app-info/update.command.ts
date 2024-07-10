@@ -1,16 +1,8 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models';
+import { AppInfoBusinessValueSchema, ResponseClientSchema } from '../../models';
 import { AppInfoSchema } from '../../models';
 
-const AppInfoUpdateResponseEntitySchema = AppInfoSchema.pick({
-  status: true,
-  comment: true,
-  language: true,
-  currency: true,
-  name: true,
-  description: true,
-  lastChangeByUserUuid: true,
-});
+const AppInfoUpdateResponseEntitySchema = AppInfoBusinessValueSchema;
 
 const AppInfoUpdateRequestSchema = AppInfoSchema.omit({
   uuid: true,
@@ -22,7 +14,7 @@ const AppInfoUpdateResponseSchema = z
   .object({
     data: AppInfoUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace AppInfoUpdateCommand {
   export const RequestSchema = AppInfoUpdateRequestSchema;

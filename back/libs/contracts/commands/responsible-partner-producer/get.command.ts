@@ -1,19 +1,14 @@
 import { z } from 'zod';
-import { ResponsiblePartnerProducerSchema } from '../../models';
+import {
+  ResponsiblePartnerProducerBusinessValueSchema,
+  ResponsiblePartnerProducerRelatedEntitiesSchema,
+  ResponsiblePartnerProducerSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ResponsiblePartnerProducerGetResponseEntitySchema = ResponsiblePartnerProducerSchema.pick({
-  name: true,
-  comment: true,
-  info: true,
-  email: true,
-  phone: true,
-  createdAt: true,
-  updatedAt: true,
-  uuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-});
+const ResponsiblePartnerProducerGetResponseEntitySchema = ResponsiblePartnerProducerBusinessValueSchema.merge(
+  ResponsiblePartnerProducerRelatedEntitiesSchema.strict(),
+);
 
 const ResponsiblePartnerProducerGetResponseSchema = z
   .object({
@@ -30,7 +25,7 @@ const ResponsiblePartnerProducerGetResponseSchema = z
       lastChangeByUserUuid: true,
     }),
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace ResponsiblePartnerProducerGetCommand {
   export const ResponseSchema = ResponsiblePartnerProducerGetResponseSchema;

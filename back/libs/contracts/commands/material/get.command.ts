@@ -1,26 +1,14 @@
 import { z } from 'zod';
-import { MaterialRelatedEntitiesSchema, MaterialSchema } from '../../models';
+import { MaterialBusinessValueSchema, MaterialRelatedEntitiesSchema, MaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const MaterialGetResponseEntitySchema = MaterialSchema.pick({
-  name: true,
-  price: true,
-  comment: true,
-  namePublic: true,
-  sourceInfo: true,
-  unitMeasurementUuid: true,
-  responsiblePartnerUuid: true,
-  categoryMaterialUuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-  uuid: true,
-}).merge(MaterialRelatedEntitiesSchema);
+const MaterialGetResponseEntitySchema = MaterialBusinessValueSchema.merge(MaterialRelatedEntitiesSchema.strict());
 
 const MaterialGetResponseSchema = z
   .object({
     data: MaterialGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace MaterialGetCommand {
   export const ResponseSchema = MaterialGetResponseSchema;

@@ -4,15 +4,7 @@ exports.PriceChangingUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const PriceChangingUpdateResponseEntitySchema = models_1.PriceChangingSchema.pick({
-    oldPrice: true,
-    comment: true,
-    newPrice: true,
-    source: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    materialUuid: true,
-});
+const PriceChangingUpdateResponseEntitySchema = models_1.PriceChangingBusinessValueSchema.merge(models_1.PriceChangingRelatedEntitiesSchema);
 const PriceChangingUpdateRequestSchema = models_1.PriceChangingSchema.pick({
     source: true,
     comment: true,

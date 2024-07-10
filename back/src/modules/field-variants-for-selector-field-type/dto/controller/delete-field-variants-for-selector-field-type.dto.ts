@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldVariantsForSelectorFieldTypeDeleteCommand } from '@numart/house-admin-contracts';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { FieldVariantsForSelectorFieldTypeDeleteCommand } from 'libs/contracts';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 
 export type FieldVariantsForSelectorFieldTypeDeleteRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 

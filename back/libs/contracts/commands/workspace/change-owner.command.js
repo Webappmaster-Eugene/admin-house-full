@@ -4,11 +4,7 @@ exports.WorkspaceChangeOwnerCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const WorkspaceChangeOwnerResponseEntitySchema = models_1.WorkspaceSchema.pick({
-    uuid: true,
-    name: true,
-    workspaceCreatorUuid: true,
-});
+const WorkspaceChangeOwnerResponseEntitySchema = models_1.WorkspaceBusinessValueSchema.merge(models_1.WorkspaceRelatedEntitiesSchema);
 const WorkspaceChangeOwnerRequestSchema = models_1.UserSchema.pick({
     uuid: true,
 });

@@ -4,19 +4,7 @@ exports.MaterialCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const MaterialCreateResponseEntitySchema = models_1.MaterialSchema.pick({
-    name: true,
-    price: true,
-    comment: true,
-    namePublic: true,
-    sourceInfo: true,
-    unitMeasurementUuid: true,
-    responsiblePartnerUuid: true,
-    categoryMaterialUuid: true,
-    handbookUuid: true,
-    lastChangeByUserUuid: true,
-    uuid: true,
-});
+const MaterialCreateResponseEntitySchema = models_1.MaterialBusinessValueSchema.merge(models_1.MaterialRelatedEntitiesSchema);
 const MaterialCreateRequestSchema = models_1.MaterialSchema.pick({
     name: true,
     price: true,
@@ -25,7 +13,7 @@ const MaterialCreateRequestSchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-}).merge(models_1.MaterialRelatedEntitiesSchema);
+});
 const MaterialCreateResponseSchema = zod_1.z
     .object({
     data: MaterialCreateResponseEntitySchema,

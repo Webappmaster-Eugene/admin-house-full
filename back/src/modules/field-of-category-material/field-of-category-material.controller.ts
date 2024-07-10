@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { KFI } from '../../common/utils/di';
 import {
@@ -13,7 +13,7 @@ import {
   FieldOfCategoryMaterialGetAllCommand,
   FieldOfCategoryMaterialGetCommand,
   FieldOfCategoryMaterialUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -67,7 +67,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialGetResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.getById(fieldOfCategoryMaterialId);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }
@@ -96,7 +96,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.getAll(queryParams);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }
@@ -115,8 +115,8 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   @ApiResponse({ status: 200, type: [FieldOfCategoryMaterialGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceMembersGuard)
-  @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
+  // @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  // @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
   @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
@@ -126,7 +126,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }
@@ -156,7 +156,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(categoryMaterialId, queryParams);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }
@@ -187,7 +187,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialCreateResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.create(dto, handbookId, categoryMaterialId, userInfoFromJWT.uuid);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }
@@ -217,7 +217,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialUpdateResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.updateById(fieldOfCategoryMaterialId, dto);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }
@@ -245,7 +245,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ): Promise<FieldOfCategoryMaterialDeleteResponseDto> {
     try {
       const { ok, data } = await this.fieldOfCategoryMaterialService.deleteById(fieldOfCategoryMaterialId);
-      return okResponseHandler(ok, data, FieldOfCategoryMaterialEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);
     }

@@ -1,22 +1,15 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { StatusResourceSchema } from '../../models';
+import { StatusResourceBusinessValueSchema, StatusResourceSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const StatusResourceDeleteResponseEntitySchema = StatusResourceSchema.pick({
-  name: true,
-  comment: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const StatusResourceDeleteResponseEntitySchema = StatusResourceBusinessValueSchema;
 
 const StatusResourceDeleteResponseSchema = z
   .object({
     data: StatusResourceDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace StatusResourceDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

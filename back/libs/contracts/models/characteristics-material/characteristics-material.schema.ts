@@ -9,7 +9,7 @@ export const CharacteristicsMaterialSchema = z.object({
   handbookUuid: z.string().uuid(),
   fieldTypeUuid: z.string().uuid(),
   fieldUnitMeasurementUuid: z.string().uuid().nullable().optional(),
-  categoryMaterialUuid: z.string().uuid(),
+  // categoryMaterialUuid: z.string().uuid(),
   materialUuid: z.string().uuid(),
   lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),

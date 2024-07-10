@@ -1,18 +1,8 @@
 import { z } from 'zod';
-import { HandbookSchema, RequestGetAllQuerySchema } from '../../models';
+import { HandbookBusinessValueSchema, HandbookRelatedEntitiesSchema, HandbookSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const HandbookGetAllResponseEntitySchema = z.array(
-  HandbookSchema.pick({
-    name: true,
-    description: true,
-    canCustomerView: true,
-    uuid: true,
-    responsibleManagerUuid: true,
-    workspaceUuid: true,
-    lastChangeByUserUuid: true,
-  }),
-);
+const HandbookGetAllResponseEntitySchema = z.array(HandbookBusinessValueSchema.merge(HandbookRelatedEntitiesSchema));
 
 const HandbookGetAllResponseSchema = z
   .object({

@@ -1,15 +1,8 @@
 import { z } from 'zod';
-import { ResponseClientSchema } from '../../models';
+import { GlobalCategoryMaterialBusinessValueSchema, ResponseClientSchema } from '../../models';
 import { GlobalCategoryMaterialSchema } from '../../models';
 
-const GlobalCategoryMaterialUpdateResponseEntitySchema = GlobalCategoryMaterialSchema.pick({
-  name: true,
-  nameRu: true,
-  comment: true,
-  color: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-});
+const GlobalCategoryMaterialUpdateResponseEntitySchema = GlobalCategoryMaterialBusinessValueSchema;
 
 const GlobalCategoryMaterialUpdateRequestSchema = GlobalCategoryMaterialSchema.pick({
   name: true,
@@ -22,7 +15,7 @@ const GlobalCategoryMaterialUpdateResponseSchema = z
   .object({
     data: GlobalCategoryMaterialUpdateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace GlobalCategoryMaterialUpdateCommand {
   export const RequestSchema = GlobalCategoryMaterialUpdateRequestSchema;

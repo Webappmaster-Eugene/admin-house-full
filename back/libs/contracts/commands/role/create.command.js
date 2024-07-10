@@ -4,13 +4,7 @@ exports.RoleCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const RoleCreateResponseEntitySchema = models_1.RoleSchema.pick({
-    uuid: true,
-    idRole: true,
-    name: true,
-    description: true,
-    lastChangeByUserUuid: true,
-});
+const RoleCreateResponseEntitySchema = models_1.RoleBusinessValueSchema;
 const RoleCreateRequestSchema = models_1.RoleSchema.pick({
     name: true,
     description: true,

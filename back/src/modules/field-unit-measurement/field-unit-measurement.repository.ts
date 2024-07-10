@@ -3,7 +3,7 @@ import { FieldUnitMeasurementCreateRequestDto } from './dto/controller/create-fi
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldUnitMeasurementRepository } from './types/field-unit-measurement.repository.interface';
 import { FieldUnitMeasurementUpdateRequestDto } from './dto/controller/update-field-unit-measurement.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldUnitMeasurementEntity } from './entities/field-unit-measurement.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -25,6 +25,9 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
         where: {
           uuid: fieldUnitMeasurementId,
         },
+        include: {
+          handbook: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -41,7 +44,13 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
     limitTakeHandler(take);
 
     try {
-      const allFieldUnitMeasurements = await this.databaseService.fieldUnitMeasurement.findMany({ skip, take });
+      const allFieldUnitMeasurements = await this.databaseService.fieldUnitMeasurement.findMany({
+        skip,
+        take,
+        include: {
+          handbook: true,
+        },
+      });
       return existenceEntityHandler(
         allFieldUnitMeasurements,
         FieldUnitMeasurementEntity,
@@ -64,6 +73,9 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
         where: { handbookUuid: handbookId },
         skip,
         take,
+        include: {
+          handbook: true,
+        },
       });
       return existenceEntityHandler(
         allFieldUnitMeasurements,
@@ -83,6 +95,9 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
       const { name, comment } = dto;
       const newFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.create({
         data: { name, comment, handbookUuid: handbookId },
+        include: {
+          handbook: true,
+        },
       });
       return existenceEntityHandler(
         newFieldUnitMeasurement,
@@ -107,6 +122,9 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
           name,
           comment,
         },
+        include: {
+          handbook: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -124,6 +142,9 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
       const deletedFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.delete({
         where: {
           uuid: fieldUnitMeasurementId,
+        },
+        include: {
+          handbook: true,
         },
       });
 

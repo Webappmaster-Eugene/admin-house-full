@@ -3,7 +3,7 @@ import { HandbookCreateRequestDto, HandbookCreateResponseDto } from '../dto/cont
 import { HandbookUpdateRequestDto, HandbookUpdateResponseDto } from '../dto/controller/update-handbook.dto';
 import { HandbookGetResponseDto } from '../dto/controller/get-handbook.dto';
 import { HandbookGetAllResponseDto } from '../dto/controller/get-all-handbooks.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { HandbookDeleteResponseDto } from '../dto/controller/delete-handbook.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

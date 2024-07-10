@@ -1,16 +1,9 @@
 import { z } from 'zod';
-import { HandbookSchema } from '../../models';
+import { HandbookBusinessValueSchema, HandbookSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
+import { HandbookRelatedEntitiesSchema } from '../../models';
 
-const HandbookCreateResponseEntitySchema = HandbookSchema.pick({
-  name: true,
-  description: true,
-  canCustomerView: true,
-  uuid: true,
-  responsibleManagerUuid: true,
-  workspaceUuid: true,
-  lastChangeByUserUuid: true,
-});
+const HandbookCreateResponseEntitySchema = HandbookBusinessValueSchema.merge(HandbookRelatedEntitiesSchema.strict());
 
 const HandbookCreateRequestSchema = HandbookSchema.pick({
   name: true,
@@ -23,7 +16,7 @@ const HandbookCreateResponseSchema = z
   .object({
     data: HandbookCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace HandbookCreateCommand {
   export const RequestSchema = HandbookCreateRequestSchema;

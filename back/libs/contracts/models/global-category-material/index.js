@@ -15,3 +15,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./global-category-material.schema"), exports);
+__exportStar(require("./global-category-business-value.schema"), exports);

@@ -4,10 +4,7 @@ exports.WorkspaceGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const WorkspaceGetResponseEntitySchema = models_1.WorkspaceSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-});
+const WorkspaceGetResponseEntitySchema = models_1.WorkspaceBusinessValueSchema.merge(models_1.WorkspaceRelatedEntitiesSchema);
 const WorkspaceGetRequestSchema = models_1.WorkspaceSchema.pick({
     uuid: true,
 });

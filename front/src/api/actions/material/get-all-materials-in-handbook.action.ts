@@ -15,13 +15,6 @@ export async function getAllMaterialsInHandbook(workspaceId: string, handbookId:
   };
 
   try {
-    console.log(
-      'response',
-      axiosEndpoints.material.get_all_in_handbook
-        .replace(':workspaceId', workspaceId)
-        .replace(':handbookId', handbookId)
-    );
-
     const response: MaterialGetAllCommand.Response = await axiosInstance.get(
       axiosEndpoints.material.get_all_in_handbook
         .replace(':workspaceId', workspaceId)
@@ -37,7 +30,8 @@ export async function getAllMaterialsInHandbook(workspaceId: string, handbookId:
       errorObject.error = response.errors[0];
       return errorObject;
     }
-    return { errorObject: response.message };
+    errorObject.error = response?.message;
+    return errorObject;
   } catch (error: unknown) {
     console.error('Catched frontend error while get all materials in handbook by user', error);
     if (error instanceof AxiosError) {

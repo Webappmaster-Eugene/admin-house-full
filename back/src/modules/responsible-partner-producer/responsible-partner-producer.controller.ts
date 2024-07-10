@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { ResponsiblePartnerProducerGetResponseDto } from './dto/controller/get-responsible-partner-producer.dto';
 import {
   ResponsiblePartnerProducerCreateRequestDto,
@@ -24,8 +24,7 @@ import {
   ResponsiblePartnerProducerGetAllCommand,
   ResponsiblePartnerProducerGetCommand,
   ResponsiblePartnerProducerUpdateCommand,
-} from '@numart/house-admin-contracts';
-import { ResponsiblePartnerProducerEntity } from './entities/responsible-partner-producer.entity';
+} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -64,7 +63,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ): Promise<ResponsiblePartnerProducerGetResponseDto> {
     try {
       const { ok, data } = await this.responsiblePartnerProducerService.getById(responsiblePartnerProducerId);
-      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
     }
@@ -96,7 +95,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ): Promise<ResponsiblePartnerProducerGetAllResponseDto> {
     try {
       const { ok, data } = await this.responsiblePartnerProducerService.getAll(queryParams);
-      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
     }
@@ -117,9 +116,8 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
     type: [ResponsiblePartnerProducerGetAllResponseDto],
   })
   @ApiBearerAuth('access-token')
-  //endregion
-  @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  //endregion@RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(ResponsiblePartnerProducerGetAllResponseDto)
   @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
@@ -129,7 +127,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ): Promise<ResponsiblePartnerProducerGetAllResponseDto> {
     try {
       const { ok, data } = await this.responsiblePartnerProducerService.getAllInHandbook(handbookId, queryParams);
-      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
     }
@@ -160,7 +158,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ): Promise<ResponsiblePartnerProducerCreateResponseDto> {
     try {
       const { ok, data } = await this.responsiblePartnerProducerService.create(dto, handbookId);
-      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
     }
@@ -193,7 +191,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ): Promise<ResponsiblePartnerProducerUpdateResponseDto> {
     try {
       const { ok, data } = await this.responsiblePartnerProducerService.updateById(responsiblePartnerProducerId, dto);
-      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
     }
@@ -222,7 +220,7 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ): Promise<ResponsiblePartnerProducerDeleteResponseDto> {
     try {
       const { ok, data } = await this.responsiblePartnerProducerService.deleteById(responsiblePartnerProducerId);
-      return okResponseHandler(ok, data, ResponsiblePartnerProducerEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.RESPONSIBLE_PARTNER_PRODUCER, urlParams);
     }

@@ -1,27 +1,14 @@
 import { z } from 'zod';
-import { ProjectSchema, RequestGetAllQuerySchema } from '../../models';
+import { ProjectBusinessValueSchema, ProjectRelatedEntitiesSchema, ProjectSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const ProjectGetAllResponseEntitySchema = z.array(
-  ProjectSchema.pick({
-    name: true,
-    description: true,
-    customerMail: true,
-    customerUuid: true,
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
-    responsibleManagerUuid: true,
-    organizationUuid: true,
-    lastChangeByUserUuid: true,
-  }),
-);
+const ProjectGetAllResponseEntitySchema = z.array(ProjectBusinessValueSchema.merge(ProjectRelatedEntitiesSchema.strict()));
 
 const ProjectGetAllResponseSchema = z
   .object({
     data: ProjectGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace ProjectGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

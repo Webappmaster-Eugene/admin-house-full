@@ -4,18 +4,7 @@ exports.ResponsiblePartnerProducerUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const ResponsiblePartnerProducerUpdateResponseEntitySchema = models_1.ResponsiblePartnerProducerSchema.omit({
-    name: true,
-    comment: true,
-    info: true,
-    email: true,
-    phone: true,
-    createdAt: true,
-    updatedAt: true,
-    uuid: true,
-    handbookUuid: true,
-    lastChangeByUserUuid: true,
-});
+const ResponsiblePartnerProducerUpdateResponseEntitySchema = models_1.ResponsiblePartnerProducerBusinessValueSchema.merge(models_1.ResponsiblePartnerProducerRelatedEntitiesSchema);
 const ResponsiblePartnerProducerUpdateRequestSchema = models_1.ResponsiblePartnerProducerSchema.pick({
     name: true,
     info: true,

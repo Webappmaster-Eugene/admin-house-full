@@ -44,7 +44,7 @@ export const ResponsiblePartnerProducerScalarFieldEnumSchema = z.enum(['uuid','n
 
 export const MaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','sourceInfo','namePublic','price','handbookUuid','unitMeasurementUuid','categoryMaterialUuid','responsiblePartnerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const CharacteristicsMaterialScalarFieldEnumSchema = z.enum(['uuid','name','value','comment','fieldOfCategoryMaterialUuid','handbookUuid','fieldTypeUuid','fieldUnitMeasurementUuid','categoryMaterialUuid','materialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const CharacteristicsMaterialScalarFieldEnumSchema = z.enum(['uuid','name','value','comment','fieldOfCategoryMaterialUuid','handbookUuid','fieldTypeUuid','fieldUnitMeasurementUuid','materialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
 export const PriceChangingScalarFieldEnumSchema = z.enum(['uuid','newPrice','oldPrice','source','comment','materialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
@@ -585,7 +585,6 @@ export const CharacteristicsMaterialSchema = z.object({
   handbookUuid: z.string(),
   fieldTypeUuid: z.string(),
   fieldUnitMeasurementUuid: z.string().nullish(),
-  categoryMaterialUuid: z.string(),
   materialUuid: z.string(),
   lastChangeByUserUuid: z.string().nullish(),
   createdAt: z.coerce.date(),

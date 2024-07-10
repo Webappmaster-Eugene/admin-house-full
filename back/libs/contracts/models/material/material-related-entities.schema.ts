@@ -1,16 +1,16 @@
 import { z } from 'zod';
-import { ResponsiblePartnerProducerSchema } from '../responsible-partner-producer';
-import { PriceChangingSchema } from '../price-changing';
-import { CharacteristicsMaterialSchema } from '../characteristics-material';
-import { CategoryMaterialSchema } from '../category-material';
-import { HandbookSchema } from '../handbook';
-import { FieldUnitMeasurementSchema } from '../field-unit-measurement';
+import { ResponsiblePartnerProducerBusinessValueSchema } from '../responsible-partner-producer';
+import { PriceChangingBusinessValueSchema } from '../price-changing';
+import { CharacteristicsMaterialBusinessValueSchema } from '../characteristics-material';
+import { CategoryMaterialBusinessValueSchema } from '../category-material';
+import { FieldUnitMeasurementBusinessValueSchema } from '../field-unit-measurement';
+import { HandbookBusinessValueSchema } from '../handbook';
 
 export const MaterialRelatedEntitiesSchema = z.object({
-  responsiblePartner: ResponsiblePartnerProducerSchema,
-  unitMeasurement: FieldUnitMeasurementSchema,
-  handbook: HandbookSchema,
-  categoryMaterial: CategoryMaterialSchema,
-  characteristicsMaterial: z.array(CharacteristicsMaterialSchema),
-  priceChanges: z.array(PriceChangingSchema),
+  responsiblePartner: ResponsiblePartnerProducerBusinessValueSchema.nullable().optional(),
+  unitMeasurement: FieldUnitMeasurementBusinessValueSchema.nullable().optional(),
+  handbook: HandbookBusinessValueSchema,
+  categoryMaterial: CategoryMaterialBusinessValueSchema,
+  characteristicsMaterial: z.array(CharacteristicsMaterialBusinessValueSchema).nullable().optional(),
+  priceChanges: z.array(PriceChangingBusinessValueSchema).nullable().optional(),
 });

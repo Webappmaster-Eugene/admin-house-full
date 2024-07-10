@@ -1,19 +1,8 @@
 import { z } from 'zod';
-import { TechLogChangesSchema } from '../../models';
+import { TechLogChangesBusinessValueSchema, TechLogChangesSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const TechLogChangesCreateResponseEntitySchema = TechLogChangesSchema.pick({
-  name: true,
-  entity: true,
-  comment: true,
-  oldInfo: true,
-  newInfo: true,
-  updateInfo: true,
-  action: true,
-  uuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const TechLogChangesCreateResponseEntitySchema = TechLogChangesBusinessValueSchema;
 
 const TechLogChangesCreateRequestSchema = TechLogChangesSchema.pick({
   updateInfo: true,
@@ -28,7 +17,7 @@ const TechLogChangesCreateResponseSchema = z
   .object({
     data: TechLogChangesCreateResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace TechLogChangesCreateCommand {
   export const RequestSchema = TechLogChangesCreateRequestSchema;

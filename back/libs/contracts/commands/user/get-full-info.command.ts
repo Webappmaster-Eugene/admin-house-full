@@ -1,19 +1,14 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema, UserSchema } from '../../models';
-import { UserFullInfoSchema } from '../../models';
+import { ResponseClientSchema, UserFullInfoBusinessValueSchema, UserFullInfoRelatedEntitiesSchema } from '../../models';
 
-const UserGetFullInfoResponseEntitySchema = UserFullInfoSchema.omit({
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const UserGetFullInfoResponseEntitySchema = UserFullInfoBusinessValueSchema.merge(UserFullInfoRelatedEntitiesSchema.strict());
 
 const UserGetFullInfoResponseSchema = z
   .object({
     data: UserGetFullInfoResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserGetFullInfoCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

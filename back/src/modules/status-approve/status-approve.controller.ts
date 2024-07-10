@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { StatusApproveGetResponseDto } from 'src/modules/status-approve/dto/controller/get-status-approve.dto';
 import {
   StatusApproveCreateRequestDto,
@@ -24,7 +24,7 @@ import {
   StatusApproveGetAllCommand,
   StatusApproveGetCommand,
   StatusApproveUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -63,7 +63,7 @@ export class StatusApproveController implements IStatusApproveController {
   ): Promise<StatusApproveGetResponseDto> {
     try {
       const { ok, data } = await this.statusApproveService.getById(statusApproveId);
-      return okResponseHandler(ok, data, StatusApproveEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -88,7 +88,7 @@ export class StatusApproveController implements IStatusApproveController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<StatusApproveGetAllResponseDto> {
     try {
       const { ok, data } = await this.statusApproveService.getAll(queryParams);
-      return okResponseHandler(ok, data, StatusApproveEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -112,7 +112,7 @@ export class StatusApproveController implements IStatusApproveController {
   async createEP(@Body() dto: StatusApproveCreateRequestDto, @UrlParams() urlParams: IUrlParams): Promise<StatusApproveCreateResponseDto> {
     try {
       const { ok, data } = await this.statusApproveService.create(dto);
-      return okResponseHandler(ok, data, StatusApproveEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -141,7 +141,7 @@ export class StatusApproveController implements IStatusApproveController {
   ): Promise<StatusApproveUpdateResponseDto> {
     try {
       const { ok, data } = await this.statusApproveService.updateById(statusApproveId, dto);
-      return okResponseHandler(ok, data, StatusApproveEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }
@@ -168,7 +168,7 @@ export class StatusApproveController implements IStatusApproveController {
   ): Promise<StatusApproveDeleteResponseDto> {
     try {
       const { ok, data } = await this.statusApproveService.deleteById(statusApproveId);
-      return okResponseHandler(ok, data, StatusApproveEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.STATUS_RESOURCE, urlParams);
     }

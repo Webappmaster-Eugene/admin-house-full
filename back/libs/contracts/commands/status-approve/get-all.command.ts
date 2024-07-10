@@ -1,24 +1,14 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema } from '../../models';
+import { RequestGetAllQuerySchema, StatusApproveBusinessValueSchema } from '../../models';
 import { ResponseClientSchema, StatusApproveSchema } from '../../models';
 
-const StatusApproveGetAllResponseEntitySchema = z.array(
-  StatusApproveSchema.pick({
-    name: true,
-    nameRu: true,
-    comment: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    createdAt: true,
-    updatedAt: true,
-  }),
-);
+const StatusApproveGetAllResponseEntitySchema = z.array(StatusApproveBusinessValueSchema);
 
 const StatusApproveGetAllResponseSchema = z
   .object({
     data: StatusApproveGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace StatusApproveGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

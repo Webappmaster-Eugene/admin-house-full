@@ -15,3 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./responsible-partner-producer.schema"), exports);
+__exportStar(require("./responsible-partner-producer-related-entities.schema"), exports);
+__exportStar(require("./responsible-partner-producer-business-value.schema"), exports);

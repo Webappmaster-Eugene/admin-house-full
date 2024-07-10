@@ -5,14 +5,7 @@ const zod_1 = require("zod");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const CategoryMaterialDeleteResponseEntitySchema = models_1.CategoryMaterialSchema.pick({
-    name: true,
-    templateName: true,
-    comment: true,
-    uuid: true,
-    globalCategoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-});
+const CategoryMaterialDeleteResponseEntitySchema = models_1.CategoryMaterialBusinessValueSchema.merge(models_1.CategoryMaterialRelatedEntitiesSchema);
 const CategoryMaterialDeleteResponseSchema = zod_1.z
     .object({
     data: CategoryMaterialDeleteResponseEntitySchema,

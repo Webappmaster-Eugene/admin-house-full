@@ -4,14 +4,7 @@ exports.GlobalCategoryMaterialCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const GlobalCategoryMaterialCreateResponseEntitySchema = models_2.GlobalCategoryMaterialSchema.pick({
-    name: true,
-    nameRu: true,
-    comment: true,
-    color: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-});
+const GlobalCategoryMaterialCreateResponseEntitySchema = models_1.GlobalCategoryMaterialBusinessValueSchema;
 const GlobalCategoryMaterialCreateRequestSchema = models_2.GlobalCategoryMaterialSchema.pick({
     name: true,
     nameRu: true,

@@ -3,7 +3,7 @@ import { MaterialCreateRequestDto, MaterialCreateResponseDto } from '../dto/cont
 import { MaterialUpdateRequestDto, MaterialUpdateResponseDto } from '../dto/controller/update-material.dto';
 import { MaterialGetResponseDto } from '../dto/controller/get-material.dto';
 import { MaterialGetAllResponseDto } from '../dto/controller/get-all-materials.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { MaterialDeleteResponseDto } from '../dto/controller/delete-material.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';

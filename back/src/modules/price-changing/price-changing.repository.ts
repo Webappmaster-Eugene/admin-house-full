@@ -3,7 +3,7 @@ import { PriceChangingCreateRequestDto } from './dto/controller/create-price-cha
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IPriceChangingRepository } from './types/price-changing.repository.interface';
 import { PriceChangingUpdateRequestDto } from './dto/controller/update-price-changing.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { PriceChangingEntity } from './entities/price-changing.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -25,6 +25,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
         where: {
           uuid: priceChangingId,
         },
+        include: {
+          material: true,
+        },
       });
 
       return existenceEntityHandler(findedPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
@@ -45,6 +48,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
         where: { material: { handbookUuid: handbookId } },
         skip,
         take,
+        include: {
+          material: true,
+        },
       });
       return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
     } catch (error: unknown) {
@@ -68,6 +74,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
         },
         skip,
         take,
+        include: {
+          material: true,
+        },
       });
       return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
     } catch (error: unknown) {
@@ -83,7 +92,14 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     limitTakeHandler(take);
 
     try {
-      const allPriceChangings = await this.databaseService.priceChanging.findMany({ where: { materialUuid: materialId }, skip, take });
+      const allPriceChangings = await this.databaseService.priceChanging.findMany({
+        where: { materialUuid: materialId },
+        skip,
+        take,
+        include: {
+          material: true,
+        },
+      });
       return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -94,7 +110,13 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     limitTakeHandler(take);
 
     try {
-      const allPriceChangings = await this.databaseService.priceChanging.findMany({ skip, take });
+      const allPriceChangings = await this.databaseService.priceChanging.findMany({
+        skip,
+        take,
+        include: {
+          material: true,
+        },
+      });
       return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -110,6 +132,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
       const { newPrice, comment, source } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
         data: { newPrice, comment, source, materialUuid: materialId },
+        include: {
+          material: true,
+        },
       });
       return existenceEntityHandler(newPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
     } catch (error: unknown) {
@@ -130,6 +155,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
           newPrice,
           comment,
         },
+        include: {
+          material: true,
+        },
       });
 
       return existenceEntityHandler(updatedPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
@@ -143,6 +171,9 @@ export class PriceChangingRepository implements IPriceChangingRepository {
       const deletedPriceChanging = await this.databaseService.priceChanging.delete({
         where: {
           uuid: priceChangingId,
+        },
+        include: {
+          material: true,
         },
       });
 

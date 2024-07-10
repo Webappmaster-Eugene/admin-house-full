@@ -1,7 +1,7 @@
 import { HandbookCreateRequestDto } from '../dto/controller/create-handbook.dto';
 import { HandbookUpdateRequestDto } from '../dto/controller/update-handbook.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../../common/types/main/count.data';
 import { HandbookEntity } from '../entities/handbook.entity';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ResponsiblePartnerProducerEntity } from './entities/responsible-partner-producer.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { IResponsiblePartnerProducerRepository } from './types/responsible-partner-producer.repository.interface';

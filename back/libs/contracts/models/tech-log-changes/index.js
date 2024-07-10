@@ -15,3 +15,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./tech-log-changes.schema"), exports);
+__exportStar(require("./tech-log-changes-business-value.schema"), exports);

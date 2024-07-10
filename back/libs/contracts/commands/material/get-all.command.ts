@@ -1,28 +1,14 @@
 import { z } from 'zod';
-import { MaterialRelatedEntitiesSchema, MaterialSchema, RequestGetAllQuerySchema } from '../../models';
+import { MaterialBusinessValueSchema, MaterialRelatedEntitiesSchema, MaterialSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const MaterialGetAllResponseEntitySchema = z.array(
-  MaterialSchema.pick({
-    name: true,
-    price: true,
-    comment: true,
-    namePublic: true,
-    sourceInfo: true,
-    unitMeasurementUuid: true,
-    responsiblePartnerUuid: true,
-    categoryMaterialUuid: true,
-    handbookUuid: true,
-    lastChangeByUserUuid: true,
-    uuid: true,
-  }).merge(MaterialRelatedEntitiesSchema),
-);
+const MaterialGetAllResponseEntitySchema = z.array(MaterialBusinessValueSchema.merge(MaterialRelatedEntitiesSchema.strict()));
 
 const MaterialGetAllResponseSchema = z
   .object({
     data: MaterialGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace MaterialGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

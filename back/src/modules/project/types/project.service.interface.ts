@@ -3,7 +3,7 @@ import { ProjectCreateRequestDto } from '../dto/controller/create-project.dto';
 import { ProjectUpdateRequestDto } from '../dto/controller/update-project.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { ProjectEntity } from '../entities/project.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 

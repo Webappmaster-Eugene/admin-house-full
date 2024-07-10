@@ -1,15 +1,15 @@
 import { z } from 'zod';
-import { RoleSchema } from '../../models';
+import { RoleBusinessValueSchema, RoleSchema } from '../../models';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
 import { ResponseClientSchema } from '../../models';
 
-const RoleGetResponseEntitySchema = RoleSchema;
+const RoleGetResponseEntitySchema = RoleBusinessValueSchema;
 
 const RoleGetResponseSchema = z
   .object({
     data: RoleGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace RoleGetCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

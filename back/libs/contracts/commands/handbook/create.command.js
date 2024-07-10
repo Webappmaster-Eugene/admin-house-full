@@ -4,15 +4,8 @@ exports.HandbookCreateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const HandbookCreateResponseEntitySchema = models_1.HandbookSchema.pick({
-    name: true,
-    description: true,
-    canCustomerView: true,
-    uuid: true,
-    responsibleManagerUuid: true,
-    workspaceUuid: true,
-    lastChangeByUserUuid: true,
-});
+const models_3 = require("../../models");
+const HandbookCreateResponseEntitySchema = models_1.HandbookBusinessValueSchema.merge(models_3.HandbookRelatedEntitiesSchema);
 const HandbookCreateRequestSchema = models_1.HandbookSchema.pick({
     name: true,
     description: true,

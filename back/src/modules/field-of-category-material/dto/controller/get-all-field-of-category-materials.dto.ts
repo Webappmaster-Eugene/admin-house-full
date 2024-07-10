@@ -1,4 +1,4 @@
 import { createZodDto } from 'nestjs-zod';
-import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
+import { FieldOfCategoryMaterialGetAllCommand } from 'libs/contracts';
 
 export class FieldOfCategoryMaterialGetAllResponseDto extends createZodDto(FieldOfCategoryMaterialGetAllCommand.ResponseSchema) {}

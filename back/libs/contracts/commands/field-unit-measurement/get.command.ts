@@ -1,20 +1,20 @@
 import { z } from 'zod';
-import { FieldUnitMeasurementSchema } from '../../models';
+import {
+  FieldUnitMeasurementBusinessValueSchema,
+  FieldUnitMeasurementRelatedEntitiesSchema,
+  FieldUnitMeasurementSchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldUnitMeasurementGetResponseEntitySchema = FieldUnitMeasurementSchema.pick({
-  name: true,
-  comment: true,
-  uuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-});
+const FieldUnitMeasurementGetResponseEntitySchema = FieldUnitMeasurementBusinessValueSchema.merge(
+  FieldUnitMeasurementRelatedEntitiesSchema.strict(),
+);
 
 const FieldUnitMeasurementGetResponseSchema = z
   .object({
     data: FieldUnitMeasurementGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldUnitMeasurementGetCommand {
   export const ResponseSchema = FieldUnitMeasurementGetResponseSchema;

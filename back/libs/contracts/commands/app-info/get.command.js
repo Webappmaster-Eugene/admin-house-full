@@ -3,16 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppInfoGetCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
-const models_2 = require("../../models");
-const AppInfoGetResponseEntitySchema = models_2.AppInfoSchema.pick({
-    name: true,
-    description: true,
-    currency: true,
-    language: true,
-    comment: true,
-    status: true,
-    lastChangeByUserUuid: true,
-});
+const AppInfoGetResponseEntitySchema = models_1.AppInfoBusinessValueSchema;
 const AppInfoGetResponseSchema = zod_1.z
     .object({
     data: AppInfoGetResponseEntitySchema,

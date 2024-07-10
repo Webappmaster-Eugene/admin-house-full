@@ -3,14 +3,13 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTa
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { AppInfoUpdateRequestDto, AppInfoUpdateResponseDto } from './dto/controller/update-app-info.dto';
 import { KFI } from '../../common/utils/di';
-import { AppInfoGetCommand, AppInfoUpdateCommand } from '@numart/house-admin-contracts';
+import { AppInfoGetCommand, AppInfoUpdateCommand } from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { AppInfoGetResponseDto } from './dto/controller/get-app-info.dto';
 import { IAppInfoController } from './types/app-info.controller.interface';
 import { IAppInfoService } from './types/app-info.service.interface';
-import { AppInfoEntity } from './entities/app-info.entity';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { EUserTypeVariants } from '.prisma/client';
@@ -39,7 +38,7 @@ export class AppInfoController implements IAppInfoController {
   async getEP(@UrlParams() urlParams: IUrlParams): Promise<AppInfoGetResponseDto> {
     try {
       const { ok, data } = await this.appInfoService.get();
-      return okResponseHandler(ok, data, AppInfoEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.APP_INFO, urlParams);
     }
@@ -65,7 +64,7 @@ export class AppInfoController implements IAppInfoController {
   async updateEP(@Body() dto: AppInfoUpdateRequestDto, @UrlParams() urlParams: IUrlParams): Promise<AppInfoUpdateResponseDto> {
     try {
       const { ok, data } = await this.appInfoService.update(dto);
-      return okResponseHandler(ok, data, AppInfoEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.APP_INFO, urlParams);
     }

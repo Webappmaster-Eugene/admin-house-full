@@ -1,22 +1,14 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema, RoleSchema } from '../../models';
+import { RequestGetAllQuerySchema, RoleBusinessValueSchema, RoleSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const RoleGetAllResponseEntitySchema = z.array(
-  RoleSchema.pick({
-    uuid: true,
-    idRole: true,
-    name: true,
-    description: true,
-    lastChangeByUserUuid: true,
-  }),
-);
+const RoleGetAllResponseEntitySchema = z.array(RoleBusinessValueSchema);
 
 const RoleGetAllResponseSchema = z
   .object({
     data: RoleGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace RoleGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

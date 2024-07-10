@@ -1,5 +1,5 @@
 import { TechLogChanges } from '.prisma/client';
-import { EntityActions } from '@numart/house-admin-contracts';
+import { EntityActions } from 'libs/contracts';
 
 export class TechLogChangesEntity implements TechLogChanges {
   uuid: string;

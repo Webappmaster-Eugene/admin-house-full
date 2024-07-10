@@ -8,7 +8,7 @@ import { AuthRegisterRequestDto, AuthRegisterResponseDto } from './dto/controlle
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IAuthService } from './types/auth.service.interface';
 import { KFI } from '../../common/utils/di';
-import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from '@numart/house-admin-contracts';
+import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from 'libs/contracts';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleResponseDto } from './dto/controller/auth.register-with-role.dto';
 import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from './dto/controller/auth.generate-key.dto';
 import { AuthRefreshKeysResponseDto } from './dto/controller/auth.refresh-keys.dto';
@@ -24,7 +24,7 @@ import { okResponseHandler } from '../../common/helpers/handlers/ok-response.han
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AuthHeader } from 'src/common/decorators/auth-header.decorator';
-import { AuthRefreshKeysCommand } from '@numart/house-admin-contracts';
+import { AuthRefreshKeysCommand } from 'libs/contracts';
 import { RefreshKeyGuard } from '../../common/guards/refresh-key.guard';
 import { AuthRefreshKeysEntity } from './entities/auth-refresh-keys.entity';
 import { AuthInterceptor } from 'src/common/interceptors/auth.interceptor';
@@ -62,7 +62,7 @@ export class AuthController implements IAuthController {
   ): Promise<AuthRegisterResponseDto> {
     try {
       const { ok, data } = await this.authService.register(dto, response);
-      return okResponseHandler(ok, data, AuthEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }
@@ -104,7 +104,7 @@ export class AuthController implements IAuthController {
         },
         response,
       );
-      return okResponseHandler(ok, data, AuthEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }
@@ -130,7 +130,7 @@ export class AuthController implements IAuthController {
     // DOC ручка для обновления пары ключей доступа
     try {
       const { ok, data } = await this.authService.refreshKeys(request, response);
-      return okResponseHandler(ok, data, AuthRefreshKeysEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }
@@ -156,7 +156,7 @@ export class AuthController implements IAuthController {
   ): Promise<AuthLoginResponseDto> {
     try {
       const { ok, data } = await this.authService.login(dto, response);
-      return okResponseHandler(ok, data, AuthEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }

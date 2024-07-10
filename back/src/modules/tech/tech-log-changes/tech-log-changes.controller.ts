@@ -2,7 +2,7 @@ import { Controller, Get, Inject, Param, ParseEnumPipe, ParseIntPipe, UseGuards 
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../../../common/guards/auth.guard';
 import { ITechLogChangesService } from './types/tech-log-changes.service.interface';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { TechLogChangesGetResponseDto } from './dto/controller/get-tech-log-changes.dto';
 import { TechLogChangesGetAllResponseDto } from './dto/controller/get-all-tech-log-changes.dto';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
@@ -15,7 +15,7 @@ import { errorResponseHandler } from '../../../common/helpers/handlers/error-res
 import { okResponseHandler } from '../../../common/helpers/handlers/ok-response.handler';
 import { IQueryParams, QueryParams } from '../../../common/decorators/query-params.decorator';
 import { KFI } from 'src/common/utils/di';
-import { TechLogChangesGetAllCommand, TechLogChangesGetCommand } from '@numart/house-admin-contracts';
+import { TechLogChangesGetAllCommand, TechLogChangesGetCommand } from 'libs/contracts';
 import { IUrlParams, UrlParams } from 'src/common/decorators/url-params.decorator';
 import { EUserTypeVariants } from '.prisma/client';
 
@@ -45,7 +45,7 @@ export class TechLogChangesController implements ITechLogChangesController {
   ): Promise<TechLogChangesGetResponseDto> {
     try {
       const { ok, data } = await this.techLogChangessService.getByUuid(techLogChangesUuid);
-      return okResponseHandler(ok, data, TechLogChangesEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error) {
       errorResponseHandler(this.logger, error, EntityName.TECH_LOG_CHANGES, urlParams);
     }
@@ -68,7 +68,7 @@ export class TechLogChangesController implements ITechLogChangesController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<TechLogChangesGetAllResponseDto> {
     try {
       const { ok, data } = await this.techLogChangessService.getAll(queryParams);
-      return okResponseHandler(ok, data, TechLogChangesEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.TECH_LOG_CHANGES, urlParams);
     }
@@ -96,7 +96,7 @@ export class TechLogChangesController implements ITechLogChangesController {
   ): Promise<TechLogChangesGetAllResponseDto> {
     try {
       const { ok, data } = await this.techLogChangessService.getAllFromEntity(EntityNameToSearch, queryParams);
-      return okResponseHandler(ok, data, TechLogChangesEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.TECH_LOG_CHANGES, urlParams);
     }

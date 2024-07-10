@@ -1,11 +1,7 @@
 import { z } from 'zod';
-import { ResponseClientSchema, UserSchema } from '../../models';
+import { ResponseClientSchema, UserBusinessValueSchema, UserRelatedEntitiesSchema, UserSchema } from '../../models';
 
-const UserAddToWorkspaceResponseEntitySchema = UserSchema.omit({
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const UserAddToWorkspaceResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema.strict());
 
 const UserAddToWorkspaceRequestSchema = UserSchema.pick({
   uuid: true,
@@ -18,7 +14,7 @@ const UserAddToWorkspaceResponseSchema = z
   .object({
     data: UserAddToWorkspaceResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserAddToWorkspaceCommand {
   export const RequestSchema = UserAddToWorkspaceRequestSchema;

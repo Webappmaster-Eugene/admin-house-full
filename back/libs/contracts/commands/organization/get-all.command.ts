@@ -1,23 +1,19 @@
 import { z } from 'zod';
-import { OrganizationSchema, RequestGetAllQuerySchema } from '../../models';
+import {
+  OrganizationBusinessValueSchema,
+  OrganizationRelatedEntitiesSchema,
+  OrganizationSchema,
+  RequestGetAllQuerySchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const OrganizationGetAllResponseEntitySchema = z.array(
-  OrganizationSchema.pick({
-    uuid: true,
-    name: true,
-    description: true,
-    organizationLeaderUuid: true,
-    workspaceUuid: true,
-    lastChangeByUserUuid: true,
-  }),
-);
+const OrganizationGetAllResponseEntitySchema = z.array(OrganizationBusinessValueSchema.merge(OrganizationRelatedEntitiesSchema.strict()));
 
 const OrganizationGetAllResponseSchema = z
   .object({
     data: OrganizationGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace OrganizationGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

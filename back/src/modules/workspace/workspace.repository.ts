@@ -3,7 +3,7 @@ import { WorkspaceCreateRequestDto } from './dto/controller/create-workspace.dto
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IWorkspaceRepository } from './types/workspace.repository.interface';
 import { WorkspaceUpdateRequestDto } from './dto/controller/update-workspace.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { WorkspaceEntity } from './entities/workspace.entity';
 import { DEFAULT_WORKSPACE_DESCRIPTION, DEFAULT_WORKSPACE_NAME } from './lib/consts/workspace.default-data';
@@ -15,6 +15,7 @@ import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repo
 import { EntityName } from '../../common/types/entity.enum';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
@@ -28,6 +29,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       const findedWorkspace = await this.databaseService.workspace.findUnique({
         where: {
           uuid: workspaceId,
+        },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
         },
       });
 
@@ -43,6 +50,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         where: {
           workspaceCreatorUuid: managerId,
         },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
+        },
       });
 
       return existenceEntityHandler(findedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
@@ -55,7 +68,24 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     limitTakeHandler(take);
 
     try {
-      const allWorkspaces = await this.databaseService.workspace.findMany({ take, skip });
+      const allWorkspaces = await this.databaseService.workspace.findMany({
+        take,
+        skip,
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: {
+            include: {
+              creatorOfWorkspace: true,
+              role: true,
+              memberOfProject: true,
+              memberOfOrganization: true,
+            },
+          },
+        },
+      });
+
       return existenceEntityHandler(allWorkspaces, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -87,6 +117,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           description: description || DEFAULT_WORKSPACE_DESCRIPTION + ` of user #${userId}`,
           workspaceCreatorUuid: userId,
         },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
+        },
       });
       return existenceEntityHandler(newWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
     } catch (error: unknown) {
@@ -108,6 +144,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           name,
           description,
         },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
+        },
       });
 
       return existenceEntityHandler(updatedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
@@ -121,6 +163,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       const deletedWorkspace = await this.databaseService.workspace.delete({
         where: {
           uuid: workspaceId,
+        },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
         },
       });
 
@@ -141,6 +189,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         },
         data: {
           workspaceCreatorUuid: dto.uuid,
+        },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
         },
       });
 

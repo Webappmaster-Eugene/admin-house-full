@@ -1,22 +1,14 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common/entity-url-param.command';
-import { ResponseClientSchema, StatusApproveSchema } from '../../models';
+import { ResponseClientSchema, StatusApproveBusinessValueSchema, StatusApproveSchema } from '../../models';
 
-const StatusApproveDeleteResponseEntitySchema = StatusApproveSchema.pick({
-  name: true,
-  nameRu: true,
-  comment: true,
-  uuid: true,
-  lastChangeByUserUuid: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const StatusApproveDeleteResponseEntitySchema = StatusApproveBusinessValueSchema;
 
 const StatusApproveDeleteResponseSchema = z
   .object({
     data: StatusApproveDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace StatusApproveDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

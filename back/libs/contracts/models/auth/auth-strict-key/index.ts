@@ -1,1 +1,1 @@
-export * from './auth.strict-key.schema';
+export * from './auth.strict-key-business-value.schema';

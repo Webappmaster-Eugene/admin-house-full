@@ -3,7 +3,7 @@ import { FieldVariantsForSelectorFieldTypeCreateRequestDto } from '../dto/contro
 import { FieldVariantsForSelectorFieldTypeUpdateRequestDto } from '../dto/controller/update-field-variants-for-selector-field-type.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { FieldVariantsForSelectorFieldTypeEntity } from '../entities/field-variants-for-selector-field-type.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 
 export interface IFieldVariantsForSelectorFieldTypeService

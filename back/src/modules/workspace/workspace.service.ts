@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WorkspaceEntity } from './entities/workspace.entity';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { IWorkspaceRepository } from './types/workspace.repository.interface';

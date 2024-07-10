@@ -1,22 +1,13 @@
 import { z } from 'zod';
-import { CategoryMaterialSchema, ResponseClientSchema } from '../../models';
-import { AppInfoSchema } from '../../models';
+import { AppInfoBusinessValueSchema, ResponseClientSchema } from '../../models';
 
-const AppInfoGetResponseEntitySchema = AppInfoSchema.pick({
-  name: true,
-  description: true,
-  currency: true,
-  language: true,
-  comment: true,
-  status: true,
-  lastChangeByUserUuid: true,
-});
+const AppInfoGetResponseEntitySchema = AppInfoBusinessValueSchema;
 
 const AppInfoGetResponseSchema = z
   .object({
     data: AppInfoGetResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace AppInfoGetCommand {
   export const ResponseSchema = AppInfoGetResponseSchema;

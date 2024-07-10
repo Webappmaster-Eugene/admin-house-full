@@ -3,7 +3,7 @@ import { OrganizationCreateRequestDto } from './dto/controller/create-organizati
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IOrganizationRepository } from './types/organization.repository.interface';
 import { OrganizationUpdateRequestDto } from './dto/controller/update-organization.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { OrganizationEntity } from './entities/organization.entity';
 import { KFI } from '../../common/utils/di';
@@ -26,6 +26,12 @@ export class OrganizationRepository implements IOrganizationRepository {
         where: {
           uuid: id,
         },
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
+        },
       });
 
       return existenceEntityHandler(concreteOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
@@ -39,6 +45,12 @@ export class OrganizationRepository implements IOrganizationRepository {
       const concreteOrganization = await this.databaseService.organization.findUnique({
         where: {
           uuid: id,
+        },
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
         },
       });
 
@@ -55,7 +67,16 @@ export class OrganizationRepository implements IOrganizationRepository {
     limitTakeHandler(take);
 
     try {
-      const allOrganizations = await this.databaseService.organization.findMany({ take, skip });
+      const allOrganizations = await this.databaseService.organization.findMany({
+        take,
+        skip,
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
+        },
+      });
       return existenceEntityHandler(allOrganizations, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -76,6 +97,12 @@ export class OrganizationRepository implements IOrganizationRepository {
         },
         take,
         skip,
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
+        },
       });
       return existenceEntityHandler(allOrganizationsInWorkspace, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity[];
     } catch (error: unknown) {
@@ -111,6 +138,12 @@ export class OrganizationRepository implements IOrganizationRepository {
           name,
           description,
         },
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
+        },
       });
 
       return existenceEntityHandler(newOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
@@ -132,6 +165,12 @@ export class OrganizationRepository implements IOrganizationRepository {
           name,
           description,
         },
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
+        },
       });
 
       return existenceEntityHandler(updatedOrganization, OrganizationEntity, EntityName.ORGANIZATION) as OrganizationEntity;
@@ -145,6 +184,12 @@ export class OrganizationRepository implements IOrganizationRepository {
       const deletedOrganization = await this.databaseService.organization.delete({
         where: {
           uuid: organizationId,
+        },
+        include: {
+          organizationLeader: true,
+          organizationMembers: true,
+          projects: true,
+          workspace: true,
         },
       });
 

@@ -1,24 +1,21 @@
 import { z } from 'zod';
-import { PriceChangingSchema, RequestGetAllQuerySchema } from '../../models';
+import {
+  PriceChangingBusinessValueSchema,
+  PriceChangingRelatedEntitiesSchema,
+  PriceChangingSchema,
+  RequestGetAllQuerySchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const PriceChangingGetAllResponseEntitySchema = z.array(
-  PriceChangingSchema.pick({
-    oldPrice: true,
-    comment: true,
-    newPrice: true,
-    source: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-    materialUuid: true,
-  }),
+  PriceChangingBusinessValueSchema.merge(PriceChangingRelatedEntitiesSchema.strict()),
 );
 
 const PriceChangingGetAllResponseSchema = z
   .object({
     data: PriceChangingGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace PriceChangingGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

@@ -1,28 +1,21 @@
 import { z } from 'zod';
-import { FieldOfCategoryMaterialSchema, RequestGetAllQuerySchema } from '../../models';
+import {
+  FieldOfCategoryMaterialBusinessValueSchema,
+  FieldOfCategoryMaterialRelatedEntitiesSchema,
+  FieldOfCategoryMaterialSchema,
+  RequestGetAllQuerySchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const FieldOfCategoryMaterialGetAllResponseEntitySchema = z.array(
-  FieldOfCategoryMaterialSchema.pick({
-    name: true,
-    comment: true,
-    uniqueNameForTemplate: true,
-    defaultValue: true,
-    isRequired: true,
-    unitOfMeasurementUuid: true,
-    fieldTypeUuid: true,
-    categoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-    handbookUuid: true,
-    uuid: true,
-  }),
+  FieldOfCategoryMaterialBusinessValueSchema.merge(FieldOfCategoryMaterialRelatedEntitiesSchema.strict()),
 );
 
 const FieldOfCategoryMaterialGetAllResponseSchema = z
   .object({
     data: FieldOfCategoryMaterialGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldOfCategoryMaterialGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

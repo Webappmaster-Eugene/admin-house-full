@@ -15,3 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./price-changing.schema"), exports);
+__exportStar(require("./price-changing-related-entities.schema"), exports);
+__exportStar(require("./price-changing-business-value.schema"), exports);

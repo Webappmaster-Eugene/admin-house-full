@@ -1,26 +1,21 @@
 import { z } from 'zod';
 import { EntityUrlParamCommand } from '../common';
-import { CharacteristicsMaterialSchema, ResponseClientSchema } from '../../models';
+import {
+  CharacteristicsMaterialBusinessValueSchema,
+  CharacteristicsMaterialRelatedEntitiesSchema,
+  CharacteristicsMaterialSchema,
+  ResponseClientSchema,
+} from '../../models';
 
-const CharacteristicsMaterialDeleteResponseEntitySchema = CharacteristicsMaterialSchema.pick({
-  uuid: true,
-  value: true,
-  name: true,
-  comment: true,
-  fieldOfCategoryMaterialUuid: true,
-  fieldUnitMeasurementUuid: true,
-  fieldTypeUuid: true,
-  handbookUuid: true,
-  categoryMaterialUuid: true,
-  materialUuid: true,
-  lastChangeByUserUuid: true,
-});
+const CharacteristicsMaterialDeleteResponseEntitySchema = CharacteristicsMaterialBusinessValueSchema.merge(
+  CharacteristicsMaterialRelatedEntitiesSchema.strict(),
+);
 
 const CharacteristicsMaterialDeleteResponseSchema = z
   .object({
     data: CharacteristicsMaterialDeleteResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace CharacteristicsMaterialDeleteCommand {
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;

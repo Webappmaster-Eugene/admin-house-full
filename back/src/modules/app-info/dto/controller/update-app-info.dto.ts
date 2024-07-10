@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { AppInfoUpdateCommand } from '@numart/house-admin-contracts';
+import { AppInfoUpdateCommand } from 'libs/contracts';
 
 export class AppInfoUpdateRequestDto extends createZodDto(AppInfoUpdateCommand.RequestSchema) {}
 

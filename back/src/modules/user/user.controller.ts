@@ -16,7 +16,6 @@ import { User } from '../../common/decorators/user.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
-import { UserEntity } from './entities/user.entity';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { KFI } from '../../common/utils/di';
 import { IUserService } from './types/user.service.interface';
@@ -29,9 +28,9 @@ import {
   UserGetAllCommand,
   UserGetCommand,
   UserUpdateCommand,
-} from '@numart/house-admin-contracts';
+} from 'libs/contracts';
 import { UserCreateRequestDto, UserCreateResponseDto } from './dto/controller/create-user.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { UserGetResponseDto } from './dto/controller/get-user.dto';
 import { UserDeleteResponseDto } from './dto/controller/delete-user.dto';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -77,7 +76,7 @@ export class UserController {
   ): Promise<UserGetResponseDto> {
     try {
       const { ok, data } = await this.userService.getById(userId);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -122,7 +121,7 @@ export class UserController {
   ): Promise<UserGetResponseDto> {
     try {
       const { ok, data } = await this.userService.getByEmail(userEmail);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -146,7 +145,7 @@ export class UserController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<UserGetAllResponseDto> {
     try {
       const { ok, data } = await this.userService.getAll(queryParams);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -171,7 +170,7 @@ export class UserController {
     // DOC через эту ручку можно зарегистрировать только user с дефолтной ролью
     try {
       const { ok, data } = await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -199,7 +198,7 @@ export class UserController {
   ): Promise<UserUpdateResponseDto> {
     try {
       const { ok, data } = await this.userService.updateById(userId, dto);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -224,7 +223,7 @@ export class UserController {
   ): Promise<UserDeleteResponseDto> {
     try {
       const { ok, data } = await this.userService.deleteById(userId);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -248,7 +247,7 @@ export class UserController {
     try {
       console.log('Пользователь находится в системе: ' + JSON.stringify(userInfoFromJWT));
       const { ok, data } = await this.userService.getFullInfoById(userInfoFromJWT.uuid);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -276,7 +275,7 @@ export class UserController {
   ): Promise<UserAddToWorkspaceResponseDto> {
     try {
       const { ok, data } = await this.userService.addUserToWorkspace(workspaceId, dto.uuid);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -306,7 +305,7 @@ export class UserController {
   ): Promise<UserAddToOrganizationResponseDto> {
     try {
       const { ok, data } = await this.userService.addUserToOrganization(workspaceId, organizationId, dto.uuid);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }
@@ -338,7 +337,7 @@ export class UserController {
   ): Promise<UserAddToProjectResponseDto> {
     try {
       const { ok, data } = await this.userService.addUserToProject(workspaceId, organizationId, projectId, dto.uuid);
-      return okResponseHandler(ok, data, UserEntity, this.logger);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
     }

@@ -3,7 +3,7 @@ import { UserCreateRequestDto } from './dto/controller/create-user.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IUserRepository } from './types/user.repository.interface';
 import { UserUpdateRequestDto } from './dto/controller/update-user.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CountData } from '../../common/types/main/count.data';
 import { UserEntity } from './entities/user.entity';
 import { KFI } from '../../common/utils/di';
@@ -18,6 +18,10 @@ import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handl
 import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
 import { UserAddToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
 import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { RoleEntity } from 'src/modules/roles/entities/role.entity';
+import { OrganizationEntity } from 'src/modules/organization/entities/organization.entity';
+import { WorkspaceEntity } from 'src/modules/workspace/entities/workspace.entity';
+import { ProjectEntity } from 'src/modules/project/entities/project.entity';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -36,10 +40,17 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
-      const userInfo = findedUser as UserEntity;
-      userInfo.roleName = findedUser.role?.name;
+      // findedUser.role = new RoleEntity(findedUser.role);
+      // findedUser.creatorOfWorkspace = new WorkspaceEntity(findedUser.creatorOfWorkspace);
+      // findedUser.memberOfWorkspace = new WorkspaceEntity(findedUser.memberOfWorkspace);
+      // findedUser.memberOfProject = new ProjectEntity(findedUser.memberOfProject);
+      // findedUser.memberOfOrganization = new OrganizationEntity(findedUser.role);
+      // const userInfo = findedUser as unknown as UserEntity;
+      // userInfo.roleName = findedUser.role?.name;
 
       return existenceEntityHandler(findedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
@@ -64,8 +75,8 @@ export class UserRepository implements IUserRepository {
           handbookManager: true,
         },
       });
-      const userInfo = findedUser as UserAllInfoEntity;
-      userInfo.roleName = findedUser.role?.name;
+      // const userInfo = findedUser as UserAllInfoEntity;
+      // userInfo.roleName = findedUser.role?.name;
 
       return existenceEntityHandler(findedUser, UserAllInfoEntity, EntityName.USER) as UserAllInfoEntity;
     } catch (error: unknown) {
@@ -83,10 +94,12 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
-      const userInfo = findedUser as UserEntity;
-      userInfo.roleName = findedUser.role?.name;
+      // const userInfo = findedUser as unknown as UserEntity;
+      // userInfo.roleName = findedUser.role?.name;
 
       return existenceUserEntityHandler(findedUser);
     } catch (error: unknown) {
@@ -99,14 +112,20 @@ export class UserRepository implements IUserRepository {
 
     try {
       const allUsers = await this.databaseService.user.findMany({
-        include: { role: true, creatorOfWorkspace: true, memberOfWorkspace: true },
         take,
         skip,
+        include: {
+          role: true,
+          creatorOfWorkspace: true,
+          memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
+        },
       });
-      const userAllInfo = allUsers as UserEntity[];
-      userAllInfo.forEach(user => {
-        user.roleName = user.role?.name;
-      });
+      // const userAllInfo = allUsers as unknown as UserEntity[];
+      // userAllInfo.forEach(user => {
+      //   user.roleName = user.role?.name;
+      // });
 
       return existenceEntityHandler(allUsers, UserEntity, EntityName.USER) as UserEntity[];
     } catch (error: unknown) {
@@ -149,21 +168,16 @@ export class UserRepository implements IUserRepository {
           avatar,
           roleUuid,
         },
-      });
-
-      const findedUser = await transactionDbClient.user.findUnique({
-        where: {
-          uuid: newUser.uuid,
-        },
         include: {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
-
-      const userInfo = findedUser as UserEntity;
-      userInfo.roleName = findedUser.role?.name;
+      // const userInfo = findedUser as unknown as UserEntity;
+      // userInfo.roleName = findedUser.role?.name;
 
       return existenceEntityHandler(newUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
@@ -192,11 +206,13 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
 
-      const userInfo = updatedUser as UserEntity;
-      userInfo.roleName = updatedUser.role?.name;
+      // const userInfo = updatedUser as unknown as UserEntity;
+      // userInfo.roleName = updatedUser.role?.name;
 
       return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
@@ -209,6 +225,13 @@ export class UserRepository implements IUserRepository {
       const deletedUser = await this.databaseService.user.delete({
         where: {
           uuid: userId,
+        },
+        include: {
+          role: true,
+          creatorOfWorkspace: true,
+          memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
       return existenceEntityHandler(deletedUser, UserEntity, EntityName.USER) as UserEntity;
@@ -234,11 +257,13 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
 
-      const userInfo = updatedManager as UserEntity;
-      userInfo.roleName = updatedManager.role?.name;
+      // const userInfo = updatedManager as unknown as UserEntity;
+      // userInfo.roleName = updatedManager.role?.name;
       return existenceEntityHandler(updatedManager, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -262,11 +287,13 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
 
-      const userInfo = updatedManager as UserEntity;
-      userInfo.roleName = updatedManager.role?.name;
+      // const userInfo = updatedManager as unknown as UserEntity;
+      // userInfo.roleName = updatedManager.role?.name;
       return existenceEntityHandler(updatedManager, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -286,11 +313,13 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
 
-      const userInfo = updatedUser as UserEntity;
-      userInfo.roleName = updatedUser.role?.name;
+      // const userInfo = updatedUser as unknown as UserEntity;
+      // userInfo.roleName = updatedUser.role?.name;
       return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -310,11 +339,13 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
 
-      const userInfo = updatedUser as UserEntity;
-      userInfo.roleName = updatedUser.role?.name;
+      // const userInfo = updatedUser as unknown as UserEntity;
+      // userInfo.roleName = updatedUser.role?.name;
       return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -334,11 +365,13 @@ export class UserRepository implements IUserRepository {
           role: true,
           creatorOfWorkspace: true,
           memberOfWorkspace: true,
+          memberOfProject: true,
+          memberOfOrganization: true,
         },
       });
 
-      const userInfo = updatedUser as UserEntity;
-      userInfo.roleName = updatedUser.role?.name;
+      // const userInfo = updatedUser as unknown as UserEntity;
+      // userInfo.roleName = updatedUser.role?.name;
       return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);

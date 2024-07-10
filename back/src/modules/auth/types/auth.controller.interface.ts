@@ -4,7 +4,7 @@ import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from '../dto/co
 import { AuthGetKeyResponseDto } from '../dto/controller/auth.get-key.dto';
 import { AuthLoginRequestDto, AuthLoginResponseDto } from '../dto/controller/auth.login.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { Response, Request } from 'express';
 import { AuthRefreshKeysResponseDto } from '../dto/controller/auth.refresh-keys.dto';
 

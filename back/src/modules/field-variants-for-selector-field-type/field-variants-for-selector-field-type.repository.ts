@@ -3,7 +3,7 @@ import { FieldVariantsForSelectorFieldTypeCreateRequestDto } from './dto/control
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldVariantsForSelectorFieldTypeRepository } from './types/field-variants-for-selector-field-type.repository.interface';
 import { FieldVariantsForSelectorFieldTypeUpdateRequestDto } from './dto/controller/update-field-variants-for-selector-field-type.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldVariantsForSelectorFieldTypeEntity } from './entities/field-variants-for-selector-field-type.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -27,6 +27,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
         where: {
           uuid: fieldVariantsForSelectorFieldTypeId,
         },
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -43,7 +47,14 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
     limitTakeHandler(take);
 
     try {
-      const allFieldVariantsForSelectorFieldTypes = await this.databaseService.fieldVariantsForSelectorFieldType.findMany({ skip, take });
+      const allFieldVariantsForSelectorFieldTypes = await this.databaseService.fieldVariantsForSelectorFieldType.findMany({
+        skip,
+        take,
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
+      });
       return existenceEntityHandler(
         allFieldVariantsForSelectorFieldTypes,
         FieldVariantsForSelectorFieldTypeEntity,
@@ -66,6 +77,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
         where: { handbookUuid: handbookId },
         skip,
         take,
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
       });
       return existenceEntityHandler(
         allFieldVariantsForSelectorFieldTypes,
@@ -93,6 +108,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
         },
         skip,
         take,
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
       });
       return existenceEntityHandler(
         allFieldVariantsForSelectorFieldTypes,
@@ -116,6 +135,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
         where: { fieldOfCategoryMaterialUuid: fieldOfCategoryMaterialId },
         skip,
         take,
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
       });
       return existenceEntityHandler(
         allFieldVariantsForSelectorFieldTypes,
@@ -137,6 +160,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
       const { value, description } = dto;
       const newFieldVariantsForSelectorFieldType = await this.databaseService.fieldVariantsForSelectorFieldType.create({
         data: { value, fieldOfCategoryMaterialUuid: fieldOfCategoryMaterialId, handbookUuid: handbookId, description },
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
       });
       return existenceEntityHandler(
         newFieldVariantsForSelectorFieldType,
@@ -158,6 +185,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
           uuid: fieldVariantsForSelectorFieldTypeId,
         },
         data: { value, description },
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
+        },
       });
 
       return existenceEntityHandler(
@@ -177,6 +208,10 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
       const deletedFieldVariantsForSelectorFieldType = await this.databaseService.fieldVariantsForSelectorFieldType.delete({
         where: {
           uuid: fieldVariantsForSelectorFieldTypeId,
+        },
+        include: {
+          handbook: true,
+          fieldOfCategoryMaterial: true,
         },
       });
 

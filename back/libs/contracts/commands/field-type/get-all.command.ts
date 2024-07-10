@@ -1,22 +1,14 @@
 import { z } from 'zod';
-import { FieldTypeSchema, RequestGetAllQuerySchema } from '../../models';
+import { FieldTypeBusinessValueSchema, FieldTypeSchema, RequestGetAllQuerySchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const FieldTypeGetAllResponseEntitySchema = z.array(
-  FieldTypeSchema.pick({
-    name: true,
-    description: true,
-    jsType: true,
-    lastChangeByUserUuid: true,
-    uuid: true,
-  }),
-);
+const FieldTypeGetAllResponseEntitySchema = z.array(FieldTypeBusinessValueSchema);
 
 const FieldTypeGetAllResponseSchema = z
   .object({
     data: FieldTypeGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace FieldTypeGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

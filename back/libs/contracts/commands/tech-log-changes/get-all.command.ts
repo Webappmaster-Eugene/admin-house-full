@@ -1,27 +1,14 @@
 import { z } from 'zod';
-import { RequestGetAllQuerySchema, TechLogChangesSchema } from '../../models';
+import { RequestGetAllQuerySchema, TechLogChangesBusinessValueSchema, TechLogChangesSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 
-const TechLogChangesGetAllResponseEntitySchema = z.array(
-  TechLogChangesSchema.pick({
-    name: true,
-    entity: true,
-    comment: true,
-    oldInfo: true,
-    newInfo: true,
-    updateInfo: true,
-    action: true,
-    uuid: true,
-    createdAt: true,
-    updatedAt: true,
-  }),
-);
+const TechLogChangesGetAllResponseEntitySchema = z.array(TechLogChangesBusinessValueSchema);
 
 const TechLogChangesGetAllResponseSchema = z
   .object({
     data: TechLogChangesGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace TechLogChangesGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

@@ -4,15 +4,7 @@ exports.GlobalCategoryMaterialDeleteCommand = void 0;
 const zod_1 = require("zod");
 const entity_url_param_command_1 = require("../common/entity-url-param.command");
 const models_1 = require("../../models");
-const models_2 = require("../../models");
-const GlobalCategoryMaterialDeleteResponseEntitySchema = models_2.GlobalCategoryMaterialSchema.pick({
-    name: true,
-    nameRu: true,
-    comment: true,
-    color: true,
-    uuid: true,
-    lastChangeByUserUuid: true,
-});
+const GlobalCategoryMaterialDeleteResponseEntitySchema = models_1.GlobalCategoryMaterialBusinessValueSchema;
 const GlobalCategoryMaterialDeleteResponseSchema = zod_1.z
     .object({
     data: GlobalCategoryMaterialDeleteResponseEntitySchema,

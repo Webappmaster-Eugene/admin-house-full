@@ -3,12 +3,12 @@ import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from '../dto/co
 import { WorkspaceUpdateRequestDto, WorkspaceUpdateResponseDto } from '../dto/controller/update-workspace.dto';
 import { WorkspaceGetResponseDto } from '../dto/controller/get-workspace.dto';
 import { WorkspaceGetAllResponseDto } from '../dto/controller/get-all-workspaces.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
 import { WorkspaceDeleteResponseDto } from '../dto/controller/delete-workspace.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { WorkspaceChangeOwnerRequestDto, WorkspaceChangeOwnerResponseDto } from '../dto/controller/change-owner-workspace.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface IWorkspaceController
   extends IControllerCommon<

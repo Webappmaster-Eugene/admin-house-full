@@ -4,14 +4,7 @@ exports.FieldVariantsForSelectorFieldTypeUpdateCommand = void 0;
 const zod_1 = require("zod");
 const models_1 = require("../../models");
 const models_2 = require("../../models");
-const FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema = models_2.FieldVariantsForSelectorFieldTypeSchema.pick({
-    description: true,
-    value: true,
-    handbookUuid: true,
-    uuid: true,
-    fieldOfCategoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-});
+const FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema = models_1.FieldVariantsForSelectorFieldTypeBusinessValueSchema.merge(models_1.FieldVariantsForSelectorFieldTypeRelatedEntitiesSchema);
 const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = models_2.FieldVariantsForSelectorFieldTypeSchema.pick({
     description: true,
     value: true,

@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { AuthGenerateKeyCommand } from '@numart/house-admin-contracts';
+import { AuthGenerateKeyCommand } from 'libs/contracts';
 
 export class AuthGenerateKeyRequestDto extends createZodDto(AuthGenerateKeyCommand.RequestSchema) {}
 

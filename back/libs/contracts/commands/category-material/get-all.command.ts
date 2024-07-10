@@ -1,23 +1,21 @@
 import { z } from 'zod';
-import { CategoryMaterialSchema, RequestGetAllQuerySchema } from '../../models';
+import {
+  CategoryMaterialBusinessValueSchema,
+  CategoryMaterialRelatedEntitiesSchema,
+  CategoryMaterialSchema,
+  RequestGetAllQuerySchema,
+} from '../../models';
 import { ResponseClientSchema } from '../../models';
 
 const CategoryMaterialGetAllResponseEntitySchema = z.array(
-  CategoryMaterialSchema.pick({
-    name: true,
-    templateName: true,
-    comment: true,
-    uuid: true,
-    globalCategoryMaterialUuid: true,
-    lastChangeByUserUuid: true,
-  }),
+  CategoryMaterialBusinessValueSchema.merge(CategoryMaterialRelatedEntitiesSchema.strict()),
 );
 
 const CategoryMaterialGetAllResponseSchema = z
   .object({
     data: CategoryMaterialGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace CategoryMaterialGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

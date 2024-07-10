@@ -9,7 +9,7 @@ import {
 } from '../dto/controller/update-field-unit-measurement.dto';
 import { FieldUnitMeasurementGetResponseDto } from '../dto/controller/get-field-unit-measurement.dto';
 import { FieldUnitMeasurementGetAllResponseDto } from '../dto/controller/get-all-field-unit-measurements.dto';
-import { EntityUrlParamCommand } from '@numart/house-admin-contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { FieldUnitMeasurementDeleteResponseDto } from '../dto/controller/delete-field-unit-measurement.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';

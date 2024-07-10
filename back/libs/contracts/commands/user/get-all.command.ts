@@ -1,21 +1,15 @@
 import { z } from 'zod';
-import { UserSchema } from '../../models';
+import { UserBusinessValueSchema, UserRelatedEntitiesSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 import { RequestGetAllQuerySchema } from '../../models';
 
-const UserGetAllResponseEntitySchema = z.array(
-  UserSchema.omit({
-    password: true,
-    createdAt: true,
-    updatedAt: true,
-  }),
-);
+const UserGetAllResponseEntitySchema = z.array(UserBusinessValueSchema.merge(UserRelatedEntitiesSchema.strict()));
 
 const UserGetAllResponseSchema = z
   .object({
     data: UserGetAllResponseEntitySchema,
   })
-  .merge(ResponseClientSchema);
+  .merge(ResponseClientSchema.strict());
 
 export namespace UserGetAllCommand {
   export const RequestQuerySchema = RequestGetAllQuerySchema;

@@ -15,3 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./workspace.schema"), exports);
+__exportStar(require("./workspace-related-entities.schema"), exports);
+__exportStar(require("./workspace-business-value.schema"), exports);
