@@ -1,27 +1,27 @@
 import { StatusApprove } from '.prisma/client';
 import { EApproveStatuses } from '@prisma/client';
-import { AutoMap } from '@numart/automapper/classes';
+// import { AutoMap } from '@numart/automapper/classes';
 
 export class StatusApproveEntity implements StatusApprove {
-  @AutoMap()
+  // @AutoMap()
   uuid: string;
 
-  @AutoMap()
+  //@AutoMap()
   name: EApproveStatuses;
 
-  @AutoMap()
+  //@AutoMap()
   nameRu: string;
 
-  @AutoMap()
+  //@AutoMap()
   comment: string;
 
-  @AutoMap()
+  //@AutoMap()
   lastChangeByUserUuid: string;
 
-  @AutoMap()
+  //@AutoMap()
   createdAt: Date;
 
-  @AutoMap()
+  // @AutoMap()
   updatedAt: Date;
 
   constructor(statusApprove: Partial<StatusApprove>) {

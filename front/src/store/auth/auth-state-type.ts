@@ -1,4 +1,4 @@
-import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
+import { UserGetFullInfoCommand } from '@/../../back/libs/contracts';
 
 export type CurrentUserInfo = UserGetFullInfoCommand.ResponseEntity | null;
 

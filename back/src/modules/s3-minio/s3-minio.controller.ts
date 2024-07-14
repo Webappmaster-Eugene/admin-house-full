@@ -37,7 +37,7 @@ import { FileNameInterceptor } from 'src/common/interceptors/file-name.intercept
 import { FileStorageControllerCreateRequestDto } from 'src/modules/s3-minio/dto/controller/upload-file.dto';
 import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
 import { FileStorageDeleteResponseDto } from 'src/modules/s3-minio/dto/service/delete-file.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { ProcessExceptionsFilter } from 'src/common/filters/process-exceptions.filter';
 import { ErrorCode, ServiceError } from 'src/common/errors';
 

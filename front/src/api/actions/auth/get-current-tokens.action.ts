@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { jwtDecode } from 'jwt-decode';
-import { IJWTPayload } from '@numart/house-admin-contracts';
+import { IJWTPayload } from '@/../../back/libs/contracts';
 
 import { cookieKeys } from 'src/utils/const';
 import { IAccessTokenInfo } from 'src/utils/types/access-token.interface';

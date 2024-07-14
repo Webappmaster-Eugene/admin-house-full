@@ -1,7 +1,7 @@
 import { UserCreateRequestDto } from '../dto/controller/create-user.dto';
 import { UserUpdateRequestDto } from '../dto/controller/update-user.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { CountData } from '../../../common/types/main/count.data';
 import { UserEntity } from '../entities/user.entity';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';

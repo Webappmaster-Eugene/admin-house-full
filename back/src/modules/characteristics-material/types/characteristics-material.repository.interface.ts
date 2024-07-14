@@ -1,8 +1,8 @@
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { CharacteristicsMaterialCreateRequestDto } from '../dto/controller/create-characteristics-material.dto';
 import { CharacteristicsMaterialUpdateRequestDto } from '../dto/controller/update-characteristics-material.dto';
 import { CharacteristicsMaterialEntity } from '../entities/characteristics-material.entity';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface ICharacteristicsMaterialRepository
   extends IRepositoryCommon<

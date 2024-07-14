@@ -2,7 +2,7 @@
 
 import { AxiosError } from 'axios';
 import { cookies } from 'next/headers';
-import { AuthLoginCommand } from '@numart/house-admin-contracts';
+import { AuthLoginCommand } from '@/../../back/libs/contracts';
 
 import { cookieKeys } from 'src/utils/const';
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';

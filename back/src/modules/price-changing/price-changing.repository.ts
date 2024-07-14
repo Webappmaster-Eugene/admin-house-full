@@ -3,7 +3,7 @@ import { PriceChangingCreateRequestDto } from './dto/controller/create-price-cha
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IPriceChangingRepository } from './types/price-changing.repository.interface';
 import { PriceChangingUpdateRequestDto } from './dto/controller/update-price-changing.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { PriceChangingEntity } from './entities/price-changing.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -31,6 +31,23 @@ export class PriceChangingRepository implements IPriceChangingRepository {
       });
 
       return existenceEntityHandler(findedPriceChanging, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<PriceChangingEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allPriceChangings = await this.databaseService.priceChanging.findMany({
+        skip,
+        take,
+        include: {
+          material: true,
+        },
+      });
+      return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -106,32 +123,15 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     }
   }
 
-  async getAll(skip = 0, take = QUANTITY_LIMIT.TAKE_MAX_LIMIT): Promise<PriceChangingEntity[]> {
-    limitTakeHandler(take);
-
-    try {
-      const allPriceChangings = await this.databaseService.priceChanging.findMany({
-        skip,
-        take,
-        include: {
-          material: true,
-        },
-      });
-      return existenceEntityHandler(allPriceChangings, PriceChangingEntity, EntityName.PRICE_CHANGING) as PriceChangingEntity[];
-    } catch (error: unknown) {
-      errorRepositoryHandler(error);
-    }
-  }
-
   async create(
     dto: PriceChangingCreateRequestDto,
     materialId: EntityUrlParamCommand.RequestUuidParam,
     changedById: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<PriceChangingEntity> {
     try {
-      const { newPrice, comment, source } = dto;
+      const { newPrice, oldPrice, comment, source } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
-        data: { newPrice, comment, source, materialUuid: materialId },
+        data: { newPrice, oldPrice, comment, source, materialUuid: materialId },
         include: {
           material: true,
         },

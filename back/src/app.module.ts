@@ -31,8 +31,8 @@ import { CharacteristicsMaterialModule } from './modules/characteristics-materia
 import { redisStore } from 'cache-manager-redis-yet';
 import { TechLogChangesModule } from 'src/modules/tech/tech-log-changes/tech-log-changes.module';
 import { S3MinioModule } from 'src/modules/s3-minio/s3-minio.module';
-import { AutomapperModule } from '@numart/automapper/nestjs';
-import { classes } from '@numart/automapper/classes';
+// import { AutomapperModule } from '@numart/automapper/nestjs';
+// import { classes } from '@numart/automapper/classes';
 import { StatusApproveModule } from 'src/modules/status-approve/status-approve.module';
 
 const logger: LoggerConfig = new LoggerConfig();
@@ -46,9 +46,9 @@ const logger: LoggerConfig = new LoggerConfig();
     }),
     DatabaseModule,
     WinstonModule.forRoot(logger.configureLogger()),
-    AutomapperModule.forRoot({
-      strategyInitializer: classes(),
-    }),
+    // AutomapperModule.forRoot({
+    //   strategyInitializer: classes(),
+    // }),
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: async () => ({
@@ -56,12 +56,12 @@ const logger: LoggerConfig = new LoggerConfig();
           ttl: 10, // seconds
           socket: {
             // DOC данные подключения redis для прода
-            // host: 'redis',
-            // port: 6379,
+            host: 'redis',
+            port: 6379,
 
             // DOC данные подключения redis для dev
-            host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-            port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+            // host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
+            // port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
           },
         }),
       }),

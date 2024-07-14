@@ -4,16 +4,8 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { KFI } from '../../common/utils/di';
-import {
-  CharacteristicsMaterialCreateCommand,
-  CharacteristicsMaterialDeleteCommand,
-  CharacteristicsMaterialGetAllCommand,
-  CharacteristicsMaterialGetCommand,
-  CharacteristicsMaterialUpdateCommand,
-} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -37,6 +29,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @ApiTags('Работа с CharacteristicsMaterial')
 @Controller('characteristics-material')
@@ -48,9 +41,9 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение CharacteristicsMaterial по id' })
   @ApiResponse({ status: 200, type: CharacteristicsMaterialGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -74,12 +67,12 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все CharacteristicsMaterial',
   })
@@ -103,12 +96,12 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все CharacteristicsMaterial внутри Handbook',
   })
@@ -133,12 +126,12 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все CharacteristicsMaterial внутри CategoryMaterial',
   })
@@ -163,12 +156,12 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все CharacteristicsMaterial внутри Material',
   })
@@ -193,12 +186,12 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(CharacteristicsMaterialCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание CharacteristicsMaterial' })
   @ApiBearerAuth('access-token')
   //endregion
@@ -237,12 +230,12 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(CharacteristicsMaterialUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение CharacteristicsMaterial по id CharacteristicsMaterial' })
   @ApiResponse({ status: 200, type: CharacteristicsMaterialUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -267,9 +260,9 @@ export class CharacteristicsMaterialController implements ICharacteristicsMateri
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CharacteristicsMaterialDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CharacteristicsMaterialDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление CharacteristicsMaterial по id CharacteristicsMaterial',
   })

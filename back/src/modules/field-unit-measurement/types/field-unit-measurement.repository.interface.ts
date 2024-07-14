@@ -1,7 +1,7 @@
 import { FieldUnitMeasurementCreateRequestDto } from '../dto/controller/create-field-unit-measurement.dto';
 import { FieldUnitMeasurementUpdateRequestDto } from '../dto/controller/update-field-unit-measurement.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { FieldUnitMeasurementEntity } from '../entities/field-unit-measurement.entity';
 
 export interface IFieldUnitMeasurementRepository

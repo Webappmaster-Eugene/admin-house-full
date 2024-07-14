@@ -3,7 +3,7 @@ import { HandbookCreateRequestDto } from './dto/controller/create-handbook.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IHandbookRepository } from './types/handbook.repository.interface';
 import { HandbookUpdateRequestDto } from './dto/controller/update-handbook.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { CountData } from '../../common/types/main/count.data';
 import { HandbookEntity } from './entities/handbook.entity';
 import { DEFAULT_HANDBOOK_DESCRIPTION, DEFAULT_HANDBOOK_NAME } from './lib/consts/handbook.default-data';
@@ -13,7 +13,7 @@ import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
+import { BackendErrorNames, InternalError } from 'src/common/errors/errors-description.backend';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 
 @Injectable()
@@ -94,12 +94,13 @@ export class HandbookRepository implements IHandbookRepository {
           fieldUnitMeasurements: true,
           responsibleManager: true,
           responsiblePartnerProducers: true,
-          workspace: {
-            include: {
-              workspaceMembers: true,
-              organizations: true,
-            },
-          },
+          workspace: true,
+          // {
+          // include: {
+          //   workspaceMembers: true,
+          //   organizations: true,
+          // },
+          // },
           materials: true,
           fieldsOfCategoryMaterials: true,
         },

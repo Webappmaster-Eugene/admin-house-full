@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AppInfoGetCommand } from '@numart/house-admin-contracts';
+import { AppInfoGetCommand } from '@/../../back/libs/contracts';
 
 interface IAuthState {
   appInfo: AppInfoGetCommand.ResponseEntity | null;

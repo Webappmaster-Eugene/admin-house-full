@@ -1,7 +1,7 @@
 import { InternalResponse } from '../../types/responses/universal-internal-response.interface';
 import { EntityName } from '../../types/entity.enum';
 import { IUrlParams } from '../../decorators/url-params.decorator';
-import { InternalError } from '../../errors/errors.backend';
+import { InternalError } from 'src/common/errors/errors-description.backend';
 
 export function errorExtractor(
   internalResponse: InternalResponse<InternalError>,

@@ -7,7 +7,7 @@ import { errorRepositoryHandler } from 'src/common/helpers/handlers/error-reposi
 import { IFileStorageRepository } from 'src/modules/s3-minio/types/minio.repository.interface';
 import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
 import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()
 export class S3MinioRepository implements IFileStorageRepository {

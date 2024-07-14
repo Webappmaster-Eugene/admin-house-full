@@ -3,7 +3,7 @@ import { HandbookCreateRequestDto } from '../dto/controller/create-handbook.dto'
 import { HandbookUpdateRequestDto } from '../dto/controller/update-handbook.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { HandbookEntity } from '../entities/handbook.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
 

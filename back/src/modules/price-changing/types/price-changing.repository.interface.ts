@@ -1,7 +1,7 @@
 import { PriceChangingCreateRequestDto } from '../dto/controller/create-price-changing.dto';
 import { PriceChangingUpdateRequestDto } from '../dto/controller/update-price-changing.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { PriceChangingEntity } from '../entities/price-changing.entity';
 
 export interface IPriceChangingRepository
@@ -17,8 +17,8 @@ export interface IPriceChangingRepository
   getAllInMaterial: (materialId: EntityUrlParamCommand.RequestUuidParam, skip?: number, take?: number) => Promise<PriceChangingEntity[]>;
   create: (
     dto: PriceChangingCreateRequestDto,
-    changedById: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    changedById: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<PriceChangingEntity>;
   updateById: (priceChangingId: EntityUrlParamCommand.RequestUuidParam, dto: PriceChangingUpdateRequestDto) => Promise<PriceChangingEntity>;
   deleteById: (priceChangingId: EntityUrlParamCommand.RequestUuidParam) => Promise<PriceChangingEntity>;

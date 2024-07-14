@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StatusResourceEntity } from './entities/status-resource.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { IStatusResourceRepository } from './types/status-resource.repository.interface';

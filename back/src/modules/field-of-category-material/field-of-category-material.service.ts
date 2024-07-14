@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { FieldOfCategoryMaterialEntity } from './entities/field-of-category-material.entity';
@@ -34,7 +34,7 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
     const { skip, take } = queryParams;
-    const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAll(handbookId, skip, take);
+    const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allFieldOfCategoryMaterials);
   }
 
@@ -43,7 +43,11 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
     const { skip, take } = queryParams;
-    const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAll(categoryMaterialId, skip, take);
+    const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAllInCategoryMaterial(
+      categoryMaterialId,
+      skip,
+      take,
+    );
     return new InternalResponse(allFieldOfCategoryMaterials);
   }
 

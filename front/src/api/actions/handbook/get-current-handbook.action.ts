@@ -2,7 +2,7 @@
 
 import { cache } from 'react';
 import { AxiosError } from 'axios';
-import { HandbookGetCommand } from '@numart/house-admin-contracts';
+import { HandbookGetCommand } from '@/../../back/libs/contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
@@ -10,14 +10,16 @@ import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
 import axiosInstance from 'src/api/axios-instance';
 import { axiosEndpoints } from 'src/entities/auth/lib';
 
-export const getCurrentHandbook = cache(async (handbookId: string) => {
+export const getCurrentHandbook = cache(async (workspaceId: string, handbookId: string) => {
   const errorObject: ErrorFromBackend = {
     error: null,
   };
 
   try {
     const response: HandbookGetCommand.Response = await axiosInstance.get(
-      axiosEndpoints.handbook.get.replace(':handbookId', handbookId)
+      axiosEndpoints.handbook.get
+        .replace(':handbookId', handbookId)
+        .replace(':workspaceId', workspaceId)
     );
     if (isGoodHttpCode(response?.statusCode)) {
       return response?.data as HandbookGetCommand.ResponseEntity;

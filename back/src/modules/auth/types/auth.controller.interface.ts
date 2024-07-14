@@ -4,9 +4,9 @@ import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from '../dto/co
 import { AuthGetKeyResponseDto } from '../dto/controller/auth.get-key.dto';
 import { AuthLoginRequestDto, AuthLoginResponseDto } from '../dto/controller/auth.login.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { Response, Request } from 'express';
 import { AuthRefreshKeysResponseDto } from '../dto/controller/auth.refresh-keys.dto';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface IAuthController {
   registerEP: (dto: AuthRegisterRequestDto, urlParams: IUrlParams, response: Response) => Promise<AuthRegisterResponseDto>;

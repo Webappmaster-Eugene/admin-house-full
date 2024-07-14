@@ -3,7 +3,7 @@ import { ProjectCreateRequestDto } from './dto/controller/create-project.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IProjectRepository } from './types/project.repository.interface';
 import { ProjectUpdateRequestDto } from './dto/controller/update-project.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { CountData } from '../../common/types/main/count.data';
 import { ProjectEntity } from './entities/project.entity';
 import { KFI } from '../../common/utils/di';

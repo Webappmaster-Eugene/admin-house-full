@@ -8,12 +8,10 @@ import { AuthRegisterRequestDto, AuthRegisterResponseDto } from './dto/controlle
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IAuthService } from './types/auth.service.interface';
 import { KFI } from '../../common/utils/di';
-import { AuthLoginCommand, AuthRegisterCommand, AuthRegisterWithRoleCommand } from 'libs/contracts';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleResponseDto } from './dto/controller/auth.register-with-role.dto';
 import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from './dto/controller/auth.generate-key.dto';
 import { AuthRefreshKeysResponseDto } from './dto/controller/auth.refresh-keys.dto';
 import { AuthGetKeyResponseDto } from './dto/controller/auth.get-key.dto';
-import { AuthEntity } from './entities/auth.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -23,14 +21,7 @@ import { EUserTypeVariants } from '.prisma/client';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { AuthHeader } from 'src/common/decorators/auth-header.decorator';
-import { AuthRefreshKeysCommand } from 'libs/contracts';
 import { RefreshKeyGuard } from '../../common/guards/refresh-key.guard';
-import { AuthRefreshKeysEntity } from './entities/auth-refresh-keys.entity';
-import { AuthInterceptor } from 'src/common/interceptors/auth.interceptor';
-import { UserInterceptor } from 'src/common/interceptors/user.interceptor';
-import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
-import { InternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
 
 @ApiTags('Работа с аутентификацией пользователя')
 @Controller('auth')
@@ -42,12 +33,12 @@ export class AuthController implements IAuthController {
   ) {}
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(AuthRegisterCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(AuthRegisterCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Зарегистрировать обычного пользователя' })
   @ApiResponse({ status: 200, type: AuthRegisterResponseDto })
   //endregion
@@ -69,12 +60,12 @@ export class AuthController implements IAuthController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(AuthRegisterWithRoleCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AuthRegisterWithRoleCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(AuthRegisterWithRoleCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AuthRegisterWithRoleCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Зарегистрировать пользователя c ролью ADMIN, MANAGER или WORKER',
   })
@@ -111,9 +102,9 @@ export class AuthController implements IAuthController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AuthRefreshKeysCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AuthRefreshKeysCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Обновление пары токенов' })
   @ApiResponse({ status: 200, type: AuthRefreshKeysResponseDto })
   //endregion
@@ -137,12 +128,12 @@ export class AuthController implements IAuthController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(AuthLoginCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AuthLoginCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(AuthLoginCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AuthLoginCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Войти в систему под любым пользователем' })
   @ApiResponse({ status: 200, type: AuthLoginResponseDto })
   //endregion
@@ -163,12 +154,12 @@ export class AuthController implements IAuthController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(AuthRegisterCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(AuthRegisterCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Сгенерировать секретный ключ' })
   @ApiResponse({ status: 200, type: AuthGenerateKeyResponseDto })
   @ApiBearerAuth('access-token')
@@ -195,9 +186,9 @@ export class AuthController implements IAuthController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AuthRegisterCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить секретный ключ' })
   @ApiResponse({ status: 200, type: AuthGetKeyResponseDto })
   @ApiBearerAuth('access-token')

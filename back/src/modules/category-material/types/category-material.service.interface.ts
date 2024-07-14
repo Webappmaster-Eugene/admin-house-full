@@ -3,8 +3,8 @@ import { CategoryMaterialCreateRequestDto } from '../dto/controller/create-categ
 import { CategoryMaterialUpdateRequestDto } from '../dto/controller/update-category-material.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { CategoryMaterialEntity } from '../entities/category-material.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface ICategoryMaterialService
   extends IServiceCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {

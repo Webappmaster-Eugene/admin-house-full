@@ -1,4 +1,4 @@
-import { MaterialGetAllCommand } from '@numart/house-admin-contracts';
+import { MaterialGetAllCommand } from '@/../../back/libs/contracts';
 
 export type DashboardMainProps = {
   materialsInfo: MaterialGetAllCommand.ResponseEntity;

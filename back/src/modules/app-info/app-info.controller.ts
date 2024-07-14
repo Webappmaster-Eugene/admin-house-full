@@ -3,7 +3,6 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTa
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { AppInfoUpdateRequestDto, AppInfoUpdateResponseDto } from './dto/controller/update-app-info.dto';
 import { KFI } from '../../common/utils/di';
-import { AppInfoGetCommand, AppInfoUpdateCommand } from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -27,9 +26,9 @@ export class AppInfoController implements IAppInfoController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AppInfoGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AppInfoGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение AppInfo' })
   @ApiResponse({ status: 200, type: AppInfoGetResponseDto })
   //endregion
@@ -45,12 +44,12 @@ export class AppInfoController implements IAppInfoController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(AppInfoUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(AppInfoUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(AppInfoUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(AppInfoUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение AppInfo админом',
   })

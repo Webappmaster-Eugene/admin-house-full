@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import {
   GlobalCategoryMaterialCreateRequestDto,
   GlobalCategoryMaterialCreateResponseDto,
@@ -44,9 +44,9 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(GlobalCategoryMaterialGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение GlobalCategoryMaterial по id' })
   @ApiResponse({ status: 200, type: GlobalCategoryMaterialGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -68,12 +68,12 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(GlobalCategoryMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(GlobalCategoryMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все GlobalCategory приложения',
   })
@@ -93,12 +93,12 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(GlobalCategoryMaterialCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(GlobalCategoryMaterialCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание GlobalCategoryMaterial' })
   @ApiResponse({ status: 201, type: GlobalCategoryMaterialCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -120,12 +120,12 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(GlobalCategoryMaterialUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(GlobalCategoryMaterialUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение GlobalCategoryMaterial пользователя по id GlobalCategoryMaterial',
   })
@@ -151,9 +151,9 @@ export class GlobalCategoryMaterialController implements IGlobalCategoryMaterial
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(GlobalCategoryMaterialDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(GlobalCategoryMaterialDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление GlobalCategoryMaterial по id GlobalCategoryMaterial',
   })

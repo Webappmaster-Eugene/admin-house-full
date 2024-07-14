@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { MaterialGetResponseDto } from './dto/controller/get-material.dto';
 import { MaterialCreateRequestDto, MaterialCreateResponseDto } from './dto/controller/create-material.dto';
@@ -14,13 +14,6 @@ import { MaterialDeleteResponseDto } from './dto/controller/delete-material.dto'
 import { IMaterialController } from './types/material.controller.interface';
 import { IMaterialService } from './types/material.service.interface';
 import { KFI } from '../../common/utils/di';
-import {
-  MaterialCreateCommand,
-  MaterialDeleteCommand,
-  MaterialGetAllCommand,
-  MaterialGetCommand,
-  MaterialUpdateCommand,
-} from 'libs/contracts';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -31,6 +24,8 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
+import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
+import { MaterialEntity } from 'src/modules/material/entities/material.entity';
 
 @ApiTags('Работа с Material')
 @Controller('material')
@@ -42,9 +37,9 @@ export class MaterialController implements IMaterialController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение Material по id' })
   @ApiResponse({ status: 200, type: MaterialGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -66,12 +61,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все materials',
   })
@@ -85,8 +80,6 @@ export class MaterialController implements IMaterialController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAll(queryParams);
-      //console.log('data', data);
-
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
@@ -94,12 +87,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все materials внутри Material',
   })
@@ -124,12 +117,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все materials внутри CategoryMaterial',
   })
@@ -154,12 +147,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(MaterialCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(MaterialCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание Material' })
   @ApiResponse({ status: 201, type: MaterialCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -185,12 +178,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(MaterialUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(MaterialUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение Material по id Material' })
   @ApiResponse({ status: 200, type: MaterialUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -214,9 +207,9 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(MaterialDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(MaterialDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление Material внутри Workspace менеджера по id Material',
   })

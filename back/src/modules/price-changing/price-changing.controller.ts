@@ -3,7 +3,6 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { PriceChangingGetResponseDto } from './dto/controller/get-price-changing.dto';
 import { PriceChangingCreateRequestDto, PriceChangingCreateResponseDto } from './dto/controller/create-price-changing.dto';
@@ -14,6 +13,7 @@ import { IPriceChangingController } from './types/price-changing.controller.inte
 import { IPriceChangingService } from './types/price-changing.service.interface';
 import { KFI } from '../../common/utils/di';
 import {
+  EntityUrlParamCommand,
   PriceChangingCreateCommand,
   PriceChangingDeleteCommand,
   PriceChangingGetAllCommand,
@@ -42,9 +42,9 @@ export class PriceChangingController implements IPriceChangingController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение PriceChanging по id' })
   @ApiResponse({ status: 200, type: PriceChangingGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -68,12 +68,12 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все PriceChanging',
   })
@@ -94,12 +94,12 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все PriceChanging внутри Handbook',
   })
@@ -124,12 +124,12 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все PriceChanging внутри CategoryMaterial',
   })
@@ -154,12 +154,12 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все PriceChanging внутри Material',
   })
@@ -184,12 +184,12 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(PriceChangingCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(PriceChangingCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание PriceChanging' })
   @ApiResponse({ status: 201, type: PriceChangingCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -212,12 +212,12 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(PriceChangingUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(PriceChangingUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение PriceChanging пользователя по id PriceChanging',
   })
@@ -244,9 +244,9 @@ export class PriceChangingController implements IPriceChangingController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(PriceChangingDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(PriceChangingDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление PriceChanging внутри Workspace менеджера по id PriceChanging',
   })

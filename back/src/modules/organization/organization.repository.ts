@@ -3,7 +3,7 @@ import { OrganizationCreateRequestDto } from './dto/controller/create-organizati
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IOrganizationRepository } from './types/organization.repository.interface';
 import { OrganizationUpdateRequestDto } from './dto/controller/update-organization.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { CountData } from '../../common/types/main/count.data';
 import { OrganizationEntity } from './entities/organization.entity';
 import { KFI } from '../../common/utils/di';

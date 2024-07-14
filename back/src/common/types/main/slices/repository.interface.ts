@@ -1,5 +1,5 @@
 import { Prisma } from '.prisma/client';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface IRepositoryCommon<
   CReqDto,

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TechLogChangesCreateRequestDto } from './dto/controller/create-tech-log-changes.dto';
 import { IPrismaService } from '../../../common/types/main/prisma.interface';
 import { ITechLogChangesRepository } from './types/tech-log-changes.repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { TechLogChangesEntity } from './entities/tech-log-changes.entity';
 import { KFI } from '../../../common/utils/di';
 import { existenceEntityHandler } from '../../../common/helpers/handlers/existance-entity-handler';

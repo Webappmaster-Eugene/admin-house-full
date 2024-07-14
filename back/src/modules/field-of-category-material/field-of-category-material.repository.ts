@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldOfCategoryMaterialRepository } from './types/field-of-category-material.repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { FieldOfCategoryMaterialEntity } from './entities/field-of-category-material.entity';
 import { FieldOfCategoryMaterialCreateRequestDto } from './dto/controller/create-field-of-category-material.dto';
@@ -88,7 +88,6 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           fieldVariantsForSelectorFieldType: true,
         },
       });
-      console.log('allFieldOfCategoryMaterials', allFieldOfCategoryMaterials);
 
       return existenceEntityHandler(
         allFieldOfCategoryMaterials,
@@ -96,8 +95,6 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
         EntityName.FIELD_OF_CATEGORY_MATERIAL,
       ) as FieldOfCategoryMaterialEntity[];
     } catch (error: unknown) {
-      console.log('ERRORallFieldOfCategoryMaterials', error);
-
       errorRepositoryHandler(error);
     }
   }

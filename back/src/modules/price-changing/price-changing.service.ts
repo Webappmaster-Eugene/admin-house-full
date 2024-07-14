@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PriceChangingEntity } from './entities/price-changing.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { IPriceChangingRepository } from './types/price-changing.repository.interface';
@@ -56,10 +56,10 @@ export class PriceChangingService implements IPriceChangingService {
 
   async create(
     dto: PriceChangingCreateRequestDto,
-    changedById: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
+    changedById: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<PriceChangingEntity>> {
-    const createdPriceChanging = await this.priceChangingRepository.create(dto, changedById, materialId);
+    const createdPriceChanging = await this.priceChangingRepository.create(dto, materialId, changedById);
     return new InternalResponse(createdPriceChanging);
   }
 

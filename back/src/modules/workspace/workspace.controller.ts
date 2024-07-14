@@ -4,14 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import {
-  WorkspaceCreateCommand,
-  WorkspaceDeleteCommand,
-  WorkspaceGetAllCommand,
-  WorkspaceGetCommand,
-  WorkspaceUpdateCommand,
-} from 'libs/contracts/';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { WorkspaceGetResponseDto } from './dto/controller/get-workspace.dto';
 import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from './dto/controller/create-workspace.dto';
@@ -22,8 +15,6 @@ import { WorkspaceChangeOwnerRequestDto, WorkspaceChangeOwnerResponseDto } from 
 import { IWorkspaceController } from './types/workspace.controller.interface';
 import { IWorkspaceService } from './types/workspace.service.interface';
 import { KFI } from '../../common/utils/di';
-import { WorkspaceChangeOwnerCommand } from 'libs/contracts';
-import { WorkspaceEntity } from './entities/workspace.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -47,9 +38,9 @@ export class WorkspaceController implements IWorkspaceController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(WorkspaceGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(WorkspaceGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение Workspace по id' })
   @ApiResponse({ status: 200, type: WorkspaceGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -71,12 +62,12 @@ export class WorkspaceController implements IWorkspaceController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(WorkspaceGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(WorkspaceGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(WorkspaceGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(WorkspaceGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить все Workspace пользователей' })
   @ApiResponse({ status: 200, type: [WorkspaceGetAllResponseDto] })
   @ApiBearerAuth('access-token')
@@ -96,12 +87,12 @@ export class WorkspaceController implements IWorkspaceController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(WorkspaceCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(WorkspaceCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(WorkspaceCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(WorkspaceCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание Workspace' })
   @ApiResponse({ status: 201, type: WorkspaceCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -125,12 +116,12 @@ export class WorkspaceController implements IWorkspaceController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(WorkspaceUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(WorkspaceUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(WorkspaceUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(WorkspaceUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение Workspace пользователя по id Workspace' })
   @ApiResponse({ status: 200, type: WorkspaceUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -154,9 +145,9 @@ export class WorkspaceController implements IWorkspaceController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(WorkspaceDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(WorkspaceDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Удаление Workspace пользователя по id Workspace' })
   @ApiResponse({ status: 200, type: WorkspaceDeleteResponseDto })
   @ApiBearerAuth('access-token')
@@ -179,11 +170,12 @@ export class WorkspaceController implements IWorkspaceController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(WorkspaceChangeOwnerCommand.RequestSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(WorkspaceChangeOwnerCommand.RequestSchema),
+  // })
   @ApiOkResponse({
-    schema: zodToOpenAPI(WorkspaceChangeOwnerCommand.ResponseSchema),
+    description: 'Successfully retrieved a message by ID',
+    type: WorkspaceChangeOwnerResponseDto,
   })
   @ApiOperation({
     summary: 'Изменение владельца Workspace по id Workspace и id пользователя',
@@ -191,7 +183,7 @@ export class WorkspaceController implements IWorkspaceController {
   @ApiResponse({ status: 200, type: WorkspaceChangeOwnerResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @ZodSerializerDto(WorkspaceGetResponseDto)
+  @ZodSerializerDto(WorkspaceChangeOwnerResponseDto)
   @RolesSetting(EUserTypeVariants.ADMIN)
   @UseGuards(AuthGuard, IsManagerInBodyGuard)
   @Put('change-owner/:workspaceId')

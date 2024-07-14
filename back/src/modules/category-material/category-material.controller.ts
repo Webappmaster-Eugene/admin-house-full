@@ -4,7 +4,6 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { CategoryMaterialGetResponseDto } from './dto/controller/get-category-material.dto';
 import { CategoryMaterialCreateRequestDto, CategoryMaterialCreateResponseDto } from './dto/controller/create-category-material.dto';
@@ -14,15 +13,6 @@ import { CategoryMaterialDeleteResponseDto } from './dto/controller/delete-categ
 import { ICategoryMaterialController } from './types/category-material.controller.interface';
 import { ICategoryMaterialService } from './types/category-material.service.interface';
 import { KFI } from '../../common/utils/di';
-import {
-  CategoryMaterialCreateCommand,
-  CategoryMaterialDeleteCommand,
-  CategoryMaterialGetAllCommand,
-  CategoryMaterialGetCommand,
-  CategoryMaterialUpdateCommand,
-  FieldVariantsForSelectorFieldTypeGetAllCommand,
-} from 'libs/contracts';
-import { CategoryMaterialEntity } from './entities/category-material.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -33,6 +23,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @ApiTags('Работа с CategoryMaterial')
 @Controller('category-material')
@@ -44,9 +35,9 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CategoryMaterialGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение CategoryMaterial по id' })
   @ApiResponse({ status: 200, type: CategoryMaterialGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -68,12 +59,12 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CategoryMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все CategoryMaterial',
   })
@@ -97,12 +88,12 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CategoryMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все CategoryMaterial в Handbook',
   })
@@ -126,12 +117,12 @@ export class CategoryMaterialController implements ICategoryMaterialController {
     }
   }
 
-  @ApiBody({
-    schema: zodToOpenAPI(CategoryMaterialCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CategoryMaterialCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(CategoryMaterialCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание CategoryMaterial' })
   @ApiResponse({ status: 201, type: CategoryMaterialCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -154,12 +145,12 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(CategoryMaterialUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CategoryMaterialUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(CategoryMaterialUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение CategoryMaterial по id CategoryMaterial',
   })
@@ -184,9 +175,9 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(CategoryMaterialDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление CategoryMaterial внутри Workspace менеджера по id CategoryMaterial',
   })

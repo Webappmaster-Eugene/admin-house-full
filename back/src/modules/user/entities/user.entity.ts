@@ -3,7 +3,6 @@ import { RoleEntity } from 'src/modules/roles/entities/role.entity';
 import { WorkspaceEntity } from 'src/modules/workspace/entities/workspace.entity';
 
 export interface UserRelatedEntities {
-  // roleName?: string;
   role: RoleEntity;
   creatorOfWorkspace: WorkspaceEntity;
   memberOfWorkspace: WorkspaceEntity;
@@ -29,7 +28,6 @@ export class UserEntity implements User, UserRelatedEntities {
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  // roleName?: string;
   role: RoleEntity;
   creatorOfWorkspace: WorkspaceEntity;
   memberOfWorkspace: WorkspaceEntity;

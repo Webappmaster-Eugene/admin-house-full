@@ -1,5 +1,5 @@
 import { IControllerCommon } from '../../../common/types/main/slices/controller.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import {

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { CharacteristicsMaterialEntity } from './entities/characteristics-material.entity';
@@ -10,6 +9,7 @@ import { CharacteristicsMaterialCreateRequestDto } from './dto/controller/create
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { IFieldOfCategoryMaterialService } from '../../modules/field-of-category-material/types/field-of-category-material.service.interface';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()
 export class CharacteristicsMaterialService implements ICharacteristicsMaterialService {

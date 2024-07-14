@@ -3,7 +3,7 @@ import { StatusApproveService } from 'src/modules/status-approve/status-approve.
 import { StatusApproveController } from 'src/modules/status-approve/status-approve.controller';
 import { KFI } from '../../common/utils/di';
 import { StatusApproveRepository } from 'src/modules/status-approve/status-approve.repository';
-import { AutomapperModule } from '@numart/automapper/nestjs';
+// import { AutomapperModule } from '@numart/automapper/nestjs';
 
 @Module({
   providers: [
@@ -17,7 +17,7 @@ import { AutomapperModule } from '@numart/automapper/nestjs';
     },
   ],
   controllers: [StatusApproveController],
-  imports: [AutomapperModule],
+  // imports: [AutomapperModule],
   exports: [KFI.STATUS_APPROVE_SERVICE],
 })
 export class StatusApproveModule {}

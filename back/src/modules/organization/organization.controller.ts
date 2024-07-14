@@ -2,8 +2,7 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put,
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrganizationEntity } from './entities/organization.entity';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { OrganizationCreateCommand, OrganizationGetAllCommand, OrganizationGetCommand, OrganizationUpdateCommand } from 'libs/contracts';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { IOrganizationService } from './types/organization.service.interface';
 import { OrganizationGetAllResponseDto } from './dto/controller/get-all-organizations.dto';
@@ -11,7 +10,6 @@ import { OrganizationGetResponseDto } from './dto/controller/get-organization.dt
 import { OrganizationDeleteResponseDto } from './dto/controller/delete-organization.dto';
 import { OrganizationUpdateRequestDto, OrganizationUpdateResponseDto } from './dto/controller/update-organization.dto';
 import { OrganizationCreateRequestDto, OrganizationCreateResponseDto } from './dto/controller/create-organization.dto';
-import { OrganizationDeleteCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
@@ -38,9 +36,9 @@ export class OrganizationController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(OrganizationGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(OrganizationGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение Organization по id' })
   @ApiResponse({ status: 200, type: OrganizationGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -63,12 +61,12 @@ export class OrganizationController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(OrganizationGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(OrganizationGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить все Organizations' })
   @ApiResponse({ status: 200, type: [OrganizationGetAllResponseDto] })
   @ApiBearerAuth('access-token')
@@ -87,12 +85,12 @@ export class OrganizationController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(OrganizationGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(OrganizationGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(OrganizationGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить все Organizations внутри одного Workspace' })
   @ApiResponse({ status: 200, type: [OrganizationGetAllResponseDto] })
   @ApiBearerAuth('access-token')
@@ -115,12 +113,12 @@ export class OrganizationController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(OrganizationCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(OrganizationCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(OrganizationCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(OrganizationCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание Organization' })
   @ApiResponse({ status: 201, type: OrganizationEntity })
   @ApiBearerAuth('access-token')
@@ -145,12 +143,12 @@ export class OrganizationController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(OrganizationUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(OrganizationUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(OrganizationUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(OrganizationUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение Organization по id Organization' })
   @ApiResponse({ status: 200, type: OrganizationUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -173,9 +171,9 @@ export class OrganizationController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(OrganizationDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(OrganizationDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление Organization по id Organization',
   })

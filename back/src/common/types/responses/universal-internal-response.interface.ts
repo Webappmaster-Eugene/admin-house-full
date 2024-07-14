@@ -1,4 +1,4 @@
-import { InternalError } from '../../errors/errors.backend';
+import { InternalError } from 'src/common/errors/errors-description.backend';
 
 export interface UniversalInternalResponse<TResponseDto> {
   ok: boolean;

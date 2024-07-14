@@ -1,6 +1,6 @@
 import { AppInfoUpdateRequestDto } from '../dto/controller/update-app-info.dto';
 import { AppInfoEntity } from '../entities/app-info.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface IAppInfoRepository {
   get: () => Promise<AppInfoEntity>;

@@ -1,5 +1,4 @@
 import { IControllerCommon } from '../../../common/types/main/slices/controller.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import {
@@ -14,6 +13,7 @@ import { CharacteristicsMaterialDeleteResponseDto } from '../dto/controller/dele
 import { CharacteristicsMaterialGetAllResponseDto } from '../dto/controller/get-all-characteristics-materials.dto';
 import { CharacteristicsMaterialGetResponseDto } from '../dto/controller/get-characteristics-material.dto';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface ICharacteristicsMaterialController
   extends IControllerCommon<

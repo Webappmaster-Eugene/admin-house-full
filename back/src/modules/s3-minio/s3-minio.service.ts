@@ -9,7 +9,7 @@ import { IFileStorageRepository } from 'src/modules/s3-minio/types/minio.reposit
 import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
 import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
 import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()
 export class S3MinioService implements IFileStorageService {

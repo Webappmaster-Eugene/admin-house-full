@@ -86,18 +86,17 @@ export const axiosEndpoints = {
   },
   // DOC material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId
   material: {
-    get: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
-    get_all: 'materials',
-    get_all_in_handbook:
-      'materials/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
+    get: 'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+    get_all: 'material',
+    get_all_in_handbook: 'material/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
     get_all_in_category_material:
-      'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
+      'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
     create:
-      'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
+      'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
     update:
-      'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+      'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
     delete:
-      'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+      'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
   },
   // DOC characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId
   characteristics_material: {

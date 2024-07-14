@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { GlobalCategoryMaterialDeleteCommand } from 'libs/contracts';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export type GlobalCategoryMaterialDeleteRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 

@@ -2,7 +2,7 @@ import { TechLogChangesCreateRequestDto } from 'src/modules/tech/tech-log-change
 import { UniversalInternalResponse } from '../../../../common/types/responses/universal-internal-response.interface';
 import { TechLogChangesEntity } from 'src/modules/tech/tech-log-changes/entities/tech-log-changes.entity';
 import { IQueryParams } from '../../../../common/decorators/query-params.decorator';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { EntityName } from 'src/common/types/entity.enum';
 
 export interface ITechLogChangesService {

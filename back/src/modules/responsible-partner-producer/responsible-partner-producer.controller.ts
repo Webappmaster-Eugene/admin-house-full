@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { ResponsiblePartnerProducerGetResponseDto } from './dto/controller/get-responsible-partner-producer.dto';
 import {
   ResponsiblePartnerProducerCreateRequestDto,
@@ -46,9 +46,9 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение ResponsiblePartnerProducer по id' })
   @ApiResponse({ status: 200, type: ResponsiblePartnerProducerGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -70,12 +70,12 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все ResponsiblePartnerProducer',
   })
@@ -102,12 +102,12 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все ResponsiblePartnerProducer внутри Handbook',
   })
@@ -134,12 +134,12 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание ResponsiblePartnerProducer' })
   @ApiResponse({
     status: 201,
@@ -165,12 +165,12 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение ResponsiblePartnerProducer по id ResponsiblePartnerProducer',
   })
@@ -198,9 +198,9 @@ export class ResponsiblePartnerProducerController implements IResponsiblePartner
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ResponsiblePartnerProducerDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ResponsiblePartnerProducerDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление ResponsiblePartnerProducer внутри Workspace менеджера по id ResponsiblePartnerProducer',
   })

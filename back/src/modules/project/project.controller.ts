@@ -6,7 +6,7 @@ import { User } from '../../common/decorators/user.decorator';
 import { ProjectEntity } from './entities/project.entity';
 import { KFI } from '../../common/utils/di';
 import { IProjectService } from './types/project.service.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { ProjectGetAllResponseDto } from './dto/controller/get-all-projects.dto';
@@ -36,9 +36,9 @@ export class ProjectController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение Project по id' })
   @ApiResponse({ status: 200, type: ProjectEntity })
   @ApiBearerAuth('access-token')
@@ -59,12 +59,12 @@ export class ProjectController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить все Projects' })
   @ApiResponse({ status: 200, type: [ProjectEntity] })
   @ApiBearerAuth('access-token')
@@ -83,12 +83,12 @@ export class ProjectController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить все Projects внутри рабочего пространства' })
   @ApiResponse({ status: 200, type: [ProjectEntity] })
   @ApiBearerAuth('access-token')
@@ -110,12 +110,12 @@ export class ProjectController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(ProjectGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить все Projects внутри организации' })
   @ApiResponse({ status: 200, type: [ProjectEntity] })
   @ApiBearerAuth('access-token')
@@ -137,12 +137,12 @@ export class ProjectController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(ProjectCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(ProjectCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание Project' })
   @ApiResponse({ status: 201, type: ProjectEntity })
   @ApiBearerAuth('access-token')
@@ -166,12 +166,12 @@ export class ProjectController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(ProjectUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(ProjectUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение Project по id Project' })
   @ApiResponse({ status: 200, type: ProjectEntity })
   @ApiBearerAuth('access-token')
@@ -194,9 +194,9 @@ export class ProjectController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(ProjectDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(ProjectDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление Project по id Project',
   })

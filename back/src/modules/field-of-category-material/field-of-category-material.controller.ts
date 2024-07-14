@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { KFI } from '../../common/utils/di';
 import {
@@ -48,9 +48,9 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение FieldOfCategoryMaterial по id' })
   @ApiResponse({ status: 200, type: FieldOfCategoryMaterialGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -74,12 +74,12 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldOfCategoryMaterial',
   })
@@ -103,20 +103,20 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldOfCategoryMaterial внутри Handbook',
   })
   @ApiResponse({ status: 200, type: [FieldOfCategoryMaterialGetAllResponseDto] })
   @ApiBearerAuth('access-token')
   //endregion
-  // @UseGuards(AuthGuard, WorkspaceMembersGuard)
-  // @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @ZodSerializerDto(FieldOfCategoryMaterialGetAllResponseDto)
   @Get('workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook')
   async getAllInHandbookEP(
     @UrlParams() urlParams: IUrlParams,
@@ -133,12 +133,12 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldOfCategoryMaterial внутри FieldOfCategoryMaterial',
   })
@@ -163,12 +163,12 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание FieldOfCategoryMaterial' })
   @ApiBearerAuth('access-token')
   //endregion
@@ -194,12 +194,12 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение FieldOfCategoryMaterial по id FieldOfCategoryMaterial' })
   @ApiResponse({ status: 200, type: FieldOfCategoryMaterialUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -224,9 +224,9 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldOfCategoryMaterialDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldOfCategoryMaterialDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление FieldOfCategoryMaterial по id FieldOfCategoryMaterial',
   })

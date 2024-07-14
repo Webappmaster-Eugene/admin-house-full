@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export class DeleteGlobalCategoryMaterialCommand {
   constructor(public readonly globalCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam) {}

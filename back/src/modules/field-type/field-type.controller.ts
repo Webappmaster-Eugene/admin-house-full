@@ -4,7 +4,7 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { KFI } from '../../common/utils/di';
 import {
@@ -41,9 +41,9 @@ export class FieldTypeController implements IFieldTypeController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldTypeGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldTypeGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение FieldType по id' })
   @ApiResponse({ status: 200, type: FieldTypeGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -65,12 +65,12 @@ export class FieldTypeController implements IFieldTypeController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldTypeGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldTypeGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldType',
   })
@@ -90,12 +90,12 @@ export class FieldTypeController implements IFieldTypeController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldTypeCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldTypeCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldTypeCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldTypeCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание FieldType' })
   @ApiResponse({ status: 201, type: FieldTypeCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -119,12 +119,12 @@ export class FieldTypeController implements IFieldTypeController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldTypeUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldTypeUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldTypeUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldTypeUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Изменение FieldType по id FieldType' })
   @ApiResponse({ status: 200, type: FieldTypeUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -148,9 +148,9 @@ export class FieldTypeController implements IFieldTypeController {
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldTypeDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldTypeDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление FieldType по id FieldType',
   })

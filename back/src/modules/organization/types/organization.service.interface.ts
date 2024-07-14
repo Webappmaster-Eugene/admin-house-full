@@ -3,9 +3,8 @@ import { OrganizationCreateRequestDto } from '../dto/controller/create-organizat
 import { OrganizationUpdateRequestDto } from '../dto/controller/update-organization.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { OrganizationEntity } from '../entities/organization.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
-import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 
 export interface IOrganizationService
   extends IServiceCommon<OrganizationCreateRequestDto, OrganizationUpdateRequestDto, OrganizationEntity> {

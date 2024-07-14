@@ -1,7 +1,7 @@
 import { ResponsiblePartnerProducerCreateRequestDto } from '../dto/controller/create-responsible-partner-producer.dto';
 import { ResponsiblePartnerProducerUpdateRequestDto } from '../dto/controller/update-responsible-partner-producer.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { ResponsiblePartnerProducerEntity } from '../entities/responsible-partner-producer.entity';
 
 export interface IResponsiblePartnerProducerRepository

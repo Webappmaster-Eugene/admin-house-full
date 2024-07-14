@@ -1,7 +1,7 @@
 import { ProjectCreateRequestDto } from '../dto/controller/create-project.dto';
 import { ProjectUpdateRequestDto } from '../dto/controller/update-project.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { CountData } from '../../../common/types/main/count.data';
 import { ProjectEntity } from '../entities/project.entity';
 

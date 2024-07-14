@@ -3,7 +3,7 @@ import { FieldVariantsForSelectorFieldTypeCreateRequestDto } from './dto/control
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IFieldVariantsForSelectorFieldTypeRepository } from './types/field-variants-for-selector-field-type.repository.interface';
 import { FieldVariantsForSelectorFieldTypeUpdateRequestDto } from './dto/controller/update-field-variants-for-selector-field-type.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { FieldVariantsForSelectorFieldTypeEntity } from './entities/field-variants-for-selector-field-type.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';

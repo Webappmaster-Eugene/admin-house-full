@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { IQuery } from '@nestjs/cqrs';
 
 export class GetGlobalCategoryMaterialByIdQuery implements IQuery {

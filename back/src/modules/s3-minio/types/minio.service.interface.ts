@@ -1,5 +1,5 @@
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
 import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
 

@@ -1,6 +1,6 @@
 import { Prisma } from '.prisma/client';
 import { UniversalInternalResponse } from '../../responses/universal-internal-response.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface IServiceCommon<
   CReqDto,

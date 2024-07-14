@@ -1,7 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
-import { UserGetAllCommand } from '@numart/house-admin-contracts';
+import { UserGetAllCommand } from '@/../../back/libs/contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
@@ -20,7 +20,7 @@ export async function getAllUsers() {
     );
     console.log(response.data);
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (response.statusCode && isGoodHttpCode(response.statusCode)) {
       return response.data as UserGetAllCommand.ResponseEntity;
     }
 

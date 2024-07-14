@@ -2,11 +2,10 @@ import { Controller, Get, Inject, Param, ParseEnumPipe, ParseIntPipe, UseGuards 
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../../../common/guards/auth.guard';
 import { ITechLogChangesService } from './types/tech-log-changes.service.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { TechLogChangesGetResponseDto } from './dto/controller/get-tech-log-changes.dto';
 import { TechLogChangesGetAllResponseDto } from './dto/controller/get-all-tech-log-changes.dto';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { TechLogChangesEntity } from 'src/modules/tech/tech-log-changes/entities/tech-log-changes.entity';
 import { EntityName } from '../../../common/types/entity.enum';
 import { ILogger } from '../../../common/types/main/logger.interface';
 import { ITechLogChangesController } from './types/tech-log-changes.controller.interface';
@@ -15,9 +14,8 @@ import { errorResponseHandler } from '../../../common/helpers/handlers/error-res
 import { okResponseHandler } from '../../../common/helpers/handlers/ok-response.handler';
 import { IQueryParams, QueryParams } from '../../../common/decorators/query-params.decorator';
 import { KFI } from 'src/common/utils/di';
-import { TechLogChangesGetAllCommand, TechLogChangesGetCommand } from 'libs/contracts';
+import { TechLogChangesGetAllCommand } from 'libs/contracts';
 import { IUrlParams, UrlParams } from 'src/common/decorators/url-params.decorator';
-import { EUserTypeVariants } from '.prisma/client';
 
 @ApiTags('Работа с технической таблицей для логгирования действий всех пользователей')
 @Controller('tech-log-changes')
@@ -29,9 +27,9 @@ export class TechLogChangesController implements ITechLogChangesController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(TechLogChangesGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(TechLogChangesGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить информацию о techLogChangesUuid по uuid' })
   @ApiResponse({ status: 200, type: TechLogChangesGetResponseDto })
   @ApiBearerAuth('access-token')

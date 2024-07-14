@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { FieldVariantsForSelectorFieldTypeGetResponseDto } from './dto/controller/get-field-variants-for-selector-field-type.dto';
 import {
   FieldVariantsForSelectorFieldTypeCreateRequestDto,
@@ -47,9 +47,9 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получение FieldVariantsForSelectorFieldType по id',
   })
@@ -78,12 +78,12 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldVariantsForSelectorFieldType',
   })
@@ -110,12 +110,12 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldVariantsForSelectorFieldType внутри Handbook',
   })
@@ -143,12 +143,12 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldVariantsForSelectorFieldType внутри CategoryMaterial',
   })
@@ -176,12 +176,12 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldVariantsForSelectorFieldType внутри FieldOfCategoryMaterial',
   })
@@ -214,12 +214,12 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание FieldVariantsForSelectorFieldType' })
   @ApiResponse({
     status: 201,
@@ -249,12 +249,12 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение FieldVariantsForSelectorFieldType по id FieldVariantsForSelectorFieldType',
   })
@@ -284,9 +284,9 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление FieldVariantsForSelectorFieldType по id FieldVariantsForSelectorFieldType',
   })

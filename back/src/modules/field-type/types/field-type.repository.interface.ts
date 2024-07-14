@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { FieldTypeCreateRequestDto } from '../dto/controller/create-field-type.dto';
 import { FieldTypeUpdateRequestDto } from '../dto/controller/update-field-type.dto';
 import { FieldTypeEntity } from '../entities/field-type.entity';

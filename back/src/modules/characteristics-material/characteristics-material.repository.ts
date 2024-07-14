@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { ICharacteristicsMaterialRepository } from './types/characteristics-material.repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { CharacteristicsMaterialEntity } from './entities/characteristics-material.entity';
 import { CharacteristicsMaterialCreateRequestDto } from './dto/controller/create-characteristics-material.dto';

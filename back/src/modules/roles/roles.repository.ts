@@ -4,7 +4,7 @@ import { RoleCreateRequestDto } from './dto/controller/create-role.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IRoleRepository } from './types/role.repository.interface';
 import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { CountData } from '../../common/types/main/count.data';
 import { RoleEntity } from './entities/role.entity';
 import { KFI } from '../../common/utils/di';

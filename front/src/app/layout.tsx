@@ -10,6 +10,7 @@ import { cookieKeys } from 'src/utils/const';
 import { PropsReactNode } from 'src/utils/types';
 import { primaryFont } from 'src/utils/theme/typography';
 import { isCurrentUserTypeGuard } from 'src/utils/type-guards/is-current-user.type-guard';
+import { isUserWithRelatedWorkspaceTG } from 'src/utils/type-guards/is-user-with-related-workspace.type-guard';
 
 import { StyledProgressBar } from 'src/shared/progress-bar';
 import GeneralProvider from 'src/providers/general-provider';
@@ -40,13 +41,13 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: PropsReactNode) {
-  let currentUserInfo;
+  let currentUserInfo = null;
   let workspaceInfo: AppState | null = null;
   const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
   if (refreshToken) {
     currentUserInfo = await getCurrentUser();
   }
-  if (isCurrentUserTypeGuard(currentUserInfo)) {
+  if (isCurrentUserTypeGuard(currentUserInfo) && isUserWithRelatedWorkspaceTG(currentUserInfo)) {
     workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
   }
 

@@ -3,7 +3,7 @@ import { UserCreateRequestDto } from '../dto/controller/create-user.dto';
 import { UserUpdateRequestDto } from '../dto/controller/update-user.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { UserEntity } from '../entities/user.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';

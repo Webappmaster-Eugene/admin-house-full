@@ -3,7 +3,7 @@ import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IMaterialRepository } from './types/material.repository.interface';
 import { MaterialUpdateRequestDto } from './dto/controller/update-material.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { MaterialEntity } from './entities/material.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -57,7 +57,6 @@ export class MaterialRepository implements IMaterialRepository {
           priceChanges: true,
         },
       });
-      console.log('allMaterials', JSON.stringify(allMaterials[0]));
       return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);

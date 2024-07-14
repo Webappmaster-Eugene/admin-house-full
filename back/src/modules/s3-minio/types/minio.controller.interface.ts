@@ -2,7 +2,7 @@ import { FileStorageCreateRequestDto, FileStorageCreateResponseDto } from 'src/m
 import { FileStorageGetResponseDto } from 'src/modules/s3-minio/dto/service/get-file.dto';
 import { FileStorageDeleteResponseDto } from 'src/modules/s3-minio/dto/service/delete-file.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 export interface IFileStorageController {
   getFileByIdEP: (fileId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<FileStorageGetResponseDto>;

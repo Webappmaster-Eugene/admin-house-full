@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiRespo
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { FieldUnitMeasurementGetResponseDto } from './dto/controller/get-field-unit-measurement.dto';
 import {
   FieldUnitMeasurementCreateRequestDto,
@@ -48,9 +48,9 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldUnitMeasurementGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение FieldUnitMeasurement по id' })
   @ApiResponse({ status: 200, type: FieldUnitMeasurementGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -72,12 +72,12 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldUnitMeasurement',
   })
@@ -101,12 +101,12 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(FieldVariantsForSelectorFieldTypeGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Получить все FieldUnitMeasurement в Workspace',
   })
@@ -131,12 +131,12 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldUnitMeasurementCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldUnitMeasurementCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создание FieldUnitMeasurement' })
   @ApiResponse({ status: 201, type: FieldUnitMeasurementCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -160,12 +160,12 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(FieldUnitMeasurementUpdateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldUnitMeasurementUpdateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementUpdateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementUpdateCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Изменение FieldUnitMeasurement по id FieldUnitMeasurement',
   })
@@ -190,9 +190,9 @@ export class FieldUnitMeasurementController implements IFieldUnitMeasurementCont
   }
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(FieldUnitMeasurementDeleteCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(FieldUnitMeasurementDeleteCommand.ResponseSchema),
+  // })
   @ApiOperation({
     summary: 'Удаление FieldUnitMeasurement внутри Workspace менеджера по id FieldUnitMeasurement',
   })

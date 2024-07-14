@@ -4,9 +4,10 @@ import {
   WorkspaceGetCommand,
   FieldTypeGetAllCommand,
   CategoryMaterialGetAllCommand,
+  FieldUnitMeasurementGetAllCommand,
   GlobalCategoryMaterialGetAllCommand,
   FieldOfCategoryMaterialGetAllCommand,
-} from '@numart/house-admin-contracts';
+} from '@/../../back/libs/contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 
@@ -17,6 +18,9 @@ export type AppState = {
   allCategoryMaterialsOfHandbook: CategoryMaterialGetAllCommand.ResponseEntity | ErrorFromBackend;
   allFieldsOfCategoryMaterialsOfHandbook:
     | FieldOfCategoryMaterialGetAllCommand.ResponseEntity
+    | ErrorFromBackend;
+  allFieldsUnitMeasurementsOfHandbook:
+    | FieldUnitMeasurementGetAllCommand.ResponseEntity
     | ErrorFromBackend;
   allGlobalCategories: GlobalCategoryMaterialGetAllCommand.ResponseEntity | ErrorFromBackend;
   allFieldTypes: FieldTypeGetAllCommand.ResponseEntity | ErrorFromBackend;

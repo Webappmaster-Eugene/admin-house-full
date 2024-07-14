@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MaterialEntity } from './entities/material.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { IMaterialRepository } from './types/material.repository.interface';
@@ -8,7 +8,6 @@ import { MaterialUpdateRequestDto } from './dto/controller/update-material.dto';
 import { IMaterialService } from './types/material.service.interface';
 import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
-import { IRoleService } from '../roles/types/role.service.interface';
 import { IPriceChangingService } from '../price-changing/types/price-changing.service.interface';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 
@@ -64,16 +63,18 @@ export class MaterialService implements IMaterialService {
     dto: MaterialUpdateRequestDto,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<MaterialEntity>> {
+    const oldMaterialData = dataInternalExtractor(await this.getById(materialId));
     const updatedMaterial = await this.materialRepository.updateById(materialId, dto);
     if (dto?.price) {
-      const oldMaterial = dataInternalExtractor(await this.getById(materialId));
-      await this.priceChangingService.create(
+      const priceChange = await this.priceChangingService.create(
         {
-          source: dto.sourceInfo,
+          source: dto?.sourceInfo,
+          oldPrice: oldMaterialData.price,
           newPrice: dto.price,
+          comment: dto?.comment,
         },
-        userId,
         materialId,
+        userId,
       );
     }
     return new InternalResponse(updatedMaterial);

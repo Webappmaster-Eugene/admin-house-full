@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
-import { WorkspaceChangeOwnerCommand } from 'libs/contracts/commands/workspace/change-owner.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
+import { WorkspaceChangeOwnerCommand } from 'libs/contracts';
 
 export type WorkspaceChangeOwnerRequestParamDto = EntityUrlParamCommand.RequestUuidParam;
 

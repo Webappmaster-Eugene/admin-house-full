@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CategoryMaterialEntity } from './entities/category-material.entity';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
 import { ICategoryMaterialRepository } from './types/category-material.repository.interface';
@@ -8,6 +7,7 @@ import { CategoryMaterialUpdateRequestDto } from './dto/controller/update-catego
 import { ICategoryMaterialService } from './types/category-material.service.interface';
 import { CategoryMaterialCreateRequestDto } from './dto/controller/create-category-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()
 export class CategoryMaterialService implements ICategoryMaterialService {

@@ -1,4 +1,4 @@
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { ICommand } from '@nestjs/cqrs';
 import { GlobalCategoryMaterialUpdateRequestDto } from '../../dto/controller/update-global-category-material.dto';
 

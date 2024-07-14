@@ -30,7 +30,7 @@ import {
   UserUpdateCommand,
 } from 'libs/contracts';
 import { UserCreateRequestDto, UserCreateResponseDto } from './dto/controller/create-user.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { UserGetResponseDto } from './dto/controller/get-user.dto';
 import { UserDeleteResponseDto } from './dto/controller/delete-user.dto';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -48,6 +48,8 @@ import { IQueryParams, QueryParams } from '../../common/decorators/query-params.
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
+import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')

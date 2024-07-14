@@ -1200,31 +1200,18 @@ async function main() {
 
   const CHARACTERISTICS_MATERIAL_OF_FANERA_1 = await prisma?.characteristicsMaterial?.create({
     data: {
-      name: FIELD_OF_CATEGORY_MATERIAL_3.name,
-      materialUuid: MATERIAL_UNIT_1.uuid,
-      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4.value,
-      handbookUuid: MANAGER_HANDBOOK.uuid,
-      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
-      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_3.fieldTypeUuid,
-      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.categoryMaterialUuid,
-      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_3.unitOfMeasurementUuid,
-    },
-  });
-
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_2 = await prisma?.characteristicsMaterial?.create({
-    data: {
       name: FIELD_OF_CATEGORY_MATERIAL_4.name,
       materialUuid: MATERIAL_UNIT_1.uuid,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7.value,
       handbookUuid: MANAGER_HANDBOOK.uuid,
-      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
-      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_1.fieldTypeUuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_4.uuid,
+      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_4.fieldTypeUuid,
       //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.categoryMaterialUuid,
-      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_1.unitOfMeasurementUuid,
+      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_4.unitOfMeasurementUuid,
     },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_3 = await prisma?.characteristicsMaterial?.create({
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_2 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_5.name,
       materialUuid: MATERIAL_UNIT_1.uuid,
@@ -1237,7 +1224,7 @@ async function main() {
     },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_4 = await prisma?.characteristicsMaterial?.create({
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_3 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_6.name,
       materialUuid: MATERIAL_UNIT_1.uuid,
@@ -1250,7 +1237,7 @@ async function main() {
     },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_5 = await prisma?.characteristicsMaterial?.create({
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_4 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_7.name,
       materialUuid: MATERIAL_UNIT_1.uuid,
@@ -1263,7 +1250,7 @@ async function main() {
     },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_6 = await prisma?.characteristicsMaterial?.create({
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_5 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_8.name,
       materialUuid: MATERIAL_UNIT_1.uuid,
@@ -1276,7 +1263,7 @@ async function main() {
     },
   });
 
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_7 = await prisma?.characteristicsMaterial?.create({
+  const CHARACTERISTICS_MATERIAL_OF_FANERA_6 = await prisma?.characteristicsMaterial?.create({
     data: {
       name: FIELD_OF_CATEGORY_MATERIAL_9.name,
       materialUuid: MATERIAL_UNIT_1.uuid,
@@ -1285,19 +1272,6 @@ async function main() {
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
       fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
       // categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
-      fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
-    },
-  });
-
-  const CHARACTERISTICS_MATERIAL_OF_FANERA_8 = await prisma?.characteristicsMaterial?.create({
-    data: {
-      name: FIELD_OF_CATEGORY_MATERIAL_9.name,
-      materialUuid: MATERIAL_UNIT_1.uuid,
-      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13.value,
-      handbookUuid: MANAGER_HANDBOOK.uuid,
-      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
-      fieldTypeUuid: FIELD_OF_CATEGORY_MATERIAL_9.fieldTypeUuid,
-      //categoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.categoryMaterialUuid,
       fieldUnitMeasurementUuid: FIELD_OF_CATEGORY_MATERIAL_9.unitOfMeasurementUuid,
     },
   });
@@ -1316,8 +1290,6 @@ async function main() {
     },
   });
   //endregion
-
-  console.log('UPDATED_MATERIAL_GLUHAR', UPDATED_MATERIAL_GLUHAR);
 }
 
 main()

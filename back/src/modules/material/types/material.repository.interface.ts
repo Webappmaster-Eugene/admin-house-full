@@ -1,7 +1,7 @@
 import { MaterialCreateRequestDto } from '../dto/controller/create-material.dto';
 import { MaterialUpdateRequestDto } from '../dto/controller/update-material.dto';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { MaterialEntity } from '../entities/material.entity';
 
 export interface IMaterialRepository extends IRepositoryCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {

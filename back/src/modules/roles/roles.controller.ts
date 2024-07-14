@@ -12,20 +12,20 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { RoleCreateRequestDto, RoleCreateResponseDto } from './dto/controller/create-role.dto';
 import { IRoleService } from './types/role.service.interface';
 import { RoleUpdateRequestDto, RoleUpdateResponseDto } from './dto/controller/update-role.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { RoleGetResponseDto } from './dto/controller/get-role.dto';
 import { RoleGetAllResponseDto } from './dto/controller/get-all-roles.dto';
 import { RoleDeleteResponseDto } from './dto/controller/delete-role.dto';
 import { EUserTypeVariants } from '.prisma/client';
 import { KFI } from '../../common/utils/di';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { RoleCreateCommand, RoleDeleteCommand, RoleGetAllCommand, RoleGetCommand, RoleUpdateCommand } from 'libs/contracts';
+import { RoleDeleteCommand, RoleUpdateCommand } from 'libs/contracts';
 import { RoleEntity } from './entities/role.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
@@ -35,6 +35,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
+import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
 
 @ApiTags('Работа с ролями')
 @Controller('role')
@@ -46,9 +47,9 @@ export class RolesController implements IRoleController {
   ) {}
 
   //region SWAGGER
-  @ApiOkResponse({
-    schema: zodToOpenAPI(RoleGetCommand.ResponseSchema),
-  })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(RoleGetCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получить информацию о роли по ее id' })
   @ApiResponse({ status: 200, type: RoleGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -70,7 +71,7 @@ export class RolesController implements IRoleController {
   }
 
   //#region SWAGGER
-  @ApiOkResponse({ schema: zodToOpenAPI(RoleGetCommand.ResponseSchema) })
+  // @ApiOkResponse({ schema: zodToOpenAPI(RoleGetCommand.ResponseSchema) })
   @ApiOperation({ summary: 'Получить информацию о роли по ее наименованию' })
   @ApiResponse({ status: 200, type: RoleGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -82,7 +83,7 @@ export class RolesController implements IRoleController {
     @Param('roleName', new ParseEnumPipe(EUserTypeVariants))
     roleName: EUserTypeVariants,
     @UrlParams() urlParams: IUrlParams,
-  ): Promise<RoleGetResponseDto> {
+  ): Promise<ExternalResponse<RoleEntity>> {
     try {
       const { ok, data } = await this.rolesService.getByValue(roleName);
       return okResponseHandler(ok, data, this.logger);
@@ -92,12 +93,12 @@ export class RolesController implements IRoleController {
   }
 
   //region SWAGGER
-  @ApiQuery({
-    schema: zodToOpenAPI(RoleGetAllCommand.RequestQuerySchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(RoleGetAllCommand.ResponseSchema),
-  })
+  // @ApiQuery({
+  //   schema: zodToOpenAPI(RoleGetAllCommand.RequestQuerySchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(RoleGetAllCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Получение всех ролей пользователей' })
   @ApiResponse({ status: 200, type: [RoleGetAllResponseDto] })
   @ApiBearerAuth('access-token')
@@ -105,7 +106,7 @@ export class RolesController implements IRoleController {
   @UseGuards(AuthGuard)
   @ZodSerializerDto(RoleGetAllResponseDto)
   @Get()
-  async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<RoleGetAllResponseDto> {
+  async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<ExternalResponse<RoleEntity[]>> {
     try {
       const { ok, data } = await this.rolesService.getAll(queryParams);
       return okResponseHandler(ok, data, this.logger);
@@ -115,12 +116,12 @@ export class RolesController implements IRoleController {
   }
 
   //region SWAGGER
-  @ApiBody({
-    schema: zodToOpenAPI(RoleCreateCommand.RequestSchema),
-  })
-  @ApiOkResponse({
-    schema: zodToOpenAPI(RoleCreateCommand.ResponseSchema),
-  })
+  // @ApiBody({
+  //   schema: zodToOpenAPI(RoleCreateCommand.RequestSchema),
+  // })
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(RoleCreateCommand.ResponseSchema),
+  // })
   @ApiOperation({ summary: 'Создать новую роль для пользователя' })
   @ApiResponse({ status: 201, type: RoleCreateResponseDto })
   @ApiBearerAuth('access-token')

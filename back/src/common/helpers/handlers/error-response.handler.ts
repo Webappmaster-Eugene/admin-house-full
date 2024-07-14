@@ -2,7 +2,7 @@ import { errorExtractor } from '../extractors/error.extractor';
 import { EntityName } from '../../types/entity.enum';
 import { ExternalResponse } from '../../types/responses/universal-external-response.interface';
 import { HttpException } from '@nestjs/common';
-import { BACKEND_ERRORS, BackendErrorNames } from '../../errors/errors.backend';
+import { BACKEND_ERRORS, BackendErrorNames } from 'src/common/errors/errors-description.backend';
 import { IUrlParams } from '../../decorators/url-params.decorator';
 import { ILogger } from '../../types/main/logger.interface';
 import { loggerError } from '../../utils/logger/logger.error';

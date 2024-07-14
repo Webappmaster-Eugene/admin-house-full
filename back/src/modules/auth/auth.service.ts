@@ -8,8 +8,7 @@ import { AuthEntity } from './entities/auth.entity';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { IUserService } from '../user/types/user.service.interface';
 import { AuthRegisterRequestDto } from './dto/controller/auth.register.dto';
-import { BackendErrorNames, InternalError } from '../../common/errors/errors.backend';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { BackendErrorNames, InternalError } from 'src/common/errors/errors-description.backend';
 import { AuthGenerateKeyRequestDto } from './dto/controller/auth.generate-key.dto';
 import { IAuthRepository } from './types/auth.repository.interface';
 import { AuthLoginRequestDto } from './dto/controller/auth.login.dto';
@@ -24,6 +23,7 @@ import { KFI } from 'src/common/utils/di';
 import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
 import { IJWTPayload, IJWTRefreshPayload } from 'src/common/types/jwt.payload.interface';
 import { AuthRefreshKeysEntity } from 'src/modules/auth/entities/auth-refresh-keys.entity';
+import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -51,7 +51,6 @@ export class AuthService implements IAuthService {
 
     const outputEntity = {
       ...registeredUser,
-      roleName: newUserRole.name,
       accessToken: accessTokenResponse,
       refreshToken: refreshTokenResponse,
     };
@@ -88,7 +87,6 @@ export class AuthService implements IAuthService {
 
       const outputEntity = {
         ...registeredUser,
-        roleName: newUserRole.name,
         accessToken: accessTokenResponse,
         refreshToken: refreshTokenResponse,
       };
@@ -168,7 +166,6 @@ export class AuthService implements IAuthService {
 
     const outputEntity = {
       ...user,
-      roleName: userRole.name,
       accessToken: accessTokenResponse,
       refreshToken: refreshTokenResponse,
     };

@@ -21,7 +21,7 @@ export interface HandbookRelatedEntities {
   fieldsOfCategoryMaterials: FieldOfCategoryMaterialEntity[];
 }
 
-export class HandbookEntity implements Handbook, HandbookRelatedEntities {
+export class HandbookEntity implements Handbook {
   uuid: string;
   description: string;
   name: string;
@@ -31,14 +31,11 @@ export class HandbookEntity implements Handbook, HandbookRelatedEntities {
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
+  workspace: WorkspaceEntity;
   categoryMaterials: CategoryMaterialEntity[];
   fieldUnitMeasurements: FieldUnitMeasurementEntity[];
   responsibleManager: UserEntity;
   responsiblePartnerProducers: ResponsiblePartnerProducerEntity[];
-  workspace: WorkspaceEntity & {
-    workspaceMembers: UserEntity[];
-    organizations: OrganizationEntity[];
-  };
   materials: MaterialEntity[];
   fieldsOfCategoryMaterials: FieldOfCategoryMaterialEntity[];
 

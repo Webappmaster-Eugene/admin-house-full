@@ -3,7 +3,7 @@ import { UserCreateRequestDto, UserCreateResponseDto } from '../dto/controller/c
 import { UserUpdateRequestDto, UserUpdateResponseDto } from '../dto/controller/update-user.dto';
 import { UserGetResponseDto } from '../dto/controller/get-user.dto';
 import { UserGetAllResponseDto } from '../dto/controller/get-all-users.dto';
-import { EntityUrlParamCommand } from 'libs/contracts/commands/common/entity-url-param.command';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { UserDeleteResponseDto } from '../dto/controller/delete-user.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
