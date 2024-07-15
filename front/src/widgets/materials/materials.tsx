@@ -12,7 +12,7 @@ import {
   CharacteristicsMaterialGetAllCommand,
   ResponsiblePartnerProducerGetCommand,
   ResponsiblePartnerProducerGetAllCommand,
-} from '@/../../back/libs/contracts';
+} from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
