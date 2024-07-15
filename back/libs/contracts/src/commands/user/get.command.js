@@ -14,6 +14,7 @@ const UserGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var UserGetCommand;
 (function (UserGetCommand) {
+    UserGetCommand.BusinessValueSchema = user_business_value_schema_1.UserBusinessValueSchema;
     UserGetCommand.RequestParamSchema = entity_url_param_command_1.EntityUrlParamCommand.RequestUuidParamSchema;
     UserGetCommand.ResponseSchema = UserGetResponseSchema;
     UserGetCommand.ResponseEntitySchema = UserGetResponseEntitySchema;

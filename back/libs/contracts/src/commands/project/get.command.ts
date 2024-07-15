@@ -16,6 +16,9 @@ const ProjectSchemaGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace ProjectGetCommand {
+  export const BusinessValueSchema = ProjectBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const RequestSchema = ProjectSchemaGetRequestSchema;
   export type Request = z.infer<typeof RequestSchema>;
 

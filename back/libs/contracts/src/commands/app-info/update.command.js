@@ -7,7 +7,7 @@ const models_1 = require("../../models");
 const AppInfoUpdateResponseEntitySchema = app_info_business_value_schema_1.AppInfoBusinessValueSchema;
 const AppInfoUpdateRequestSchema = models_1.AppInfoSchema.omit({
     uuid: true,
-});
+}).partial();
 const AppInfoUpdateResponseSchema = zod_1.z
     .object({
     data: AppInfoUpdateResponseEntitySchema,

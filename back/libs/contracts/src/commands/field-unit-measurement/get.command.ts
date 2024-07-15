@@ -14,6 +14,9 @@ const FieldUnitMeasurementGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace FieldUnitMeasurementGetCommand {
+  export const BusinessValueSchema = FieldUnitMeasurementBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = FieldUnitMeasurementGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

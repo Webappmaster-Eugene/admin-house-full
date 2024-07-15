@@ -13,6 +13,7 @@ const CharacteristicsMaterialGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var CharacteristicsMaterialGetCommand;
 (function (CharacteristicsMaterialGetCommand) {
+    CharacteristicsMaterialGetCommand.BusinessValueSchema = characteristics_material_business_value_schema_1.CharacteristicsMaterialBusinessValueSchema;
     CharacteristicsMaterialGetCommand.ResponseSchema = CharacteristicsMaterialGetResponseSchema;
     CharacteristicsMaterialGetCommand.ResponseEntitySchema = CharacteristicsMaterialGetResponseEntitySchema;
 })(CharacteristicsMaterialGetCommand || (exports.CharacteristicsMaterialGetCommand = CharacteristicsMaterialGetCommand = {}));

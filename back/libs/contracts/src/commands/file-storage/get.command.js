@@ -12,6 +12,7 @@ const FileStorageGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var FileStorageGetCommand;
 (function (FileStorageGetCommand) {
+    FileStorageGetCommand.BusinessValueSchema = file_storage_business_value_schema_1.FileStorageBusinessValueSchema;
     FileStorageGetCommand.ResponseSchema = FileStorageGetResponseSchema;
     FileStorageGetCommand.ResponseEntitySchema = FileStorageGetResponseEntitySchema;
 })(FileStorageGetCommand || (exports.FileStorageGetCommand = FileStorageGetCommand = {}));

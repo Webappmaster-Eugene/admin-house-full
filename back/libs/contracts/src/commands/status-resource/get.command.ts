@@ -11,6 +11,9 @@ const StatusResourceGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace StatusResourceGetCommand {
+  export const BusinessValueSchema = StatusResourceBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = StatusResourceGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

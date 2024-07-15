@@ -10,7 +10,8 @@ const PriceChangingUpdateRequestSchema = models_1.PriceChangingSchema.pick({
     source: true,
     comment: true,
     newPrice: true,
-});
+    oldPrice: true,
+}).partial();
 const PriceChangingUpdateResponseSchema = zod_1.z
     .object({
     data: PriceChangingUpdateResponseEntitySchema,

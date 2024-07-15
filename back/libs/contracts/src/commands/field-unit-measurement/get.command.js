@@ -13,6 +13,7 @@ const FieldUnitMeasurementGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var FieldUnitMeasurementGetCommand;
 (function (FieldUnitMeasurementGetCommand) {
+    FieldUnitMeasurementGetCommand.BusinessValueSchema = field_unit_measurement_business_value_schema_1.FieldUnitMeasurementBusinessValueSchema;
     FieldUnitMeasurementGetCommand.ResponseSchema = FieldUnitMeasurementGetResponseSchema;
     FieldUnitMeasurementGetCommand.ResponseEntitySchema = FieldUnitMeasurementGetResponseEntitySchema;
 })(FieldUnitMeasurementGetCommand || (exports.FieldUnitMeasurementGetCommand = FieldUnitMeasurementGetCommand = {}));

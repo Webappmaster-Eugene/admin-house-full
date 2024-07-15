@@ -12,6 +12,9 @@ const MaterialGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace MaterialGetCommand {
+  export const BusinessValueSchema = MaterialBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = MaterialGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

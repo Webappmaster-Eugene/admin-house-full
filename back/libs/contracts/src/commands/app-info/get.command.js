@@ -12,6 +12,7 @@ const AppInfoGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var AppInfoGetCommand;
 (function (AppInfoGetCommand) {
+    AppInfoGetCommand.BusinessValueSchema = app_info_business_value_schema_1.AppInfoBusinessValueSchema;
     AppInfoGetCommand.ResponseSchema = AppInfoGetResponseSchema;
     AppInfoGetCommand.ResponseEntitySchema = AppInfoGetResponseEntitySchema;
 })(AppInfoGetCommand || (exports.AppInfoGetCommand = AppInfoGetCommand = {}));

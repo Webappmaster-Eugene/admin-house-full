@@ -12,6 +12,9 @@ const TechLogChangesGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace TechLogChangesGetCommand {
+  export const BusinessValueSchema = TechLogChangesBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 

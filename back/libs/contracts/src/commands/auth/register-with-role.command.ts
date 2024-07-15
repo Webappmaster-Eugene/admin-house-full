@@ -40,6 +40,9 @@ const AuthRegisterWithRoleResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace AuthRegisterWithRoleCommand {
+  export const BusinessValueSchema = RegisterBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const RequestParamSchema = AuthRegisterWithRoleRequestParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 

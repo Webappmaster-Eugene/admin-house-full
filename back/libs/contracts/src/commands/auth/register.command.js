@@ -32,6 +32,7 @@ const AuthRegisterResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var AuthRegisterCommand;
 (function (AuthRegisterCommand) {
+    AuthRegisterCommand.BusinessValueSchema = register_business_value_schema_1.RegisterBusinessValueSchema;
     AuthRegisterCommand.RequestSchema = AuthRegisterRequestSchema;
     AuthRegisterCommand.ResponseSchema = AuthRegisterResponseSchema;
     AuthRegisterCommand.ResponseEntitySchema = AuthRegisterResponseEntitySchema;

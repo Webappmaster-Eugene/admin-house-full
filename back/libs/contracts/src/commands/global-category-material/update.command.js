@@ -10,7 +10,7 @@ const GlobalCategoryMaterialUpdateRequestSchema = models_1.GlobalCategoryMateria
     nameRu: true,
     comment: true,
     color: true,
-});
+}).partial();
 const GlobalCategoryMaterialUpdateResponseSchema = zod_1.z
     .object({
     data: GlobalCategoryMaterialUpdateResponseEntitySchema,

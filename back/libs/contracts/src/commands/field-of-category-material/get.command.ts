@@ -14,6 +14,9 @@ const FieldOfCategoryMaterialGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace FieldOfCategoryMaterialGetCommand {
+  export const BusinessValueSchema = FieldOfCategoryMaterialBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = FieldOfCategoryMaterialGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

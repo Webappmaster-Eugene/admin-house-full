@@ -11,6 +11,9 @@ const AuthRefreshKeysResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace AuthRefreshKeysCommand {
+  export const BusinessValueSchema = AuthRefreshKeysBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = AuthRefreshKeysResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

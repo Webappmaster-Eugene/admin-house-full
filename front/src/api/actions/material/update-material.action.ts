@@ -14,7 +14,7 @@ export async function updateMaterial(
   handbookId: string,
   categoryMaterialId: string,
   materialId: string,
-  updateDto: MaterialUpdateCommand.RequestSchema
+  updateDto: typeof MaterialUpdateCommand.RequestSchema
 ) {
   const errorObject: ErrorFromBackend = {
     error: null,

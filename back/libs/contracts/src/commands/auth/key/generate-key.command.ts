@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { AuthStrictKeyBusinessValueSchema } from '../../models/auth/auth-strict-key/auth.strict-key-business-value.schema';
-import { ResponseClientSchema } from '../../models';
+import { AuthStrictKeyBusinessValueSchema } from '../../../models/auth/auth-strict-key/auth.strict-key-business-value.schema';
+import { ResponseClientSchema } from '../../../models';
 
 const AuthGenerateKeyResponseEntitySchema = AuthStrictKeyBusinessValueSchema;
 

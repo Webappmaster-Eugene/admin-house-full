@@ -13,6 +13,7 @@ const OrganizationSchemaGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var OrganizationGetCommand;
 (function (OrganizationGetCommand) {
+    OrganizationGetCommand.BusinessValueSchema = organization_business_value_schema_1.OrganizationBusinessValueSchema;
     OrganizationGetCommand.ResponseSchema = OrganizationSchemaGetResponseSchema;
     OrganizationGetCommand.ResponseEntitySchema = OrganizationGetResponseEntitySchema;
 })(OrganizationGetCommand || (exports.OrganizationGetCommand = OrganizationGetCommand = {}));

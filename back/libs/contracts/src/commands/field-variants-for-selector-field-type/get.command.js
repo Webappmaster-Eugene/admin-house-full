@@ -13,6 +13,7 @@ const FieldVariantsForSelectorFieldTypeGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var FieldVariantsForSelectorFieldTypeGetCommand;
 (function (FieldVariantsForSelectorFieldTypeGetCommand) {
+    FieldVariantsForSelectorFieldTypeGetCommand.BusinessValueSchema = field_variants_for_selector_field_type_business_value_schema_1.FieldVariantsForSelectorFieldTypeBusinessValueSchema;
     FieldVariantsForSelectorFieldTypeGetCommand.ResponseSchema = FieldVariantsForSelectorFieldTypeGetResponseSchema;
     FieldVariantsForSelectorFieldTypeGetCommand.ResponseEntitySchema = FieldVariantsForSelectorFieldTypeGetResponseEntitySchema;
 })(FieldVariantsForSelectorFieldTypeGetCommand || (exports.FieldVariantsForSelectorFieldTypeGetCommand = FieldVariantsForSelectorFieldTypeGetCommand = {}));

@@ -14,7 +14,7 @@ const MaterialUpdateRequestSchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
-});
+}).partial();
 const MaterialUpdateResponseSchema = zod_1.z
     .object({
     data: MaterialUpdateResponseEntitySchema,

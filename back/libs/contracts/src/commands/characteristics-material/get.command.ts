@@ -14,6 +14,9 @@ const CharacteristicsMaterialGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace CharacteristicsMaterialGetCommand {
+  export const BusinessValueSchema = CharacteristicsMaterialBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = CharacteristicsMaterialGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

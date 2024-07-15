@@ -12,6 +12,9 @@ const PriceChangingGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace PriceChangingGetCommand {
+  export const BusinessValueSchema = PriceChangingBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = PriceChangingGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

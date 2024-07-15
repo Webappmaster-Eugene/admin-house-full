@@ -7,7 +7,7 @@ const field_type_business_value_schema_1 = require("../../models/field-type/fiel
 const FieldTypeUpdateResponseEntitySchema = field_type_business_value_schema_1.FieldTypeBusinessValueSchema;
 const FieldTypeUpdateRequestSchema = models_1.FieldTypeSchema.pick({
     description: true,
-});
+}).partial();
 const FieldTypeUpdateResponseSchema = zod_1.z
     .object({
     data: FieldTypeUpdateResponseEntitySchema,

@@ -11,7 +11,7 @@ const ProjectUpdateRequestSchema = models_1.ProjectSchema.pick({
     customerMail: true,
     customerUuid: true,
     description: true,
-});
+}).partial();
 const ProjectUpdateResponseSchema = zod_1.z
     .object({
     data: ProjectUpdateResponseEntitySchema,

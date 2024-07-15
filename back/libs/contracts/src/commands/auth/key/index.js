@@ -14,8 +14,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./login.command"), exports);
-__exportStar(require("./register.command"), exports);
-__exportStar(require("./register-with-role.command"), exports);
-__exportStar(require("./key"), exports);
-__exportStar(require("./refresh-keys.command"), exports);
+__exportStar(require("./generate-key.command"), exports);
+__exportStar(require("./get-key.command"), exports);

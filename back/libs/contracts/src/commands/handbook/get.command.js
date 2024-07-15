@@ -13,6 +13,7 @@ const HandbookGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var HandbookGetCommand;
 (function (HandbookGetCommand) {
+    HandbookGetCommand.BusinessValueSchema = handbook_business_value_schema_1.HandbookBusinessValueSchema;
     HandbookGetCommand.ResponseSchema = HandbookGetResponseSchema;
     HandbookGetCommand.ResponseEntitySchema = HandbookGetResponseEntitySchema;
 })(HandbookGetCommand || (exports.HandbookGetCommand = HandbookGetCommand = {}));

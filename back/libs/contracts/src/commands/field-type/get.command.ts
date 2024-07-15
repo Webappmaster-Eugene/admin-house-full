@@ -11,6 +11,9 @@ const FieldTypeGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace FieldTypeGetCommand {
+  export const BusinessValueSchema = FieldTypeBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = FieldTypeGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

@@ -16,6 +16,7 @@ const ProjectSchemaGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var ProjectGetCommand;
 (function (ProjectGetCommand) {
+    ProjectGetCommand.BusinessValueSchema = project_business_value_schema_1.ProjectBusinessValueSchema;
     ProjectGetCommand.RequestSchema = ProjectSchemaGetRequestSchema;
     ProjectGetCommand.ResponseSchema = ProjectSchemaGetResponseSchema;
     ProjectGetCommand.ResponseEntitySchema = ProjectGetResponseEntitySchema;

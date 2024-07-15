@@ -16,6 +16,7 @@ const WorkspaceGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var WorkspaceGetCommand;
 (function (WorkspaceGetCommand) {
+    WorkspaceGetCommand.BusinessValueSchema = workspace_business_value_schema_1.WorkspaceBusinessValueSchema;
     WorkspaceGetCommand.RequestSchema = WorkspaceGetRequestSchema;
     WorkspaceGetCommand.ResponseSchema = WorkspaceGetResponseSchema;
     WorkspaceGetCommand.ResponseEntitySchema = WorkspaceGetResponseEntitySchema;

@@ -35,6 +35,9 @@ const AuthRegisterResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace AuthRegisterCommand {
+  export const BusinessValueSchema = RegisterBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const RequestSchema = AuthRegisterRequestSchema;
   export type Request = z.infer<typeof RequestSchema>;
 

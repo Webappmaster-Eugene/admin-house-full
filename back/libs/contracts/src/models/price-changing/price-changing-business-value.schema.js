@@ -10,4 +10,6 @@ exports.PriceChangingBusinessValueSchema = price_changing_schema_1.PriceChanging
     uuid: true,
     lastChangeByUserUuid: true,
     materialUuid: true,
+    createdAt: true,
+    updatedAt: true,
 });

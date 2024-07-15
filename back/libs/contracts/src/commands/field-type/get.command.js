@@ -12,6 +12,7 @@ const FieldTypeGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var FieldTypeGetCommand;
 (function (FieldTypeGetCommand) {
+    FieldTypeGetCommand.BusinessValueSchema = field_type_business_value_schema_1.FieldTypeBusinessValueSchema;
     FieldTypeGetCommand.ResponseSchema = FieldTypeGetResponseSchema;
     FieldTypeGetCommand.ResponseEntitySchema = FieldTypeGetResponseEntitySchema;
 })(FieldTypeGetCommand || (exports.FieldTypeGetCommand = FieldTypeGetCommand = {}));

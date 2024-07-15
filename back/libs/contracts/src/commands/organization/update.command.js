@@ -9,7 +9,7 @@ const OrganizationUpdateResponseEntitySchema = organization_business_value_schem
 const OrganizationUpdateRequestSchema = models_1.OrganizationSchema.pick({
     name: true,
     description: true,
-});
+}).partial();
 const OrganizationUpdateResponseSchema = zod_1.z
     .object({
     data: OrganizationUpdateResponseEntitySchema,

@@ -24,6 +24,7 @@ const ResponsiblePartnerProducerGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var ResponsiblePartnerProducerGetCommand;
 (function (ResponsiblePartnerProducerGetCommand) {
+    ResponsiblePartnerProducerGetCommand.BusinessValueSchema = responsible_partner_producer_business_value_schema_1.ResponsiblePartnerProducerBusinessValueSchema;
     ResponsiblePartnerProducerGetCommand.ResponseSchema = ResponsiblePartnerProducerGetResponseSchema;
     ResponsiblePartnerProducerGetCommand.ResponseEntitySchema = ResponsiblePartnerProducerGetResponseEntitySchema;
 })(ResponsiblePartnerProducerGetCommand || (exports.ResponsiblePartnerProducerGetCommand = ResponsiblePartnerProducerGetCommand = {}));

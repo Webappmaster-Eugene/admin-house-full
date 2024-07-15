@@ -13,6 +13,7 @@ const PriceChangingGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var PriceChangingGetCommand;
 (function (PriceChangingGetCommand) {
+    PriceChangingGetCommand.BusinessValueSchema = price_changing_business_value_schema_1.PriceChangingBusinessValueSchema;
     PriceChangingGetCommand.ResponseSchema = PriceChangingGetResponseSchema;
     PriceChangingGetCommand.ResponseEntitySchema = PriceChangingGetResponseEntitySchema;
 })(PriceChangingGetCommand || (exports.PriceChangingGetCommand = PriceChangingGetCommand = {}));

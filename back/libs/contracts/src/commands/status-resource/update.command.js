@@ -8,7 +8,7 @@ const StatusResourceUpdateResponseEntitySchema = status_resource_business_value_
 const StatusResourceUpdateRequestSchema = models_1.StatusResourceSchema.pick({
     name: true,
     comment: true,
-});
+}).partial();
 const StatusResourceUpdateResponseSchema = zod_1.z
     .object({
     data: StatusResourceUpdateResponseEntitySchema,

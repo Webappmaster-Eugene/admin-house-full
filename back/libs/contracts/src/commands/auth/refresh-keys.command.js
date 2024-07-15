@@ -12,6 +12,7 @@ const AuthRefreshKeysResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var AuthRefreshKeysCommand;
 (function (AuthRefreshKeysCommand) {
+    AuthRefreshKeysCommand.BusinessValueSchema = auth_refresh_keys_business_value_schema_1.AuthRefreshKeysBusinessValueSchema;
     AuthRefreshKeysCommand.ResponseSchema = AuthRefreshKeysResponseSchema;
     AuthRefreshKeysCommand.ResponseEntitySchema = AuthRefreshKeysResponseEntitySchema;
 })(AuthRefreshKeysCommand || (exports.AuthRefreshKeysCommand = AuthRefreshKeysCommand = {}));

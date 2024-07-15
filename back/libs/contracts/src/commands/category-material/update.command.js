@@ -11,7 +11,7 @@ const CategoryMaterialUpdateRequestSchema = models_1.CategoryMaterialSchema.pick
     name: true,
     comment: true,
     templateName: true,
-});
+}).partial();
 const CategoryMaterialUpdateResponseSchema = zod_1.z
     .object({
     data: CategoryMaterialUpdateResponseEntitySchema,

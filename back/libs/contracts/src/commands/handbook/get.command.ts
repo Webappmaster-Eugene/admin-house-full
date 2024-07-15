@@ -12,6 +12,9 @@ const HandbookGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace HandbookGetCommand {
+  export const BusinessValueSchema = HandbookBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = HandbookGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

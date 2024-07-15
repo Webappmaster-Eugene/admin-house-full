@@ -25,6 +25,9 @@ const ResponsiblePartnerProducerGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace ResponsiblePartnerProducerGetCommand {
+  export const BusinessValueSchema = ResponsiblePartnerProducerBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = ResponsiblePartnerProducerGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

@@ -9,7 +9,7 @@ const StatusApproveUpdateRequestSchema = models_1.StatusApproveSchema.pick({
     name: true,
     nameRu: true,
     comment: true,
-});
+}).partial();
 const StatusApproveUpdateResponseSchema = zod_1.z
     .object({
     data: StatusApproveUpdateResponseEntitySchema,

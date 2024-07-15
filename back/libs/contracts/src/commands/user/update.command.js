@@ -15,7 +15,7 @@ const UserUpdateRequestSchema = models_1.UserSchema.pick({
     documents: true,
     firstName: true,
     phone: true,
-});
+}).partial();
 const UserUpdateResponseSchema = zod_1.z
     .object({
     data: UserUpdateResponseEntitySchema,

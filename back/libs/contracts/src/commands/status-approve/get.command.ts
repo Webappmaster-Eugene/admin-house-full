@@ -11,6 +11,9 @@ const StatusApproveGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace StatusApproveGetCommand {
+  export const BusinessValueSchema = StatusApproveBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = StatusApproveGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

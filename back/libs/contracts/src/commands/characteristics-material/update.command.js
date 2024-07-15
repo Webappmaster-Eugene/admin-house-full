@@ -10,7 +10,7 @@ const CharacteristicsMaterialUpdateRequestSchema = models_1.CharacteristicsMater
     name: true,
     value: true,
     comment: true,
-});
+}).partial();
 const CharacteristicsMaterialUpdateResponseSchema = zod_1.z
     .object({
     data: CharacteristicsMaterialUpdateResponseEntitySchema,

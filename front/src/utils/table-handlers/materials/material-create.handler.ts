@@ -3,9 +3,8 @@ import {
   MaterialCreateCommand,
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetAllCommand,
-  ResponsiblePartnerProducerGetAllCommand,
-} from '@/../../back/libs/contracts';
-
+  ResponsiblePartnerProducerGetCommand,
+  ResponsiblePartnerProducerGetAllCommand } from '@numart/house-admin-contracts';
 import {
   MaterialColumnSchema,
   MaterialColumnEditableFullSchema,
@@ -15,24 +14,33 @@ import { createMaterial } from 'src/api/actions/material/create-material.action'
 import { MaterialEditableCreateColumns } from 'src/widgets/materials/editable-rows';
 
 export async function materialCreateHandler(
-  newMaterial: MaterialGetCommand.ResponseEntity,
+  newMaterial: MaterialGetCommand.BusinessValue,
   workspaceId: string,
   handbookId: string,
   responsiblePartnerProducers: ResponsiblePartnerProducerGetAllCommand.ResponseEntity,
   categoryMaterials: CategoryMaterialGetAllCommand.ResponseEntity,
   unitMeasurements: FieldUnitMeasurementGetAllCommand.ResponseEntity
 ) {
-  const createMaterialDto: MaterialCreateCommand.Request = {};
-  const newResponsiblePartnerUuid = responsiblePartnerProducers.find(
-    (partner) => partner.name === newMaterial[MaterialColumnSchema.responsiblePartner]
-  ).uuid;
-  const newCategoryMaterialUuid = categoryMaterials.find(
+  const createMaterialDto: MaterialCreateCommand.Request | {} = {};
+  const newResponsiblePartner = responsiblePartnerProducers?.find(
+    (partner: ResponsiblePartnerProducerGetCommand.ResponseEntity) => {
+      const responsiblePartnerName = newMaterial. as string
+      partner?.name ===
+    }
+
+  );
+  const newResponsiblePartnerUuid: string | undefined = newResponsiblePartner?.uuid;
+  // if (responsiblePartnerProducers) {
+  //
+  // }
+
+  const newCategoryMaterialUuid = categoryMaterials?.find(
     (categoryMaterial) =>
       categoryMaterial.name === newMaterial[MaterialColumnSchema.categoryMaterial]
-  ).uuid;
-  const newUnitMeasurementUuid = unitMeasurements.find(
+  )?.uuid;
+  const newUnitMeasurementUuid = unitMeasurements?.find(
     (unitMeasurement) => unitMeasurement.name === newMaterial[MaterialColumnSchema.unitMeasurement]
-  ).uuid;
+  )?.uuid;
 
   Object.entries(newMaterial).forEach(([key, value]) => {
     if (MaterialEditableCreateColumns.includes(key)) {
@@ -80,5 +88,4 @@ export async function materialCreateHandler(
     newCategoryMaterialUuid,
     createMaterialDto
   );
-  console.log('newMaterialCreated', newMaterialCreated);
 }

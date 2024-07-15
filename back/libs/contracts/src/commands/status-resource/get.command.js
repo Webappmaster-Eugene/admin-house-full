@@ -12,6 +12,7 @@ const StatusResourceGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var StatusResourceGetCommand;
 (function (StatusResourceGetCommand) {
+    StatusResourceGetCommand.BusinessValueSchema = status_resource_business_value_schema_1.StatusResourceBusinessValueSchema;
     StatusResourceGetCommand.ResponseSchema = StatusResourceGetResponseSchema;
     StatusResourceGetCommand.ResponseEntitySchema = StatusResourceGetResponseEntitySchema;
 })(StatusResourceGetCommand || (exports.StatusResourceGetCommand = StatusResourceGetCommand = {}));

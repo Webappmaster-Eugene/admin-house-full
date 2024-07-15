@@ -7,7 +7,7 @@ const models_1 = require("../../models");
 const FileStorageUpdateResponseEntitySchema = file_storage_business_value_schema_1.FileStorageBusinessValueSchema;
 const FileStorageUpdateRequestSchema = models_1.FileStorageSchema.pick({
     comment: true,
-});
+}).partial();
 const FileStorageUpdateResponseSchema = zod_1.z
     .object({
     data: FileStorageUpdateResponseEntitySchema,

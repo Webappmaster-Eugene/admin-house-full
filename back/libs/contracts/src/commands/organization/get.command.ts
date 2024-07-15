@@ -12,6 +12,9 @@ const OrganizationSchemaGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace OrganizationGetCommand {
+  export const BusinessValueSchema = OrganizationBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = OrganizationSchemaGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

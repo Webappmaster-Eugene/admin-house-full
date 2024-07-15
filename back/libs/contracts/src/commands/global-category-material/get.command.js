@@ -12,6 +12,7 @@ const GlobalCategoryMaterialGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var GlobalCategoryMaterialGetCommand;
 (function (GlobalCategoryMaterialGetCommand) {
+    GlobalCategoryMaterialGetCommand.BusinessValueSchema = global_category_business_value_schema_1.GlobalCategoryMaterialBusinessValueSchema;
     GlobalCategoryMaterialGetCommand.ResponseSchema = GlobalCategoryMaterialGetResponseSchema;
     GlobalCategoryMaterialGetCommand.ResponseEntitySchema = GlobalCategoryMaterialGetResponseEntitySchema;
 })(GlobalCategoryMaterialGetCommand || (exports.GlobalCategoryMaterialGetCommand = GlobalCategoryMaterialGetCommand = {}));

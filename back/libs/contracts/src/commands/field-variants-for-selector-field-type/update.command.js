@@ -9,7 +9,7 @@ const FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema = field_varian
 const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = models_1.FieldVariantsForSelectorFieldTypeSchema.pick({
     description: true,
     value: true,
-});
+}).partial();
 const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = zod_1.z
     .object({
     data: FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema,

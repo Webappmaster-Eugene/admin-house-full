@@ -11,6 +11,9 @@ const AppInfoGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace AppInfoGetCommand {
+  export const BusinessValueSchema = AppInfoBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const ResponseSchema = AppInfoGetResponseSchema;
   export type Response = z.infer<typeof ResponseSchema>;
 

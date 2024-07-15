@@ -12,6 +12,7 @@ const StatusApproveGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var StatusApproveGetCommand;
 (function (StatusApproveGetCommand) {
+    StatusApproveGetCommand.BusinessValueSchema = status_approve_business_value_schema_1.StatusApproveBusinessValueSchema;
     StatusApproveGetCommand.ResponseSchema = StatusApproveGetResponseSchema;
     StatusApproveGetCommand.ResponseEntitySchema = StatusApproveGetResponseEntitySchema;
 })(StatusApproveGetCommand || (exports.StatusApproveGetCommand = StatusApproveGetCommand = {}));

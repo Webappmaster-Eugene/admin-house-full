@@ -13,7 +13,7 @@ export async function createMaterial(
   workspaceId: string,
   handbookId: string,
   categoryMaterialId: string,
-  createDto: MaterialCreateCommand.RequestSchema
+  createDto: typeof MaterialCreateCommand.RequestSchema
 ) {
   const errorObject: ErrorFromBackend = {
     error: null,

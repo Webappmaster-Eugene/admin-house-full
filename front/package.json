@@ -1,7 +1,7 @@
 {
   "name": "Admin House - frontend",
   "author": "LUCHI",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Admin House - frontend",
   "private": true,
   "scripts": {
@@ -29,6 +29,7 @@
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.15.20",
     "@mui/x-data-grid": "^7.7.0",
+    "@numart/house-admin-contracts": "^2.1.2",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.2",
     "clsx": "^2.1.1",

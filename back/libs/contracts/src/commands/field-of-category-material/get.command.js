@@ -13,6 +13,7 @@ const FieldOfCategoryMaterialGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var FieldOfCategoryMaterialGetCommand;
 (function (FieldOfCategoryMaterialGetCommand) {
+    FieldOfCategoryMaterialGetCommand.BusinessValueSchema = field_of_category_material_business_value_schema_1.FieldOfCategoryMaterialBusinessValueSchema;
     FieldOfCategoryMaterialGetCommand.ResponseSchema = FieldOfCategoryMaterialGetResponseSchema;
     FieldOfCategoryMaterialGetCommand.ResponseEntitySchema = FieldOfCategoryMaterialGetResponseEntitySchema;
 })(FieldOfCategoryMaterialGetCommand || (exports.FieldOfCategoryMaterialGetCommand = FieldOfCategoryMaterialGetCommand = {}));

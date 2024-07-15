@@ -16,6 +16,9 @@ const WorkspaceGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace WorkspaceGetCommand {
+  export const BusinessValueSchema = WorkspaceBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const RequestSchema = WorkspaceGetRequestSchema;
   export type Request = z.infer<typeof RequestSchema>;
 

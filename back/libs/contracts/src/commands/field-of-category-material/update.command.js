@@ -15,7 +15,7 @@ const FieldOfCategoryMaterialUpdateRequestSchema = models_1.FieldOfCategoryMater
     // DOC пока не дадим пользователю изменять этип поля
     //isRequired: true,
     // fieldTypeUuid: true,
-});
+}).partial();
 const FieldOfCategoryMaterialUpdateResponseSchema = zod_1.z
     .object({
     data: FieldOfCategoryMaterialUpdateResponseEntitySchema,

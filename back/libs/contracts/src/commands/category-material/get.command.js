@@ -13,6 +13,7 @@ const CategoryMaterialGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var CategoryMaterialGetCommand;
 (function (CategoryMaterialGetCommand) {
+    CategoryMaterialGetCommand.BusinessValueSchema = category_material_business_value_schema_1.CategoryMaterialBusinessValueSchema;
     CategoryMaterialGetCommand.ResponseSchema = CategoryMaterialGetResponseSchema;
     CategoryMaterialGetCommand.ResponseEntitySchema = CategoryMaterialGetResponseEntitySchema;
 })(CategoryMaterialGetCommand || (exports.CategoryMaterialGetCommand = CategoryMaterialGetCommand = {}));

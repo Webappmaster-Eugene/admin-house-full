@@ -13,6 +13,7 @@ const RoleGetResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var RoleGetCommand;
 (function (RoleGetCommand) {
+    RoleGetCommand.BusinessValueSchema = role_business_value_schema_1.RoleBusinessValueSchema;
     RoleGetCommand.RequestParamSchema = common_1.EntityUrlParamCommand.RequestUuidParamSchema;
     RoleGetCommand.ResponseSchema = RoleGetResponseSchema;
     RoleGetCommand.ResponseEntitySchema = RoleGetResponseEntitySchema;

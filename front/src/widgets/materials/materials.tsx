@@ -3,6 +3,7 @@
 import moment from 'moment';
 import { useState } from 'react';
 import { useSettingsContext } from '@/shared/settings';
+import { MaterialCreateCommand } from '@numart/house-admin-contracts';
 import {
   HandbookGetCommand,
   MaterialGetAllCommand,
@@ -45,7 +46,6 @@ import {
 import { toRubles } from 'src/utils/helpers/intl';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { materialEditHandler } from 'src/utils/table-handlers/materials/material-edit.handler';
-import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
 import { MaterialColumnSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 import { isEntityCategoryMaterialTG } from 'src/utils/type-guards/is-entity-category-material.type-guard';
 import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-responsible-partner.type-guard';
@@ -129,16 +129,19 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     const isNewRow = apiRef.current.getRow(id)?.isNew;
     const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
     const responsiblePartners =
-      handbookInfo.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
+      handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
     const categoryMaterials =
       workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
     const unitMeasurements =
       workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
     if (isNewRow) {
-      const newRowLocally = apiRef.current.getRowWithUpdatedValues(id);
+      const newRowLocally: MaterialCreateCommand.Request = apiRef.current.getRowWithUpdatedValues(
+        id,
+        'ignore'
+      );
       const workspaceId = handbookInfo?.workspaceUuid;
       const handbookId = handbookInfo.uuid;
-      const newRowOnServer = await materialCreateHandler(
+      await materialCrefateHandler(
         newRowLocally,
         workspaceId,
         handbookId,
@@ -147,8 +150,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         unitMeasurements
       );
     } else {
-      const updatedRowLocally = apiRef.current.getRowWithUpdatedValues(id);
-      const updatedRowOnServer = await materialEditHandler(updatedRowLocally, responsiblePartners);
+      const updatedRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
+      await materialEditHandler(updatedRowLocally, responsiblePartners);
     }
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };

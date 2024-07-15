@@ -36,6 +36,7 @@ const AuthRegisterWithRoleResponseSchema = zod_1.z
     .merge(models_1.ResponseClientSchema);
 var AuthRegisterWithRoleCommand;
 (function (AuthRegisterWithRoleCommand) {
+    AuthRegisterWithRoleCommand.BusinessValueSchema = register_business_value_schema_1.RegisterBusinessValueSchema;
     AuthRegisterWithRoleCommand.RequestParamSchema = AuthRegisterWithRoleRequestParamSchema;
     AuthRegisterWithRoleCommand.RequestSchema = AuthRegisterWithRoleRequestSchema;
     AuthRegisterWithRoleCommand.ResponseSchema = AuthRegisterWithRoleResponseSchema;

@@ -13,6 +13,9 @@ const UserGetResponseSchema = z
   .merge(ResponseClientSchema);
 
 export namespace UserGetCommand {
+  export const BusinessValueSchema = UserBusinessValueSchema;
+  export type BusinessValue = z.infer<typeof BusinessValueSchema>;
+
   export const RequestParamSchema = EntityUrlParamCommand.RequestUuidParamSchema;
   export type RequestParam = z.infer<typeof RequestParamSchema>;
 
