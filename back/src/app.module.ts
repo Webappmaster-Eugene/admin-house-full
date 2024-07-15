@@ -61,7 +61,7 @@ const logger: LoggerConfig = new LoggerConfig();
 
             // DOC данные подключения redis для dev
             //host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-            //port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+            //  port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
           },
         }),
       }),
