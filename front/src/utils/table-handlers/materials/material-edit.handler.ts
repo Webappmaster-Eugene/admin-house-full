@@ -32,7 +32,7 @@ export async function materialEditHandler(
       switch (key) {
         case MaterialColumnEditableFullSchema.sourceInfo:
           if (value !== 'Источник не указан') {
-            updateSelfDto[key] = updatedMaterialInfo[key];
+            updateSelfDto[key] = updatedMaterialInfo.sourceInfo;
           }
           break;
         case MaterialColumnEditableFullSchema.price:

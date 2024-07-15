@@ -86,8 +86,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       const unitMeasurements =
         workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
 
-      // const partnerNames = responsiblePartners && responsiblePartners.map((elem) => elem.name);
-
       const uuid = 'new id';
       setRows((oldRows) => {
         const newRow: TMaterialTableEntity = {
