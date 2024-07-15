@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------
 
 import Materials from '@/widgets/materials/materials';
-import { MaterialGetAllCommand, UserGetFullInfoCommand } from '@/../../back/libs/contracts';
+import { MaterialGetAllCommand, UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 

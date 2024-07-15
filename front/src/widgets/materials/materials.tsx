@@ -116,7 +116,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     return (
       <GridToolbarContainer>
         <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-          Добавить метериал
+          Добавить материал
         </Button>
         <GridToolbar />
       </GridToolbarContainer>
