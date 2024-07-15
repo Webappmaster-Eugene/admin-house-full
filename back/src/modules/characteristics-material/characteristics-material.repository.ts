@@ -165,7 +165,7 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
   async create(
     dto: CharacteristicsMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    //categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
     fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
