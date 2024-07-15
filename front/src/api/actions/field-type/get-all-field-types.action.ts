@@ -2,7 +2,7 @@
 
 import { cache } from 'react';
 import { AxiosError } from 'axios';
-import { FieldTypeGetAllCommand } from '@/../../back/libs/contracts';
+import { FieldTypeGetAllCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';

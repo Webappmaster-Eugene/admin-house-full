@@ -1,7 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
-import { MaterialCreateCommand } from '@/../../back/libs/contracts';
+import { MaterialCreateCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
@@ -13,7 +13,7 @@ export async function createMaterial(
   workspaceId: string,
   handbookId: string,
   categoryMaterialId: string,
-  createDto: typeof MaterialCreateCommand.RequestSchema
+  createDto: MaterialCreateCommand.Request
 ) {
   const errorObject: ErrorFromBackend = {
     error: null,

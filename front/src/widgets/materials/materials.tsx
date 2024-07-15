@@ -3,10 +3,8 @@
 import moment from 'moment';
 import { useState } from 'react';
 import { useSettingsContext } from '@/shared/settings';
-import { MaterialCreateCommand } from '@numart/house-admin-contracts';
 import {
   HandbookGetCommand,
-  MaterialGetAllCommand,
   PriceChangingGetAllCommand,
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetCommand,
@@ -29,11 +27,11 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import {
   DataGrid,
   GridRowId,
+  GridSlots,
   GridColDef,
   gridClasses,
   GridToolbar,
   GridRowModes,
-  GridRowModel,
   useGridApiRef,
   GridRowModesModel,
   GridEventListener,
@@ -46,6 +44,8 @@ import {
 import { toRubles } from 'src/utils/helpers/intl';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { materialEditHandler } from 'src/utils/table-handlers/materials/material-edit.handler';
+import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
+import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
 import { MaterialColumnSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 import { isEntityCategoryMaterialTG } from 'src/utils/type-guards/is-entity-category-material.type-guard';
 import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-responsible-partner.type-guard';
@@ -53,6 +53,7 @@ import { isEntityFieldUnitMeasurementTG } from 'src/utils/type-guards/is-entity-
 
 import { MaterialsProps } from 'src/widgets/materials/material.props';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
+import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { MaterialEditableColumns } from 'src/widgets/materials/editable-rows';
 
 export default function Materials({ materialsInfo }: MaterialsProps) {
@@ -62,7 +63,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     pageSize: 10,
     page: 0,
   });
-  const [rows, setRows] = useState<MaterialGetAllCommand.ResponseEntity>(materialsInfo);
+  const materialsEntity = materialsInfo.map((elem) => ({ ...elem, isNew: false }));
+  const [rows, setRows] = useState<TMaterialTableEntity[]>(materialsEntity);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
   const { workspaceInfo } = useWorkspaceInfoStore();
@@ -84,27 +86,27 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       const unitMeasurements =
         workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
 
-      const partnerNames = responsiblePartners && responsiblePartners.map((elem) => elem.name);
+      // const partnerNames = responsiblePartners && responsiblePartners.map((elem) => elem.name);
 
       const uuid = 'new id';
-      setRows((oldRows) => [
-        ...oldRows,
-        {
+      setRows((oldRows) => {
+        const newRow: TMaterialTableEntity = {
           [MaterialColumnSchema.uuid]: uuid,
           [MaterialColumnSchema.name]: 'Новый материал',
           [MaterialColumnSchema.namePublic]: 'Сокр. наименование',
           [MaterialColumnSchema.comment]: 'Описание нового материала',
           [MaterialColumnSchema.price]: 0,
           [MaterialColumnSchema.sourceInfo]: 'Укажите источник',
-          [MaterialColumnSchema.responsiblePartner]: partnerNames[0],
+          [MaterialColumnSchema.responsiblePartner]: responsiblePartners[0],
           [MaterialColumnSchema.categoryMaterial]: categoryMaterials[0],
           [MaterialColumnSchema.unitMeasurement]: unitMeasurements[0],
           [MaterialColumnSchema.priceChanges]: [],
           [MaterialColumnSchema.characteristicsMaterial]: [],
           [MaterialColumnSchema.updatedAt]: new Date(),
           isNew: true,
-        },
-      ]);
+        };
+        return [...oldRows, newRow];
+      });
       setRowModesModel((oldModel) => ({
         ...oldModel,
         [uuid]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
@@ -134,16 +136,13 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
     const unitMeasurements =
       workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
+    const workspaceId = handbookInfo.workspaceUuid;
+    const handbookId = handbookInfo.uuid;
     if (isNewRow) {
-      const newRowLocally: MaterialCreateCommand.Request = apiRef.current.getRowWithUpdatedValues(
-        id,
-        'ignore'
-      );
-      const workspaceId = handbookInfo?.workspaceUuid;
-      const handbookId = handbookInfo.uuid;
-      await materialCrefateHandler(
-        newRowLocally,
-        workspaceId,
+      const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
+      await materialCreateHandler(
+        newRowLocally as TMaterialTableEntity,
+        workspaceId as string,
         handbookId,
         responsiblePartners,
         categoryMaterials,
@@ -151,12 +150,26 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       );
     } else {
       const updatedRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-      await materialEditHandler(updatedRowLocally, responsiblePartners);
+
+      await materialEditHandler(
+        updatedRowLocally as TMaterialTableEntity,
+        workspaceId as string,
+        handbookId,
+        responsiblePartners
+      );
     }
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => async () => {
+    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+    handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
+    const categoryMaterials =
+      workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
+    const workspaceId = handbookInfo.workspaceUuid;
+    const handbookId = handbookInfo.uuid;
+    const rowLocally = apiRef.current.getRow(id);
+    await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
     setRows(rows.filter((row) => row.uuid !== id));
   };
 
@@ -172,9 +185,9 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     }
   };
 
-  const processRowUpdate = (newRow: GridRowModel) => {
+  const processRowUpdate = (newRow: TMaterialTableEntity) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.uuid === newRow.id ? updatedRow : row)));
+    setRows(rows.map((row) => (row.uuid === newRow.uuid ? updatedRow : row)));
     return updatedRow;
   };
 
@@ -295,7 +308,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     },
     {
       field: MaterialColumnSchema.categoryMaterial,
-      valueGetter: (value, row) => `${row.categoryMaterial.name}`,
       headerName: 'Категория',
       align: 'left',
       headerAlign: 'left',
@@ -309,12 +321,11 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
 
         return categoryNames;
       },
-      valueGetter: (value: CategoryMaterialGetAllCommand.ResponseEntity, row) =>
+      valueGetter: (value: TMaterialTableEntity, row) =>
         isEntityCategoryMaterialTG(value) ? value.name : value,
     },
     {
       field: MaterialColumnSchema.unitMeasurement,
-      valueGetter: (value, row) => `${row.unitMeasurement.name}`,
       headerName: 'Ед. изм.',
       align: 'left',
       headerAlign: 'left',

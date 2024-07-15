@@ -7,7 +7,7 @@ import {
   FieldUnitMeasurementGetAllCommand,
   GlobalCategoryMaterialGetAllCommand,
   FieldOfCategoryMaterialGetAllCommand,
-} from '@/../../back/libs/contracts';
+} from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 

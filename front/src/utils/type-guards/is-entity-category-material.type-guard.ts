@@ -1,4 +1,4 @@
-import { CategoryMaterialGetCommand } from '@/../../back/libs/contracts';
+import { CategoryMaterialGetCommand } from '@numart/house-admin-contracts';
 
 export function isEntityCategoryMaterialTG(
   entity: unknown

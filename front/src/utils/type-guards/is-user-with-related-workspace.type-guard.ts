@@ -1,4 +1,4 @@
-import { UserGetFullInfoCommand } from '@/../../back/libs/contracts';
+import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
 import { UserRoles } from 'src/utils/const/user-roles.enum';
 

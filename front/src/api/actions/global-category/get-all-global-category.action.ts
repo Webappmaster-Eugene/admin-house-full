@@ -2,7 +2,7 @@
 
 import { cache } from 'react';
 import { AxiosError } from 'axios';
-import { GlobalCategoryMaterialGetAllCommand } from '@/../../back/libs/contracts';
+import { GlobalCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';

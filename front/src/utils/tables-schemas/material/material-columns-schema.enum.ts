@@ -21,9 +21,6 @@ export enum MaterialColumnEditableFullSchema {
   price = 'price',
   sourceInfo = 'sourceInfo',
   responsiblePartner = 'responsiblePartner',
-  responsiblePartnerUuid = 'responsiblePartnerUuid',
   categoryMaterial = 'categoryMaterial',
-  categoryMaterialUuid = 'categoryMaterialUuid',
   unitMeasurement = 'unitMeasurement',
-  unitMeasurementUuid = 'unitMeasurementUuid',
 }

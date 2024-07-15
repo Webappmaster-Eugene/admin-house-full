@@ -1,4 +1,4 @@
-import { FieldUnitMeasurementGetCommand } from '@/../../back/libs/contracts';
+import { FieldUnitMeasurementGetCommand } from '@numart/house-admin-contracts';
 
 export function isEntityFieldUnitMeasurementTG(
   entity: unknown

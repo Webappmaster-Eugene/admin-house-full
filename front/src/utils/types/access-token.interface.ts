@@ -1,4 +1,4 @@
-import { IJWTPayload } from '@/../../back/libs/contracts';
+import { IJWTPayload } from '@numart/house-admin-contracts';
 
 export interface IAccessTokenInfo {
   accessToken: string;

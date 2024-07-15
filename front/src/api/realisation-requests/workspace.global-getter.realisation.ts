@@ -1,6 +1,6 @@
 'use server';
 
-import { WorkspaceGetCommand, UserGetFullInfoCommand } from '@/../../back/libs/contracts';
+import { WorkspaceGetCommand, UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 import { getAllGlobalCategories } from '@/api/actions/global-category/get-all-global-category.action';
 
 import { isErrorInArrayFieldTypeGuard } from 'src/utils/type-guards/are-error-in-array-of-fields.type-guard';

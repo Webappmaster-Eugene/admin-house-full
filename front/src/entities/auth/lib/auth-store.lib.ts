@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EUserVariants } from '@/../../back/libs/contracts';
+import { EUserVariants } from '@numart/house-admin-contracts';
 
 const allUserRoles = EUserVariants;
 

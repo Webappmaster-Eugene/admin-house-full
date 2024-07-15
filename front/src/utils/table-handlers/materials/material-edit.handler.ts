@@ -1,58 +1,62 @@
 import {
-  MaterialGetCommand,
   MaterialUpdateCommand,
+  ResponsiblePartnerProducerGetCommand,
   ResponsiblePartnerProducerGetAllCommand,
-} from '@/../../back/libs/contracts';
+} from '@numart/house-admin-contracts';
 
-import {
-  MaterialColumnSchema,
-  MaterialColumnEditableFullSchema,
-} from 'src/utils/tables-schemas/material/material-columns-schema.enum';
+import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 
+import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { MaterialEditableColumns } from 'src/widgets/materials/editable-rows';
 import { updateMaterial } from 'src/api/actions/material/update-material.action';
 
 export async function materialEditHandler(
-  material: MaterialGetCommand.ResponseEntity,
+  updatedMaterialInfo: TMaterialTableEntity,
+  workspaceId: string,
+  handbookId: string,
   responsiblePartnerProducers: ResponsiblePartnerProducerGetAllCommand.ResponseEntity
 ) {
   const updateSelfDto: MaterialUpdateCommand.Request = {};
   const newResponsiblePartnerUuid = responsiblePartnerProducers.find(
-    (partner) => partner.name === material[MaterialColumnSchema.responsiblePartner]
-  )?.uuid;
+    (partner: ResponsiblePartnerProducerGetCommand.ResponseEntity) => {
+      const responsiblePartnerName =
+        typeof updatedMaterialInfo.responsiblePartner === 'string'
+          ? updatedMaterialInfo.responsiblePartner
+          : updatedMaterialInfo.responsiblePartner?.name;
+      return partner.name === responsiblePartnerName;
+    }
+  )!.uuid;
 
-  Object.entries(material).forEach(([key, value]) => {
+  Object.entries(updatedMaterialInfo).forEach(([key, value]) => {
     if (MaterialEditableColumns.includes(key)) {
       switch (key) {
         case MaterialColumnEditableFullSchema.sourceInfo:
           if (value !== 'Источник не указан') {
-            updateSelfDto[key] = value;
+            updateSelfDto[key] = updatedMaterialInfo[key];
           }
           break;
         case MaterialColumnEditableFullSchema.price:
           updateSelfDto[key] = Number(value);
           break;
-        case MaterialColumnEditableFullSchema.responsiblePartnerUuid:
-          updateSelfDto[MaterialColumnEditableFullSchema.responsiblePartnerUuid] =
-            newResponsiblePartnerUuid;
+        case MaterialColumnEditableFullSchema.responsiblePartner:
+          updateSelfDto.responsiblePartnerUuid = newResponsiblePartnerUuid;
           break;
         default:
-          if (
-            key !== MaterialColumnEditableFullSchema.responsiblePartner &&
-            key !== MaterialColumnEditableFullSchema.categoryMaterial &&
-            key !== MaterialColumnEditableFullSchema.responsiblePartner
-          ) {
-            updateSelfDto[key] = value;
+          if (key === MaterialColumnEditableFullSchema.name) {
+            updateSelfDto[key] = updatedMaterialInfo.name;
+          } else if (key === MaterialColumnEditableFullSchema.namePublic) {
+            updateSelfDto[key] = updatedMaterialInfo.namePublic;
+          } else if (key === MaterialColumnEditableFullSchema.comment) {
+            updateSelfDto[key] = updatedMaterialInfo.comment;
           }
       }
     }
   });
   const updatedMaterial = await updateMaterial(
-    material.handbook.workspaceUuid,
-    material.handbookUuid,
-    material.categoryMaterialUuid,
-    material.uuid,
+    workspaceId,
+    handbookId,
+    updatedMaterialInfo.categoryMaterial.uuid,
+    updatedMaterialInfo.uuid,
     updateSelfDto
   );
-  console.log('updatedMaterial', updatedMaterial);
 }

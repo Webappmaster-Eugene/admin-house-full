@@ -1,4 +1,4 @@
-import { ResponsiblePartnerProducerGetCommand } from '@/../../back/libs/contracts';
+import { ResponsiblePartnerProducerGetCommand } from '@numart/house-admin-contracts';
 
 export function isEntityResponsiblePartnerTG(
   entity: unknown

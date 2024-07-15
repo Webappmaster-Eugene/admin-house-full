@@ -2,7 +2,7 @@
 
 import { AxiosError } from 'axios';
 import axiosInstance from '@/api/axios-instance';
-import { AppInfoGetCommand } from '@/../../back/libs/contracts';
+import { AppInfoGetCommand } from '@numart/house-admin-contracts';
 import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
 import { isGoodHttpCode } from '@/utils/helpers/is-good-http-code.helper';
 
