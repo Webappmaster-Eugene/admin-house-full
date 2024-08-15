@@ -1,10 +1,19 @@
 'use client';
 
 import moment from 'moment';
-import { useState } from 'react';
+import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
+import { useState, useCallback, useLayoutEffect } from 'react';
+import { AlertDialogTexts } from '@/widgets/materials/dialog-texts';
+import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
+import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
+import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
+import { NewMaterialId } from '@/widgets/materials/new-material-id.const';
+import { MaterialEditableColumns } from '@/widgets/materials/editable-columns';
+import { MaterialRequiredCreateColumns } from '@/widgets/materials/required-columns';
 import {
   HandbookGetCommand,
+  MaterialCreateCommand,
   PriceChangingGetAllCommand,
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetCommand,
@@ -18,32 +27,42 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
 import Container from '@mui/material/Container';
+import { ruRU } from '@mui/x-data-grid/locales';
+import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import CancelIcon from '@mui/icons-material/Close';
+import BlockIcon from '@mui/icons-material/Block';
+import CheckIcon from '@mui/icons-material/Check';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import {
   DataGrid,
   GridRowId,
   GridSlots,
+  GridState,
   GridColDef,
   gridClasses,
-  GridToolbar,
   GridRowModes,
   useGridApiRef,
+  GridRowParams,
+  GridInitialState,
   GridRowModesModel,
   GridEventListener,
+  GridToolbarExport,
   GridPaginationModel,
-  GridActionsCellItem,
   GridToolbarContainer,
+  GridRowSelectionModel,
   GridRowEditStopReasons,
+  GridToolbarFilterButton,
+  GridToolbarColumnsButton,
+  GridColumnVisibilityModel,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
 } from '@mui/x-data-grid';
 
 import { toRubles } from 'src/utils/helpers/intl';
+import { deepEqualAndIn } from 'src/utils/helpers/deep-equal-and-in';
+import { deepEqualAndInTableKeys } from 'src/utils/helpers/deep-equal-in-tablekeys';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
-import { materialEditHandler } from 'src/utils/table-handlers/materials/material-edit.handler';
 import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
 import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
 import { MaterialColumnSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
@@ -54,10 +73,12 @@ import { isEntityFieldUnitMeasurementTG } from 'src/utils/type-guards/is-entity-
 import { MaterialsProps } from 'src/widgets/materials/material.props';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
-import { MaterialEditableColumns } from 'src/widgets/materials/editable-rows';
+import { CustomNoRowsOverlay } from 'src/shared/no-rows-overlay/NoRowsOverlay';
+import { columnsInitialState } from 'src/widgets/materials/table-initial-state';
 
 export default function Materials({ materialsInfo }: MaterialsProps) {
   const settings = useSettingsContext();
+  const isDialogOpen = useBoolean();
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
@@ -65,10 +86,42 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   });
   const materialsEntity = materialsInfo.map((elem) => ({ ...elem, isNew: false }));
   const [rows, setRows] = useState<TMaterialTableEntity[]>(materialsEntity);
+  const [isCreateRowMode, setIsCreateRowMode] = useState<boolean>(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-
   const { workspaceInfo } = useWorkspaceInfoStore();
   const apiRef = useGridApiRef();
+  const [gridStateBeforeCreate, setGridStateBeforeCreate] = useState<GridState>(
+    apiRef.current.state
+  );
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>();
+
+  const [materialsDataGridInitialState, setMaterialsDataGridInitialState] =
+    useState<GridInitialState>();
+
+  const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
+
+  const saveMaterialsDataGridState = useCallback(() => {
+    if (apiRef?.current?.exportState && localStorage) {
+      const currentState = apiRef.current.exportState();
+      localStorage.setItem('materialsDataGridState', JSON.stringify(currentState));
+    }
+  }, [apiRef]);
+
+  useLayoutEffect(() => {
+    const stateFromLocalStorage = localStorage?.getItem('materialsDataGridState');
+    setMaterialsDataGridInitialState(
+      stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {}
+    );
+
+    // handle refresh and navigating away/refreshing
+    window.addEventListener('beforeunload', saveMaterialsDataGridState);
+
+    return () => {
+      // in case of an SPA remove the event-listener
+      window.removeEventListener('beforeunload', saveMaterialsDataGridState);
+      saveMaterialsDataGridState();
+    };
+  }, [saveMaterialsDataGridState]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -76,8 +129,54 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     }
   };
 
+  const addRequiredColumnsToTable = (requiredCreateColumns: string[]): void => {
+    const tableStateAtStart = apiRef.current.state;
+    setGridStateBeforeCreate(tableStateAtStart);
+    const initialColumnVisibilityModel = tableStateAtStart?.columns.columnVisibilityModel;
+    // const allColumnsOfTable = apiRef.current.getAllColumns();
+    const visibleColumns = apiRef.current.getVisibleColumns().map((column) => column.field);
+    const isSubArray = requiredCreateColumns.every((arrElem) => visibleColumns.includes(arrElem));
+    if (!isSubArray) {
+      const startValue: Record<string, boolean> = {};
+      const newColumnVisibilityModel = requiredCreateColumns.reduce((acc, curValue) => {
+        acc[curValue] = true;
+        return acc;
+      }, startValue);
+      const finalNewColumnVisibilityModel = {
+        ...initialColumnVisibilityModel,
+        ...newColumnVisibilityModel,
+      };
+      console.log(initialColumnVisibilityModel);
+      console.log(finalNewColumnVisibilityModel);
+      apiRef.current.setColumnVisibilityModel(finalNewColumnVisibilityModel);
+    }
+    restrictHideRequiredColumns(requiredCreateColumns, tableStateAtStart);
+  };
+
+  // DOC сделать hideable=false для всех обязательных столбцов
+  const restrictHideRequiredColumns = (
+    requiredCreateColumns: string[],
+    tableStateAtStart: GridState
+  ) => {
+    requiredCreateColumns.forEach((column) => {
+      const requiredFieldInTable = tableStateAtStart.columns.lookup[column];
+      requiredFieldInTable.hideable = false;
+    });
+  };
+
+  // DOC сделать hideable=true для всех обязательных столбцов
+  const allowHideRequiredColumns = (
+    requiredCreateColumns: string[],
+    tableStateCurrent: GridState
+  ) => {
+    requiredCreateColumns.forEach((column) => {
+      const requiredFieldInTable = tableStateCurrent.columns.lookup[column];
+      requiredFieldInTable.hideable = true;
+    });
+  };
+
   const editToolbar = () => {
-    const handleClick = () => {
+    const handleClickAddMaterial = () => {
       const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
       const responsiblePartners =
         handbookInfo.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
@@ -86,11 +185,13 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       const unitMeasurements =
         workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
 
-      const uuid = 'new id';
+      addRequiredColumnsToTable(MaterialRequiredCreateColumns);
+
       setRows((oldRows) => {
         const newRow: TMaterialTableEntity = {
-          [MaterialColumnSchema.uuid]: uuid,
-          [MaterialColumnSchema.name]: 'Новый материал',
+          [MaterialColumnSchema.uuid]: NewMaterialId,
+          [MaterialColumnSchema.numInOrder]: 999,
+          [MaterialColumnSchema.name]: 'Наименование материала',
           [MaterialColumnSchema.namePublic]: 'Сокр. наименование',
           [MaterialColumnSchema.comment]: 'Описание нового материала',
           [MaterialColumnSchema.price]: 0,
@@ -103,30 +204,164 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
           [MaterialColumnSchema.updatedAt]: new Date(),
           isNew: true,
         };
-        return [...oldRows, newRow];
+        return [newRow, ...oldRows];
       });
+
+      setIsCreateRowMode((prevMode) => !prevMode);
+
       setRowModesModel((oldModel) => ({
+        [NewMaterialId]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
         ...oldModel,
-        [uuid]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
       }));
+
+      const currentRowsIds = apiRef.current.getAllRowIds();
+      currentRowsIds.forEach((rowId) => {
+        apiRef.current.selectRow(rowId, false, true);
+      });
+
+      // apiRef.current.restoreState(tableStateBeforeCreate);
+    };
+
+    const isCreateRowButtonVisible = () => {
+      const newRow = apiRef.current.getRowWithUpdatedValues(NewMaterialId, 'ignore');
+
+      if (
+        newRow?.name &&
+        typeof newRow?.categoryMaterial &&
+        newRow?.unitMeasurement &&
+        (newRow?.price || newRow?.price === 0)
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    const isResetSettingsVisible = (): boolean => {
+      const curTableState = apiRef.current.state;
+      const initialState = columnsInitialState;
+
+      const isEqColumns = !deepEqualAndIn(curTableState, initialState);
+
+      const columnsCurrent = apiRef.current.state.columns.lookup;
+      const columnsInitial = columnsInitialState.columns?.dimensions;
+      const isEqWidths = deepEqualAndInTableKeys(columnsCurrent, columnsInitial);
+      return isEqColumns || isEqWidths;
+    };
+
+    const handleClickResetSettingsTable = () => {
+      apiRef.current.restoreState(columnsInitialState);
+      localStorage.setItem('materialsDataGridState', JSON.stringify(columnsInitialState));
+    };
+
+    const isDeleteRowVisible = (): boolean => {
+      const rowsIdToDelete = rowSelectionModel;
+      return rowsIdToDelete.length > 0;
     };
 
     return (
-      <GridToolbarContainer>
-        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-          Добавить материал
-        </Button>
-        <GridToolbar />
+      <GridToolbarContainer
+        sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
+      >
+        <Box>
+          <Button
+            color="primary"
+            disabled={isCreateRowMode}
+            startIcon={<AddIcon />}
+            onClick={handleClickAddMaterial}
+          >
+            Добавить материал
+          </Button>
+
+          {isDeleteRowVisible() && (
+            <Button color="error" startIcon={<DeleteIcon />} onClick={handleDeleteRowClick}>
+              Удалить
+            </Button>
+          )}
+
+          {isCreateRowMode && (
+            <Button
+              color="primary"
+              startIcon={<CheckIcon />}
+              disabled={!isCreateRowButtonVisible()}
+              onClick={handleSaveClick}
+            >
+              Подтвердить
+            </Button>
+          )}
+
+          {isCreateRowMode && (
+            <Button color="warning" startIcon={<BlockIcon />} onClick={handleCancelRowClick}>
+              Отменить создание материала
+            </Button>
+          )}
+
+          {isResetSettingsVisible() && !isCreateRowMode && (
+            <Button
+              color="warning"
+              startIcon={<RestartAltIcon />}
+              onClick={handleClickResetSettingsTable}
+            >
+              Вернуться к исходным настройкам
+            </Button>
+          )}
+        </Box>
+
+        <GridToolbarContainer>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton />
+          <Box sx={{ flexGrow: 1 }} />
+          <GridToolbarExport
+            slotProps={{
+              tooltip: { title: 'Выгрузить данные' },
+              button: { variant: 'outlined' },
+            }}
+          />
+        </GridToolbarContainer>
       </GridToolbarContainer>
     );
+  };
+
+  const handleDeleteRowClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('подтвердить');
+    isDialogOpen.onTrue();
+  };
+
+  const handleCancelRowClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const startTableState = gridStateBeforeCreate;
+    const oldColumnVisibilityModel = startTableState.columns.columnVisibilityModel;
+    // console.log(oldColumnVisibilityModel);
+    if (typeof startTableState === 'object' && Object.keys(startTableState).length !== 0) {
+      apiRef.current.restoreState(startTableState);
+      apiRef.current.setColumnVisibilityModel(oldColumnVisibilityModel);
+    }
+
+    allowHideRequiredColumns(MaterialRequiredCreateColumns, apiRef.current.state);
+
+    handleCancelClick(NewMaterialId);
+  };
+
+  const handleCancelClick = (id: GridRowId) => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = rows.find((row) => row.uuid === id);
+    if (editedRow?.isNew) {
+      setRows(rows.filter((row) => row.uuid !== id));
+    }
+
+    setIsCreateRowMode((prevValue) => !prevValue);
   };
 
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id: GridRowId) => async () => {
+  const handleSaveClick = async () => {
+    const id = NewMaterialId;
     const isNewRow = apiRef.current.getRow(id)?.isNew;
+    let finalRow: string | MaterialCreateCommand.ResponseEntity | ErrorFromBackend;
     const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
     const responsiblePartners =
       handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
@@ -138,7 +373,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     const handbookId = handbookInfo.uuid;
     if (isNewRow) {
       const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-      await materialCreateHandler(
+      finalRow = await materialCreateHandler(
         newRowLocally as TMaterialTableEntity,
         workspaceId as string,
         handbookId,
@@ -147,16 +382,21 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         unitMeasurements
       );
     } else {
-      const updatedRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-
-      await materialEditHandler(
-        updatedRowLocally as TMaterialTableEntity,
-        workspaceId as string,
-        handbookId,
-        responsiblePartners
-      );
+      // const updatedRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
+      //
+      // await materialEditHandler(
+      //   updatedRowLocally as TMaterialTableEntity,
+      //   workspaceId as string,
+      //   handbookId,
+      //   responsiblePartners
+      // );
     }
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    const newRowId = (finalRow && (finalRow as MaterialCreateCommand.ResponseEntity).uuid) || id;
+    setRowModesModel({
+      ...rowModesModel,
+      [newRowId]: { mode: GridRowModes.View },
+    });
+    setIsCreateRowMode((prevValue) => !prevValue);
   };
 
   const handleDeleteClick = (id: GridRowId) => async () => {
@@ -169,18 +409,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     const rowLocally = apiRef.current.getRow(id);
     await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
     setRows(rows.filter((row) => row.uuid !== id));
-  };
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.uuid === id);
-    if (editedRow?.isNew) {
-      setRows(rows.filter((row) => row.uuid !== id));
-    }
   };
 
   const processRowUpdate = (newRow: TMaterialTableEntity) => {
@@ -204,57 +432,76 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       width: 130,
       sortable: false,
       filterable: false,
+      resizable: false,
+      align: 'left',
+      headerAlign: 'left',
+      disableColumnMenu: true,
+      disableReorder: true,
+    },
+    {
+      field: MaterialColumnSchema.numInOrder,
+      headerName: 'Номер п/п',
+      minWidth: 90,
       align: 'left',
       headerAlign: 'left',
     },
     {
       field: MaterialColumnSchema.name,
-      headerName: 'Название',
-      width: 150,
+      headerName: 'Наименование',
+      minWidth: 160,
+      width: materialsDataGridInitialState?.columns?.dimensions?.name?.width,
+      flex: materialsDataGridInitialState?.columns?.dimensions?.name?.width ? undefined : 1,
       align: 'left',
       headerAlign: 'left',
       editable: true,
+      hideable: false,
+      hideSortIcons: true,
+      resizable: false,
+      sortable: false,
     },
     {
       field: MaterialColumnSchema.namePublic,
-      headerName: 'Сокращенное',
-      width: 170,
+      headerName: 'Сокращенно',
+      minWidth: 170,
+      width: materialsDataGridInitialState?.columns?.dimensions?.namePublic?.width,
       align: 'left',
       headerAlign: 'left',
       editable: true,
-      renderHeader: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
-        </Box>
-      ),
+      // renderHeader: (params) => (
+      //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      //     {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
+      //   </Box>
+      // ),
     },
     {
       field: MaterialColumnSchema.comment,
       headerName: 'Описание',
-      width: 190,
+      minWidth: 190,
+      width: materialsDataGridInitialState?.columns?.dimensions?.comment?.width,
       align: 'left',
       headerAlign: 'left',
       editable: true,
-      renderHeader: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
-        </Box>
-      ),
+      // renderHeader: (params) => (
+      //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      //     {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
+      //   </Box>
+      // ),
     },
     {
       field: MaterialColumnSchema.price,
       valueFormatter: (value) => toRubles(Number(value)),
       headerName: 'Цена',
-      width: 100,
+      minWidth: 140,
+      width: materialsDataGridInitialState?.columns?.dimensions?.price?.width,
       type: 'number',
       align: 'left',
       headerAlign: 'left',
       editable: true,
-      renderHeader: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
-        </Box>
-      ),
+      // renderHeader: (params) => (
+      //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      //     {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
+      //   </Box>
+      // ),
     },
     {
       field: MaterialColumnSchema.sourceInfo,
@@ -267,15 +514,16 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         }
         return finishValue;
       },
-      width: 150,
+      minWidth: 150,
+      width: materialsDataGridInitialState?.columns?.dimensions?.sourceInfo?.width,
       align: 'left',
       headerAlign: 'left',
       editable: true,
-      renderHeader: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
-        </Box>
-      ),
+      // renderHeader: (params) => (
+      //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      //     {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
+      //   </Box>
+      // ),
     },
     {
       field: MaterialColumnSchema.responsiblePartner,
@@ -294,22 +542,24 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       valueGetter: (value: ResponsiblePartnerProducerGetCommand.ResponseEntity, row) =>
         isEntityResponsiblePartnerTG(value) ? value.name : value,
       headerName: 'Поставщик',
-      width: 110,
+      minWidth: 110,
+      width: materialsDataGridInitialState?.columns?.dimensions?.responsiblePartner?.width,
       align: 'left',
       headerAlign: 'left',
       editable: true,
-      renderHeader: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
-        </Box>
-      ),
+      // renderHeader: (params) => (
+      //   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      //     {params.colDef.headerName} <EditIcon sx={{ width: 18, height: 18, mb: 0.5 }} />
+      //   </Box>
+      // ),
     },
     {
       field: MaterialColumnSchema.categoryMaterial,
       headerName: 'Категория',
       align: 'left',
       headerAlign: 'left',
-      width: 100,
+      minWidth: 100,
+      width: materialsDataGridInitialState?.columns?.dimensions?.categoryMaterial?.width,
       editable: true,
       type: 'singleSelect',
       valueOptions: (params) => {
@@ -327,7 +577,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       headerName: 'Ед. изм.',
       align: 'left',
       headerAlign: 'left',
-      width: 100,
+      minWidth: 100,
+      width: materialsDataGridInitialState?.columns?.dimensions?.unitMeasurement?.width,
       editable: true,
       type: 'singleSelect',
       valueOptions: (params) => {
@@ -359,7 +610,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         return finishValue;
       },
       headerName: 'Изменения цены',
-      width: 130,
+      minWidth: 130,
+      width: materialsDataGridInitialState?.columns?.dimensions?.priceChanges?.width,
       align: 'left',
       headerAlign: 'left',
     },
@@ -395,7 +647,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       headerName: 'Характеристики',
       align: 'left',
       headerAlign: 'left',
-      width: 250,
+      minWidth: 250,
+      width: materialsDataGridInitialState?.columns?.dimensions?.characteristicsMaterial?.width,
     },
     {
       field: MaterialColumnSchema.updatedAt,
@@ -404,108 +657,138 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         const finishValue = moment(row.updatedAt).locale('ru').format('DD.MM.YYYY HH:mm:ss');
         return finishValue;
       },
+      resizable: false,
       headerName: 'Дата обновления',
-      width: 100,
-    },
-    {
-      field: MaterialColumnSchema.actions,
-      // type: 'boolean',
-      // renderCell: (params) => <MaterialActionsTable {...{ params, rowId, setRowId }} />,
-      type: 'actions',
-      cellClassName: 'actions',
-      headerName: 'Действия',
-      width: 180,
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
+      minWidth: 170,
+      width: materialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
     },
   ];
 
+  const handleClickDialogYesDeleteRow = async () => {
+    const rowIdToDelete = rowSelectionModel[0];
+    const rowInfo = apiRef.current.getRow(rowIdToDelete);
+    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+    handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
+    const categoryMaterials =
+      workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
+    const workspaceId = handbookInfo.workspaceUuid;
+    const handbookId = handbookInfo.uuid;
+    await materialDeleteHandler(rowInfo, workspaceId as string, handbookId, categoryMaterials);
+    setRows(rows.filter((row) => row.uuid !== rowIdToDelete));
+  };
+
+  const onClickYesDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
+    handleClickDialogYesDeleteRow();
+    isDialogOpen.onFalse();
+  };
+
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Typography variant="h4"> Справочник материалов</Typography>
-      <div style={{ width: '100%', maxWidth: '100vw' }}>
-        <DataGrid
-          rows={rows}
-          columns={allMaterialsTableColumns}
-          getRowId={(row) => row.uuid}
-          apiRef={apiRef}
-          loading={!workspaceInfo}
-          editMode="row"
-          pageSizeOptions={[5, 10, 20, 50, 100]}
-          paginationModel={paginationModel}
-          onPaginationModelChange={(paginationModelGrid) => setPaginationModel(paginationModelGrid)}
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          isCellEditable={(params) => {
-            const isEditableRow = MaterialEditableColumns.includes(params.field);
-            const isNewRow = params.row?.isNew;
-            return isNewRow || isEditableRow;
-          }}
-          // slots={{ toolbar: GridToolbar }}
-          slots={{
-            toolbar: editToolbar as GridSlots['toolbar'],
-          }}
-          slotProps={{
-            toolbar: { setRows, setRowModesModel },
-          }}
-          onProcessRowUpdateError={handleProcessRowUpdateError}
-          autoHeight
-          getRowHeight={() => 'auto'}
-          getRowSpacing={(params) => ({
-            top: params.isFirstVisible ? 0 : 5,
-            bottom: params.isLastVisible ? 0 : 5,
-          })}
-          sx={{
-            [`& .${gridClasses.row}`]: {
-              bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
-            },
-            '& .MuiDataGrid-cell--editable': {
-              bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)'),
-            },
-          }}
-          // disableRowSelectionOnClick
-          // checkboxSelection
+    <>
+      <Container maxWidth="xl">
+        <Typography variant="h4"> Справочник материалов</Typography>
+        <Box sx={{ width: '100%', maxWidth: '100vw' }}>
+          {materialsDataGridInitialState ? (
+            <DataGrid
+              apiRef={apiRef}
+              localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
+              initialState={{
+                ...columnsInitialState,
+                ...materialsDataGridInitialState,
+              }}
+              rows={rows}
+              columns={[
+                {
+                  ...GRID_CHECKBOX_SELECTION_COL_DEF,
+                  hideable: false,
+                  headerName: 'Выбор строки',
+                  cellClassName: 'MuiDataGrid-cellCheckbox',
+                  headerClassName: 'MuiDataGrid-columnHeaderCheckbox',
+                },
+                ...allMaterialsTableColumns,
+              ]}
+              getRowId={(row) => row.uuid}
+              loading={!workspaceInfo}
+              editMode="row"
+              pageSizeOptions={[5, 10, 20, 50, 100]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={(paginationModelGrid) =>
+                setPaginationModel(paginationModelGrid)
+              }
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={handleRowModesModelChange}
+              onRowEditStop={handleRowEditStop}
+              processRowUpdate={processRowUpdate}
+              isCellEditable={(params) => {
+                const isEditableRow = MaterialEditableColumns.includes(params.field);
+                const isNewRow = params.row?.isNew;
+                return isNewRow || isEditableRow;
+              }}
+              // slots={{ toolbar: GridToolbar }}
+              slots={{
+                noRowsOverlay: CustomNoRowsOverlay,
+                toolbar: editToolbar as GridSlots['toolbar'],
+              }}
+              slotProps={{
+                toolbar: { setRows, setRowModesModel },
+              }}
+              onProcessRowUpdateError={handleProcessRowUpdateError}
+              autoHeight
+              getRowHeight={() => 'auto'}
+              getRowSpacing={(params) => ({
+                top: params.isFirstVisible ? 0 : 5,
+                bottom: params.isLastVisible ? 0 : 5,
+              })}
+              isRowSelectable={(params: GridRowParams) => {
+                if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
+                  return true;
+                }
+
+                return false;
+              }}
+              onRowSelectionModelChange={(newRowSelectionModel) => {
+                setRowSelectionModel(newRowSelectionModel);
+              }}
+              rowSelectionModel={rowSelectionModel}
+              autosizeOptions={{
+                columns: [MaterialColumnSchema.name],
+                includeOutliers: true,
+                includeHeaders: true,
+              }}
+              sx={{
+                [`& .${gridClasses.row}`]: {
+                  bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
+                },
+                '& .MuiDataGrid-cell--editable': {
+                  bgcolor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+                },
+              }}
+              disableRowSelectionOnClick
+              checkboxSelection
+              disableMultipleRowSelection
+              columnVisibilityModel={columnVisibilityModel}
+              onColumnVisibilityModelChange={(newModel) => {
+                console.log(newModel);
+                setColumnVisibilityModel(newModel);
+              }}
+            />
+          ) : (
+            <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%' }} />
+          )}
+        </Box>
+      </Container>
+
+      {isDialogOpen && (
+        <AlertDialog
+          isDialogOpen={isDialogOpen}
+          onClickYes={onClickYesDialog}
+          titleDialog={AlertDialogTexts.titleDialog}
+          textDialog={templaterCreatorTexts(
+            AlertDialogTexts.textDialog,
+            rowSelectionModel[0] as string
+          )}
         />
-      </div>
-    </Container>
+      )}
+    </>
   );
 }

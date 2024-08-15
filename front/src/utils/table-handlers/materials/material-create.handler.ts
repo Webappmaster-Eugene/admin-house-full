@@ -1,3 +1,6 @@
+import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
+import { MaterialEditableCreateColumns } from '@/widgets/materials/editable-columns';
+import { isEntityMaterialTG } from '@/utils/type-guards/is-entity-material-when-create.type-guard';
 import {
   MaterialCreateCommand,
   CategoryMaterialGetAllCommand,
@@ -10,7 +13,6 @@ import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/mater
 
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { createMaterial } from 'src/api/actions/material/create-material.action';
-import { MaterialEditableCreateColumns } from 'src/widgets/materials/editable-rows';
 
 export async function materialCreateHandler(
   newMaterial: TMaterialTableEntity,
@@ -83,12 +85,13 @@ export async function materialCreateHandler(
     }
   });
 
-  if (createMaterialDto?.name) {
-    const newMaterialCreated = await createMaterial(
-      workspaceId,
-      handbookId,
-      newCategoryMaterialUuid,
-      createMaterialDto
-    );
+  if (!createMaterialDto?.name) {
+    return 'Ошибка при отправке данных. Введите имя, цену, категорию и единицу измерения';
   }
+  const newMaterialCreated: MaterialCreateCommand.ResponseEntity | ErrorFromBackend =
+    await createMaterial(workspaceId, handbookId, newCategoryMaterialUuid, createMaterialDto);
+  if (isEntityMaterialTG(newMaterialCreated)) {
+    return newMaterialCreated;
+  }
+  return newMaterialCreated;
 }

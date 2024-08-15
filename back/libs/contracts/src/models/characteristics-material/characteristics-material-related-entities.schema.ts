@@ -9,6 +9,4 @@ export const CharacteristicsMaterialRelatedEntitiesSchema = z.object({
   material: MaterialBusinessValueSchema,
   fieldOfCategoryMaterial: FieldOfCategoryMaterialBusinessValueSchema,
   handbook: HandbookBusinessValueSchema,
-  fieldType: FieldTypeBusinessValueSchema,
-  fieldUnitMeasurement: FieldUnitMeasurementBusinessValueSchema,
 });

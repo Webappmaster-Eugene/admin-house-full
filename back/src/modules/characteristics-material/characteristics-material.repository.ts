@@ -10,6 +10,7 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
+import { EActiveStatuses } from '.prisma/client';
 
 @Injectable()
 export class CharacteristicsMaterialRepository implements ICharacteristicsMaterialRepository {
@@ -28,8 +29,6 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
           material: true,
           fieldOfCategoryMaterial: true,
           handbook: true,
-          fieldType: true,
-          fieldUnitMeasurement: true,
         },
       });
 
@@ -54,8 +53,6 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
           material: true,
           fieldOfCategoryMaterial: true,
           handbook: true,
-          fieldType: true,
-          fieldUnitMeasurement: true,
         },
       });
       return existenceEntityHandler(
@@ -84,8 +81,6 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
           material: true,
           fieldOfCategoryMaterial: true,
           handbook: true,
-          fieldType: true,
-          fieldUnitMeasurement: true,
         },
       });
       return existenceEntityHandler(
@@ -116,8 +111,6 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
           material: true,
           fieldOfCategoryMaterial: true,
           handbook: true,
-          fieldType: true,
-          fieldUnitMeasurement: true,
         },
         take,
         skip,
@@ -148,8 +141,6 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
           material: true,
           fieldOfCategoryMaterial: true,
           handbook: true,
-          fieldType: true,
-          fieldUnitMeasurement: true,
         },
       });
       return existenceEntityHandler(
@@ -165,22 +156,26 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
   async create(
     dto: CharacteristicsMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    //categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
     fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
-    unitOfMeasurementUuid: EntityUrlParamCommand.RequestUuidParam,
-    userId: EntityUrlParamCommand.RequestUuidParam,
+    unitOfMeasurementId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<CharacteristicsMaterialEntity> {
     try {
-      const { name, comment, value } = dto;
+      const { comment, value, characteristicsMaterialStatus } = dto;
+      const lastCategoryMaterialInHandbook = await this.databaseService.material.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+      });
+      const numInOrder = lastCategoryMaterialInHandbook?.numInOrder + 1 || 1;
+
       const newCharacteristicsMaterial = await this.databaseService.characteristicsMaterial.create({
         data: {
-          name,
           comment,
           value,
-          fieldUnitMeasurementUuid: unitOfMeasurementUuid,
-          fieldTypeUuid: fieldTypeId,
+          characteristicsMaterialStatus,
+          numInOrder,
           fieldOfCategoryMaterialUuid: fieldCategoryMaterialId,
           materialUuid: materialId,
           handbookUuid: handbookId,
@@ -189,8 +184,6 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
           material: true,
           fieldOfCategoryMaterial: true,
           handbook: true,
-          fieldType: true,
-          fieldUnitMeasurement: true,
         },
       });
 
@@ -209,15 +202,20 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
     dto: CharacteristicsMaterialCreateRequestDto,
   ): Promise<CharacteristicsMaterialEntity> {
     try {
-      const { name, comment, value } = dto;
+      const { comment, value, characteristicsMaterialStatus } = dto;
       const updatedCharacteristicsMaterial = await this.databaseService.characteristicsMaterial.update({
         where: {
           uuid: characteristicsMaterialId,
         },
         data: {
-          name,
+          characteristicsMaterialStatus,
           comment,
           value,
+        },
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
         },
       });
 
@@ -231,14 +229,53 @@ export class CharacteristicsMaterialRepository implements ICharacteristicsMateri
     }
   }
 
+  async updateManyStatusByMaterialId(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: CharacteristicsMaterialCreateRequestDto,
+  ): Promise<CharacteristicsMaterialEntity[]> {
+    try {
+      const { comment, value, characteristicsMaterialStatus } = dto;
+      const updatedCharacteristicsMaterial = await this.databaseService.characteristicsMaterial.updateMany({
+        where: {
+          materialUuid: materialId,
+        },
+        data: {
+          characteristicsMaterialStatus,
+          comment,
+          value,
+        },
+      });
+
+      const allCharacteristicsOfMaterial = await this.databaseService.characteristicsMaterial.findMany({
+        where: { materialUuid: materialId },
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+        },
+      });
+      return existenceEntityHandler(
+        allCharacteristicsOfMaterial,
+        CharacteristicsMaterialEntity,
+        EntityName.CHARACTERISTICS_MATERIAL,
+      ) as CharacteristicsMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async deleteById(characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<CharacteristicsMaterialEntity> {
     try {
       const deletedCharacteristicsMaterial = await this.databaseService.characteristicsMaterial.delete({
         where: {
           uuid: characteristicsMaterialId,
         },
+        include: {
+          material: true,
+          fieldOfCategoryMaterial: true,
+          handbook: true,
+        },
       });
-
       return existenceEntityHandler(
         deletedCharacteristicsMaterial,
         CharacteristicsMaterialEntity,

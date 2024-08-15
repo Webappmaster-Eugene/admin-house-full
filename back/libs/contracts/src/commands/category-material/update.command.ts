@@ -3,14 +3,18 @@ import { CategoryMaterialSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 import { CategoryMaterialBusinessValueSchema } from '../../models/category-material/category-material-business-value.schema';
 import { CategoryMaterialRelatedEntitiesSchema } from '../../models/category-material/category-material-related-entities.schema';
+import { CategoryMaterialDataWithFieldsOfCategoryMaterialsSchema } from '../../models/category-material/category-material-data-with-fields-of-category-materials.schema';
 
 const CategoryMaterialUpdateResponseEntitySchema = CategoryMaterialBusinessValueSchema.merge(CategoryMaterialRelatedEntitiesSchema);
 
 const CategoryMaterialUpdateRequestSchema = CategoryMaterialSchema.pick({
   name: true,
   comment: true,
+  categoryMaterialStatus: true,
   templateName: true,
-}).partial();
+})
+  .partial()
+  .merge(CategoryMaterialDataWithFieldsOfCategoryMaterialsSchema);
 
 const CategoryMaterialUpdateResponseSchema = z
   .object({

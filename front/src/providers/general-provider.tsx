@@ -15,9 +15,9 @@ export default function GeneralProvider({ children }: PropsReactNode) {
         themeMode: 'light', // 'light' | 'dark'
         themeDirection: 'ltr', //  'rtl' | 'ltr'
         themeContrast: 'default', // 'default' | 'bold'
-        themeLayout: 'mini', // 'vertical' | 'horizontal' | 'mini'
+        themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
         themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-        themeStretch: false,
+        themeStretch: true,
       }}
     >
       <ThemeProvider>

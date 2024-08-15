@@ -1,18 +1,19 @@
-import { Project } from '.prisma/client';
+import { EActiveStatuses, Organization, Project, User } from '.prisma/client';
 import { OrganizationEntity } from 'src/modules/organization/entities/organization.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 export interface ProjectRelatedEntities {
-  organization: OrganizationEntity;
-  projectMembers: UserEntity[];
-  customer: UserEntity;
-  responsibleManager: UserEntity;
+  organization: Organization;
+  projectMembers: User[];
+  customer: User;
+  responsibleManager: User;
 }
 
 export class ProjectEntity implements Project, ProjectRelatedEntities {
   uuid: string;
   name: string;
   description: string;
+  projectStatus: EActiveStatuses;
   customerUuid: string;
   customerMail: string;
   organizationUuid: string;
@@ -20,10 +21,10 @@ export class ProjectEntity implements Project, ProjectRelatedEntities {
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  organization: OrganizationEntity;
-  projectMembers: UserEntity[];
-  customer: UserEntity;
-  responsibleManager: UserEntity;
+  organization: Organization;
+  projectMembers: User[];
+  customer: User;
+  responsibleManager: User;
 
   constructor(project: Partial<Project>) {
     Object.assign(this, project);

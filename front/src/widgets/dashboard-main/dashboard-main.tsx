@@ -9,7 +9,8 @@ export default function DashboardMain() {
   const settings = useSettingsContext();
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+    // <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+    <Container maxWidth="xl">
       <Typography variant="h4"> Дашборд </Typography>
     </Container>
   );

@@ -5,11 +5,10 @@ const characteristics_material_schema_1 = require("./characteristics-material.sc
 exports.CharacteristicsMaterialBusinessValueSchema = characteristics_material_schema_1.CharacteristicsMaterialSchema.pick({
     uuid: true,
     value: true,
-    name: true,
     comment: true,
+    numInOrder: true,
+    characteristicsMaterialStatus: true,
     fieldOfCategoryMaterialUuid: true,
-    fieldUnitMeasurementUuid: true,
-    fieldTypeUuid: true,
     handbookUuid: true,
     materialUuid: true,
     lastChangeByUserUuid: true,

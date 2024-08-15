@@ -6,5 +6,7 @@ export const CategoryMaterialBusinessValueSchema = CategoryMaterialSchema.pick({
   comment: true,
   uuid: true,
   globalCategoryMaterialUuid: true,
+  numInOrder: true,
+  categoryMaterialStatus: true,
   lastChangeByUserUuid: true,
 });

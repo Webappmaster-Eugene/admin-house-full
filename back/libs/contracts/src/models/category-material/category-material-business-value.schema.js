@@ -8,5 +8,7 @@ exports.CategoryMaterialBusinessValueSchema = category_material_1.CategoryMateri
     comment: true,
     uuid: true,
     globalCategoryMaterialUuid: true,
+    numInOrder: true,
+    categoryMaterialStatus: true,
     lastChangeByUserUuid: true,
 });

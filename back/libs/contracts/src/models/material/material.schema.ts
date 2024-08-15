@@ -1,8 +1,11 @@
 import { z } from 'zod';
+import { EActiveStatusVariants } from '../../enums';
 
 export const MaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
+  numInOrder: z.number().nullable().optional(),
+  materialStatus: EActiveStatusVariants,
   comment: z.string().nullable().optional(),
   namePublic: z.string().nullable().optional(),
   sourceInfo: z.string().nullable().optional(),

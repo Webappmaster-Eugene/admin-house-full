@@ -171,7 +171,7 @@ export class UserController {
   async createEP(@Body() dto: UserCreateRequestDto, @UrlParams() urlParams: IUrlParams): Promise<UserCreateResponseDto> {
     // DOC через эту ручку можно зарегистрировать только user с дефолтной ролью
     try {
-      const { ok, data } = await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID);
+      const { ok, data } = await this.userService.create(dto, [ROLE_IDS.CUSTOMER_ROLE_ID]);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);

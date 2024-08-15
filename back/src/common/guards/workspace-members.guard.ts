@@ -38,8 +38,10 @@ export class WorkspaceMembersGuard implements CanActivate {
         // return false;
       }
 
+      const findedUserRolesIdRoles = findedUser.roles.map(role => role.idRole);
+      const findedUserWorkspaces = findedUser.memberOfWorkspaces.map(workspace => workspace.uuid);
       // DOC или действие совершает ADMIN
-      if (findedUser.role['idRole'] === ROLE_IDS.ADMIN_ROLE_ID) {
+      if (findedUserRolesIdRoles.includes(ROLE_IDS.ADMIN_ROLE_ID)) {
         return true;
       }
 

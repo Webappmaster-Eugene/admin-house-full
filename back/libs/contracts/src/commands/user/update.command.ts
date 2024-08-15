@@ -14,6 +14,7 @@ const UserUpdateRequestSchema = UserSchema.pick({
   documents: true,
   firstName: true,
   phone: true,
+  userStatus: true,
 }).partial();
 
 const UserUpdateResponseSchema = z

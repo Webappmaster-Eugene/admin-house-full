@@ -34,11 +34,6 @@ export interface IFieldVariantsForSelectorFieldTypeController
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ) => Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto>;
-  getAllInCategoryMaterialEP: (
-    urlParams: IUrlParams,
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    queryParams?: IQueryParams,
-  ) => Promise<FieldVariantsForSelectorFieldTypeGetAllResponseDto>;
   getAllInFieldOfCategoryMaterialEP: (
     urlParams: IUrlParams,
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

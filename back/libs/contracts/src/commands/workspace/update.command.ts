@@ -9,6 +9,7 @@ const WorkspaceUpdateRequestSchema = WorkspaceSchema.pick({
   name: true,
   description: true,
   handbookOfWorkspaceUuid: true,
+  workspaceStatus: true,
 }).partial();
 
 const WorkspaceUpdateResponseSchema = z

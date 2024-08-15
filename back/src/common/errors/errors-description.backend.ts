@@ -19,6 +19,9 @@ export const enum BackendErrorNames {
   BAD_REQUEST = 'BAD_REQUEST',
   INTERNAL_ERROR = 'INTERNAL_ERROR',
   WORKSPACE_MISMATCH = 'WORKSPACE_MISMATCH',
+  REQUIRED_CHARCS_ARE_EMPTY_ERROR = 'REQUIRED_CHARCS_ARE_EMPTY_ERROR',
+  CANT_CHANGE_NAME_MATERIAL_ERROR = 'CANT_CHANGE_NAME_MATERIAL_ERROR',
+  FIELD_TYPE_ERROR = 'FIELD_TYPE_ERROR',
   SKIP_TAKES_TOO_MUCH = 'SKIP_TAKES_TOO_MUCH',
   PRISMA_CONFLICT_ERROR = 'PRISMA_CONFLICT_ERROR',
   PRISMA_INVALID_INPUT = 'PRISMA_INVALID_INPUT',
@@ -35,6 +38,9 @@ export type BackendArrayErrors = {
     [BackendErrorNames.INTERNAL_ERROR]: BackendError;
     [BackendErrorNames.SKIP_TAKES_TOO_MUCH]: BackendError;
     [BackendErrorNames.WORKSPACE_MISMATCH]: BackendError;
+    [BackendErrorNames.FIELD_TYPE_ERROR]: BackendError;
+    [BackendErrorNames.CANT_CHANGE_NAME_MATERIAL_ERROR]: BackendError;
+    [BackendErrorNames.REQUIRED_CHARCS_ARE_EMPTY_ERROR]: BackendError;
   };
   PRISMA_ERRORS: {
     [BackendErrorNames.PRISMA_CONFLICT_ERROR]: BackendError;
@@ -71,7 +77,7 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
     [BackendErrorNames.REFRESH_KEY_EXPIRED]: {
       innerCode: 'S004',
       error: {
-        name: 'Error error (refresh jwt expired)',
+        name: 'Error with refresh token (refresh jwt expired)',
         description: 'Your Refresh JWT key is expired. Relogin please.',
       },
       httpCode: 403,
@@ -114,6 +120,33 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
       error: {
         name: 'Skip query takes too much error',
         description: 'Failed to get all entities due to a really big skip query error',
+      },
+      httpCode: 400,
+    },
+    [BackendErrorNames.FIELD_TYPE_ERROR]: {
+      innerCode: 'S010',
+      error: {
+        name: 'Field type error in field of category material',
+        description:
+          'Failed to create new variants for this field of category material due to an error in field type - it must be a selector (array), but its a string or a number',
+      },
+      httpCode: 400,
+    },
+    [BackendErrorNames.REQUIRED_CHARCS_ARE_EMPTY_ERROR]: {
+      innerCode: 'S011',
+      error: {
+        name: 'Error of updating info of material - you can only change relations with characteristics',
+        description:
+          'Required characteristics are empty after created new field of category material. Error of updating info of material - you can only change relations with characteristics to make filled all required characteristics due to required field types',
+      },
+      httpCode: 400,
+    },
+    [BackendErrorNames.CANT_CHANGE_NAME_MATERIAL_ERROR]: {
+      innerCode: 'S012',
+      error: {
+        name: 'Error of updating name of material - you can only change etc info due to filled all required characteristics',
+        description:
+          'Failed to update name of material while all characteristics are filled. Error of updating name of material - you can only change etc info due to filled all required characteristics',
       },
       httpCode: 400,
     },

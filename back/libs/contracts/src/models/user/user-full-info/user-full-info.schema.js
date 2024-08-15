@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserFullInfoSchema = void 0;
 const zod_1 = require("zod");
+const enums_1 = require("../../../enums");
 exports.UserFullInfoSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     firstName: zod_1.z.string(),
     secondName: zod_1.z.string().nullable().optional(),
+    userStatus: enums_1.EActiveStatusVariants,
     avatar: zod_1.z.string().nullable().optional(),
     phone: zod_1.z
         .string()
@@ -22,12 +24,8 @@ At least one special character`),
     address: zod_1.z.string().nullable().optional(),
     info: zod_1.z.string().nullable().optional(),
     documents: zod_1.z.string().nullable().optional(),
-    roleUuid: zod_1.z.string().uuid(),
     creatorOfWorkspaceUuid: zod_1.z.string().uuid().nullable().optional(),
     handbookManagerUuid: zod_1.z.string().uuid().nullable().optional(),
-    memberOfWorkspaceUuid: zod_1.z.string().uuid().nullable().optional(),
-    memberOfOrganizationUuid: zod_1.z.string().uuid().nullable().optional(),
-    memberOfProjectUuid: zod_1.z.string().uuid().nullable().optional(),
     lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),
     updatedAt: zod_1.z.coerce.date(),

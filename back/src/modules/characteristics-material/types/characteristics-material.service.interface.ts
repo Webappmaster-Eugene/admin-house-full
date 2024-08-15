@@ -36,6 +36,10 @@ export interface ICharacteristicsMaterialService
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: CharacteristicsMaterialUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity>>;
+  updateManyStatusByMaterialId: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: CharacteristicsMaterialCreateRequestDto,
+  ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>>;
   deleteById: (
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<CharacteristicsMaterialEntity>>;

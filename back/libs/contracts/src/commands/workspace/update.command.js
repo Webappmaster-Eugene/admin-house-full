@@ -10,6 +10,7 @@ const WorkspaceUpdateRequestSchema = models_1.WorkspaceSchema.pick({
     name: true,
     description: true,
     handbookOfWorkspaceUuid: true,
+    workspaceStatus: true,
 }).partial();
 const WorkspaceUpdateResponseSchema = zod_1.z
     .object({

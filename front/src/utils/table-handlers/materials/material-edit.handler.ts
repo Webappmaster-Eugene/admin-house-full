@@ -1,3 +1,4 @@
+import { MaterialEditableColumns } from '@/widgets/materials/editable-columns';
 import {
   MaterialUpdateCommand,
   ResponsiblePartnerProducerGetCommand,
@@ -7,7 +8,6 @@ import {
 import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
-import { MaterialEditableColumns } from 'src/widgets/materials/editable-rows';
 import { updateMaterial } from 'src/api/actions/material/update-material.action';
 
 export async function materialEditHandler(

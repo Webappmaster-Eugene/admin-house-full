@@ -10,6 +10,7 @@ const FieldVariantsForSelectorFieldTypeUpdateResponseEntitySchema = FieldVariant
 const FieldVariantsForSelectorFieldTypeUpdateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.pick({
   description: true,
   value: true,
+  fieldVariantsForSelectorFieldTypeStatus: true,
 }).partial();
 
 const FieldVariantsForSelectorFieldTypeUpdateResponseSchema = z

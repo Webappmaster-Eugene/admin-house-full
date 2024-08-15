@@ -8,12 +8,19 @@ import { ICategoryMaterialService } from './types/category-material.service.inte
 import { CategoryMaterialCreateRequestDto } from './dto/controller/create-category-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
+import { IMaterialService } from 'src/modules/material/types/material.service.interface';
+import { ICharacteristicsMaterialService } from 'src/modules/characteristics-material/types/characteristics-material.service.interface';
 
 @Injectable()
 export class CategoryMaterialService implements ICategoryMaterialService {
   constructor(
     @Inject(KFI.CATEGORY_MATERIAL_REPOSITORY)
     private readonly categoryMaterialRepository: ICategoryMaterialRepository,
+    @Inject(KFI.MATERIAL_SERVICE)
+    private readonly materialService: IMaterialService,
+    @Inject(KFI.CHARACTERISTICS_MATERIAL_SERVICE)
+    private readonly characteristicsMaterialService: ICharacteristicsMaterialService,
   ) {}
 
   async getById(categoryMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
@@ -41,6 +48,16 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
     const createdCategoryMaterial = await this.categoryMaterialRepository.create(dto, handbookId);
+    const isTemplateCreatedWithCategories = dto.fieldsOfCategoryMaterialsInTemplate.length > 0;
+    if (isTemplateCreatedWithCategories) {
+      const allMaterialsInCategory = dataInternalExtractor(
+        await this.materialService.getAllInCategoryMaterial(createdCategoryMaterial.uuid),
+      );
+      allMaterialsInCategory.length > 0 &&
+        allMaterialsInCategory.map(async materialInCategory => {
+          await this.materialService.rebuildNameForMaterialById(materialInCategory.uuid);
+        });
+    }
     return new InternalResponse(createdCategoryMaterial);
   }
 
@@ -48,7 +65,45 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: CategoryMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+    const findedCategoryMaterialIds = dataInternalExtractor(await this.getById(categoryMaterialId)).fieldsOfCategoryMaterialsInTemplate.map(
+      fieldOfCategoryMaterialsInTemplate => fieldOfCategoryMaterialsInTemplate.uuid,
+    );
+    const isTemplateUpdatedWithCategories =
+      findedCategoryMaterialIds.length !== dto.fieldsOfCategoryMaterialsInTemplate.length ||
+      dto.fieldsOfCategoryMaterialsInTemplate.some(fieldOfCategoryMaterialsInTemplate => {
+        return findedCategoryMaterialIds.indexOf(fieldOfCategoryMaterialsInTemplate.uuid) === -1;
+      });
     const updatedCategoryMaterial = await this.categoryMaterialRepository.updateById(categoryMaterialId, dto);
+
+    if (isTemplateUpdatedWithCategories) {
+      const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
+      allMaterialsInCategory.map(async materialInCategory => {
+        const allCharacteristicsOfCurrentMaterial = dataInternalExtractor(
+          await this.characteristicsMaterialService.getAllInMaterial(materialInCategory.uuid),
+        );
+        const unusedCharacteristicsOfMaterial = allCharacteristicsOfCurrentMaterial.filter(characteristicOfCurrentMaterial => {
+          return !findedCategoryMaterialIds.includes(characteristicOfCurrentMaterial.fieldOfCategoryMaterial.uuid);
+        });
+        unusedCharacteristicsOfMaterial.map(async unusedCharacteristicOfMaterial => {
+          await this.characteristicsMaterialService.updateById(unusedCharacteristicOfMaterial.uuid, {
+            characteristicsMaterialStatus: 'INACTIVE',
+          });
+        });
+        await this.materialService.rebuildNameForMaterialById(materialInCategory.uuid);
+      });
+    }
+    return new InternalResponse(updatedCategoryMaterial);
+  }
+
+  async rebuildCategoryMaterialNameById(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+    const updatedCategoryMaterial = await this.categoryMaterialRepository.rebuildCategoryMaterialNameById(categoryMaterialId);
+
+    const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
+    allMaterialsInCategory.map(async materialInCategory => {
+      await this.materialService.rebuildNameForMaterialById(materialInCategory.uuid);
+    });
     return new InternalResponse(updatedCategoryMaterial);
   }
 

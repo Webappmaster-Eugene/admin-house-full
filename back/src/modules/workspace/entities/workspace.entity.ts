@@ -1,13 +1,17 @@
-import { Workspace } from '.prisma/client';
+import { EActiveStatuses, Handbook, Organization, User, Workspace } from '.prisma/client';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { OrganizationEntity } from 'src/modules/organization/entities/organization.entity';
 import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
+import { z } from 'zod';
+import { UserBusinessValueSchema } from 'libs/contracts/src/models/user/user-business-value.schema';
+import { OrganizationBusinessValueSchema } from 'libs/contracts/src/models/organization/organization-business-value.schema';
+import { HandbookBusinessValueSchema } from 'libs/contracts/src/models/handbook/handbook-business-value.schema';
 
 export interface WorkspaceRelatedEntities {
-  workspaceMembers: UserEntity[];
-  organizations: OrganizationEntity[];
-  handbookOfWorkspace: HandbookEntity;
-  workspaceCreator: UserEntity;
+  workspaceMembers: User[];
+  organizations: Organization[];
+  handbookOfWorkspace: Handbook;
+  workspaceCreator: User;
 }
 
 export class WorkspaceEntity implements Workspace, WorkspaceRelatedEntities {
@@ -15,14 +19,15 @@ export class WorkspaceEntity implements Workspace, WorkspaceRelatedEntities {
   name: string;
   description: string;
   workspaceCreatorUuid: string;
+  workspaceStatus: EActiveStatuses;
   handbookOfWorkspaceUuid: string;
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  workspaceMembers: UserEntity[];
-  organizations: OrganizationEntity[];
-  handbookOfWorkspace: HandbookEntity;
-  workspaceCreator: UserEntity;
+  workspaceMembers: User[];
+  organizations: Organization[];
+  handbookOfWorkspace: Handbook;
+  workspaceCreator: User;
 
   constructor(workspace: Partial<Workspace>) {
     Object.assign(this, workspace);

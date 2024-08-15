@@ -8,6 +8,7 @@ export const ProjectBusinessValueSchema = ProjectSchema.pick({
   createdAt: true,
   updatedAt: true,
   uuid: true,
+  projectStatus: true,
   responsibleManagerUuid: true,
   organizationUuid: true,
   lastChangeByUserUuid: true,

@@ -8,6 +8,7 @@ const OrganizationUpdateResponseEntitySchema = OrganizationBusinessValueSchema.m
 const OrganizationUpdateRequestSchema = OrganizationSchema.pick({
   name: true,
   description: true,
+  organizationStatus: true,
 }).partial();
 
 const OrganizationUpdateResponseSchema = z

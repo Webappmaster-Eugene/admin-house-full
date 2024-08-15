@@ -130,7 +130,7 @@ export class HandbookRepository implements IHandbookRepository {
     transactionDbClient = this.databaseService,
   ): Promise<HandbookEntity> {
     try {
-      const { name, description, canCustomerView, workspaceUuid } = dto;
+      const { name, description, canCustomerView, workspaceUuid, handbookStatus } = dto;
       const newHandbook = await transactionDbClient.handbook.create({
         data: {
           name: name || DEFAULT_HANDBOOK_NAME + ` of user #${managerId}`,
@@ -138,6 +138,7 @@ export class HandbookRepository implements IHandbookRepository {
           canCustomerView: canCustomerView || false,
           responsibleManagerUuid: managerId,
           workspaceUuid,
+          handbookStatus,
         },
         include: {
           categoryMaterials: true,
@@ -162,7 +163,7 @@ export class HandbookRepository implements IHandbookRepository {
 
   async updateById(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    { name, description }: HandbookUpdateRequestDto,
+    { name, description, handbookStatus }: HandbookUpdateRequestDto,
   ): Promise<HandbookEntity> {
     try {
       const updatedHandbook = await this.databaseService.handbook.update({
@@ -172,6 +173,7 @@ export class HandbookRepository implements IHandbookRepository {
         data: {
           name,
           description,
+          handbookStatus,
         },
         include: {
           categoryMaterials: true,

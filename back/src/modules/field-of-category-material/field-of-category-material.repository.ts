@@ -10,6 +10,8 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
+import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from 'src/common/helpers/regex/regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator';
+import { fieldOfCategoryMaterialTemplateGenerator } from 'src/common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
 
 @Injectable()
 export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMaterialRepository {
@@ -25,11 +27,12 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           uuid: fieldOfCategoryMaterialId,
         },
         include: {
-          categoryMaterial: true,
+          categoriesMaterial: true,
           handbook: true,
           fieldType: true,
           unitOfMeasurement: true,
           fieldVariantsForSelectorFieldType: true,
+          categoriesMaterialsTemplatesIncludesThisField: true,
         },
       });
 
@@ -51,11 +54,12 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
         take,
         skip,
         include: {
-          categoryMaterial: true,
+          categoriesMaterial: true,
           handbook: true,
           fieldType: true,
           unitOfMeasurement: true,
           fieldVariantsForSelectorFieldType: true,
+          categoriesMaterialsTemplatesIncludesThisField: true,
         },
       });
       return existenceEntityHandler(
@@ -81,11 +85,12 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
         take,
         skip,
         include: {
-          categoryMaterial: true,
+          categoriesMaterial: true,
           handbook: true,
           fieldType: true,
           unitOfMeasurement: true,
           fieldVariantsForSelectorFieldType: true,
+          categoriesMaterialsTemplatesIncludesThisField: true,
         },
       });
 
@@ -108,15 +113,22 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
 
     try {
       const allFieldOfCategoryMaterials = await this.databaseService.fieldOfCategoryMaterial.findMany({
-        where: { categoryMaterialUuid: categoryMaterialId },
+        where: {
+          categoriesMaterial: {
+            some: {
+              uuid: categoryMaterialId,
+            },
+          },
+        },
         take,
         skip,
         include: {
-          categoryMaterial: true,
+          categoriesMaterial: true,
           handbook: true,
           fieldType: true,
           unitOfMeasurement: true,
           fieldVariantsForSelectorFieldType: true,
+          categoriesMaterialsTemplatesIncludesThisField: true,
         },
       });
       return existenceEntityHandler(
@@ -132,33 +144,65 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
   async create(
     dto: FieldOfCategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldOfCategoryMaterialEntity> {
     try {
-      const { name, comment, defaultValue, uniqueNameForTemplate, fieldTypeUuid, isRequired, unitOfMeasurementUuid } = dto;
+      const {
+        name,
+        fieldOfCategoryMaterialStatus,
+        categoriesMaterial,
+        comment,
+        defaultValue,
+        fieldTypeUuid,
+        isRequired,
+        unitOfMeasurementUuid,
+      } = dto;
+      const lastFieldOfCategoryMaterialInHandbook = await this.databaseService.material.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+      });
+      const numInOrder = lastFieldOfCategoryMaterialInHandbook?.numInOrder + 1 || 1;
+
       const newFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.create({
         data: {
           name,
           comment,
           defaultValue,
+          numInOrder,
+          fieldOfCategoryMaterialStatus,
           fieldTypeUuid,
           isRequired,
-          categoryMaterialUuid: categoryMaterialId,
+          categoriesMaterial: {
+            connect: [
+              ...categoriesMaterial.map(categoryMaterial => ({
+                uuid: categoryMaterial.uuid,
+              })),
+            ],
+          },
           unitOfMeasurementUuid,
-          uniqueNameForTemplate,
           handbookUuid: handbookId,
         },
+      });
+      const uniqueNameForTemplate = fieldOfCategoryMaterialTemplateGenerator(newFieldOfCategoryMaterial);
+      const updatedFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.update({
+        where: {
+          uuid: newFieldOfCategoryMaterial.uuid,
+        },
+        data: {
+          uniqueNameForTemplate,
+        },
         include: {
-          categoryMaterial: true,
+          categoriesMaterial: true,
           handbook: true,
           fieldType: true,
           unitOfMeasurement: true,
           fieldVariantsForSelectorFieldType: true,
+          categoriesMaterialsTemplatesIncludesThisField: true,
         },
       });
       return existenceEntityHandler(
-        newFieldOfCategoryMaterial,
+        updatedFieldOfCategoryMaterial,
         FieldOfCategoryMaterialEntity,
         EntityName.FIELD_OF_CATEGORY_MATERIAL,
       ) as FieldOfCategoryMaterialEntity;
@@ -171,9 +215,28 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfCategoryMaterialCreateRequestDto,
   ): Promise<FieldOfCategoryMaterialEntity> {
+    const oldCategoriesOfFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.findUnique({
+      where: {
+        uuid: fieldOfCategoryMaterialId,
+      },
+      include: {
+        categoriesMaterial: true,
+        categoriesMaterialsTemplatesIncludesThisField: true,
+      },
+    });
+
     try {
-      const { name, comment, defaultValue, unitOfMeasurementUuid } = dto;
-      const updatedFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.update({
+      const {
+        name,
+        comment,
+        defaultValue,
+        fieldOfCategoryMaterialStatus,
+        fieldTypeUuid,
+        categoriesMaterial,
+        isRequired,
+        unitOfMeasurementUuid,
+      } = dto;
+      let updatedFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.update({
         where: {
           uuid: fieldOfCategoryMaterialId,
         },
@@ -182,15 +245,55 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           comment,
           defaultValue,
           unitOfMeasurementUuid,
-        },
-        include: {
-          categoryMaterial: true,
-          handbook: true,
-          fieldType: true,
-          unitOfMeasurement: true,
-          fieldVariantsForSelectorFieldType: true,
+          fieldOfCategoryMaterialStatus,
+          fieldTypeUuid,
+          categoriesMaterial: {
+            disconnect: [
+              ...oldCategoriesOfFieldOfCategoryMaterial.categoriesMaterial.map(categoryMaterial => ({
+                uuid: categoryMaterial.uuid,
+              })),
+            ],
+            connect: [
+              ...categoriesMaterial.map(categoryMaterial => ({
+                uuid: categoryMaterial.uuid,
+              })),
+            ],
+          },
+          // categoriesMaterialsTemplatesIncludesThisField: {
+          //   disconnect: [
+          //     ...oldCategoriesOfFieldOfCategoryMaterial.categoriesMaterialsTemplatesIncludesThisField.map(categoryMaterial => ({
+          //       uuid: categoryMaterial.uuid,
+          //     })),
+          //   ],
+          //   connect: [
+          //     ...categoriesMaterialsTemplatesIncludesThisField.map(categoryMaterial => ({
+          //       uuid: categoryMaterial.uuid,
+          //     })),
+          //   ],
+          // },
+          isRequired,
         },
       });
+
+      if (fieldTypeUuid || name) {
+        const uniqueNameForTemplate = fieldOfCategoryMaterialTemplateGenerator(updatedFieldOfCategoryMaterial);
+        updatedFieldOfCategoryMaterial = await this.databaseService.fieldOfCategoryMaterial.update({
+          where: {
+            uuid: updatedFieldOfCategoryMaterial.uuid,
+          },
+          data: {
+            uniqueNameForTemplate,
+          },
+          include: {
+            categoriesMaterial: true,
+            handbook: true,
+            fieldType: true,
+            unitOfMeasurement: true,
+            fieldVariantsForSelectorFieldType: true,
+            categoriesMaterialsTemplatesIncludesThisField: true,
+          },
+        });
+      }
 
       return existenceEntityHandler(
         updatedFieldOfCategoryMaterial,
@@ -209,11 +312,12 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           uuid: fieldOfCategoryMaterialId,
         },
         include: {
-          categoryMaterial: true,
+          categoriesMaterial: true,
           handbook: true,
           fieldType: true,
           unitOfMeasurement: true,
           fieldVariantsForSelectorFieldType: true,
+          categoriesMaterialsTemplatesIncludesThisField: true,
         },
       });
 

@@ -6,6 +6,8 @@ exports.MaterialBusinessValueSchema = material_schema_1.MaterialSchema.pick({
     name: true,
     price: true,
     comment: true,
+    numInOrder: true,
+    materialStatus: true,
     namePublic: true,
     sourceInfo: true,
     unitMeasurementUuid: true,

@@ -3,6 +3,7 @@ import { UserSchema } from '../../models';
 import { ResponseClientSchema } from '../../models';
 import { UserBusinessValueSchema } from '../../models/user/user-business-value.schema';
 import { UserRelatedEntitiesSchema } from '../../models/user/user-related-entities.schema';
+import { UserMemberOfProjectsSchema } from '../../models/user/user-member/user-member-projects.schema';
 
 const UserAddToProjectResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema);
 
@@ -10,8 +11,7 @@ const UserAddToProjectRequestSchema = UserSchema.pick({
   uuid: true,
   //DOC это поле специально здесь, потому что dtoToUpdateUser формируется в сервисе userService на этапе добавления
   //пользователя в организацию (не в исходном входном dto, поступившего из контроллера, там только userId)
-  memberOfProjectUuid: true,
-});
+}).merge(UserMemberOfProjectsSchema);
 
 const UserAddToProjectResponseSchema = z
   .object({

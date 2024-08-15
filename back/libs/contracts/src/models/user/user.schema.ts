@@ -1,9 +1,11 @@
 import { z } from 'zod';
+import { EActiveStatusVariants } from '../../enums';
 
 export const UserSchema = z.object({
   uuid: z.string().uuid(),
   firstName: z.string(),
   secondName: z.string().nullable().optional(),
+  userStatus: EActiveStatusVariants,
   avatar: z.string().nullable().optional(),
   phone: z
     .string()
@@ -23,12 +25,8 @@ At least one special character`,
   address: z.string().nullable().optional(),
   info: z.string().nullable().optional(),
   documents: z.string().nullable().optional(),
-  roleUuid: z.string().uuid(),
   creatorOfWorkspaceUuid: z.string().uuid().nullable().optional(),
   handbookManagerUuid: z.string().uuid().nullable().optional(),
-  memberOfWorkspaceUuid: z.string().uuid().nullable().optional(),
-  memberOfOrganizationUuid: z.string().uuid().nullable().optional(),
-  memberOfProjectUuid: z.string().uuid().nullable().optional(),
   lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

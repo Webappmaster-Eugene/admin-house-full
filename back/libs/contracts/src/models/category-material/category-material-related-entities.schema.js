@@ -9,6 +9,7 @@ const handbook_business_value_schema_1 = require("../handbook/handbook-business-
 exports.CategoryMaterialRelatedEntitiesSchema = zod_1.z.object({
     materials: zod_1.z.array(material_business_value_schema_1.MaterialBusinessValueSchema).nullable().optional(),
     fieldsOfCategoryMaterials: zod_1.z.array(field_of_category_material_business_value_schema_1.FieldOfCategoryMaterialBusinessValueSchema).nullable().optional(),
+    fieldsOfCategoryMaterialsInTemplate: zod_1.z.array(field_of_category_material_business_value_schema_1.FieldOfCategoryMaterialBusinessValueSchema).nullable().optional(),
     globalCategoryMaterial: global_category_business_value_schema_1.GlobalCategoryMaterialBusinessValueSchema,
     handbook: handbook_business_value_schema_1.HandbookBusinessValueSchema,
 });

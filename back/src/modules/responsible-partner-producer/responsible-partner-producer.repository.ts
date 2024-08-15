@@ -95,9 +95,18 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
     handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<ResponsiblePartnerProducerEntity> {
     try {
-      const { name, comment, email, info, phone } = dto;
+      const { name, comment, email, info, phone, responsiblePartnerProducerStatus } = dto;
+      const lastResponsiblePartnerProducerInHandbook = await this.databaseService.responsiblePartnerProducer.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      const numInOrder = lastResponsiblePartnerProducerInHandbook?.numInOrder + 1 || 1;
       const newResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.create({
-        data: { name, comment, email, info, phone, handbookUuid: handbookId },
+        data: { numInOrder, name, comment, email, info, phone, handbookUuid: handbookId, responsiblePartnerProducerStatus },
         include: {
           handbook: true,
           materials: true,
@@ -117,7 +126,7 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
     responsiblePartnerProducerId: EntityUrlParamCommand.RequestUuidParam,
     dto: ResponsiblePartnerProducerUpdateRequestDto,
   ): Promise<ResponsiblePartnerProducerEntity> {
-    const { name, comment, email, info, phone } = dto;
+    const { name, comment, email, info, phone, responsiblePartnerProducerStatus } = dto;
 
     try {
       const updatedResponsiblePartnerProducer = await this.databaseService.responsiblePartnerProducer.update({
@@ -130,6 +139,7 @@ export class ResponsiblePartnerProducerRepository implements IResponsiblePartner
           email,
           info,
           phone,
+          responsiblePartnerProducerStatus,
         },
         include: {
           handbook: true,

@@ -10,6 +10,9 @@ const ProjectUpdateRequestSchema = ProjectSchema.pick({
   customerMail: true,
   customerUuid: true,
   description: true,
+  projectStatus: true,
+  responsibleManagerUuid: true,
+  organizationUuid: true,
 }).partial();
 
 const ProjectUpdateResponseSchema = z

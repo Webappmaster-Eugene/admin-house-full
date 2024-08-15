@@ -92,37 +92,6 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
     }
   }
 
-  async getAllInCategoryMaterial(
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    skip = 0,
-    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
-  ): Promise<FieldVariantsForSelectorFieldTypeEntity[]> {
-    limitTakeHandler(take);
-
-    try {
-      const allFieldVariantsForSelectorFieldTypes = await this.databaseService.fieldVariantsForSelectorFieldType.findMany({
-        where: {
-          fieldOfCategoryMaterial: {
-            categoryMaterialUuid: categoryMaterialId,
-          },
-        },
-        skip,
-        take,
-        include: {
-          handbook: true,
-          fieldOfCategoryMaterial: true,
-        },
-      });
-      return existenceEntityHandler(
-        allFieldVariantsForSelectorFieldTypes,
-        FieldVariantsForSelectorFieldTypeEntity,
-        EntityName.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE,
-      ) as FieldVariantsForSelectorFieldTypeEntity[];
-    } catch (error: unknown) {
-      errorRepositoryHandler(error);
-    }
-  }
-
   async getAllInFieldOfCategoryMaterial(
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     skip = 0,
@@ -156,10 +125,23 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity> {
     try {
-      // FIXME делать проверку если fieldTypeUuid не спиок/селектор, то отмена
-      const { value, description } = dto;
+      const { value, description, fieldVariantsForSelectorFieldTypeStatus } = dto;
+      const lastFieldVariantsForSelectorFieldTypeInHandbook = await this.databaseService.material.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+      });
+      const numInOrder = lastFieldVariantsForSelectorFieldTypeInHandbook?.numInOrder + 1 || 1;
+
       const newFieldVariantsForSelectorFieldType = await this.databaseService.fieldVariantsForSelectorFieldType.create({
-        data: { value, fieldOfCategoryMaterialUuid: fieldOfCategoryMaterialId, handbookUuid: handbookId, description },
+        data: {
+          value,
+          fieldVariantsForSelectorFieldTypeStatus,
+          fieldOfCategoryMaterialUuid: fieldOfCategoryMaterialId,
+          handbookUuid: handbookId,
+          description,
+          numInOrder,
+        },
         include: {
           handbook: true,
           fieldOfCategoryMaterial: true,
@@ -177,14 +159,14 @@ export class FieldVariantsForSelectorFieldTypeRepository implements IFieldVarian
 
   async updateById(
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
-    { value, description }: FieldVariantsForSelectorFieldTypeUpdateRequestDto,
+    { value, description, fieldVariantsForSelectorFieldTypeStatus }: FieldVariantsForSelectorFieldTypeUpdateRequestDto,
   ): Promise<FieldVariantsForSelectorFieldTypeEntity> {
     try {
       const updatedFieldVariantsForSelectorFieldType = await this.databaseService.fieldVariantsForSelectorFieldType.update({
         where: {
           uuid: fieldVariantsForSelectorFieldTypeId,
         },
-        data: { value, description },
+        data: { value, description, fieldVariantsForSelectorFieldTypeStatus },
         include: {
           handbook: true,
           fieldOfCategoryMaterial: true,

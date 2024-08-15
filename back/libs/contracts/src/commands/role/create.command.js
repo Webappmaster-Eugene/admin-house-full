@@ -8,6 +8,7 @@ const RoleCreateResponseEntitySchema = role_business_value_schema_1.RoleBusiness
 const RoleCreateRequestSchema = models_1.RoleSchema.pick({
     name: true,
     description: true,
+    idRole: true,
 }).merge(zod_1.z.object({
     key: zod_1.z.string(),
 }));

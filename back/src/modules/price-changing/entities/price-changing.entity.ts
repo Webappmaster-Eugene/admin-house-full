@@ -1,8 +1,8 @@
-import { PriceChanging } from '.prisma/client';
+import { Material, PriceChanging } from '.prisma/client';
 import { MaterialEntity } from 'src/modules/material/entities/material.entity';
 
 export interface PriceChangingRelatedEntities {
-  material: MaterialEntity;
+  material: Material;
 }
 
 export class PriceChangingEntity implements PriceChanging, PriceChangingRelatedEntities {
@@ -15,7 +15,7 @@ export class PriceChangingEntity implements PriceChanging, PriceChangingRelatedE
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  material: MaterialEntity;
+  material: Material;
 
   constructor(priceChanging: Partial<PriceChanging>) {
     Object.assign(this, priceChanging);

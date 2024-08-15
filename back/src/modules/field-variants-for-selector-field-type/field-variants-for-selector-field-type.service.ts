@@ -8,12 +8,18 @@ import { FieldVariantsForSelectorFieldTypeUpdateRequestDto } from './dto/control
 import { IFieldVariantsForSelectorFieldTypeService } from './types/field-variants-for-selector-field-type.service.interface';
 import { FieldVariantsForSelectorFieldTypeCreateRequestDto } from './dto/controller/create-field-variants-for-selector-field-type.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
+import { IFieldOfCategoryMaterialRepository } from 'src/modules/field-of-category-material/types/field-of-category-material.repository.interface';
+import { IFieldOfCategoryMaterialService } from 'src/modules/field-of-category-material/types/field-of-category-material.service.interface';
+import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
+import { BackendErrorNames, InternalError } from 'src/common/errors';
 
 @Injectable()
 export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsForSelectorFieldTypeService {
   constructor(
     @Inject(KFI.FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_REPOSITORY)
     private readonly fieldVariantsForSelectorFieldTypeRepository: IFieldVariantsForSelectorFieldTypeRepository,
+    @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE)
+    private readonly fieldOfCategoryMaterialService: IFieldOfCategoryMaterialService,
   ) {}
 
   async getById(
@@ -43,19 +49,6 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
   }
 
-  async getAllInCategoryMaterial(
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    queryParams?: IQueryParams,
-  ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
-    const { skip, take } = queryParams;
-    const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAllInCategoryMaterial(
-      categoryMaterialId,
-      skip,
-      take,
-    );
-    return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
-  }
-
   async getAllInFieldOfCategoryMaterial(
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
@@ -74,6 +67,11 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity>> {
+    const fieldOfCategoryMaterial = dataInternalExtractor(await this.fieldOfCategoryMaterialService.getById(fieldOfCategoryMaterialId));
+
+    if (fieldOfCategoryMaterial.fieldType.jsType !== 'array') {
+      throw new InternalResponse(new InternalError(BackendErrorNames.FIELD_TYPE_ERROR));
+    }
     const createdFieldVariantsForSelectorFieldType = await this.fieldVariantsForSelectorFieldTypeRepository.create(
       dto,
       handbookId,
@@ -86,6 +84,15 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     fieldVariantsForSelectorFieldTypeId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldVariantsForSelectorFieldTypeUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity>> {
+    const fieldVariantsForSelectorFieldType =
+      await this.fieldVariantsForSelectorFieldTypeRepository.getById(fieldVariantsForSelectorFieldTypeId);
+    const fieldOfCategoryMaterial = dataInternalExtractor(
+      await this.fieldOfCategoryMaterialService.getById(fieldVariantsForSelectorFieldType.fieldOfCategoryMaterialUuid),
+    );
+
+    if (fieldOfCategoryMaterial.fieldType.jsType !== 'array') {
+      throw new InternalResponse(new InternalError(BackendErrorNames.FIELD_TYPE_ERROR));
+    }
     const updatedFieldVariantsForSelectorFieldType = await this.fieldVariantsForSelectorFieldTypeRepository.updateById(
       fieldVariantsForSelectorFieldTypeId,
       dto,

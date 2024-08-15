@@ -8,12 +8,19 @@ import { IFieldOfCategoryMaterialService } from './types/field-of-category-mater
 import { FieldOfCategoryMaterialUpdateRequestDto } from './dto/controller/update-field-of-category-material.dto';
 import { FieldOfCategoryMaterialCreateRequestDto } from './dto/controller/create-field-of-category-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
+import { IMaterialService } from 'src/modules/material/types/material.service.interface';
+import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
+import { ICategoryMaterialService } from 'src/modules/category-material/types/category-material.service.interface';
 
 @Injectable()
 export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialService {
   constructor(
     @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_REPOSITORY)
     private readonly fieldOfCategoryMaterialRepository: IFieldOfCategoryMaterialRepository,
+    @Inject(KFI.MATERIAL_SERVICE)
+    private readonly materialService: IMaterialService,
+    @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
+    private readonly categoryMaterialService: ICategoryMaterialService,
   ) {}
 
   async getById(
@@ -65,7 +72,21 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     fieldOfCategoryMaterialIdId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfCategoryMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>> {
+    const oldFieldOfCategoryMaterial = dataInternalExtractor(await this.getById(fieldOfCategoryMaterialIdId));
+    //DOC categoriesMaterialsTemplatesIncludesThisField может изменяться только со стороны категории
+    //DOC так как составить шаблон можно только при изменении категории с помощью специального инпута и никак иначе
+
+    // DOC в самом репозитории внутри проиcходит изменение templateName (если необходимо)
     const updatedFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.updateById(fieldOfCategoryMaterialIdId, dto);
+
+    // DOC если шаблон не пустой и если данное поле участвует в составлении шаблона и если isNameOrTypeChanged=true
+    const isCategoryMaterialNameMustChange =
+      (dto.fieldTypeUuid || dto.name) && oldFieldOfCategoryMaterial.categoriesMaterialsTemplatesIncludesThisField.length > 0;
+    if (isCategoryMaterialNameMustChange) {
+      oldFieldOfCategoryMaterial.categoriesMaterialsTemplatesIncludesThisField.map(async categoryMaterial => {
+        await this.categoryMaterialService.rebuildCategoryMaterialNameById(categoryMaterial.uuid);
+      });
+    }
     return new InternalResponse(updatedFieldOfCategoryMaterial);
   }
 

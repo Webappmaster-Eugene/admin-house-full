@@ -46,9 +46,9 @@ export default async function RootLayout({ children }: PropsReactNode) {
   const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
   if (refreshToken) {
     currentUserInfo = await getCurrentUser();
-  }
-  if (isCurrentUserTypeGuard(currentUserInfo) && isUserWithRelatedWorkspaceTG(currentUserInfo)) {
-    workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
+    if (isCurrentUserTypeGuard(currentUserInfo) && isUserWithRelatedWorkspaceTG(currentUserInfo)) {
+      workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
+    }
   }
 
   return (

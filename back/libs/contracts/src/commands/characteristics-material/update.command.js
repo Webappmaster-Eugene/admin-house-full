@@ -7,9 +7,9 @@ const characteristics_material_related_entities_schema_1 = require("../../models
 const characteristics_material_business_value_schema_1 = require("../../models/characteristics-material/characteristics-material-business-value.schema");
 const CharacteristicsMaterialUpdateResponseEntitySchema = characteristics_material_business_value_schema_1.CharacteristicsMaterialBusinessValueSchema.merge(characteristics_material_related_entities_schema_1.CharacteristicsMaterialRelatedEntitiesSchema);
 const CharacteristicsMaterialUpdateRequestSchema = models_1.CharacteristicsMaterialSchema.pick({
-    name: true,
     value: true,
     comment: true,
+    characteristicsMaterialStatus: true,
 }).partial();
 const CharacteristicsMaterialUpdateResponseSchema = zod_1.z
     .object({

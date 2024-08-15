@@ -92,9 +92,16 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
     handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<FieldUnitMeasurementEntity> {
     try {
-      const { name, comment } = dto;
+      const { name, comment, fieldUnitMeasurementStatus } = dto;
+      const lastFieldUnitMeasurementInHandbook = await this.databaseService.material.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+      });
+      const numInOrder = lastFieldUnitMeasurementInHandbook?.numInOrder + 1 || 1;
+
       const newFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.create({
-        data: { name, comment, handbookUuid: handbookId },
+        data: { name, comment, numInOrder, handbookUuid: handbookId, fieldUnitMeasurementStatus },
         include: {
           handbook: true,
         },
@@ -111,7 +118,7 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
 
   async updateById(
     fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam,
-    { name, comment }: FieldUnitMeasurementUpdateRequestDto,
+    { name, comment, fieldUnitMeasurementStatus }: FieldUnitMeasurementUpdateRequestDto,
   ): Promise<FieldUnitMeasurementEntity> {
     try {
       const updatedFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.update({
@@ -119,6 +126,7 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
           uuid: fieldUnitMeasurementId,
         },
         data: {
+          fieldUnitMeasurementStatus,
           name,
           comment,
         },

@@ -12,6 +12,7 @@ const ResponsiblePartnerProducerCreateRequestSchema = models_1.ResponsiblePartne
     info: true,
     email: true,
     phone: true,
+    responsiblePartnerProducerStatus: true,
 });
 const ResponsiblePartnerProducerCreateResponseSchema = zod_1.z
     .object({

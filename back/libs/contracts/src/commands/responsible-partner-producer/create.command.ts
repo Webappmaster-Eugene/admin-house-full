@@ -13,6 +13,7 @@ const ResponsiblePartnerProducerCreateRequestSchema = ResponsiblePartnerProducer
   info: true,
   email: true,
   phone: true,
+  responsiblePartnerProducerStatus: true,
 });
 
 const ResponsiblePartnerProducerCreateResponseSchema = z

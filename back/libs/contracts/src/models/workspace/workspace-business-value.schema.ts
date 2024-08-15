@@ -4,6 +4,7 @@ export const WorkspaceBusinessValueSchema = WorkspaceSchema.pick({
   uuid: true,
   name: true,
   description: true,
+  workspaceStatus: true,
   workspaceCreatorUuid: true,
   handbookOfWorkspaceUuid: true,
 });

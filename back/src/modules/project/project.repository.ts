@@ -162,13 +162,15 @@ export class ProjectsRepository implements IProjectRepository {
 
   async updateById(projectId: EntityUrlParamCommand.RequestUuidParam, dto: ProjectUpdateRequestDto): Promise<ProjectEntity> {
     try {
-      const { name, description, customerMail, customerUuid } = dto;
+      const { name, description, customerMail, customerUuid, projectStatus, organizationUuid } = dto;
 
       const updatedProject = await this.databaseService.project.update({
         where: {
           uuid: projectId,
         },
         data: {
+          projectStatus,
+          organizationUuid,
           name,
           description,
           customerMail,

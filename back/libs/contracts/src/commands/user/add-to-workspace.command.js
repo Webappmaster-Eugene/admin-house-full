@@ -5,13 +5,13 @@ const zod_1 = require("zod");
 const models_1 = require("../../models");
 const user_business_value_schema_1 = require("../../models/user/user-business-value.schema");
 const user_related_entities_schema_1 = require("../../models/user/user-related-entities.schema");
+const user_member_workspaces_schema_1 = require("../../models/user/user-member/user-member-workspaces.schema");
 const UserAddToWorkspaceResponseEntitySchema = user_business_value_schema_1.UserBusinessValueSchema.merge(user_related_entities_schema_1.UserRelatedEntitiesSchema);
 const UserAddToWorkspaceRequestSchema = models_1.UserSchema.pick({
     uuid: true,
     //DOC это поле специально здесь, потому что dtoToUpdateUser формируется в сервисе userService на этапе добавления
     //пользователя в организацию (не в исходном входном dto, поступившего из контроллера, там только userId)
-    memberOfWorkspaceUuid: true,
-});
+}).merge(user_member_workspaces_schema_1.UserMemberOfWorkspacesSchema);
 const UserAddToWorkspaceResponseSchema = zod_1.z
     .object({
     data: UserAddToWorkspaceResponseEntitySchema,

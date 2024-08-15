@@ -3,6 +3,7 @@ import { CategoryMaterialUpdateRequestDto } from '../dto/controller/update-categ
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
 import { CategoryMaterialEntity } from '../entities/category-material.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import { UniversalInternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
 
 export interface ICategoryMaterialRepository
   extends IRepositoryCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {
@@ -14,5 +15,6 @@ export interface ICategoryMaterialRepository
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: CategoryMaterialUpdateRequestDto,
   ) => Promise<CategoryMaterialEntity>;
+  rebuildCategoryMaterialNameById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
   deleteById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
 }

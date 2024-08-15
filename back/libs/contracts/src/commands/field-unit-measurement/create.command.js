@@ -10,10 +10,13 @@ const FieldUnitMeasurementCreateResponseEntitySchema = models_1.FieldUnitMeasure
     uuid: true,
     handbookUuid: true,
     lastChangeByUserUuid: true,
+    fieldUnitMeasurementStatus: true,
+    numInOrder: true,
 }).merge(field_unit_measurement_related_entities_schema_1.FieldUnitMeasurementRelatedEntitiesSchema);
 const FieldUnitMeasurementCreateRequestSchema = models_1.FieldUnitMeasurementSchema.pick({
     name: true,
     comment: true,
+    fieldUnitMeasurementStatus: true,
 });
 const FieldUnitMeasurementCreateResponseSchema = zod_1.z
     .object({

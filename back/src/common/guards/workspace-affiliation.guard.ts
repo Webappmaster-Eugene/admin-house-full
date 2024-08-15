@@ -31,7 +31,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
       const findedUser = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
 
       if (!findedUser) {
-        throw Error('Login under the user with the appropriate rights to perform this action');
+        throw Error('Please, login under the user with the appropriate rights to perform this action');
         // return false;
       }
 
@@ -40,15 +40,17 @@ export class WorkspaceAffiliationGuard implements CanActivate {
 
       // DOC или действие совершает ADMIN
       // DOC или пользователь сам себя редактирует/смотрит
-      if (findedUser.role['idRole'] === ROLE_IDS.ADMIN_ROLE_ID || inputUuid === uuid) {
+      const findedUserRolesIdRoles = findedUser.roles.map(role => role.idRole);
+      if (findedUserRolesIdRoles.includes(ROLE_IDS.ADMIN_ROLE_ID) || inputUuid === uuid) {
         return true;
       }
 
       // DOC или действие совершает менеджер Workspace, в котором находится пользователь
-      if (findedUser.role['idRole'] === ROLE_IDS.MANAGER_ROLE_ID) {
+      if (findedUserRolesIdRoles.includes(ROLE_IDS.MANAGER_ROLE_ID)) {
         const manager = findedUser;
         const selectedUser = dataInternalExtractor(await this.userService.getFullInfoById(inputUuid));
-        if (selectedUser.memberOfWorkspaceUuid === manager.creatorOfWorkspaceUuid) {
+        const selectedUserWorkspacesUuids = selectedUser.memberOfWorkspaces.map(workspace => workspace.uuid);
+        if (selectedUserWorkspacesUuids.includes(manager.creatorOfWorkspaceUuid)) {
           return true;
         }
       }

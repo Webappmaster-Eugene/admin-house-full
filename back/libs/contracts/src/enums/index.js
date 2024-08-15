@@ -22,3 +22,4 @@ __exportStar(require("./approve-status.variants"), exports);
 __exportStar(require("./user-role.variants"), exports);
 __exportStar(require("./field-type.variants"), exports);
 __exportStar(require("./global-category.variants"), exports);
+__exportStar(require("./active-status.variants"), exports);

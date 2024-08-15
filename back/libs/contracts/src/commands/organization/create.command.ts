@@ -8,6 +8,7 @@ const OrganizationCreateResponseEntitySchema = OrganizationBusinessValueSchema.m
 const OrganizationCreateRequestSchema = OrganizationSchema.pick({
   name: true,
   description: true,
+  organizationStatus: true,
 });
 
 const OrganizationCreateResponseSchema = z

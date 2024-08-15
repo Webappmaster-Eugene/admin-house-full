@@ -10,6 +10,7 @@ const HandbookCreateRequestSchema = HandbookSchema.pick({
   description: true,
   canCustomerView: true,
   workspaceUuid: true,
+  handbookStatus: true,
 });
 
 const HandbookCreateResponseSchema = z

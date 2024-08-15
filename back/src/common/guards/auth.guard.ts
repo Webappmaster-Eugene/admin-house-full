@@ -14,6 +14,7 @@ import { ExternalResponse } from 'src/common/types/responses/universal-external-
 import { IConfigService } from 'src/common/types/main/config.service.interface';
 import { IAuthService } from 'src/modules/auth/types/auth.service.interface';
 import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
+import { EUserTypeVariants } from '.prisma/client';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,7 +27,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const roles = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]) || [];
+    const roles: EUserTypeVariants[] = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]) || [];
 
     const refreshToken = context.switchToHttp().getRequest().cookies[COOKIE_KEYS.REFRESH_KEY];
 
@@ -151,20 +152,25 @@ export class AuthGuard implements CanActivate {
       const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
       if (!user) {
         // return false;
-        throw Error('Login under the user with the appropriate role');
+        throw Error('Error! Please, register or login under the user with the appropriate role');
       }
 
       if (roles?.length === 0) {
         return true;
       }
 
-      if (!roles.includes(user.role['name'])) {
-        throw Error('Login under the user with the appropriate role');
+      const userRoleNames = user.roles.map(role => role.name);
+      if (
+        !roles.some(role => {
+          return userRoleNames.includes(role);
+        })
+      ) {
+        throw Error('Error! Please, register or login under the user with the appropriate role');
       }
       return true;
       // return !!roles.includes(user.role['name']);
     } catch (error) {
-      if (error.message === 'Login under the user with the appropriate role') {
+      if (error.message === 'Error! Please, register or login under the user with the appropriate role') {
         const errorRoles = {
           name: 'Your role have not got access rights',
           message: 'Login under the user with the appropriate role',

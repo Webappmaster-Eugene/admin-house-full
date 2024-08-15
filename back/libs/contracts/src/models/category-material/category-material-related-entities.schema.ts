@@ -7,6 +7,7 @@ import { HandbookBusinessValueSchema } from '../handbook/handbook-business-value
 export const CategoryMaterialRelatedEntitiesSchema = z.object({
   materials: z.array(MaterialBusinessValueSchema).nullable().optional(),
   fieldsOfCategoryMaterials: z.array(FieldOfCategoryMaterialBusinessValueSchema).nullable().optional(),
+  fieldsOfCategoryMaterialsInTemplate: z.array(FieldOfCategoryMaterialBusinessValueSchema).nullable().optional(),
   globalCategoryMaterial: GlobalCategoryMaterialBusinessValueSchema,
   handbook: HandbookBusinessValueSchema,
 });

@@ -13,7 +13,8 @@ export default function SettingsView() {
   const settings = useSettingsContext();
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+    // <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+    <Container maxWidth="xl">
       <Typography variant="h4"> Page Six </Typography>
 
       <Box

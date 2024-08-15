@@ -1,10 +1,10 @@
-import { FieldOfCategoryMaterial, FieldVariantsForSelectorFieldType, Handbook } from '.prisma/client';
+import { EActiveStatuses, FieldOfCategoryMaterial, FieldVariantsForSelectorFieldType, Handbook } from '.prisma/client';
 import { FieldOfCategoryMaterialEntity } from 'src/modules/field-of-category-material/entities/field-of-category-material.entity';
 import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
 
 export interface FieldVariantsForSelectorFieldTypeRelatedEntities {
-  handbook: HandbookEntity;
-  fieldOfCategoryMaterial: FieldOfCategoryMaterialEntity;
+  handbook: Handbook;
+  fieldOfCategoryMaterial: FieldOfCategoryMaterial;
 }
 
 export class FieldVariantsForSelectorFieldTypeEntity
@@ -12,6 +12,8 @@ export class FieldVariantsForSelectorFieldTypeEntity
 {
   uuid: string;
   value: string;
+  numInOrder: number;
+  fieldVariantsForSelectorFieldTypeStatus: EActiveStatuses;
   fieldOfCategoryMaterialUuid: string;
   description: string;
   fieldTypeUuid: string;
@@ -19,8 +21,8 @@ export class FieldVariantsForSelectorFieldTypeEntity
   lastChangeByUserUuid: string;
   createdAt: Date;
   updatedAt: Date;
-  handbook: HandbookEntity;
-  fieldOfCategoryMaterial: FieldOfCategoryMaterialEntity;
+  handbook: Handbook;
+  fieldOfCategoryMaterial: FieldOfCategoryMaterial;
 
   constructor(fieldVariantsForSelectorFieldType: Partial<FieldVariantsForSelectorFieldType>) {
     Object.assign(this, fieldVariantsForSelectorFieldType);

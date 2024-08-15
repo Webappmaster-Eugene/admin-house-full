@@ -4,7 +4,14 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { User } from '../../common/decorators/user.decorator';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
-import { EntityUrlParamCommand } from 'libs/contracts';
+import {
+  EntityUrlParamCommand,
+  MaterialCreateCommand,
+  MaterialDeleteCommand,
+  MaterialGetAllCommand,
+  MaterialGetCommand,
+  MaterialUpdateCommand,
+} from 'libs/contracts';
 import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 import { MaterialGetResponseDto } from './dto/controller/get-material.dto';
 import { MaterialCreateRequestDto, MaterialCreateResponseDto } from './dto/controller/create-material.dto';
@@ -24,8 +31,13 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
-import { MaterialEntity } from 'src/modules/material/entities/material.entity';
+import {
+  MaterialUpdateCategoryRequestDto,
+  MaterialUpdateCategoryResponseDto,
+} from 'src/modules/material/dto/controller/update-category-material.dto';
+import { MaterialUpdateCategoryCommand } from 'libs/contracts/src/commands/material/update-category.command';
+import { MaterialUpdateNameCommand } from 'libs/contracts/src/commands/material/update-name.command';
+import { MaterialUpdateNameRequestDto, MaterialUpdateNameResponseDto } from 'src/modules/material/dto/controller/update-name-material.dto';
 
 @ApiTags('Работа с Material')
 @Controller('material')
@@ -37,9 +49,9 @@ export class MaterialController implements IMaterialController {
   ) {}
 
   //region SWAGGER
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialGetCommand.ResponseSchema),
-  // })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialGetCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Получение Material по id' })
   @ApiResponse({ status: 200, type: MaterialGetResponseDto })
   @ApiBearerAuth('access-token')
@@ -61,12 +73,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  // @ApiQuery({
-  //   schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
-  // })
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
-  // })
+  @ApiQuery({
+    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  })
   @ApiOperation({
     summary: 'Получить все materials',
   })
@@ -80,6 +92,8 @@ export class MaterialController implements IMaterialController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAll(queryParams);
+
+      console.log(data);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
@@ -87,12 +101,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  // @ApiQuery({
-  //   schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
-  // })
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
-  // })
+  @ApiQuery({
+    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  })
   @ApiOperation({
     summary: 'Получить все materials внутри Material',
   })
@@ -117,12 +131,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  // @ApiQuery({
-  //   schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
-  // })
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
-  // })
+  @ApiQuery({
+    schema: zodToOpenAPI(MaterialGetAllCommand.RequestQuerySchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialGetAllCommand.ResponseSchema),
+  })
   @ApiOperation({
     summary: 'Получить все materials внутри CategoryMaterial',
   })
@@ -147,12 +161,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  // @ApiBody({
-  //   schema: zodToOpenAPI(MaterialCreateCommand.RequestSchema),
-  // })
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialCreateCommand.ResponseSchema),
-  // })
+  @ApiBody({
+    schema: zodToOpenAPI(MaterialCreateCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialCreateCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Создание Material' })
   @ApiResponse({ status: 201, type: MaterialCreateResponseDto })
   @ApiBearerAuth('access-token')
@@ -178,12 +192,12 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  // @ApiBody({
-  //   schema: zodToOpenAPI(MaterialUpdateCommand.RequestSchema),
-  // })
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialUpdateCommand.ResponseSchema),
-  // })
+  @ApiBody({
+    schema: zodToOpenAPI(MaterialUpdateCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialUpdateCommand.ResponseSchema),
+  })
   @ApiOperation({ summary: 'Изменение Material по id Material' })
   @ApiResponse({ status: 200, type: MaterialUpdateResponseDto })
   @ApiBearerAuth('access-token')
@@ -207,9 +221,67 @@ export class MaterialController implements IMaterialController {
   }
 
   //region SWAGGER
-  // @ApiOkResponse({
-  //   schema: zodToOpenAPI(MaterialDeleteCommand.ResponseSchema),
-  // })
+  @ApiBody({
+    schema: zodToOpenAPI(MaterialUpdateCategoryCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialUpdateCategoryCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Изменение только категории Material по id Material' })
+  @ApiResponse({ status: 200, type: MaterialUpdateCategoryResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @ZodSerializerDto(MaterialUpdateCategoryResponseDto)
+  @Put('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/change-category')
+  async changeCategoryOfMaterialByIdEP(
+    @Param('materialId', ParseUUIDPipe)
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    @Body() dto: MaterialUpdateCategoryRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+    @User() userInfoFromJWT: IJWTPayload,
+  ): Promise<MaterialUpdateCategoryResponseDto> {
+    try {
+      const { ok, data } = await this.materialService.changeCategoryMaterialById(materialId, dto);
+      return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiBody({
+    schema: zodToOpenAPI(MaterialUpdateNameCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialUpdateNameCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Изменение только категории Material по id Material' })
+  @ApiResponse({ status: 200, type: MaterialUpdateNameResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @ZodSerializerDto(MaterialUpdateNameResponseDto)
+  @Put('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/update-name')
+  async updateNameForMaterialByIdEP(
+    @Param('materialId', ParseUUIDPipe)
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    @Body() dto: MaterialUpdateNameRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+    @User() userInfoFromJWT: IJWTPayload,
+  ): Promise<MaterialUpdateNameResponseDto> {
+    try {
+      const { ok, data } = await this.materialService.updateNameForMaterialById(materialId, dto);
+      return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiOkResponse({
+    schema: zodToOpenAPI(MaterialDeleteCommand.ResponseSchema),
+  })
   @ApiOperation({
     summary: 'Удаление Material внутри Workspace менеджера по id Material',
   })

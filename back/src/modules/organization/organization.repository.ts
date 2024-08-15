@@ -130,7 +130,6 @@ export class OrganizationRepository implements IOrganizationRepository {
   ): Promise<OrganizationEntity> {
     try {
       const { description, name } = dto;
-
       const newOrganization = await this.databaseService.organization.create({
         data: {
           organizationLeaderUuid: userId,
@@ -154,7 +153,7 @@ export class OrganizationRepository implements IOrganizationRepository {
 
   async updateById(
     organizationId: EntityUrlParamCommand.RequestUuidParam,
-    { description, name }: OrganizationUpdateRequestDto,
+    { description, name, organizationStatus }: OrganizationUpdateRequestDto,
   ): Promise<OrganizationEntity> {
     try {
       const updatedOrganization = await this.databaseService.organization.update({
@@ -164,6 +163,7 @@ export class OrganizationRepository implements IOrganizationRepository {
         data: {
           name,
           description,
+          organizationStatus,
         },
         include: {
           organizationLeader: true,

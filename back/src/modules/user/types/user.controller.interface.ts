@@ -11,6 +11,7 @@ import { IQueryParams } from '../../../common/decorators/query-params.decorator'
 import { UserAddToOrganizationResponseDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
 import { UserAddToProjectResponseDto } from 'src/modules/user/dto/controller/add-to-project.dto';
 import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
+import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
 
 export interface IUserController
   extends IControllerCommon<
@@ -35,6 +36,7 @@ export interface IUserController
     dto: UserUpdateRequestDto,
     urlParams: IUrlParams,
   ) => Promise<UserUpdateResponseDto>;
+  updateRolesOfUserEP: (dto: UserUpdateRolesRequestDto) => Promise<UserUpdateResponseDto>;
   deleteByIdEP: (userId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<UserDeleteResponseDto>;
   getCurrentUserEP: (userInfoFromJWT: IJWTPayload, urlParams: IUrlParams) => Promise<UserGetFullInfoResponseDto>;
   addUserToWorkspaceEP: (

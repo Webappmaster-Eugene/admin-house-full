@@ -21,7 +21,6 @@ import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.gua
 import { EUserTypeVariants } from '.prisma/client';
 import { FieldOfCategoryMaterialDeleteResponseDto } from './dto/controller/delete-field-of-category-material.dto';
 import { FieldOfCategoryMaterialGetResponseDto } from './dto/controller/get-field-of-category-material.dto';
-import { FieldOfCategoryMaterialEntity } from './entities/field-of-category-material.entity';
 import { FieldOfCategoryMaterialGetAllResponseDto } from './dto/controller/get-all-field-of-category-materials.dto';
 import {
   FieldOfCategoryMaterialCreateRequestDto,
@@ -57,9 +56,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialGetResponseDto)
-  @Get(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
-  )
+  @Get('workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId')
   async getByIdEP(
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -175,7 +172,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   @ApiResponse({ status: 201, type: FieldOfCategoryMaterialCreateResponseDto })
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialCreateResponseDto)
-  @Post('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId')
+  @Post('workspace/:workspaceId/handbook/:handbookId')
   async createEP(
     @Body() dto: FieldOfCategoryMaterialCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -206,9 +203,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldOfCategoryMaterialUpdateResponseDto)
-  @Put(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
-  )
+  @Put('workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId')
   async updateByIdEP(
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -235,9 +230,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   //endregion
   @ZodSerializerDto(FieldOfCategoryMaterialDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
-  @Delete(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
-  )
+  @Delete('workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId')
   async deleteByIdEP(
     @Param('fieldOfCategoryMaterialId', ParseUUIDPipe)
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,

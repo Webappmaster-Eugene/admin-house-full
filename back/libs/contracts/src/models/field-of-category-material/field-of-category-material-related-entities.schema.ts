@@ -1,14 +1,15 @@
 import { z } from 'zod';
-import { HandbookSchema } from '../handbook';
-import { FieldTypeSchema } from '../field-type';
-import { FieldUnitMeasurementSchema } from '../field-unit-measurement';
-import { CategoryMaterialSchema } from '../category-material';
-import { FieldVariantsForSelectorFieldTypeSchema } from '../field-variants-for-selector-field-type';
+import { CategoryMaterialBusinessValueSchema } from '../category-material/category-material-business-value.schema';
+import { FieldVariantsForSelectorFieldTypeBusinessValueSchema } from '../field-variants-for-selector-field-type/field-variants-for-selector-field-type-business-value.schema';
+import { FieldUnitMeasurementBusinessValueSchema } from '../field-unit-measurement/field-unit-measurement-business-value.schema';
+import { FieldTypeBusinessValueSchema } from '../field-type/field-type-business-value.schema';
+import { HandbookBusinessValueSchema } from '../handbook/handbook-business-value.schema';
 
 export const FieldOfCategoryMaterialRelatedEntitiesSchema = z.object({
-  categoryMaterial: CategoryMaterialSchema,
-  handbook: HandbookSchema,
-  fieldType: FieldTypeSchema,
-  unitOfMeasurement: FieldUnitMeasurementSchema,
-  fieldVariantsForSelectorFieldType: z.array(FieldVariantsForSelectorFieldTypeSchema).nullable().optional(),
+  handbook: HandbookBusinessValueSchema,
+  categoriesMaterial: z.array(CategoryMaterialBusinessValueSchema).nullable().optional(),
+  categoriesMaterialsTemplatesIncludesThisField: z.array(CategoryMaterialBusinessValueSchema).nullable().optional(),
+  fieldType: FieldTypeBusinessValueSchema,
+  unitOfMeasurement: FieldUnitMeasurementBusinessValueSchema,
+  fieldVariantsForSelectorFieldType: z.array(FieldVariantsForSelectorFieldTypeBusinessValueSchema).nullable().optional(),
 });

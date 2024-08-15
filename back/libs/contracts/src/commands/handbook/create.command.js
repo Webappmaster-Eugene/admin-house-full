@@ -11,6 +11,7 @@ const HandbookCreateRequestSchema = models_1.HandbookSchema.pick({
     description: true,
     canCustomerView: true,
     workspaceUuid: true,
+    handbookStatus: true,
 });
 const HandbookCreateResponseSchema = zod_1.z
     .object({

@@ -87,20 +87,19 @@ export class UserService implements IUserService {
 
   async create(
     dto: UserCreateRequestDto,
-    roleId?: EntityUrlParamCommand.RequestNumberParam,
+    roleIds: EntityUrlParamCommand.RequestNumberParam[],
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const roleNumberId = roleId ? roleId : ROLE_IDS.CUSTOMER_ROLE_ID;
-    const role = dataInternalExtractor(await this.roleService.getById(roleNumberId));
-
-    const hashedPassword = await argon2.hash(dto.password);
+    const role = dataInternalExtractor(await this.roleService.getById(roleIds[0]));
     const roleUuid = role.uuid;
+    const hashedPassword = await argon2.hash(dto.password);
+
     try {
       const resultOfTransaction = await this.databaseService.$transaction(async transactionDbClient => {
         const createdUser = await this.userRepository.create(dto, roleUuid, hashedPassword, transactionDbClient);
 
         await cacheRemoverBatch(this.cacheManager, [CACHE_KEYS.USER_ALL]);
 
-        if (roleNumberId === 2) {
+        if (role.idRole === 2) {
           const newManagerWorkspace = await this.workspaceService.create(
             { name: null, description: null },
             createdUser.uuid,
@@ -144,7 +143,6 @@ export class UserService implements IUserService {
       });
       return resultOfTransaction;
     } catch (error) {
-      console.log('create, userRepository error: ', error);
       throw error;
     }
 
@@ -208,8 +206,8 @@ export class UserService implements IUserService {
   ): Promise<UniversalInternalResponse<UserEntity>> {
     const findedUser = await this.userRepository.getById(userId);
 
-    if (!findedUser.memberOfWorkspaceUuid) {
-      const dtoToUpdateUser: UserAddToWorkspaceRequestDto = { uuid: userId, memberOfWorkspaceUuid: workspaceId };
+    if (!findedUser.memberOfWorkspaces.map(workspace => workspace.uuid).includes(workspaceId)) {
+      const dtoToUpdateUser: UserAddToWorkspaceRequestDto = { uuid: userId, workspaceToAddId: workspaceId };
 
       const updatedUser = await this.userRepository.addUserToWorkspaceById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);

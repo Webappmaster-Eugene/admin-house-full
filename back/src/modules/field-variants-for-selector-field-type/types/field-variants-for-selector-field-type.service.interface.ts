@@ -20,10 +20,6 @@ export interface IFieldVariantsForSelectorFieldTypeService
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>>;
-  getAllInCategoryMaterial: (
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    queryParams?: IQueryParams,
-  ) => Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>>;
   getAllInFieldOfCategoryMaterial: (
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,

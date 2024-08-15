@@ -18,33 +18,33 @@ export const AppInfoScalarFieldEnumSchema = z.enum(['uuid','name','description',
 
 export const RoleScalarFieldEnumSchema = z.enum(['uuid','idRole','name','description','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const UserScalarFieldEnumSchema = z.enum(['uuid','firstName','secondName','avatar','phone','email','password','address','info','documents','roleUuid','creatorOfWorkspaceUuid','handbookManagerUuid','memberOfWorkspaceUuid','memberOfOrganizationUuid','memberOfProjectUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const UserScalarFieldEnumSchema = z.enum(['uuid','firstName','secondName','avatar','phone','email','password','address','info','documents','userStatus','creatorOfWorkspaceUuid','handbookManagerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const WorkspaceScalarFieldEnumSchema = z.enum(['uuid','name','description','workspaceCreatorUuid','handbookOfWorkspaceUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const WorkspaceScalarFieldEnumSchema = z.enum(['uuid','name','description','workspaceStatus','workspaceCreatorUuid','handbookOfWorkspaceUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const HandbookScalarFieldEnumSchema = z.enum(['uuid','name','description','canCustomerView','workspaceUuid','responsibleManagerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const HandbookScalarFieldEnumSchema = z.enum(['uuid','name','description','handbookStatus','canCustomerView','workspaceUuid','responsibleManagerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const OrganizationScalarFieldEnumSchema = z.enum(['uuid','name','description','workspaceUuid','organizationLeaderUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const OrganizationScalarFieldEnumSchema = z.enum(['uuid','name','description','organizationStatus','workspaceUuid','organizationLeaderUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const ProjectScalarFieldEnumSchema = z.enum(['uuid','name','description','organizationUuid','customerMail','customerUuid','responsibleManagerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const ProjectScalarFieldEnumSchema = z.enum(['uuid','name','description','projectStatus','organizationUuid','customerMail','customerUuid','responsibleManagerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
 export const FieldTypeScalarFieldEnumSchema = z.enum(['uuid','name','description','jsType','lastChangeByUserUuid','createdAt','updatedAt']);
 
 export const GlobalCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','nameRu','comment','color','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','templateName','globalCategoryMaterialUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','templateName','categoryMaterialStatus','globalCategoryMaterialUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','handbookUuid','fieldUnitMeasurementStatus','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const FieldOfCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','uniqueNameForTemplate','comment','isRequired','defaultValue','categoryMaterialUuid','unitOfMeasurementUuid','fieldTypeUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const FieldOfCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','uniqueNameForTemplate','comment','numInOrder','fieldOfCategoryMaterialStatus','isRequired','defaultValue','unitOfMeasurementUuid','fieldTypeUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const FieldVariantsForSelectorFieldTypeScalarFieldEnumSchema = z.enum(['uuid','value','description','handbookUuid','fieldOfCategoryMaterialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const FieldVariantsForSelectorFieldTypeScalarFieldEnumSchema = z.enum(['uuid','value','description','numInOrder','fieldVariantsForSelectorFieldTypeStatus','handbookUuid','fieldOfCategoryMaterialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const ResponsiblePartnerProducerScalarFieldEnumSchema = z.enum(['uuid','name','comment','info','email','phone','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const ResponsiblePartnerProducerScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','responsiblePartnerProducerStatus','info','email','phone','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const MaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','sourceInfo','namePublic','price','handbookUuid','unitMeasurementUuid','categoryMaterialUuid','responsiblePartnerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const MaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','materialStatus','sourceInfo','namePublic','price','handbookUuid','unitMeasurementUuid','categoryMaterialUuid','responsiblePartnerUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const CharacteristicsMaterialScalarFieldEnumSchema = z.enum(['uuid','name','value','comment','fieldOfCategoryMaterialUuid','handbookUuid','fieldTypeUuid','fieldUnitMeasurementUuid','materialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const CharacteristicsMaterialScalarFieldEnumSchema = z.enum(['uuid','value','numInOrder','characteristicsMaterialStatus','comment','fieldOfCategoryMaterialUuid','handbookUuid','materialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
 export const PriceChangingScalarFieldEnumSchema = z.enum(['uuid','newPrice','oldPrice','source','comment','materialUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
@@ -93,6 +93,10 @@ export type EEntityActionsType = `${z.infer<typeof EEntityActionsSchema>}`
 export const EApproveStatusesSchema = z.enum(['ONAPPROVAL','REFUSUAL','AGREED']);
 
 export type EApproveStatusesType = `${z.infer<typeof EApproveStatusesSchema>}`
+
+export const EActiveStatusesSchema = z.enum(['ACTIVE','INACTIVE','DELETED']);
+
+export type EActiveStatusesType = `${z.infer<typeof EActiveStatusesSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -186,6 +190,7 @@ export type RoleOptionalDefaults = z.infer<typeof RoleOptionalDefaultsSchema>
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
+  userStatus: EActiveStatusesSchema,
   uuid: z.string(),
   firstName: z.string(),
   secondName: z.string().nullish(),
@@ -196,12 +201,8 @@ export const UserSchema = z.object({
   address: z.string().nullish(),
   info: z.string().nullish(),
   documents: z.string().nullish(),
-  roleUuid: z.string(),
   creatorOfWorkspaceUuid: z.string().nullish(),
   handbookManagerUuid: z.string().nullish(),
-  memberOfWorkspaceUuid: z.string().nullish(),
-  memberOfOrganizationUuid: z.string().nullish(),
-  memberOfProjectUuid: z.string().nullish(),
   lastChangeByUserUuid: z.string().nullish(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -213,6 +214,7 @@ export type User = z.infer<typeof UserSchema>
 //------------------------------------------------------
 
 export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
+  userStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -225,6 +227,7 @@ export type UserOptionalDefaults = z.infer<typeof UserOptionalDefaultsSchema>
 /////////////////////////////////////////
 
 export const WorkspaceSchema = z.object({
+  workspaceStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   description: z.string().nullish(),
@@ -241,6 +244,7 @@ export type Workspace = z.infer<typeof WorkspaceSchema>
 //------------------------------------------------------
 
 export const WorkspaceOptionalDefaultsSchema = WorkspaceSchema.merge(z.object({
+  workspaceStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -253,6 +257,7 @@ export type WorkspaceOptionalDefaults = z.infer<typeof WorkspaceOptionalDefaults
 /////////////////////////////////////////
 
 export const HandbookSchema = z.object({
+  handbookStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   description: z.string().nullish(),
@@ -270,6 +275,7 @@ export type Handbook = z.infer<typeof HandbookSchema>
 //------------------------------------------------------
 
 export const HandbookOptionalDefaultsSchema = HandbookSchema.merge(z.object({
+  handbookStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   canCustomerView: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
@@ -283,6 +289,7 @@ export type HandbookOptionalDefaults = z.infer<typeof HandbookOptionalDefaultsSc
 /////////////////////////////////////////
 
 export const OrganizationSchema = z.object({
+  organizationStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   description: z.string().nullish(),
@@ -299,6 +306,7 @@ export type Organization = z.infer<typeof OrganizationSchema>
 //------------------------------------------------------
 
 export const OrganizationOptionalDefaultsSchema = OrganizationSchema.merge(z.object({
+  organizationStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -311,12 +319,13 @@ export type OrganizationOptionalDefaults = z.infer<typeof OrganizationOptionalDe
 /////////////////////////////////////////
 
 export const ProjectSchema = z.object({
+  projectStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   description: z.string().nullish(),
   organizationUuid: z.string(),
-  customerMail: z.string(),
-  customerUuid: z.string(),
+  customerMail: z.string().nullish(),
+  customerUuid: z.string().nullish(),
   responsibleManagerUuid: z.string(),
   lastChangeByUserUuid: z.string().nullish(),
   createdAt: z.coerce.date(),
@@ -329,6 +338,7 @@ export type Project = z.infer<typeof ProjectSchema>
 //------------------------------------------------------
 
 export const ProjectOptionalDefaultsSchema = ProjectSchema.merge(z.object({
+  projectStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -396,9 +406,11 @@ export type GlobalCategoryMaterialOptionalDefaults = z.infer<typeof GlobalCatego
 /////////////////////////////////////////
 
 export const CategoryMaterialSchema = z.object({
+  categoryMaterialStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   comment: z.string().nullish(),
+  numInOrder: z.number().nullish(),
   templateName: z.string().nullish(),
   globalCategoryMaterialUuid: z.string(),
   handbookUuid: z.string(),
@@ -413,6 +425,7 @@ export type CategoryMaterial = z.infer<typeof CategoryMaterialSchema>
 //------------------------------------------------------
 
 export const CategoryMaterialOptionalDefaultsSchema = CategoryMaterialSchema.merge(z.object({
+  categoryMaterialStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -425,9 +438,11 @@ export type CategoryMaterialOptionalDefaults = z.infer<typeof CategoryMaterialOp
 /////////////////////////////////////////
 
 export const FieldUnitMeasurementSchema = z.object({
+  fieldUnitMeasurementStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   comment: z.string().nullish(),
+  numInOrder: z.number().nullish(),
   handbookUuid: z.string(),
   lastChangeByUserUuid: z.string().nullish(),
   createdAt: z.coerce.date(),
@@ -440,6 +455,7 @@ export type FieldUnitMeasurement = z.infer<typeof FieldUnitMeasurementSchema>
 //------------------------------------------------------
 
 export const FieldUnitMeasurementOptionalDefaultsSchema = FieldUnitMeasurementSchema.merge(z.object({
+  fieldUnitMeasurementStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -452,13 +468,14 @@ export type FieldUnitMeasurementOptionalDefaults = z.infer<typeof FieldUnitMeasu
 /////////////////////////////////////////
 
 export const FieldOfCategoryMaterialSchema = z.object({
+  fieldOfCategoryMaterialStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   uniqueNameForTemplate: z.string().nullish(),
   comment: z.string().nullish(),
+  numInOrder: z.number().nullish(),
   isRequired: z.boolean(),
   defaultValue: z.string().nullish(),
-  categoryMaterialUuid: z.string(),
   unitOfMeasurementUuid: z.string(),
   fieldTypeUuid: z.string(),
   handbookUuid: z.string(),
@@ -473,6 +490,7 @@ export type FieldOfCategoryMaterial = z.infer<typeof FieldOfCategoryMaterialSche
 //------------------------------------------------------
 
 export const FieldOfCategoryMaterialOptionalDefaultsSchema = FieldOfCategoryMaterialSchema.merge(z.object({
+  fieldOfCategoryMaterialStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   isRequired: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
@@ -486,9 +504,11 @@ export type FieldOfCategoryMaterialOptionalDefaults = z.infer<typeof FieldOfCate
 /////////////////////////////////////////
 
 export const FieldVariantsForSelectorFieldTypeSchema = z.object({
+  fieldVariantsForSelectorFieldTypeStatus: EActiveStatusesSchema,
   uuid: z.string(),
   value: z.string(),
   description: z.string().nullish(),
+  numInOrder: z.number().nullish(),
   handbookUuid: z.string(),
   fieldOfCategoryMaterialUuid: z.string(),
   lastChangeByUserUuid: z.string().nullish(),
@@ -502,6 +522,7 @@ export type FieldVariantsForSelectorFieldType = z.infer<typeof FieldVariantsForS
 //------------------------------------------------------
 
 export const FieldVariantsForSelectorFieldTypeOptionalDefaultsSchema = FieldVariantsForSelectorFieldTypeSchema.merge(z.object({
+  fieldVariantsForSelectorFieldTypeStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -514,9 +535,11 @@ export type FieldVariantsForSelectorFieldTypeOptionalDefaults = z.infer<typeof F
 /////////////////////////////////////////
 
 export const ResponsiblePartnerProducerSchema = z.object({
+  responsiblePartnerProducerStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   comment: z.string().nullish(),
+  numInOrder: z.number().nullish(),
   info: z.string().nullish(),
   email: z.string().nullish(),
   phone: z.string().nullish(),
@@ -532,6 +555,7 @@ export type ResponsiblePartnerProducer = z.infer<typeof ResponsiblePartnerProduc
 //------------------------------------------------------
 
 export const ResponsiblePartnerProducerOptionalDefaultsSchema = ResponsiblePartnerProducerSchema.merge(z.object({
+  responsiblePartnerProducerStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -544,14 +568,16 @@ export type ResponsiblePartnerProducerOptionalDefaults = z.infer<typeof Responsi
 /////////////////////////////////////////
 
 export const MaterialSchema = z.object({
+  materialStatus: EActiveStatusesSchema,
   uuid: z.string(),
   name: z.string(),
   comment: z.string().nullish(),
+  numInOrder: z.number().nullish(),
   sourceInfo: z.string().nullish(),
   namePublic: z.string().nullish(),
-  price: z.number(),
+  price: z.number().nullish(),
   handbookUuid: z.string(),
-  unitMeasurementUuid: z.string(),
+  unitMeasurementUuid: z.string().nullish(),
   categoryMaterialUuid: z.string(),
   responsiblePartnerUuid: z.string().nullish(),
   lastChangeByUserUuid: z.string().nullish(),
@@ -565,6 +591,7 @@ export type Material = z.infer<typeof MaterialSchema>
 //------------------------------------------------------
 
 export const MaterialOptionalDefaultsSchema = MaterialSchema.merge(z.object({
+  materialStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -577,14 +604,13 @@ export type MaterialOptionalDefaults = z.infer<typeof MaterialOptionalDefaultsSc
 /////////////////////////////////////////
 
 export const CharacteristicsMaterialSchema = z.object({
+  characteristicsMaterialStatus: EActiveStatusesSchema,
   uuid: z.string(),
-  name: z.string(),
   value: z.string(),
+  numInOrder: z.number().nullish(),
   comment: z.string().nullish(),
   fieldOfCategoryMaterialUuid: z.string(),
   handbookUuid: z.string(),
-  fieldTypeUuid: z.string(),
-  fieldUnitMeasurementUuid: z.string().nullish(),
   materialUuid: z.string(),
   lastChangeByUserUuid: z.string().nullish(),
   createdAt: z.coerce.date(),
@@ -597,6 +623,7 @@ export type CharacteristicsMaterial = z.infer<typeof CharacteristicsMaterialSche
 //------------------------------------------------------
 
 export const CharacteristicsMaterialOptionalDefaultsSchema = CharacteristicsMaterialSchema.merge(z.object({
+  characteristicsMaterialStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),

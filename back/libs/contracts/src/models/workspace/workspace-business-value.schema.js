@@ -6,6 +6,7 @@ exports.WorkspaceBusinessValueSchema = workspace_schema_1.WorkspaceSchema.pick({
     uuid: true,
     name: true,
     description: true,
+    workspaceStatus: true,
     workspaceCreatorUuid: true,
     handbookOfWorkspaceUuid: true,
 });

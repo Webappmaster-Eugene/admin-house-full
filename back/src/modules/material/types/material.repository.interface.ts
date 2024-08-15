@@ -3,6 +3,9 @@ import { MaterialUpdateRequestDto } from '../dto/controller/update-material.dto'
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { MaterialEntity } from '../entities/material.entity';
+import { MaterialUpdateNameRequestDto } from 'src/modules/material/dto/controller/update-name-material.dto';
+import { MaterialUpdateCategoryRequestDto } from 'src/modules/material/dto/controller/update-category-material.dto';
+import { UniversalInternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
 
 export interface IMaterialRepository extends IRepositoryCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {
   getById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<MaterialEntity>;
@@ -19,5 +22,14 @@ export interface IMaterialRepository extends IRepositoryCommon<MaterialCreateReq
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<MaterialEntity>;
   updateById: (materialId: EntityUrlParamCommand.RequestUuidParam, dto: MaterialUpdateRequestDto) => Promise<MaterialEntity>;
+  rebuildNameForMaterialById: (material: MaterialEntity, newName?: string) => Promise<MaterialEntity>;
+  updateNameForMaterialById: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: MaterialUpdateNameRequestDto,
+  ) => Promise<MaterialEntity>;
+  changeCategoryMaterialById: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: MaterialUpdateCategoryRequestDto,
+  ) => Promise<MaterialEntity>;
   deleteById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<MaterialEntity>;
 }

@@ -24,8 +24,8 @@ export class IsManagerInBodyGuard implements CanActivate {
       const bodyUuid = context.switchToHttp().getRequest().body['uuid'];
 
       const user = dataInternalExtractor(await this.userService.getFullInfoById(bodyUuid));
-
-      if (user.role['idRole'] === ROLE_IDS.MANAGER_ROLE_ID) {
+      const userRolesIdRoles = user.roles.map(role => role.idRole);
+      if (userRolesIdRoles.includes(ROLE_IDS.MANAGER_ROLE_ID)) {
         return true;
       }
       throw Error('User in body is not a manager. Please, sent a right uuid of manager user in request');

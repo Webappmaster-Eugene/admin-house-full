@@ -10,6 +10,7 @@ const FieldUnitMeasurementUpdateResponseEntitySchema = FieldUnitMeasurementBusin
 const FieldUnitMeasurementUpdateRequestSchema = FieldUnitMeasurementSchema.pick({
   name: true,
   comment: true,
+  fieldUnitMeasurementStatus: true,
 }).partial();
 
 const FieldUnitMeasurementUpdateResponseSchema = z

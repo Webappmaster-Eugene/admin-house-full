@@ -9,6 +9,7 @@ const HandbookUpdateRequestSchema = HandbookSchema.pick({
   name: true,
   canCustomerView: true,
   description: true,
+  handbookStatus: true,
 }).partial();
 
 const HandbookUpdateResponseSchema = z

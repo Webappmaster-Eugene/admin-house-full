@@ -9,6 +9,7 @@ const FieldVariantsForSelectorFieldTypeCreateResponseEntitySchema = field_varian
 const FieldVariantsForSelectorFieldTypeCreateRequestSchema = models_1.FieldVariantsForSelectorFieldTypeSchema.pick({
     description: true,
     value: true,
+    fieldVariantsForSelectorFieldTypeStatus: true,
 });
 const FieldVariantsForSelectorFieldTypeCreateResponseSchema = zod_1.z
     .object({

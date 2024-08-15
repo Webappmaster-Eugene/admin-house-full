@@ -6,6 +6,7 @@ exports.HandbookBusinessValueSchema = handbook_schema_1.HandbookSchema.pick({
     name: true,
     description: true,
     canCustomerView: true,
+    handbookStatus: true,
     uuid: true,
     responsibleManagerUuid: true,
     workspaceUuid: true,

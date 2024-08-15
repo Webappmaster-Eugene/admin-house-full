@@ -7,7 +7,7 @@ import { CharacteristicsMaterialBusinessValueSchema } from '../characteristics-m
 import { PriceChangingBusinessValueSchema } from '../price-changing/price-changing-business-value.schema';
 
 export const MaterialRelatedEntitiesSchema = z.object({
-  responsiblePartner: ResponsiblePartnerProducerBusinessValueSchema,
+  responsiblePartner: ResponsiblePartnerProducerBusinessValueSchema.nullable().optional(),
   unitMeasurement: FieldUnitMeasurementBusinessValueSchema.nullable().optional(),
   handbook: HandbookBusinessValueSchema,
   categoryMaterial: CategoryMaterialBusinessValueSchema,

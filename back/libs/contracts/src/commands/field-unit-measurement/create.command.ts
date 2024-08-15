@@ -8,11 +8,14 @@ const FieldUnitMeasurementCreateResponseEntitySchema = FieldUnitMeasurementSchem
   uuid: true,
   handbookUuid: true,
   lastChangeByUserUuid: true,
+  fieldUnitMeasurementStatus: true,
+  numInOrder: true,
 }).merge(FieldUnitMeasurementRelatedEntitiesSchema);
 
 const FieldUnitMeasurementCreateRequestSchema = FieldUnitMeasurementSchema.pick({
   name: true,
   comment: true,
+  fieldUnitMeasurementStatus: true,
 });
 
 const FieldUnitMeasurementCreateResponseSchema = z

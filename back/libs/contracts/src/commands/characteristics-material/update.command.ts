@@ -8,9 +8,9 @@ const CharacteristicsMaterialUpdateResponseEntitySchema = CharacteristicsMateria
 );
 
 const CharacteristicsMaterialUpdateRequestSchema = CharacteristicsMaterialSchema.pick({
-  name: true,
   value: true,
   comment: true,
+  characteristicsMaterialStatus: true,
 }).partial();
 
 const CharacteristicsMaterialUpdateResponseSchema = z

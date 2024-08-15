@@ -5,5 +5,7 @@ export const FieldUnitMeasurementBusinessValueSchema = FieldUnitMeasurementSchem
   comment: true,
   uuid: true,
   handbookUuid: true,
+  fieldUnitMeasurementStatus: true,
+  numInOrder: true,
   lastChangeByUserUuid: true,
 });

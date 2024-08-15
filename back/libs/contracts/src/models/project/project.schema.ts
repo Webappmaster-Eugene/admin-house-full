@@ -1,8 +1,10 @@
 import { z } from 'zod';
+import { EActiveStatusVariants } from '../../enums';
 
 export const ProjectSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
+  projectStatus: EActiveStatusVariants,
   description: z.string().nullable().optional(),
   customerMail: z.string().email().optional().nullable(),
   organizationUuid: z.string().uuid(),

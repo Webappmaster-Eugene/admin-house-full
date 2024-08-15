@@ -1,6 +1,7 @@
 export enum MaterialColumnSchema {
   uuid = 'uuid',
   name = 'name',
+  numInOrder = 'numInOrder',
   namePublic = 'namePublic',
   comment = 'comment',
   price = 'price',
@@ -11,7 +12,6 @@ export enum MaterialColumnSchema {
   priceChanges = 'priceChanges',
   characteristicsMaterial = 'characteristicsMaterial',
   updatedAt = 'updatedAt',
-  actions = 'actions',
 }
 
 export enum MaterialColumnEditableFullSchema {

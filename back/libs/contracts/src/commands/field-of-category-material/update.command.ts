@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { FieldOfCategoryMaterialSchema, ResponseClientSchema } from '../../models';
 import { FieldOfCategoryMaterialRelatedEntitiesSchema } from '../../models/field-of-category-material/field-of-category-material-related-entities.schema';
 import { FieldOfCategoryMaterialBusinessValueSchema } from '../../models/field-of-category-material/field-of-category-material-business-value.schema';
+import { FieldOfCategoryMaterialDataWithCategoryMaterials } from '../../models/field-of-category-material/field-of-category-material-data-with-category-materials.schema';
 
 const FieldOfCategoryMaterialUpdateResponseEntitySchema = FieldOfCategoryMaterialBusinessValueSchema.merge(
   FieldOfCategoryMaterialRelatedEntitiesSchema,
@@ -10,13 +11,15 @@ const FieldOfCategoryMaterialUpdateResponseEntitySchema = FieldOfCategoryMateria
 const FieldOfCategoryMaterialUpdateRequestSchema = FieldOfCategoryMaterialSchema.pick({
   name: true,
   comment: true,
-  uniqueNameForTemplate: true,
   defaultValue: true,
+  fieldOfCategoryMaterialStatus: true,
   unitOfMeasurementUuid: true,
-  // DOC пока не дадим пользователю изменять этип поля
-  //isRequired: true,
-  // fieldTypeUuid: true,
-}).partial();
+  isRequired: true,
+  fieldTypeUuid: true,
+  // DOC проверить правильность функции изменять тип поля (строка, число или select)
+})
+  .partial()
+  .merge(FieldOfCategoryMaterialDataWithCategoryMaterials);
 
 const FieldOfCategoryMaterialUpdateResponseSchema = z
   .object({

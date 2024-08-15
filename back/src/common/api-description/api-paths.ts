@@ -2160,13 +2160,13 @@ export const API_PATHS: IAPI_PATHS = {
     },
     //DOC field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
     MATERIALS: {
-      ROOT_PATH: 'materials',
+      ROOT_PATH: 'material',
       DESCRIPTION_ENTITY: 'Роуты для работы с материалами',
       FEATURES: [],
       ROUTES: {
         GET: {
           METHOD: METHODS.GET,
-          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+          FULL_PATH: 'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
           DESCRIPTION: 'Получить один материал',
           ROLES: [],
           MIDDLEWARES: {
@@ -2188,7 +2188,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
         GET_ALL: {
           METHOD: METHODS.GET,
-          FULL_PATH: 'materials',
+          FULL_PATH: 'material',
           DESCRIPTION: 'Получить все материалы в приложении',
           ROLES: [USER_ROLES.ADMIN],
           MIDDLEWARES: {
@@ -2210,7 +2210,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
         GET_ALL_IN_HANDBOOK: {
           METHOD: METHODS.GET,
-          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
+          FULL_PATH: 'material/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
           DESCRIPTION: 'Получить все материалы внутри handbook',
           ROLES: [],
           MIDDLEWARES: {
@@ -2233,7 +2233,7 @@ export const API_PATHS: IAPI_PATHS = {
         GET_ALL_IN_CATEGORY_MATERIAL: {
           METHOD: METHODS.GET,
           FULL_PATH:
-            'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
+            'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
           DESCRIPTION: 'Получить все материалы внутри category-material внутри handbook',
           ROLES: [],
           MIDDLEWARES: {
@@ -2255,7 +2255,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
         CREATE: {
           METHOD: METHODS.POST,
-          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
+          FULL_PATH: 'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
           DESCRIPTION: 'Создать один вариант значения SELECTOR в handbook в fieldOfCategoryMaterialId в приложении',
           ROLES: [],
           MIDDLEWARES: {
@@ -2277,7 +2277,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
         UPDATE: {
           METHOD: METHODS.PUT,
-          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+          FULL_PATH: 'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
           DESCRIPTION: 'Обновить один материал в приложении',
           ROLES: [],
           MIDDLEWARES: {
@@ -2299,7 +2299,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
         DELETE: {
           METHOD: METHODS.DELETE,
-          FULL_PATH: 'materials/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+          FULL_PATH: 'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
           DESCRIPTION: 'Удалить один материал в приложении',
           ROLES: [],
           MIDDLEWARES: {

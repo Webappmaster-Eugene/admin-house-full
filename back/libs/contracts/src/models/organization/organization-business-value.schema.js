@@ -6,6 +6,7 @@ exports.OrganizationBusinessValueSchema = organization_schema_1.OrganizationSche
     uuid: true,
     name: true,
     description: true,
+    organizationStatus: true,
     organizationLeaderUuid: true,
     workspaceUuid: true,
     lastChangeByUserUuid: true,

@@ -11,6 +11,11 @@ import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repo
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import { templateNameMapper } from 'src/common/helpers/handlers/template-name-mapper.handler';
+import { regexFieldCategoryReplacer } from 'src/common/helpers/regex/regexFieldCategoryReplacer';
+import { fieldCategoryMaterialExtractor } from 'src/common/helpers/regex/fieldCategoryMaterialExtractor';
+import { fieldOfCategoryMaterialTemplateReGenerator } from 'src/common/helpers/regex/fieldOfCategoryMaterialRegenerator';
+import { fieldOfCategoryMaterialTemplateGenerator } from 'src/common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
 
 @Injectable()
 export class CategoryMaterialRepository implements ICategoryMaterialRepository {
@@ -28,6 +33,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         include: {
           materials: true,
           fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
           globalCategoryMaterial: true,
           handbook: true,
         },
@@ -49,6 +55,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         include: {
           materials: true,
           fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
           globalCategoryMaterial: true,
           handbook: true,
         },
@@ -74,6 +81,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         include: {
           materials: true,
           fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
           globalCategoryMaterial: true,
           handbook: true,
         },
@@ -86,16 +94,56 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
 
   async create(dto: CategoryMaterialCreateRequestDto, handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
     try {
-      const { name, templateName, comment, globalCategoryMaterialUuid } = dto;
+      const {
+        name,
+        fieldsOfCategoryMaterials,
+        categoryMaterialStatus,
+        fieldsOfCategoryMaterialsInTemplate,
+        templateName,
+        comment,
+        globalCategoryMaterialUuid,
+      } = dto;
+      const lastCategoryMaterialInHandbook = await this.databaseService.material.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+      });
+      const numInOrder = lastCategoryMaterialInHandbook?.numInOrder + 1 || 1;
+      const newTemplateName = RegexTemplateNameTester.test(templateName) ? templateName : null;
+
       const newCategoryMaterial = await this.databaseService.categoryMaterial.create({
-        data: { name, templateName, comment, globalCategoryMaterialUuid, handbookUuid: handbookId },
+        data: {
+          name,
+          fieldsOfCategoryMaterials: {
+            connect: [
+              ...fieldsOfCategoryMaterials.map(fieldOfCategoryMaterial => ({
+                uuid: fieldOfCategoryMaterial.uuid,
+              })),
+            ],
+          },
+          fieldsOfCategoryMaterialsInTemplate: {
+            connect: [
+              ...fieldsOfCategoryMaterialsInTemplate.map(fieldOfCategoryMaterialsInTemplate => ({
+                uuid: fieldOfCategoryMaterialsInTemplate.uuid,
+              })),
+            ],
+          },
+          numInOrder,
+          comment,
+          globalCategoryMaterialUuid,
+          categoryMaterialStatus,
+          handbookUuid: handbookId,
+          templateName: newTemplateName,
+        },
         include: {
           materials: true,
           fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
           globalCategoryMaterial: true,
           handbook: true,
         },
       });
+
       return existenceEntityHandler(newCategoryMaterial, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -104,21 +152,110 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
 
   async updateById(
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    { name, templateName, comment }: CategoryMaterialUpdateRequestDto,
+    {
+      name,
+      templateName,
+      comment,
+      categoryMaterialStatus,
+      fieldsOfCategoryMaterialsInTemplate,
+      fieldsOfCategoryMaterials,
+    }: CategoryMaterialUpdateRequestDto,
   ): Promise<CategoryMaterialEntity> {
     try {
+      const newTemplateName = RegexTemplateNameTester.test(templateName) ? templateName : null;
+
+      const oldCategoryMaterialInfo = await this.databaseService.categoryMaterial.findFirst({
+        where: {
+          uuid: categoryMaterialId,
+        },
+        include: {
+          fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
+        },
+      });
+
       const updatedCategoryMaterial = await this.databaseService.categoryMaterial.update({
         where: {
           uuid: categoryMaterialId,
         },
         data: {
           name,
-          templateName,
+          templateName: newTemplateName,
           comment,
+          categoryMaterialStatus,
+          fieldsOfCategoryMaterials: {
+            disconnect: [
+              ...oldCategoryMaterialInfo.fieldsOfCategoryMaterials.map(fieldOfCategoryMaterial => ({
+                uuid: fieldOfCategoryMaterial.uuid,
+              })),
+            ],
+            connect: [
+              ...fieldsOfCategoryMaterials.map(fieldOfCategoryMaterial => ({
+                uuid: fieldOfCategoryMaterial.uuid,
+              })),
+            ],
+          },
+          fieldsOfCategoryMaterialsInTemplate: {
+            disconnect: [
+              ...oldCategoryMaterialInfo.fieldsOfCategoryMaterialsInTemplate.map(categoryMaterial => ({
+                uuid: categoryMaterial.uuid,
+              })),
+            ],
+            connect: [
+              ...fieldsOfCategoryMaterialsInTemplate.map(fieldOfCategoryMaterialsInTemplate => ({
+                uuid: fieldOfCategoryMaterialsInTemplate.uuid,
+              })),
+            ],
+          },
         },
         include: {
           materials: true,
           fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
+      });
+
+      return existenceEntityHandler(
+        updatedCategoryMaterial,
+        CategoryMaterialEntity,
+        EntityName.CATEGORY_MATERIAL,
+      ) as CategoryMaterialEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async rebuildCategoryMaterialNameById(categoryMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
+    try {
+      const oldCategoryMaterialInfo = await this.databaseService.categoryMaterial.findFirst({
+        where: {
+          uuid: categoryMaterialId,
+        },
+        include: {
+          fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
+        },
+      });
+      let newTemplateName = oldCategoryMaterialInfo.templateName;
+      oldCategoryMaterialInfo.fieldsOfCategoryMaterialsInTemplate.map(fieldOfCategoryMaterialsInTemplate => {
+        const replaceRegExp = fieldCategoryMaterialExtractor(fieldOfCategoryMaterialsInTemplate.uuid);
+        const fieldOfCategoryMaterialTemplateName = fieldOfCategoryMaterialTemplateGenerator(fieldOfCategoryMaterialsInTemplate);
+        newTemplateName = newTemplateName.replace(replaceRegExp, fieldOfCategoryMaterialTemplateName);
+      });
+
+      const updatedCategoryMaterial = await this.databaseService.categoryMaterial.update({
+        where: {
+          uuid: categoryMaterialId,
+        },
+        data: {
+          templateName: newTemplateName,
+        },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
           globalCategoryMaterial: true,
           handbook: true,
         },
@@ -143,6 +280,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         include: {
           materials: true,
           fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
           globalCategoryMaterial: true,
           handbook: true,
         },

@@ -5,6 +5,7 @@ import { MaterialBusinessValueSchema } from '../material/material-business-value
 import { WorkspaceBusinessValueSchema } from '../workspace/workspace-business-value.schema';
 import { ResponsiblePartnerProducerBusinessValueSchema } from '../responsible-partner-producer/responsible-partner-producer-business-value.schema';
 import { UserBusinessValueSchema } from '../user/user-business-value.schema';
+import { CategoryMaterialBusinessValueSchema } from '../category-material/category-material-business-value.schema';
 
 export const HandbookRelatedEntitiesSchema = z.object({
   fieldUnitMeasurements: z.array(FieldUnitMeasurementBusinessValueSchema).nullable().optional(),
@@ -12,5 +13,6 @@ export const HandbookRelatedEntitiesSchema = z.object({
   responsiblePartnerProducers: z.array(ResponsiblePartnerProducerBusinessValueSchema).nullable().optional(),
   workspace: WorkspaceBusinessValueSchema,
   materials: z.array(MaterialBusinessValueSchema).nullable().optional(),
+  categoryMaterials: z.array(CategoryMaterialBusinessValueSchema).nullable().optional(),
   fieldsOfCategoryMaterials: z.array(FieldOfCategoryMaterialBusinessValueSchema).nullable().optional(),
 });

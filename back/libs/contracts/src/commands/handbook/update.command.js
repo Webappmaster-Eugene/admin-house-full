@@ -10,6 +10,7 @@ const HandbookUpdateRequestSchema = models_1.HandbookSchema.pick({
     name: true,
     canCustomerView: true,
     description: true,
+    handbookStatus: true,
 }).partial();
 const HandbookUpdateResponseSchema = zod_1.z
     .object({

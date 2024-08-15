@@ -9,7 +9,7 @@ const category_material_business_value_schema_1 = require("../category-material/
 const characteristics_material_business_value_schema_1 = require("../characteristics-material/characteristics-material-business-value.schema");
 const price_changing_business_value_schema_1 = require("../price-changing/price-changing-business-value.schema");
 exports.MaterialRelatedEntitiesSchema = zod_1.z.object({
-    responsiblePartner: responsible_partner_producer_business_value_schema_1.ResponsiblePartnerProducerBusinessValueSchema,
+    responsiblePartner: responsible_partner_producer_business_value_schema_1.ResponsiblePartnerProducerBusinessValueSchema.nullable().optional(),
     unitMeasurement: field_unit_measurement_business_value_schema_1.FieldUnitMeasurementBusinessValueSchema.nullable().optional(),
     handbook: handbook_business_value_schema_1.HandbookBusinessValueSchema,
     categoryMaterial: category_material_business_value_schema_1.CategoryMaterialBusinessValueSchema,

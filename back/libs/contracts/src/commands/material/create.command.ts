@@ -13,6 +13,7 @@ const MaterialCreateRequestSchema = MaterialSchema.pick({
   sourceInfo: true,
   unitMeasurementUuid: true,
   responsiblePartnerUuid: true,
+  materialStatus: true,
 });
 
 const MaterialCreateResponseSchema = z

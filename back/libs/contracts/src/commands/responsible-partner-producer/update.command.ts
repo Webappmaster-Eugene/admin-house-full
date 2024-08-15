@@ -13,6 +13,7 @@ const ResponsiblePartnerProducerUpdateRequestSchema = ResponsiblePartnerProducer
   phone: true,
   email: true,
   comment: true,
+  responsiblePartnerProducerStatus: true,
 }).partial();
 
 const ResponsiblePartnerProducerUpdateResponseSchema = z

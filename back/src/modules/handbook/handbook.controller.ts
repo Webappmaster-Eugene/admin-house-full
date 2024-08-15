@@ -74,7 +74,7 @@ export class HandbookController implements IHandbookController {
   @ApiBearerAuth('access-token')
   //endregion
   @RolesSetting(EUserTypeVariants.ADMIN)
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   @ZodSerializerDto(HandbookGetAllResponseDto)
   @Get()
   async getAllEP(
@@ -83,9 +83,7 @@ export class HandbookController implements IHandbookController {
   ): Promise<ExternalResponse<HandbookEntity[]>> {
     try {
       const { ok, data } = await this.handbookService.getAll(queryParams);
-      const resp = okResponseHandler(ok, data, this.logger);
-      console.log(resp);
-      return resp;
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.HANDBOOK, urlParams);
     }

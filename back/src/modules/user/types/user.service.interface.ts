@@ -7,13 +7,21 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
+import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
 
 export interface IUserService extends IServiceCommon<UserCreateRequestDto, UserUpdateRequestDto, UserEntity> {
   getById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<UserEntity>>;
   getFullInfoById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<UserAllInfoEntity>>;
   getByEmail: (userEmail: EntityUrlParamCommand.RequestEmailParam) => Promise<UniversalInternalResponse<UserEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<UserEntity[]>>;
-  create: (dto: UserCreateRequestDto, roleId?: EntityUrlParamCommand.RequestNumberParam) => Promise<UniversalInternalResponse<UserEntity>>;
+  create: (
+    dto: UserCreateRequestDto,
+    roleIds?: EntityUrlParamCommand.RequestNumberParam[],
+  ) => Promise<UniversalInternalResponse<UserEntity>>;
+  updateRolesOfUser: (
+    dto: UserUpdateRolesRequestDto,
+    roleIds?: EntityUrlParamCommand.RequestNumberParam[],
+  ) => Promise<UniversalInternalResponse<UserEntity>>;
   updateById: (userId: EntityUrlParamCommand.RequestUuidParam, dto: UserUpdateRequestDto) => Promise<UniversalInternalResponse<UserEntity>>;
   deleteById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<UserEntity>>;
   addExistedWorkspaceToManager: (

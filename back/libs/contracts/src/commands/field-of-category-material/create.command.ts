@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { FieldOfCategoryMaterialSchema, ResponseClientSchema } from '../../models';
 import { FieldOfCategoryMaterialBusinessValueSchema } from '../../models/field-of-category-material/field-of-category-material-business-value.schema';
 import { FieldOfCategoryMaterialRelatedEntitiesSchema } from '../../models/field-of-category-material/field-of-category-material-related-entities.schema';
+import { FieldOfCategoryMaterialDataWithCategoryMaterials } from '../../models/field-of-category-material/field-of-category-material-data-with-category-materials.schema';
 
 const FieldOfCategoryMaterialCreateResponseEntitySchema = FieldOfCategoryMaterialBusinessValueSchema.merge(
   FieldOfCategoryMaterialRelatedEntitiesSchema,
@@ -10,12 +11,12 @@ const FieldOfCategoryMaterialCreateResponseEntitySchema = FieldOfCategoryMateria
 const FieldOfCategoryMaterialCreateRequestSchema = FieldOfCategoryMaterialSchema.pick({
   name: true,
   comment: true,
-  uniqueNameForTemplate: true,
+  fieldOfCategoryMaterialStatus: true,
   defaultValue: true,
   isRequired: true,
   unitOfMeasurementUuid: true,
   fieldTypeUuid: true,
-});
+}).merge(FieldOfCategoryMaterialDataWithCategoryMaterials);
 
 const FieldOfCategoryMaterialCreateResponseSchema = z
   .object({

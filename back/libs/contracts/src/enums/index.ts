@@ -6,3 +6,4 @@ export * from './approve-status.variants';
 export * from './user-role.variants';
 export * from './field-type.variants';
 export * from './global-category.variants';
+export * from './active-status.variants';

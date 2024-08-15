@@ -33,13 +33,15 @@ export interface ICharacteristicsMaterialRepository
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     materialId: EntityUrlParamCommand.RequestUuidParam,
     fieldCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
-    fieldTypeId: EntityUrlParamCommand.RequestUuidParam,
-    unitOfMeasurementId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<CharacteristicsMaterialEntity>;
   updateById: (
     characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: CharacteristicsMaterialUpdateRequestDto,
   ) => Promise<CharacteristicsMaterialEntity>;
+  updateManyStatusByMaterialId: (
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    dto: CharacteristicsMaterialCreateRequestDto,
+  ) => Promise<CharacteristicsMaterialEntity[]>;
   deleteById: (characteristicsMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CharacteristicsMaterialEntity>;
 }

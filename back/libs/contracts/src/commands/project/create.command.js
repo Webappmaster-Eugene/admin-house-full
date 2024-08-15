@@ -11,6 +11,7 @@ const ProjectCreateRequestSchema = models_1.ProjectSchema.pick({
     description: true,
     customerMail: true,
     customerUuid: true,
+    projectStatus: true,
 });
 const ProjectCreateResponseSchema = zod_1.z
     .object({

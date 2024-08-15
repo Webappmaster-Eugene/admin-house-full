@@ -10,6 +10,7 @@ const FieldVariantsForSelectorFieldTypeCreateResponseEntitySchema = FieldVariant
 const FieldVariantsForSelectorFieldTypeCreateRequestSchema = FieldVariantsForSelectorFieldTypeSchema.pick({
   description: true,
   value: true,
+  fieldVariantsForSelectorFieldTypeStatus: true,
 });
 
 const FieldVariantsForSelectorFieldTypeCreateResponseSchema = z

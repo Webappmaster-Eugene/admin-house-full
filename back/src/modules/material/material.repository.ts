@@ -3,7 +3,7 @@ import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IMaterialRepository } from './types/material.repository.interface';
 import { MaterialUpdateRequestDto } from './dto/controller/update-material.dto';
-import { EntityUrlParamCommand } from 'libs/contracts';
+import { EActiveStatusVariants, EntityUrlParamCommand } from 'libs/contracts';
 import { MaterialEntity } from './entities/material.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -11,6 +11,12 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
+import { ResponsiblePartnerProducerBusinessValueSchema } from 'libs/contracts/src/models/responsible-partner-producer/responsible-partner-producer-business-value.schema';
+import { MaterialUpdateNameRequestDto } from 'src/modules/material/dto/controller/update-name-material.dto';
+import { InternalResponse, UniversalInternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
+import { MaterialUpdateCategoryRequestDto } from 'src/modules/material/dto/controller/update-category-material.dto';
+import { EActiveStatuses } from '.prisma/client';
+import { templateNameMapper } from 'src/common/helpers/handlers/template-name-mapper.handler';
 
 @Injectable()
 export class MaterialRepository implements IMaterialRepository {
@@ -30,7 +36,11 @@ export class MaterialRepository implements IMaterialRepository {
           unitMeasurement: true,
           handbook: true,
           categoryMaterial: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
         },
       });
@@ -53,7 +63,11 @@ export class MaterialRepository implements IMaterialRepository {
           unitMeasurement: true,
           handbook: true,
           categoryMaterial: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
         },
       });
@@ -78,13 +92,16 @@ export class MaterialRepository implements IMaterialRepository {
           unitMeasurement: true,
           handbook: true,
           categoryMaterial: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
         },
         skip,
         take,
       });
-      console.log('allMaterials', allMaterials);
       return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -106,7 +123,11 @@ export class MaterialRepository implements IMaterialRepository {
           unitMeasurement: true,
           handbook: true,
           categoryMaterial: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
         },
         skip,
@@ -125,12 +146,22 @@ export class MaterialRepository implements IMaterialRepository {
   ): Promise<MaterialEntity> {
     try {
       const { name, responsiblePartnerUuid, unitMeasurementUuid, namePublic, comment, price } = dto;
+      const lastMaterialInHandbook = await this.databaseService.material.findFirst({
+        where: {
+          handbookUuid: handbookId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      const numInOrder = lastMaterialInHandbook?.numInOrder + 1 || 1;
       const newMaterial = await this.databaseService.material.create({
         data: {
           name,
           responsiblePartnerUuid,
           unitMeasurementUuid,
           namePublic,
+          numInOrder,
           comment,
           price,
           handbookUuid: handbookId,
@@ -141,7 +172,11 @@ export class MaterialRepository implements IMaterialRepository {
           unitMeasurement: true,
           handbook: true,
           categoryMaterial: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
         },
       });
@@ -152,7 +187,45 @@ export class MaterialRepository implements IMaterialRepository {
   }
 
   async updateById(materialId: EntityUrlParamCommand.RequestUuidParam, dto: MaterialUpdateRequestDto): Promise<MaterialEntity> {
-    const { name, namePublic, comment, price } = dto;
+    const { namePublic, comment, price, materialStatus, responsiblePartnerUuid, unitMeasurementUuid, sourceInfo } = dto;
+    try {
+      const updatedMaterial = await this.databaseService.material.update({
+        where: {
+          uuid: materialId,
+        },
+        data: {
+          namePublic,
+          comment,
+          price,
+          materialStatus,
+          responsiblePartnerUuid,
+          unitMeasurementUuid,
+          sourceInfo,
+        },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
+          priceChanges: true,
+        },
+      });
+
+      return existenceEntityHandler(updatedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async updateNameForMaterialById(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    { name }: MaterialUpdateNameRequestDto,
+  ): Promise<MaterialEntity> {
     try {
       const updatedMaterial = await this.databaseService.material.update({
         where: {
@@ -160,16 +233,78 @@ export class MaterialRepository implements IMaterialRepository {
         },
         data: {
           name,
-          namePublic,
-          comment,
-          price,
         },
         include: {
           responsiblePartner: true,
           unitMeasurement: true,
           handbook: true,
           categoryMaterial: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
+          priceChanges: true,
+        },
+      });
+
+      return existenceEntityHandler(updatedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async rebuildNameForMaterialById(material: MaterialEntity, newName?: string): Promise<MaterialEntity> {
+    try {
+      const newMaterialName = newName ? newName : await templateNameMapper(this.databaseService, material);
+      const updatedMaterial = await this.databaseService.material.update({
+        where: {
+          uuid: material.uuid,
+        },
+        data: {
+          name: newMaterialName,
+        },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
+          priceChanges: true,
+        },
+      });
+      return existenceEntityHandler(updatedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async changeCategoryMaterialById(
+    materialId: EntityUrlParamCommand.RequestUuidParam,
+    { categoryMaterialUuid }: MaterialUpdateCategoryRequestDto,
+  ): Promise<MaterialEntity> {
+    try {
+      const updatedMaterial = await this.databaseService.material.update({
+        where: {
+          uuid: materialId,
+        },
+        data: {
+          categoryMaterialUuid,
+        },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
         },
       });
@@ -190,7 +325,11 @@ export class MaterialRepository implements IMaterialRepository {
           responsiblePartner: true,
           unitMeasurement: true,
           handbook: true,
-          characteristicsMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
           priceChanges: true,
           categoryMaterial: true,
         },

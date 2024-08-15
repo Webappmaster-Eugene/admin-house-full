@@ -4,6 +4,7 @@ import { MaterialGetCommand } from '@numart/house-admin-contracts';
 export const MaterialTableEntity = MaterialGetCommand.ResponseEntitySchema.pick({
   uuid: true,
   name: true,
+  numInOrder: true,
   namePublic: true,
   comment: true,
   price: true,

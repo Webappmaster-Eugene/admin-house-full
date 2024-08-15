@@ -8,5 +8,7 @@ exports.FieldVariantsForSelectorFieldTypeBusinessValueSchema = field_variants_fo
     handbookUuid: true,
     uuid: true,
     fieldOfCategoryMaterialUuid: true,
+    fieldVariantsForSelectorFieldTypeStatus: true,
+    numInOrder: true,
     lastChangeByUserUuid: true,
 });

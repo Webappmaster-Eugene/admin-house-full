@@ -8,8 +8,8 @@ const CharacteristicsMaterialCreateResponseEntitySchema = CharacteristicsMateria
 );
 
 const CharacteristicsMaterialCreateRequestSchema = CharacteristicsMaterialSchema.pick({
-  name: true,
   value: true,
+  characteristicsMaterialStatus: true,
   comment: true,
 });
 

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ResponseClientSchema, UserSchema } from '../../models';
 import { UserBusinessValueSchema } from '../../models/user/user-business-value.schema';
 import { UserRelatedEntitiesSchema } from '../../models/user/user-related-entities.schema';
+import { UserMemberOfOrganizationsSchema } from '../../models/user/user-member/user-member-organizations.schema';
 
 const UserAddToOrganizationResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema);
 
@@ -9,8 +10,7 @@ const UserAddToOrganizationRequestSchema = UserSchema.pick({
   uuid: true,
   //DOC это поле специально здесь, потому что dtoToUpdateUser формируется в сервисе userService на этапе добавления
   //пользователя в организацию (не в исходном входном dto, поступившем из контроллера, там только userId)
-  memberOfOrganizationUuid: true,
-});
+}).merge(UserMemberOfOrganizationsSchema);
 
 const UserAddToOrganizationResponseSchema = z
   .object({

@@ -1,13 +1,15 @@
 import { z } from 'zod';
+import { EActiveStatusVariants } from '../../enums';
 
 export const FieldOfCategoryMaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
+  fieldOfCategoryMaterialStatus: EActiveStatusVariants,
+  numInOrder: z.number().nullable().optional(),
   uniqueNameForTemplate: z.string().nullable().optional(),
   comment: z.string().nullable().optional(),
   isRequired: z.boolean().default(true),
   defaultValue: z.string().nullable().optional(),
-  categoryMaterialUuid: z.string().uuid(),
   handbookUuid: z.string().uuid(),
   unitOfMeasurementUuid: z.string().uuid(),
   fieldTypeUuid: z.string().uuid(),

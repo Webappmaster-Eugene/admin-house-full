@@ -6,5 +6,7 @@ export const FieldVariantsForSelectorFieldTypeBusinessValueSchema = FieldVariant
   handbookUuid: true,
   uuid: true,
   fieldOfCategoryMaterialUuid: true,
+  fieldVariantsForSelectorFieldTypeStatus: true,
+  numInOrder: true,
   lastChangeByUserUuid: true,
 });

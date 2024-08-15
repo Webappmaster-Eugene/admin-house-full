@@ -7,13 +7,13 @@ const material_business_value_schema_1 = require("../../models/material/material
 const material_related_entities_schema_1 = require("../../models/material/material-related-entities.schema");
 const MaterialUpdateResponseEntitySchema = material_business_value_schema_1.MaterialBusinessValueSchema.merge(material_related_entities_schema_1.MaterialRelatedEntitiesSchema);
 const MaterialUpdateRequestSchema = models_1.MaterialSchema.pick({
-    name: true,
     price: true,
     comment: true,
     namePublic: true,
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
+    materialStatus: true,
 }).partial();
 const MaterialUpdateResponseSchema = zod_1.z
     .object({

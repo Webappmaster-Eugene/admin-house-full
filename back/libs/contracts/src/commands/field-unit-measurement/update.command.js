@@ -9,6 +9,7 @@ const FieldUnitMeasurementUpdateResponseEntitySchema = field_unit_measurement_bu
 const FieldUnitMeasurementUpdateRequestSchema = models_1.FieldUnitMeasurementSchema.pick({
     name: true,
     comment: true,
+    fieldUnitMeasurementStatus: true,
 }).partial();
 const FieldUnitMeasurementUpdateResponseSchema = zod_1.z
     .object({

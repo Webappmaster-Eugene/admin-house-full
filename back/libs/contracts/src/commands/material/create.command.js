@@ -14,6 +14,7 @@ const MaterialCreateRequestSchema = models_1.MaterialSchema.pick({
     sourceInfo: true,
     unitMeasurementUuid: true,
     responsiblePartnerUuid: true,
+    materialStatus: true,
 });
 const MaterialCreateResponseSchema = zod_1.z
     .object({
