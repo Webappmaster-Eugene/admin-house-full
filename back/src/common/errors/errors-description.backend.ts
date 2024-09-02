@@ -21,6 +21,8 @@ export const enum BackendErrorNames {
   WORKSPACE_MISMATCH = 'WORKSPACE_MISMATCH',
   REQUIRED_CHARCS_ARE_EMPTY_ERROR = 'REQUIRED_CHARCS_ARE_EMPTY_ERROR',
   CANT_CHANGE_NAME_MATERIAL_ERROR = 'CANT_CHANGE_NAME_MATERIAL_ERROR',
+  USER_ALREADY_HAS_THE_SAME_ROLE = 'USER_ALREADY_HAS_THE_SAME_ROLE',
+  USER_IS_ALREADY_IN_THIS_GROUP_ENTITY = 'USER_IS_ALREADY_IN_THIS_GROUP_ENTITY',
   FIELD_TYPE_ERROR = 'FIELD_TYPE_ERROR',
   SKIP_TAKES_TOO_MUCH = 'SKIP_TAKES_TOO_MUCH',
   PRISMA_CONFLICT_ERROR = 'PRISMA_CONFLICT_ERROR',
@@ -41,6 +43,8 @@ export type BackendArrayErrors = {
     [BackendErrorNames.FIELD_TYPE_ERROR]: BackendError;
     [BackendErrorNames.CANT_CHANGE_NAME_MATERIAL_ERROR]: BackendError;
     [BackendErrorNames.REQUIRED_CHARCS_ARE_EMPTY_ERROR]: BackendError;
+    [BackendErrorNames.USER_ALREADY_HAS_THE_SAME_ROLE]: BackendError;
+    [BackendErrorNames.USER_IS_ALREADY_IN_THIS_GROUP_ENTITY]: BackendError;
   };
   PRISMA_ERRORS: {
     [BackendErrorNames.PRISMA_CONFLICT_ERROR]: BackendError;
@@ -147,6 +151,24 @@ export const BACKEND_ERRORS: BackendArrayErrors = {
         name: 'Error of updating name of material - you can only change etc info due to filled all required characteristics',
         description:
           'Failed to update name of material while all characteristics are filled. Error of updating name of material - you can only change etc info due to filled all required characteristics',
+      },
+      httpCode: 400,
+    },
+    [BackendErrorNames.USER_ALREADY_HAS_THE_SAME_ROLE]: {
+      innerCode: 'S013',
+      error: {
+        name: 'Error of updating roles of the user - you can change roles due to already having this role',
+        description:
+          'Failed to update roles of the user. Error of updating roles of the user - you can change roles due to already having this role',
+      },
+      httpCode: 400,
+    },
+    [BackendErrorNames.USER_IS_ALREADY_IN_THIS_GROUP_ENTITY]: {
+      innerCode: 'S014',
+      error: {
+        name: 'Error of creating some group entity of the user due to already be included to this group entity',
+        description:
+          'Failed to create link of the user. Error of creating some group entity of the user due to already be included to this group entity',
       },
       httpCode: 400,
     },

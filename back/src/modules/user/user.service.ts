@@ -26,6 +26,9 @@ import { cacheRemoverBatch } from '../../common/helpers/cashe/cache-remover.batc
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
 import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
 import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
+import { IProjectService } from 'src/modules/project/types/project.service.interface';
+import { IOrganizationService } from 'src/modules/organization/types/organization.service.interface';
+import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -36,6 +39,10 @@ export class UserService implements IUserService {
     private readonly roleService: IRoleService,
     @Inject(KFI.WORKSPACE_SERVICE)
     private readonly workspaceService: IWorkspaceService,
+    @Inject(KFI.ORGANIZATION_SERVICE)
+    private readonly organizationService: IOrganizationService,
+    @Inject(KFI.PROJECT_SERVICE)
+    private readonly projectService: IProjectService,
     @Inject(KFI.HANDBOOK_SERVICE)
     private readonly handbookService: IHandbookService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: CacheStore,
@@ -89,17 +96,23 @@ export class UserService implements IUserService {
     dto: UserCreateRequestDto,
     roleIds: EntityUrlParamCommand.RequestNumberParam[],
   ): Promise<UniversalInternalResponse<UserEntity>> {
-    const role = dataInternalExtractor(await this.roleService.getById(roleIds[0]));
-    const roleUuid = role.uuid;
+    const roles = await Promise.all(
+      roleIds.map(async roleId => {
+        const data = await this.roleService.getById(roleId);
+        const roleEntity = dataInternalExtractor(data);
+        return roleEntity;
+      }),
+    );
+    const rolesUuids = roles.map(role => role.uuid);
     const hashedPassword = await argon2.hash(dto.password);
 
     try {
       const resultOfTransaction = await this.databaseService.$transaction(async transactionDbClient => {
-        const createdUser = await this.userRepository.create(dto, roleUuid, hashedPassword, transactionDbClient);
+        const createdUser = await this.userRepository.create(dto, rolesUuids, hashedPassword, transactionDbClient);
 
         await cacheRemoverBatch(this.cacheManager, [CACHE_KEYS.USER_ALL]);
 
-        if (role.idRole === 2) {
+        if (roles.some(role => role.idRole === 2)) {
           const newManagerWorkspace = await this.workspaceService.create(
             { name: null, description: null },
             createdUser.uuid,
@@ -159,6 +172,23 @@ export class UserService implements IUserService {
     return new InternalResponse(updatedUser);
   }
 
+  async updateUserRolesById(
+    userId: EntityUrlParamCommand.RequestUuidParam,
+    dto: UserUpdateRolesRequestDto,
+  ): Promise<UniversalInternalResponse<UserEntity>> {
+    const findedUser = dataInternalExtractor(await this.getById(userId));
+    const userExistedRolesIds = findedUser.roles.map(role => role.idRole);
+    userExistedRolesIds.map(userExistedRolesId => {
+      if (dto.rolesIds.includes(userExistedRolesId)) {
+        throw new InternalResponse(new InternalError(BackendErrorNames.USER_ALREADY_HAS_THE_SAME_ROLE));
+      }
+    });
+
+    const updatedUser = await this.userRepository.updateUserRolesById(userId, dto);
+    await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
+    return new InternalResponse(updatedUser);
+  }
+
   async deleteById(userId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<UserEntity>> {
     const deletedUser = await this.userRepository.deleteById(userId);
     await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
@@ -169,6 +199,11 @@ export class UserService implements IUserService {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     transactionDbClient?: TransactionDbClient,
   ): Promise<UniversalInternalResponse<UserEntity>> {
+    const findedUser = dataInternalExtractor(await this.getById(workspaceCreatorId));
+    if (findedUser.creatorOfWorkspace) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
+    }
+
     const updatedUserWithWorkspace = await this.userRepository.addExistedWorkspaceToManager(
       workspaceCreatorId,
       workspaceId,
@@ -187,6 +222,11 @@ export class UserService implements IUserService {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     transactionDbClient?: TransactionDbClient,
   ): Promise<UniversalInternalResponse<UserEntity>> {
+    const findedUser = dataInternalExtractor(await this.getById(handbookCreatorId));
+    if (findedUser.handbookManagerUuid) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
+    }
+
     const updatedUserWithHandbook = await this.userRepository.addExistedHandbookToManager(
       handbookCreatorId,
       handbookId,
@@ -205,17 +245,19 @@ export class UserService implements IUserService {
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
     const findedUser = await this.userRepository.getById(userId);
-
-    if (!findedUser.memberOfWorkspaces.map(workspace => workspace.uuid).includes(workspaceId)) {
-      const dtoToUpdateUser: UserAddToWorkspaceRequestDto = { uuid: userId, workspaceToAddId: workspaceId };
-
-      const updatedUser = await this.userRepository.addUserToWorkspaceById(dtoToUpdateUser);
-      await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
-
-      return new InternalResponse(updatedUser);
-    } else {
-      throw new InternalResponse(new InternalError(BackendErrorNames.WORKSPACE_MISMATCH));
+    const findedUserWorkspacesUuids = findedUser.memberOfWorkspaces.map(workspace => workspace.uuid);
+    if (findedUserWorkspacesUuids.includes(workspaceId)) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.USER_IS_ALREADY_IN_THIS_GROUP_ENTITY));
     }
+
+    const workspace = dataInternalExtractor(await this.workspaceService.getById(workspaceId));
+
+    const dtoToUpdateUser: UserAddToWorkspaceRequestDto = { uuid: userId, memberOfWorkspaces: [workspace] };
+
+    const updatedUser = await this.userRepository.addUserToWorkspaceById(dtoToUpdateUser);
+    await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
+
+    return new InternalResponse(updatedUser);
   }
 
   async addUserToOrganization(
@@ -224,9 +266,15 @@ export class UserService implements IUserService {
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
     const findedUser = await this.userRepository.getById(userId);
+    const findedUserOrganisationsUuids = findedUser.membersOfOrganizations.map(organization => organization.uuid);
+    if (findedUserOrganisationsUuids.includes(organizationId)) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.USER_IS_ALREADY_IN_THIS_GROUP_ENTITY));
+    }
 
-    if (findedUser.memberOfWorkspaceUuid === workspaceId) {
-      const dtoToUpdateUser: UserAddToOrganizationRequestDto = { uuid: userId, memberOfOrganizationUuid: organizationId };
+    if (findedUser.memberOfWorkspaces.map(workspace => workspace.uuid).includes(workspaceId)) {
+      const organizationEntity = dataInternalExtractor(await this.organizationService.getById(organizationId));
+
+      const dtoToUpdateUser: UserAddToOrganizationRequestDto = { uuid: userId, memberOfOrganizations: [organizationEntity] };
       const updatedUser = await this.userRepository.addUserToOrganizationById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);
 
@@ -243,9 +291,17 @@ export class UserService implements IUserService {
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<UserEntity>> {
     const findedUser = await this.userRepository.getById(userId);
+    const findedUserProjectsUuids = findedUser.membersOfProjects.map(project => project.uuid);
+    if (findedUserProjectsUuids.includes(projectId)) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.USER_IS_ALREADY_IN_THIS_GROUP_ENTITY));
+    }
 
-    if (findedUser.memberOfWorkspaceUuid === workspaceId && findedUser.memberOfOrganizationUuid === organizationId) {
-      const dtoToUpdateUser: UserAddToProjectRequestDto = { uuid: userId, memberOfProjectUuid: projectId };
+    if (
+      findedUser.memberOfWorkspaces.map(workspace => workspace.uuid).includes(workspaceId) &&
+      findedUser.membersOfOrganizations.map(organization => organization.uuid).includes(organizationId)
+    ) {
+      const project = dataInternalExtractor(await this.projectService.getById(projectId));
+      const dtoToUpdateUser: UserAddToProjectRequestDto = { uuid: userId, memberOfProjects: [project] };
 
       const updatedUser = await this.userRepository.addUserToProjectById(dtoToUpdateUser);
       await cacheRemoverBatch(this.cacheManager, [userId, `${CACHE_KEYS.USER_FULL_INFO}userId${userId}`, CACHE_KEYS.USER_ALL]);

@@ -24,6 +24,7 @@ import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
 import { IJWTPayload, IJWTRefreshPayload } from 'src/common/types/jwt.payload.interface';
 import { AuthRefreshKeysEntity } from 'src/modules/auth/entities/auth-refresh-keys.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import { EActiveStatuses } from '.prisma/client';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -38,15 +39,15 @@ export class AuthService implements IAuthService {
   ) {}
 
   async register(dto: AuthRegisterRequestDto, response: Response): Promise<UniversalInternalResponse<AuthEntity>> {
-    const registeredUser = dataInternalExtractor(await this.userService.create(dto, ROLE_IDS.CUSTOMER_ROLE_ID));
-    const newUserRole = dataInternalExtractor(await this.roleService.getById(ROLE_IDS.CUSTOMER_ROLE_ID));
-
+    const registeredUser = dataInternalExtractor(await this.userService.create(dto, [ROLE_IDS.CUSTOMER_ROLE_ID]));
+    //const newUserRole = dataInternalExtractor(await this.roleService.getById(ROLE_IDS.CUSTOMER_ROLE_ID));
+    const registeredUserRoles = registeredUser.roles.map(role => role.idRole);
     const accessTokenResponse = dataInternalExtractor(
-      await this.generateJWT(TokenType.ACCESS, registeredUser.uuid, registeredUser.email, registeredUser.roleUuid),
+      await this.generateJWT(TokenType.ACCESS, registeredUser.uuid, registeredUser.email, registeredUserRoles),
     );
 
     const refreshTokenResponse = dataInternalExtractor(
-      await this.generateJWT(TokenType.REFRESH, registeredUser.uuid, registeredUser.email),
+      await this.generateJWT(TokenType.REFRESH, registeredUser.uuid, registeredUser.email, registeredUserRoles, registeredUser.userStatus),
     );
 
     const outputEntity = {
@@ -71,18 +72,22 @@ export class AuthService implements IAuthService {
 
     const { key } = dataInternalExtractor(await this.getStrictAdminKey());
 
-    // console.log("ROLEKEY",key, registerWithRoleKey);
-
     if (registerWithRoleKey === key) {
-      const registeredUser = dataInternalExtractor(await this.userService.create(dto, roleId));
-      const newUserRole = dataInternalExtractor(await this.roleService.getById(roleId));
+      const registeredUser = dataInternalExtractor(await this.userService.create(dto, [roleId]));
+      const registeredUserRoles = registeredUser.roles.map(role => role.idRole);
 
       const accessTokenResponse = dataInternalExtractor(
-        await this.generateJWT(TokenType.ACCESS, registeredUser.uuid, registeredUser.email, registeredUser.roleUuid),
+        await this.generateJWT(TokenType.ACCESS, registeredUser.uuid, registeredUser.email, registeredUserRoles),
       );
 
       const refreshTokenResponse = dataInternalExtractor(
-        await this.generateJWT(TokenType.REFRESH, registeredUser.uuid, registeredUser.email),
+        await this.generateJWT(
+          TokenType.REFRESH,
+          registeredUser.uuid,
+          registeredUser.email,
+          registeredUserRoles,
+          registeredUser.userStatus,
+        ),
       );
 
       const outputEntity = {
@@ -124,14 +129,18 @@ export class AuthService implements IAuthService {
     const { email } = refreshData;
 
     const existedUser = dataInternalExtractor(await this.userService.getByEmail(email));
+
     if (!existedUser) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
+    const registeredUserRoles = existedUser.roles.map(role => role.idRole);
 
     const accessTokenResponse = dataInternalExtractor(
-      await this.generateJWT(TokenType.ACCESS, existedUser.uuid, existedUser.email, existedUser.roleUuid),
+      await this.generateJWT(TokenType.ACCESS, existedUser.uuid, existedUser.email, registeredUserRoles),
     );
-    const refreshTokenResponse = dataInternalExtractor(await this.generateJWT(TokenType.REFRESH, existedUser.uuid, existedUser.email));
+    const refreshTokenResponse = dataInternalExtractor(
+      await this.generateJWT(TokenType.REFRESH, existedUser.uuid, existedUser.email, registeredUserRoles, existedUser.userStatus),
+    );
 
     const outputEntity = {
       accessToken: accessTokenResponse,
@@ -160,9 +169,12 @@ export class AuthService implements IAuthService {
     if (!isValidPassword) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }
-    const userRole = dataInternalExtractor(await this.roleService.getByUuid(user.roleUuid));
-    const accessTokenResponse = dataInternalExtractor(await this.generateJWT(TokenType.ACCESS, user.uuid, user.email, user.roleUuid));
-    const refreshTokenResponse = dataInternalExtractor(await this.generateJWT(TokenType.REFRESH, user.uuid, user.email));
+    const loginedUserRoles = user.roles.map(role => role.idRole);
+
+    const accessTokenResponse = dataInternalExtractor(await this.generateJWT(TokenType.ACCESS, user.uuid, user.email, loginedUserRoles));
+    const refreshTokenResponse = dataInternalExtractor(
+      await this.generateJWT(TokenType.REFRESH, user.uuid, user.email, loginedUserRoles, user.userStatus),
+    );
 
     const outputEntity = {
       ...user,
@@ -180,17 +192,19 @@ export class AuthService implements IAuthService {
     tokenType: TokenType = TokenType.ACCESS,
     uuid: EntityUrlParamCommand.RequestUuidParam,
     email: string,
-    roleUuid?: string,
+    roleIds: number[],
+    userStatus?: EActiveStatuses,
   ): Promise<UniversalInternalResponse<string>> {
     const token = jwt.sign(
       {
         uuid,
         email,
-        roleUuid,
+        roleIds,
+        userStatus,
       },
       this.configService.get('JWT_KEY'),
       {
-        expiresIn: tokenType === TokenType.REFRESH ? '7d' : '7d', // 604800(7 суток), 86400(1 сутки)
+        expiresIn: tokenType === TokenType.REFRESH ? '1d' : '20d', // 604800(7 суток), 86400(1 сутки)
       },
     );
 

@@ -3,6 +3,7 @@ import { CategoryMaterialService } from './category-material.service';
 import { CategoryMaterialController } from './category-material.controller';
 import { KFI } from '../../common/utils/di';
 import { CategoryMaterialRepository } from './category-material.repository';
+import { MaterialModule } from 'src/modules/material/material.module';
 
 @Module({
   providers: [
@@ -16,7 +17,7 @@ import { CategoryMaterialRepository } from './category-material.repository';
     },
   ],
   controllers: [CategoryMaterialController],
-  imports: [],
+  imports: [MaterialModule],
   exports: [KFI.CATEGORY_MATERIAL_SERVICE],
 })
 export class CategoryMaterialModule {}

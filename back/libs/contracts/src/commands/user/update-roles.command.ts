@@ -6,7 +6,7 @@ import { UserBusinessValueSchema } from '../../models/user/user-business-value.s
 
 const UserUpdateResponseEntitySchema = UserBusinessValueSchema.merge(UserRelatedEntitiesSchema);
 
-const UserUpdateRequestSchema = z.object({ roles: z.array(z.number()).nullable().optional() });
+const UserUpdateRequestSchema = z.object({ rolesIds: z.array(z.number()).nullable().optional() });
 
 const UserUpdateResponseSchema = z
   .object({

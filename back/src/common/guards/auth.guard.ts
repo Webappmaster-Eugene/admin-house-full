@@ -151,7 +151,6 @@ export class AuthGuard implements CanActivate {
 
       const user = dataInternalExtractor(await this.userService.getFullInfoById(uuid));
       if (!user) {
-        // return false;
         throw Error('Error! Please, register or login under the user with the appropriate role');
       }
 
@@ -168,7 +167,6 @@ export class AuthGuard implements CanActivate {
         throw Error('Error! Please, register or login under the user with the appropriate role');
       }
       return true;
-      // return !!roles.includes(user.role['name']);
     } catch (error) {
       if (error.message === 'Error! Please, register or login under the user with the appropriate role') {
         const errorRoles = {

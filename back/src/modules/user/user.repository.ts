@@ -19,6 +19,7 @@ import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller
 import { UserAddToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
 import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
 import { Handbook, Organization, Project, Role, Workspace } from '.prisma/client';
+import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -143,18 +144,12 @@ export class UserRepository implements IUserRepository {
 
   async create(
     dto: UserCreateRequestDto,
-    rolesIds: EntityUrlParamCommand.RequestNumberParam[],
+    rolesUuids: EntityUrlParamCommand.RequestUuidParam[],
     hashedPassword: string,
     transactionDbClient: TransactionDbClient = this.databaseService,
   ): Promise<UserEntity> {
     try {
-
       const { email, phone, firstName, secondName, address, info, documents, avatar } = dto;
- //      let newUserRoles =[]
- //      newUserRoles = rolesIds.reduce((acc, curValue) => {
- //   const role = await this.role
- //   acc.push()
- // }, [])
 
       const newUser = await transactionDbClient.user.create({
         data: {
@@ -168,10 +163,8 @@ export class UserRepository implements IUserRepository {
           documents,
           avatar,
           roles: {
-            connect: {
-              roles.map((role) => ({ uuid: role.uuid })),
-            }
-          }
+            connect: rolesUuids.map(roleUuid => ({ uuid: roleUuid })) || [],
+          },
         },
         include: {
           roles: true,
@@ -222,8 +215,35 @@ export class UserRepository implements IUserRepository {
         },
       });
 
-      // const userInfo = updatedUser as unknown as UserEntity;
-      // userInfo.roleName = updatedUser.role?.name;
+      return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async updateUserRolesById(userId: EntityUrlParamCommand.RequestUuidParam, dto: UserUpdateRolesRequestDto): Promise<UserEntity> {
+    try {
+      const updatedUser = await this.databaseService.user.update({
+        where: {
+          uuid: userId,
+        },
+        data: {
+          roles: {
+            connect: dto.rolesIds.map(roleId => ({ idRole: roleId })) || [],
+          },
+        },
+        include: {
+          roles: true,
+          customerOfProjects: true,
+          handbookManager: true,
+          responsibleManagerOfProjects: true,
+          creatorOfWorkspace: true,
+          leaderOfOrganizations: true,
+          memberOfWorkspaces: true,
+          membersOfOrganizations: true,
+          membersOfProjects: true,
+        },
+      });
 
       return existenceEntityHandler(updatedUser, UserEntity, EntityName.USER) as UserEntity;
     } catch (error: unknown) {
@@ -321,14 +341,18 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async addUserToWorkspaceById({ uuid, memberOfWorkspaceUuid }: UserAddToWorkspaceRequestDto): Promise<UserEntity> {
+  async addUserToWorkspaceById({ uuid, memberOfWorkspaces }: UserAddToWorkspaceRequestDto): Promise<UserEntity> {
     try {
       const updatedUser = await this.databaseService.user.update({
         where: {
           uuid,
         },
         data: {
-          memberOfWorkspaceUuid,
+          memberOfWorkspaces: {
+            connect: {
+              uuid: memberOfWorkspaces[0].uuid,
+            },
+          },
         },
         include: {
           roles: true,
@@ -349,14 +373,18 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async addUserToOrganizationById({ uuid, memberOfOrganizationUuid }: UserAddToOrganizationRequestDto): Promise<UserEntity> {
+  async addUserToOrganizationById({ uuid, memberOfOrganizations }: UserAddToOrganizationRequestDto): Promise<UserEntity> {
     try {
       const updatedUser = await this.databaseService.user.update({
         where: {
           uuid,
         },
         data: {
-          memberOfOrganizationUuid,
+          membersOfOrganizations: {
+            connect: {
+              uuid: memberOfOrganizations[0].uuid,
+            },
+          },
         },
         include: {
           roles: true,
@@ -379,14 +407,18 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async addUserToProjectById({ uuid, memberOfProjectUuid }: UserAddToProjectRequestDto): Promise<UserEntity> {
+  async addUserToProjectById({ uuid, memberOfProjects }: UserAddToProjectRequestDto): Promise<UserEntity> {
     try {
       const updatedUser = await this.databaseService.user.update({
         where: {
           uuid,
         },
         data: {
-          memberOfProjectUuid,
+          membersOfProjects: {
+            connect: {
+              uuid: memberOfProjects[0].uuid,
+            },
+          },
         },
         include: {
           roles: true,

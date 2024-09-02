@@ -18,9 +18,9 @@ export interface IUserService extends IServiceCommon<UserCreateRequestDto, UserU
     dto: UserCreateRequestDto,
     roleIds?: EntityUrlParamCommand.RequestNumberParam[],
   ) => Promise<UniversalInternalResponse<UserEntity>>;
-  updateRolesOfUser: (
+  updateUserRolesById: (
+    idUser: EntityUrlParamCommand.RequestUuidParam,
     dto: UserUpdateRolesRequestDto,
-    roleIds?: EntityUrlParamCommand.RequestNumberParam[],
   ) => Promise<UniversalInternalResponse<UserEntity>>;
   updateById: (userId: EntityUrlParamCommand.RequestUuidParam, dto: UserUpdateRequestDto) => Promise<UniversalInternalResponse<UserEntity>>;
   deleteById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<UserEntity>>;

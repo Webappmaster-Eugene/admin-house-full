@@ -36,7 +36,7 @@ export interface IUserController
     dto: UserUpdateRequestDto,
     urlParams: IUrlParams,
   ) => Promise<UserUpdateResponseDto>;
-  updateRolesOfUserEP: (dto: UserUpdateRolesRequestDto) => Promise<UserUpdateResponseDto>;
+  updateUserRolesByIdEP: (idUser: EntityUrlParamCommand.RequestUuidParam, dto: UserUpdateRolesRequestDto) => Promise<UserUpdateResponseDto>;
   deleteByIdEP: (userId: EntityUrlParamCommand.RequestUuidParam, urlParams: IUrlParams) => Promise<UserDeleteResponseDto>;
   getCurrentUserEP: (userInfoFromJWT: IJWTPayload, urlParams: IUrlParams) => Promise<UserGetFullInfoResponseDto>;
   addUserToWorkspaceEP: (

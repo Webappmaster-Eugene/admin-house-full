@@ -83,8 +83,6 @@ export class AuthController implements IAuthController {
   ): Promise<AuthRegisterWithRoleResponseDto> {
     // DOC каждый раз при вызове идет запись в БД в таблицу registerWithRoleKey (то есть обновление) - при успешной регистрации пользователя с ролью НЕ customer
     // DOC иначе вызов данной ручки не происходит
-    console.log('Controller', roleId, registerWithRoleKey);
-    //console.log();
 
     try {
       const { ok, data } = await this.authService.registerWithRole(

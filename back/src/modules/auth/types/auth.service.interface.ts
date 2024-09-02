@@ -7,6 +7,8 @@ import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleRequestParamDto } f
 import { AuthLoginRequestDto } from '../dto/controller/auth.login.dto';
 import { AuthRefreshKeysEntity } from 'src/modules/auth/entities/auth-refresh-keys.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import { TokenType } from 'src/common/types/token-type.enum';
+import { EActiveStatuses } from '.prisma/client';
 
 export interface IAuthService {
   register: (dto: AuthRegisterRequestDto, response: Response) => Promise<UniversalInternalResponse<AuthEntity>>;
@@ -18,9 +20,11 @@ export interface IAuthService {
   login: (dto: AuthLoginRequestDto, response: Response) => Promise<UniversalInternalResponse<AuthEntity>>;
   refreshKeys: (request: Request, response: Response) => Promise<UniversalInternalResponse<AuthRefreshKeysEntity>>;
   generateJWT: (
+    tokenType: TokenType,
     uuid: EntityUrlParamCommand.RequestUuidParam,
     email: string,
-    workspaceUuid: EntityUrlParamCommand.RequestUuidParam,
+    roleIds: number[],
+    userStatus?: EActiveStatuses,
   ) => Promise<UniversalInternalResponse<string>>;
   generateStrictAdminKey: (dto: AuthGenerateKeyRequestDto) => Promise<UniversalInternalResponse<{ key: string }>>;
   getStrictAdminKey: () => Promise<UniversalInternalResponse<{ key: string }>>;

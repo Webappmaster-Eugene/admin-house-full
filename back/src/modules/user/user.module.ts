@@ -7,6 +7,7 @@ import { UserRepository } from './user.repository';
 import { RolesModule } from '../roles/roles.module';
 import { HandbookModule } from '../handbook/handbook.module';
 import { OrganizationModule } from '../organization/organization.module';
+import { ProjectModule } from 'src/modules/project/project.module';
 
 // TODO да, Global - это жесть, но нужно для работы Гвардов. В идеале в Гварды нужно красиво заинжектить UserService
 @Global()
@@ -22,7 +23,7 @@ import { OrganizationModule } from '../organization/organization.module';
     },
   ],
   controllers: [UserController],
-  imports: [RolesModule, WorkspaceModule, OrganizationModule, HandbookModule],
+  imports: [RolesModule, WorkspaceModule, OrganizationModule, ProjectModule, HandbookModule],
   exports: [KFI.USER_SERVICE],
 })
 export class UserModule {}

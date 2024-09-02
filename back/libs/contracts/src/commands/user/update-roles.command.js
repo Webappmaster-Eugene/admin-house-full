@@ -7,7 +7,7 @@ const models_1 = require("../../models");
 const user_related_entities_schema_1 = require("../../models/user/user-related-entities.schema");
 const user_business_value_schema_1 = require("../../models/user/user-business-value.schema");
 const UserUpdateResponseEntitySchema = user_business_value_schema_1.UserBusinessValueSchema.merge(user_related_entities_schema_1.UserRelatedEntitiesSchema);
-const UserUpdateRequestSchema = zod_1.z.object({ roles: zod_1.z.array(zod_1.z.number()).nullable().optional() });
+const UserUpdateRequestSchema = zod_1.z.object({ rolesIds: zod_1.z.array(zod_1.z.number()).nullable().optional() });
 const UserUpdateResponseSchema = zod_1.z
     .object({
     data: UserUpdateResponseEntitySchema,

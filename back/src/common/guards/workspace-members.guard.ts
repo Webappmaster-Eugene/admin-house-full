@@ -52,7 +52,10 @@ export class WorkspaceMembersGuard implements CanActivate {
 
       // DOC или действие совершает менеджер самого Workspace
       // DOC или пользователь, который входит в Workspace
-      if (findedUser.memberOfWorkspaceUuid === selectedWorkspace.uuid || findedUser.creatorOfWorkspaceUuid === selectedWorkspace.uuid) {
+      if (
+        findedUser.memberOfWorkspaces.map(workspace => workspace.uuid).includes(selectedWorkspace.uuid) ||
+        findedUser.creatorOfWorkspaceUuid === selectedWorkspace.uuid
+      ) {
         return true;
       }
       throw Error('Login under the user with the appropriate role');

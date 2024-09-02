@@ -19,4 +19,5 @@ __exportStar(require("./get-all.command"), exports);
 __exportStar(require("./create.command"), exports);
 __exportStar(require("./update.command"), exports);
 __exportStar(require("./delete.command"), exports);
-__exportStar(require("src/commands/material/update-name.command"), exports);
+__exportStar(require("./update-category.command"), exports);
+__exportStar(require("./update-name.command"), exports);

@@ -50,6 +50,8 @@ import { okResponseHandler } from '../../common/helpers/handlers/ok-response.han
 import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
 import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserUpdateRolesCommand } from 'libs/contracts/src/commands/user/update-roles.command';
+import { UserUpdateRolesRequestDto, UserUpdateRolesResponseDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')
@@ -200,6 +202,35 @@ export class UserController {
   ): Promise<UserUpdateResponseDto> {
     try {
       const { ok, data } = await this.userService.updateById(userId, dto);
+      return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.USER, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiBody({
+    schema: zodToOpenAPI(UserUpdateRolesCommand.RequestSchema),
+  })
+  @ApiOkResponse({
+    schema: zodToOpenAPI(UserUpdateRolesCommand.ResponseSchema),
+  })
+  @ApiOperation({ summary: 'Изменение только ролей пользователя админом по его id' })
+  @ApiResponse({ status: 200, type: UserUpdateRolesResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @ZodSerializerDto(UserUpdateRolesResponseDto)
+  @RolesSetting(EUserTypeVariants.ADMIN)
+  @UseGuards(AuthGuard)
+  @Put('/:userId')
+  async updateUserRolesByIdEP(
+    @Body() dto: UserUpdateRolesRequestDto,
+    @Param('userId', ParseUUIDPipe)
+    userId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<UserUpdateRolesResponseDto> {
+    try {
+      const { ok, data } = await this.userService.updateUserRolesById(userId, dto);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);

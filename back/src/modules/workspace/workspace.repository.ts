@@ -77,9 +77,9 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           workspaceCreator: {
             include: {
               creatorOfWorkspace: true,
-              role: true,
-              memberOfProject: true,
-              memberOfOrganization: true,
+              roles: true,
+              membersOfProjects: true,
+              membersOfOrganizations: true,
             },
           },
         },
