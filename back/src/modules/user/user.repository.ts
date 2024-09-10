@@ -15,11 +15,11 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { existenceUserEntityHandler } from './lib/user-entity-existance.handler';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
-import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
-import { UserAddToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
-import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
+import { UserAddToOrganizationRequestDto } from '../..//modules/user/dto/controller/add-to-organization.dto';
+import { UserAddToWorkspaceRequestDto } from '../..//modules/user/dto/controller/add-to-workspace.dto';
+import { UserAddToProjectRequestDto } from '../..//modules/user/dto/controller/add-to-project.dto';
 import { Handbook, Organization, Project, Role, Workspace } from '.prisma/client';
-import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
+import { UserUpdateRolesRequestDto } from '../..//modules/user/dto/controller/update-user-roles.dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

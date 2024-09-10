@@ -12,11 +12,11 @@ import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repo
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 import { ResponsiblePartnerProducerBusinessValueSchema } from 'libs/contracts/src/models/responsible-partner-producer/responsible-partner-producer-business-value.schema';
-import { MaterialUpdateNameRequestDto } from 'src/modules/material/dto/controller/update-name-material.dto';
-import { InternalResponse, UniversalInternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
-import { MaterialUpdateCategoryRequestDto } from 'src/modules/material/dto/controller/update-category-material.dto';
+import { MaterialUpdateNameRequestDto } from '../../modules/material/dto/controller/update-name-material.dto';
+import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { MaterialUpdateCategoryRequestDto } from '../../modules/material/dto/controller/update-category-material.dto';
 import { EActiveStatuses } from '.prisma/client';
-import { templateNameMapper } from 'src/common/helpers/handlers/template-name-mapper.handler';
+import { templateNameMapper } from '../../common/helpers/handlers/template-name-mapper.handler';
 
 @Injectable()
 export class MaterialRepository implements IMaterialRepository {

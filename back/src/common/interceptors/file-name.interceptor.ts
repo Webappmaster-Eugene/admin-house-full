@@ -1,9 +1,9 @@
 import { CallHandler, ExecutionContext, Inject, NestInterceptor } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { ILogger } from 'src/common/types/main/logger.interface';
-import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { FileStorageCreateRequestDto } from '../../modules/s3-minio/dto/service/upload-file.dto';
 import { v4 as uuid_generate } from 'uuid';
 
 export class FileNameInterceptor implements NestInterceptor {

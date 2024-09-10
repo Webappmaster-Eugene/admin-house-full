@@ -1,12 +1,12 @@
 import { CallHandler, ExecutionContext, Inject, NestInterceptor } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { jwtExtractor } from 'src/common/helpers/extractors/jwt.extractor';
+import { jwtExtractor } from '../../common/helpers/extractors/jwt.extractor';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { ILogger } from 'src/common/types/main/logger.interface';
-import { IJWTPayload } from 'src/common/types/jwt.payload.interface';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { IJWTPayload } from '../../common/types/jwt.payload.interface';
 
 export class UserInterceptor implements NestInterceptor {
   constructor(

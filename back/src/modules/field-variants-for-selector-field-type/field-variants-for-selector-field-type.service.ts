@@ -8,10 +8,10 @@ import { FieldVariantsForSelectorFieldTypeUpdateRequestDto } from './dto/control
 import { IFieldVariantsForSelectorFieldTypeService } from './types/field-variants-for-selector-field-type.service.interface';
 import { FieldVariantsForSelectorFieldTypeCreateRequestDto } from './dto/controller/create-field-variants-for-selector-field-type.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
-import { IFieldOfCategoryMaterialRepository } from 'src/modules/field-of-category-material/types/field-of-category-material.repository.interface';
-import { IFieldOfCategoryMaterialService } from 'src/modules/field-of-category-material/types/field-of-category-material.service.interface';
-import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
-import { BackendErrorNames, InternalError } from 'src/common/errors';
+import { IFieldOfCategoryMaterialRepository } from '../../modules/field-of-category-material/types/field-of-category-material.repository.interface';
+import { IFieldOfCategoryMaterialService } from '../../modules/field-of-category-material/types/field-of-category-material.service.interface';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
+import { BackendErrorNames, InternalError } from '../../common/errors';
 
 @Injectable()
 export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsForSelectorFieldTypeService {

@@ -1,4 +1,4 @@
-import { InternalError } from 'src/common/errors/errors-description.backend';
+import { InternalError } from '../../../common/errors/errors-description.backend';
 import { isOkResponseHandler } from '../../type-guards/is-ok-response.handler';
 import { ExternalResponse } from '../../types/responses/universal-external-response.interface';
 import { errorResponseHandler } from './error-response.handler';

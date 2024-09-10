@@ -9,9 +9,9 @@ import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IUserService } from '../../modules/user/types/user.service.interface';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
-import { BACKEND_ERRORS, BackendErrorNames } from 'src/common/errors/errors-description.backend';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import { BACKEND_ERRORS, BackendErrorNames } from '../../common/errors/errors-description.backend';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 
 @Injectable()
 export class WorkspaceAffiliationGuard implements CanActivate {

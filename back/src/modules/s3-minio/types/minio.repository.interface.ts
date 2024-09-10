@@ -1,6 +1,6 @@
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
-import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
+import { FileStorageEntity } from '../../../modules/s3-minio/entities/minio.entity';
+import { FileStorageCreateRequestDto } from '../../../modules/s3-minio/dto/service/upload-file.dto';
 
 export interface IFileStorageRepository {
   getFile: (fileId: EntityUrlParamCommand.RequestUuidParam) => Promise<FileStorageEntity>;

@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { AppInfoService } from '../app-info.service';
 import { AppInfoController } from '../app-info.controller';
-import { METHODS } from 'src/common/api-description/method.enum';
+import { METHODS } from '../../../common/api-description/method.enum';
 import { KFI } from '../../../common/utils/di';
 import { AppInfoRepository } from '../app-info.repository';
 import { QUERIES } from '../query';

@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { KFI } from 'src/common/utils/di';
-import { IPrismaService } from 'src/common/types/main/prisma.interface';
-import { existenceEntityHandler } from 'src/common/helpers/handlers/existance-entity-handler';
-import { EntityName } from 'src/common/types/entity.enum';
-import { errorRepositoryHandler } from 'src/common/helpers/handlers/error-repository.handler';
-import { IFileStorageRepository } from 'src/modules/s3-minio/types/minio.repository.interface';
-import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
-import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
+import { KFI } from '../../common/utils/di';
+import { IPrismaService } from '../../common/types/main/prisma.interface';
+import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
+import { IFileStorageRepository } from '../../modules/s3-minio/types/minio.repository.interface';
+import { FileStorageCreateRequestDto } from '../../modules/s3-minio/dto/service/upload-file.dto';
+import { FileStorageEntity } from '../../modules/s3-minio/entities/minio.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()

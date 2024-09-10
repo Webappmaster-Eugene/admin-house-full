@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { StatusApproveCreateRequestDto } from 'src/modules/status-approve/dto/controller/create-status-approve.dto';
+import { StatusApproveCreateRequestDto } from '../../modules/status-approve/dto/controller/create-status-approve.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IStatusApproveRepository } from './types/status-approve.repository.interface';
-import { StatusApproveUpdateRequestDto } from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
+import { StatusApproveUpdateRequestDto } from '../../modules/status-approve/dto/controller/update-status-approve.dto';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
@@ -10,7 +10,7 @@ import { existenceEntityHandler } from '../../common/helpers/handlers/existance-
 import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
-import { StatusApproveEntity } from 'src/modules/status-approve/entities/status-approve.entity';
+import { StatusApproveEntity } from '../../modules/status-approve/entities/status-approve.entity';
 
 @Injectable()
 export class StatusApproveRepository implements IStatusApproveRepository {

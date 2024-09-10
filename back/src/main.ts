@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { CustomExceptionFilter } from './common/exceptions/custom-exception-filter';
 import { VersioningType } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { IConfigService } from './common/types/main/config.service.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

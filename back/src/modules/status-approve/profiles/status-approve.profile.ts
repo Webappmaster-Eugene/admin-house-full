@@ -2,7 +2,7 @@
 //
 // import { Injectable } from '@nestjs/common';
 // import { createMap, Mapper, MappingProfile } from '@numart/automapper/core';
-// import { StatusApproveGetResponseDto } from 'src/modules/status-approve/dto/controller/get-status-approve.dto';
+// import { StatusApproveGetResponseDto } from '../../modules/status-approve/dto/controller/get-status-approve.dto';
 //
 // @Injectable()
 // export class StatusApproveProfile extends AutomapperProfile {

@@ -7,7 +7,7 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
-import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
+import { UserUpdateRolesRequestDto } from '../../../modules/user/dto/controller/update-user-roles.dto';
 
 export interface IUserService extends IServiceCommon<UserCreateRequestDto, UserUpdateRequestDto, UserEntity> {
   getById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<UserEntity>>;

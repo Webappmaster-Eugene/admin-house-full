@@ -4,9 +4,9 @@ import { ServiceError, ErrorCode } from '../errors';
 import { Response, Request } from 'express';
 import { ObjectUtil } from '../utils/object.util';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { ILogger } from 'src/common/types/main/logger.interface';
+import { ILogger } from '../../common/types/main/logger.interface';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
 
 @Catch()
 export class ProcessExceptionsFilter extends BaseExceptionFilter<ServiceError> {

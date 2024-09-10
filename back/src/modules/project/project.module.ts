@@ -17,7 +17,7 @@ import { OrganizationModule } from '../organization/organization.module';
     },
   ],
   controllers: [ProjectController],
-  imports: [OrganizationModule],
-  exports: [],
+  imports: [],
+  exports: [KFI.PROJECT_SERVICE],
 })
 export class ProjectModule {}

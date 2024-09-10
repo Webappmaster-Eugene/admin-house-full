@@ -3,7 +3,7 @@
 // import { Builder } from 'xml2js';
 // import { ISitemapItem } from './sitemap.interface';
 // import { QueryBus } from '@nestjs/cqrs';
-// import { FindPostsQuery } from 'src/module/post/query/find-posts/find-posts.query';
+// import { FindPostsQuery } from '../../../../module/post/query/find-posts/find-posts.query';
 // import { Post } from '.prisma/client';
 //
 // @Controller('sitemap')

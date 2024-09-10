@@ -10,8 +10,8 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
-import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from 'src/common/helpers/regex/regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator';
-import { fieldOfCategoryMaterialTemplateGenerator } from 'src/common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
+import { regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator } from '../../common/helpers/regex/regexUniqueNameForTemplateFieldOfCategoryMaterialGenerator';
+import { fieldOfCategoryMaterialTemplateGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
 
 @Injectable()
 export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMaterialRepository {

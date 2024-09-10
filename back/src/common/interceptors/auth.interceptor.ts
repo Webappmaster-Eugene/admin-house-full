@@ -1,16 +1,15 @@
 import { CallHandler, ExecutionContext, Inject, NestInterceptor } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
-import { KFI } from 'src/common/utils/di';
-import { IAuthService } from 'src/modules/auth/types/auth.service.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import { KFI } from '../../common/utils/di';
+import { IAuthService } from '../../modules/auth/types/auth.service.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { ILogger } from 'src/common/types/main/logger.interface';
-import { jwtExtractor } from 'src/common/helpers/extractors/jwt.extractor';
-import { IJWTPayload } from 'src/common/types/jwt.payload.interface';
-import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
-import { HEADER_KEYS } from 'src/common/consts/header-keys';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { jwtExtractor } from '../../common/helpers/extractors/jwt.extractor';
+import { IJWTPayload } from '../../common/types/jwt.payload.interface';
+import { COOKIE_KEYS } from '../../common/consts/cookie-keys';
 
 export class AuthInterceptor implements NestInterceptor {
   constructor(

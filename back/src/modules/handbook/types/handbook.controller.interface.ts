@@ -7,9 +7,7 @@ import { HandbookDeleteResponseDto } from '../dto/controller/delete-handbook.dto
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
-import { HandbookGetAllResponseDto } from 'src/modules/handbook/dto/controller/get-all-handbooks.dto';
+import { HandbookGetAllResponseDto } from '../../../modules/handbook/dto/controller/get-all-handbooks.dto';
 
 export interface IHandbookController
   extends IControllerCommon<

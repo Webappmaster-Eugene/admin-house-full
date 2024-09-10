@@ -8,7 +8,7 @@ import { KFI } from '../../../common/utils/di';
 import { existenceEntityHandler } from '../../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../../common/helpers/handlers/error-repository.handler';
-import { QUANTITY_LIMIT } from 'src/common/consts/take-quantity.limitation';
+import { QUANTITY_LIMIT } from '../../../common/consts/take-quantity.limitation';
 
 @Injectable()
 export class TechLogChangesRepository implements ITechLogChangesRepository {

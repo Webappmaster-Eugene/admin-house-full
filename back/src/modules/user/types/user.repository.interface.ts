@@ -6,10 +6,10 @@ import { CountData } from '../../../common/types/main/count.data';
 import { UserEntity } from '../entities/user.entity';
 import { UserAllInfoEntity } from '../entities/user-all-info.entity';
 import type { TransactionDbClient } from '../../../common/types/transaction-prisma-client.type';
-import { UserAddToWorkspaceRequestDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
-import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
-import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
-import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
+import { UserAddToWorkspaceRequestDto } from '../../../modules/user/dto/controller/add-to-workspace.dto';
+import { UserAddToProjectRequestDto } from '../../../modules/user/dto/controller/add-to-project.dto';
+import { UserAddToOrganizationRequestDto } from '../../../modules/user/dto/controller/add-to-organization.dto';
+import { UserUpdateRolesRequestDto } from '../../../modules/user/dto/controller/update-user-roles.dto';
 
 export interface IUserRepository extends IRepositoryCommon<UserCreateRequestDto, UserUpdateRequestDto, UserEntity> {
   getById: (userId: EntityUrlParamCommand.RequestUuidParam) => Promise<UserEntity>;

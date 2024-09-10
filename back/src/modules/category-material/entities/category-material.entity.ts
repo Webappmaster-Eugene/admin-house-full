@@ -1,8 +1,4 @@
 import { CategoryMaterial, FieldOfCategoryMaterial, GlobalCategoryMaterial, Handbook, Material } from '.prisma/client';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
-import { GlobalCategoryMaterialEntity } from 'src/modules/global-category-material/entities/global-category-material.entity';
-import { FieldOfCategoryMaterialEntity } from 'src/modules/field-of-category-material/entities/field-of-category-material.entity';
-import { MaterialEntity } from 'src/modules/material/entities/material.entity';
 import { EActiveStatuses } from '.prisma/client';
 
 export interface CategoryMaterialRelatedEntities {

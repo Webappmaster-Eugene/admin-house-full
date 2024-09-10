@@ -13,7 +13,7 @@ import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
 import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
-import { BackendErrorNames, InternalError } from 'src/common/errors/errors-description.backend';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors-description.backend';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 
 @Injectable()

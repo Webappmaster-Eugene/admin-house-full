@@ -17,29 +17,29 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { RolesSetting } from 'src/common/decorators/roles.decorator';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { RolesSetting } from '../../common/decorators/roles.decorator';
+import { AuthGuard } from '../../common/guards/auth.guard';
 import { EUserTypeVariants } from '.prisma/client';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { okResponseHandler } from 'src/common/helpers/handlers/ok-response.handler';
-import { errorResponseHandler } from 'src/common/helpers/handlers/error-response.handler';
-import { EntityName } from 'src/common/types/entity.enum';
-import { KFI } from 'src/common/utils/di';
+import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
+import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
+import { EntityName } from '../../common/types/entity.enum';
+import { KFI } from '../../common/utils/di';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { ILogger } from 'src/common/types/main/logger.interface';
-import { IFileStorageController } from 'src/modules/s3-minio/types/minio.controller.interface';
+import { ILogger } from '../../common/types/main/logger.interface';
+import { IFileStorageController } from '../../modules/s3-minio/types/minio.controller.interface';
 import { ZodSerializerDto } from 'nestjs-zod';
-import { IUrlParams, UrlParams } from 'src/common/decorators/url-params.decorator';
-import { IFileStorageService } from 'src/modules/s3-minio/types/minio.service.interface';
-import { FileStorageGetResponseDto } from 'src/modules/s3-minio/dto/service/get-file.dto';
-import { FileStorageCreateResponseDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
-import { FileNameInterceptor } from 'src/common/interceptors/file-name.interceptor';
-import { FileStorageControllerCreateRequestDto } from 'src/modules/s3-minio/dto/controller/upload-file.dto';
-import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
-import { FileStorageDeleteResponseDto } from 'src/modules/s3-minio/dto/service/delete-file.dto';
+import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
+import { IFileStorageService } from '../../modules/s3-minio/types/minio.service.interface';
+import { FileStorageGetResponseDto } from '../../modules/s3-minio/dto/service/get-file.dto';
+import { FileStorageCreateResponseDto } from '../../modules/s3-minio/dto/service/upload-file.dto';
+import { FileNameInterceptor } from '../../common/interceptors/file-name.interceptor';
+import { FileStorageControllerCreateRequestDto } from '../../modules/s3-minio/dto/controller/upload-file.dto';
+import { FileStorageEntity } from '../../modules/s3-minio/entities/minio.entity';
+import { FileStorageDeleteResponseDto } from '../../modules/s3-minio/dto/service/delete-file.dto';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { ProcessExceptionsFilter } from 'src/common/filters/process-exceptions.filter';
-import { ErrorCode, ServiceError } from 'src/common/errors';
+import { ProcessExceptionsFilter } from '../../common/filters/process-exceptions.filter';
+import { ErrorCode, ServiceError } from '../../common/errors';
 
 @ApiTags('Работа с Files')
 @Controller('files')

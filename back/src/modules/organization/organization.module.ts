@@ -17,7 +17,7 @@ import { WorkspaceModule } from '../workspace/workspace.module';
     },
   ],
   controllers: [OrganizationController],
-  imports: [WorkspaceModule],
+  imports: [],
   exports: [KFI.ORGANIZATION_SERVICE],
 })
 export class OrganizationModule {}

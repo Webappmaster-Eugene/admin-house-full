@@ -29,12 +29,11 @@ import { PriceChangingModule } from './modules/price-changing/price-changing.mod
 import { ResponsiblePartnerProducerModule } from './modules/responsible-partner-producer/responsible-partner-producer.module';
 import { CharacteristicsMaterialModule } from './modules/characteristics-material/characteristics-material.module';
 import { redisStore } from 'cache-manager-redis-yet';
-import { TechLogChangesModule } from 'src/modules/tech/tech-log-changes/tech-log-changes.module';
-import { S3MinioModule } from 'src/modules/s3-minio/s3-minio.module';
+import { TechLogChangesModule } from './modules/tech/tech-log-changes/tech-log-changes.module';
+import { S3MinioModule } from './modules/s3-minio/s3-minio.module';
 // import { AutomapperModule } from '@numart/automapper/nestjs';
 // import { classes } from '@numart/automapper/classes';
-import { StatusApproveModule } from 'src/modules/status-approve/status-approve.module';
-
+import { StatusApproveModule } from './modules/status-approve/status-approve.module';
 const logger: LoggerConfig = new LoggerConfig();
 
 @Module({

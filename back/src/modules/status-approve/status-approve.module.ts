@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { StatusApproveService } from 'src/modules/status-approve/status-approve.service';
-import { StatusApproveController } from 'src/modules/status-approve/status-approve.controller';
+import { StatusApproveService } from '../../modules/status-approve/status-approve.service';
+import { StatusApproveController } from '../../modules/status-approve/status-approve.controller';
 import { KFI } from '../../common/utils/di';
-import { StatusApproveRepository } from 'src/modules/status-approve/status-approve.repository';
+import { StatusApproveRepository } from '../../modules/status-approve/status-approve.repository';
 // import { AutomapperModule } from '@numart/automapper/nestjs';
 
 @Module({

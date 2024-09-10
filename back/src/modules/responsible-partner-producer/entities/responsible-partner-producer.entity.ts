@@ -1,6 +1,4 @@
 import { EActiveStatuses, Handbook, Material, ResponsiblePartnerProducer } from '.prisma/client';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
-import { MaterialEntity } from 'src/modules/material/entities/material.entity';
 
 export interface ResponsiblePartnerProducerRelatedEntities {
   handbook: Handbook;

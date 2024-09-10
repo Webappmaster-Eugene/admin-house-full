@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as Minio from 'minio';
 import { ConfigService } from '@nestjs/config';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
-import { IFileStorageService } from 'src/modules/s3-minio/types/minio.service.interface';
-import { InternalResponse, UniversalInternalResponse } from 'src/common/types/responses/universal-internal-response.interface';
-import { KFI } from 'src/common/utils/di';
-import { IFileStorageRepository } from 'src/modules/s3-minio/types/minio.repository.interface';
-import { FileStorageEntity } from 'src/modules/s3-minio/entities/minio.entity';
-import { FileStorageCreateRequestDto } from 'src/modules/s3-minio/dto/service/upload-file.dto';
-import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import { IFileStorageService } from '../../modules/s3-minio/types/minio.service.interface';
+import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { KFI } from '../../common/utils/di';
+import { IFileStorageRepository } from '../../modules/s3-minio/types/minio.repository.interface';
+import { FileStorageEntity } from '../../modules/s3-minio/entities/minio.entity';
+import { FileStorageCreateRequestDto } from '../../modules/s3-minio/dto/service/upload-file.dto';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { EntityUrlParamCommand } from 'libs/contracts';
 
 @Injectable()

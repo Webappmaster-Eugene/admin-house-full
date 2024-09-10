@@ -47,11 +47,11 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
-import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserGetFullInfoResponseDto } from '../../modules/user/dto/controller/get-full-user-info.dto';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
+import { UserEntity } from '../../modules/user/entities/user.entity';
 import { UserUpdateRolesCommand } from 'libs/contracts/src/commands/user/update-roles.command';
-import { UserUpdateRolesRequestDto, UserUpdateRolesResponseDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
+import { UserUpdateRolesRequestDto, UserUpdateRolesResponseDto } from '../../modules/user/dto/controller/update-user-roles.dto';
 
 @ApiTags('Работа с пользователями')
 @Controller('user')

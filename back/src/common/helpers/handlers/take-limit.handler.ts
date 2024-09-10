@@ -1,6 +1,6 @@
 import { QUANTITY_LIMIT } from '../../consts/take-quantity.limitation';
 import { InternalResponse } from '../../types/responses/universal-internal-response.interface';
-import { BackendErrorNames, InternalError } from 'src/common/errors/errors-description.backend';
+import { BackendErrorNames, InternalError } from '../../../common/errors/errors-description.backend';
 
 export function limitTakeHandler(take) {
   if (take > QUANTITY_LIMIT.TAKE_MAX_LIMIT) {

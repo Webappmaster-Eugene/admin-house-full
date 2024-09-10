@@ -8,11 +8,14 @@ import { MaterialDeleteResponseDto } from '../dto/controller/delete-material.dto
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
-import { MaterialUpdateNameRequestDto, MaterialUpdateNameResponseDto } from 'src/modules/material/dto/controller/update-name-material.dto';
+import {
+  MaterialUpdateNameRequestDto,
+  MaterialUpdateNameResponseDto,
+} from '../../../modules/material/dto/controller/update-name-material.dto';
 import {
   MaterialUpdateCategoryRequestDto,
   MaterialUpdateCategoryResponseDto,
-} from 'src/modules/material/dto/controller/update-category-material.dto';
+} from '../../../modules/material/dto/controller/update-category-material.dto';
 
 export interface IMaterialController
   extends IControllerCommon<

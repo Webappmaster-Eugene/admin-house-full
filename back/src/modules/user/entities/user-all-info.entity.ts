@@ -1,9 +1,4 @@
 import { EActiveStatuses, Handbook, Organization, Project, Role, User, Workspace } from '.prisma/client';
-import { RoleEntity } from 'src/modules/roles/entities/role.entity';
-import { WorkspaceEntity } from 'src/modules/workspace/entities/workspace.entity';
-import { OrganizationEntity } from 'src/modules/organization/entities/organization.entity';
-import { ProjectEntity } from 'src/modules/project/entities/project.entity';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
 
 export interface UserAllInfoRelatedEntities {
   roles: Role[];

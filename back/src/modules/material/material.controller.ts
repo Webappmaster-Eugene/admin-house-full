@@ -34,10 +34,13 @@ import { IQueryParams, QueryParams } from '../../common/decorators/query-params.
 import {
   MaterialUpdateCategoryRequestDto,
   MaterialUpdateCategoryResponseDto,
-} from 'src/modules/material/dto/controller/update-category-material.dto';
+} from '../../modules/material/dto/controller/update-category-material.dto';
 import { MaterialUpdateCategoryCommand } from 'libs/contracts/src/commands/material/update-category.command';
 import { MaterialUpdateNameCommand } from 'libs/contracts/src/commands/material/update-name.command';
-import { MaterialUpdateNameRequestDto, MaterialUpdateNameResponseDto } from 'src/modules/material/dto/controller/update-name-material.dto';
+import {
+  MaterialUpdateNameRequestDto,
+  MaterialUpdateNameResponseDto,
+} from '../../modules/material/dto/controller/update-name-material.dto';
 
 @ApiTags('Работа с Material')
 @Controller('material')

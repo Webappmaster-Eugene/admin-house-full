@@ -16,8 +16,8 @@ export class ProjectService implements IProjectService {
   constructor(
     @Inject(KFI.PROJECT_REPOSITORY)
     private readonly projectRepository: IProjectRepository,
-    @Inject(KFI.ORGANIZATION_SERVICE)
-    private readonly organizationService: IOrganizationService,
+    // @Inject(KFI.ORGANIZATION_SERVICE)
+    // private readonly organizationService: IOrganizationService,
   ) {}
 
   async getById(projectId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<ProjectEntity>> {

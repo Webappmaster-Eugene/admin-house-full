@@ -8,10 +8,10 @@ import { UserDeleteResponseDto } from '../dto/controller/delete-user.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
-import { UserAddToOrganizationResponseDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
-import { UserAddToProjectResponseDto } from 'src/modules/user/dto/controller/add-to-project.dto';
-import { UserGetFullInfoResponseDto } from 'src/modules/user/dto/controller/get-full-user-info.dto';
-import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
+import { UserAddToOrganizationResponseDto } from '../../../modules/user/dto/controller/add-to-organization.dto';
+import { UserAddToProjectResponseDto } from '../../../modules/user/dto/controller/add-to-project.dto';
+import { UserGetFullInfoResponseDto } from '../../../modules/user/dto/controller/get-full-user-info.dto';
+import { UserUpdateRolesRequestDto } from '../../../modules/user/dto/controller/update-user-roles.dto';
 
 export interface IUserController
   extends IControllerCommon<

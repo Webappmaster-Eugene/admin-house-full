@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { MaterialEntity } from './entities/material.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
@@ -10,13 +10,12 @@ import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { IPriceChangingService } from '../price-changing/types/price-changing.service.interface';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
-import { MaterialUpdateNameRequestDto } from 'src/modules/material/dto/controller/update-name-material.dto';
-import { MaterialUpdateCategoryRequestDto } from 'src/modules/material/dto/controller/update-category-material.dto';
-import { ICharacteristicsMaterialService } from 'src/modules/characteristics-material/types/characteristics-material.service.interface';
-import { ICategoryMaterialService } from 'src/modules/category-material/types/category-material.service.interface';
-import { IFieldOfCategoryMaterialService } from 'src/modules/field-of-category-material/types/field-of-category-material.service.interface';
-import { BackendErrorNames, InternalError } from 'src/common/errors';
-import { templateNameMapper } from 'src/common/helpers/handlers/template-name-mapper.handler';
+import { MaterialUpdateNameRequestDto } from '../../modules/material/dto/controller/update-name-material.dto';
+import { MaterialUpdateCategoryRequestDto } from '../../modules/material/dto/controller/update-category-material.dto';
+import { ICharacteristicsMaterialService } from '../../modules/characteristics-material/types/characteristics-material.service.interface';
+import { ICategoryMaterialService } from '../../modules/category-material/types/category-material.service.interface';
+import { IFieldOfCategoryMaterialService } from '../../modules/field-of-category-material/types/field-of-category-material.service.interface';
+import { BackendErrorNames, InternalError } from '../../common/errors';
 
 @Injectable()
 export class MaterialService implements IMaterialService {
@@ -27,9 +26,11 @@ export class MaterialService implements IMaterialService {
     private readonly priceChangingService: IPriceChangingService,
     @Inject(KFI.CHARACTERISTICS_MATERIAL_SERVICE)
     private readonly characteristicsMaterialService: ICharacteristicsMaterialService,
-    @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
-    private readonly categoryMaterialService: ICategoryMaterialService,
-    @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE)
+    // @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
+    // private readonly categoryMaterialService: ICategoryMaterialService,
+    // @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE)
+    // private readonly fieldOfCategoryMaterialService: IFieldOfCategoryMaterialService,
+    @Inject(forwardRef(() => KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE))
     private readonly fieldOfCategoryMaterialService: IFieldOfCategoryMaterialService,
   ) {}
 

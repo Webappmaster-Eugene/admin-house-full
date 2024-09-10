@@ -9,7 +9,7 @@ import { IRoleRepository } from './types/role.repository.interface';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { RoleUpdateRequestDto } from './dto/controller/update-role.dto';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { BackendErrorNames, InternalError } from 'src/common/errors/errors-description.backend';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors-description.backend';
 import { KFI } from '../../common/utils/di';
 import { CACHE_KEYS } from '../../common/consts/cache-keys';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';

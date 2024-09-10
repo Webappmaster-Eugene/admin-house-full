@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { METHODS } from 'src/common/api-description/method.enum';
+import { METHODS } from '../../common/api-description/method.enum';
 
 export interface IUrlParams {
   url: string;

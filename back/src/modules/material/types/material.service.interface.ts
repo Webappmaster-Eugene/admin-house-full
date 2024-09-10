@@ -6,8 +6,8 @@ import { MaterialEntity } from '../entities/material.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
-import { MaterialUpdateNameRequestDto } from 'src/modules/material/dto/controller/update-name-material.dto';
-import { MaterialUpdateCategoryRequestDto } from 'src/modules/material/dto/controller/update-category-material.dto';
+import { MaterialUpdateNameRequestDto } from '../../../modules/material/dto/controller/update-name-material.dto';
+import { MaterialUpdateCategoryRequestDto } from '../../../modules/material/dto/controller/update-category-material.dto';
 
 export interface IMaterialService extends IServiceCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {
   getById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<MaterialEntity>>;

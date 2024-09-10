@@ -4,17 +4,17 @@ import { RolesSetting } from '../../common/decorators/roles.decorator';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { StatusApproveGetResponseDto } from 'src/modules/status-approve/dto/controller/get-status-approve.dto';
+import { StatusApproveGetResponseDto } from '../../modules/status-approve/dto/controller/get-status-approve.dto';
 import {
   StatusApproveCreateRequestDto,
   StatusApproveCreateResponseDto,
-} from 'src/modules/status-approve/dto/controller/create-status-approve.dto';
-import { StatusApproveGetAllResponseDto } from 'src/modules/status-approve/dto/controller/get-all-status-approve.dto';
+} from '../../modules/status-approve/dto/controller/create-status-approve.dto';
+import { StatusApproveGetAllResponseDto } from '../../modules/status-approve/dto/controller/get-all-status-approve.dto';
 import {
   StatusApproveUpdateRequestDto,
   StatusApproveUpdateResponseDto,
-} from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
-import { StatusApproveDeleteResponseDto } from 'src/modules/status-approve/dto/controller/delete-status-approve.dto';
+} from '../../modules/status-approve/dto/controller/update-status-approve.dto';
+import { StatusApproveDeleteResponseDto } from '../../modules/status-approve/dto/controller/delete-status-approve.dto';
 import { IStatusApproveController } from './types/status-approve.controller.interface';
 import { IStatusApproveService } from './types/status-approve.service.interface';
 import { KFI } from '../../common/utils/di';
@@ -33,7 +33,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
-import { StatusApproveEntity } from 'src/modules/status-approve/entities/status-approve.entity';
+import { StatusApproveEntity } from '../../modules/status-approve/entities/status-approve.entity';
 
 @ApiTags('Работа с StatusApprove')
 @Controller('status-approve')

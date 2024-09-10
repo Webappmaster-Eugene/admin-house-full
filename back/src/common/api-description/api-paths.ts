@@ -1,149 +1,152 @@
-import { AppInfoUpdateRequestDto } from 'src/modules/app-info/dto/controller/update-app-info.dto';
-import { AppInfoGetResponseDto } from 'src/modules/app-info/dto/controller/get-app-info.dto';
-import { GUARDS } from 'src/common/api-description/guards';
-import { USER_ROLES } from 'src/common/api-description/user-roles';
-import { AuthRegisterRequestDto, AuthRegisterResponseDto } from 'src/modules/auth/dto/controller/auth.register.dto';
+import { AppInfoUpdateRequestDto } from '../../modules/app-info/dto/controller/update-app-info.dto';
+import { AppInfoGetResponseDto } from '../../modules/app-info/dto/controller/get-app-info.dto';
+import { GUARDS } from '../../common/api-description/guards';
+import { USER_ROLES } from '../../common/api-description/user-roles';
+import { AuthRegisterRequestDto, AuthRegisterResponseDto } from '../../modules/auth/dto/controller/auth.register.dto';
 import {
   AuthRegisterWithRoleRequestDto,
   AuthRegisterWithRoleResponseDto,
-} from 'src/modules/auth/dto/controller/auth.register-with-role.dto';
-import { SIDE_EFFECTS } from 'src/common/api-description/side-effects';
-import { METHODS } from 'src/common/api-description/method.enum';
-import { ADDITIONAL_INFO } from 'src/common/api-description/additional-request-info';
-import { FEATURES } from 'src/common/api-description/features';
-import { AuthRefreshKeysResponseDto } from 'src/modules/auth/dto/controller/auth.refresh-keys.dto';
-import { AuthLoginRequestDto, AuthLoginResponseDto } from 'src/modules/auth/dto/controller/auth.login.dto';
-import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from 'src/modules/auth/dto/controller/auth.generate-key.dto';
-import { AuthGetKeyResponseDto } from 'src/modules/auth/dto/controller/auth.get-key.dto';
-import { UserGetResponseDto } from 'src/modules/user/dto/controller/get-user.dto';
-import { QueryParamsAll } from 'src/common/api-description/query-params-all';
-import { UserCreateRequestDto, UserCreateResponseDto } from 'src/modules/user/dto/controller/create-user.dto';
-import { UserUpdateRequestDto, UserUpdateResponseDto } from 'src/modules/user/dto/controller/update-user.dto';
-import { UserDeleteResponseDto } from 'src/modules/user/dto/controller/delete-user.dto';
-import { UserAddToWorkspaceRequestDto, UserAddToWorkspaceResponseDto } from 'src/modules/user/dto/controller/add-to-workspace.dto';
-import { UserAddToOrganizationRequestDto, UserAddToOrganizationResponseDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
-import { UserAddToProjectRequestDto, UserAddToProjectResponseDto } from 'src/modules/user/dto/controller/add-to-project.dto';
-import { WorkspaceGetResponseDto } from 'src/modules/workspace/dto/controller/get-workspace.dto';
-import { WorkspaceGetAllResponseDto } from 'src/modules/workspace/dto/controller/get-all-workspaces.dto';
-import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from 'src/modules/workspace/dto/controller/create-workspace.dto';
-import { WorkspaceUpdateRequestDto, WorkspaceUpdateResponseDto } from 'src/modules/workspace/dto/controller/update-workspace.dto';
-import { WorkspaceDeleteResponseDto } from 'src/modules/workspace/dto/controller/delete-workspace.dto';
+} from '../../modules/auth/dto/controller/auth.register-with-role.dto';
+import { SIDE_EFFECTS } from '../../common/api-description/side-effects';
+import { METHODS } from '../../common/api-description/method.enum';
+import { ADDITIONAL_INFO } from '../../common/api-description/additional-request-info';
+import { FEATURES } from '../../common/api-description/features';
+import { AuthRefreshKeysResponseDto } from '../../modules/auth/dto/controller/auth.refresh-keys.dto';
+import { AuthLoginRequestDto, AuthLoginResponseDto } from '../../modules/auth/dto/controller/auth.login.dto';
+import { AuthGenerateKeyRequestDto, AuthGenerateKeyResponseDto } from '../../modules/auth/dto/controller/auth.generate-key.dto';
+import { AuthGetKeyResponseDto } from '../../modules/auth/dto/controller/auth.get-key.dto';
+import { UserGetResponseDto } from '../../modules/user/dto/controller/get-user.dto';
+import { QueryParamsAll } from '../../common/api-description/query-params-all';
+import { UserCreateRequestDto, UserCreateResponseDto } from '../../modules/user/dto/controller/create-user.dto';
+import { UserUpdateRequestDto, UserUpdateResponseDto } from '../../modules/user/dto/controller/update-user.dto';
+import { UserDeleteResponseDto } from '../../modules/user/dto/controller/delete-user.dto';
+import { UserAddToWorkspaceRequestDto, UserAddToWorkspaceResponseDto } from '../../modules/user/dto/controller/add-to-workspace.dto';
+import {
+  UserAddToOrganizationRequestDto,
+  UserAddToOrganizationResponseDto,
+} from '../../modules/user/dto/controller/add-to-organization.dto';
+import { UserAddToProjectRequestDto, UserAddToProjectResponseDto } from '../../modules/user/dto/controller/add-to-project.dto';
+import { WorkspaceGetResponseDto } from '../../modules/workspace/dto/controller/get-workspace.dto';
+import { WorkspaceGetAllResponseDto } from '../../modules/workspace/dto/controller/get-all-workspaces.dto';
+import { WorkspaceCreateRequestDto, WorkspaceCreateResponseDto } from '../../modules/workspace/dto/controller/create-workspace.dto';
+import { WorkspaceUpdateRequestDto, WorkspaceUpdateResponseDto } from '../../modules/workspace/dto/controller/update-workspace.dto';
+import { WorkspaceDeleteResponseDto } from '../../modules/workspace/dto/controller/delete-workspace.dto';
 import {
   WorkspaceChangeOwnerRequestDto,
   WorkspaceChangeOwnerResponseDto,
-} from 'src/modules/workspace/dto/controller/change-owner-workspace.dto';
-import { OrganizationGetResponseDto } from 'src/modules/organization/dto/controller/get-organization.dto';
-import { OrganizationGetAllResponseDto } from 'src/modules/organization/dto/controller/get-all-organizations.dto';
-import { OrganizationCreateResponseDto } from 'src/modules/organization/dto/controller/create-organization.dto';
+} from '../../modules/workspace/dto/controller/change-owner-workspace.dto';
+import { OrganizationGetResponseDto } from '../../modules/organization/dto/controller/get-organization.dto';
+import { OrganizationGetAllResponseDto } from '../../modules/organization/dto/controller/get-all-organizations.dto';
+import { OrganizationCreateResponseDto } from '../../modules/organization/dto/controller/create-organization.dto';
 import {
   OrganizationUpdateRequestDto,
   OrganizationUpdateResponseDto,
-} from 'src/modules/organization/dto/controller/update-organization.dto';
-import { OrganizationDeleteResponseDto } from 'src/modules/organization/dto/controller/delete-organization.dto';
-import { ProjectGetResponseDto } from 'src/modules/project/dto/controller/get-project.dto';
-import { ProjectGetAllResponseDto } from 'src/modules/project/dto/controller/get-all-projects.dto';
-import { ProjectCreateRequestDto, ProjectCreateResponseDto } from 'src/modules/project/dto/controller/create-project.dto';
-import { ProjectUpdateRequestDto, ProjectUpdateResponseDto } from 'src/modules/project/dto/controller/update-project.dto';
-import { ProjectDeleteResponseDto } from 'src/modules/project/dto/controller/delete-project.dto';
-import { HandbookGetResponseDto } from 'src/modules/handbook/dto/controller/get-handbook.dto';
-import { HandbookGetAllResponseDto } from 'src/modules/handbook/dto/controller/get-all-handbooks.dto';
-import { HandbookCreateRequestDto, HandbookCreateResponseDto } from 'src/modules/handbook/dto/controller/create-handbook.dto';
-import { HandbookUpdateRequestDto, HandbookUpdateResponseDto } from 'src/modules/handbook/dto/controller/update-handbook.dto';
-import { HandbookDeleteResponseDto } from 'src/modules/handbook/dto/controller/delete-handbook.dto';
-import { RoleGetResponseDto } from 'src/modules/roles/dto/controller/get-role.dto';
-import { RoleGetAllResponseDto } from 'src/modules/roles/dto/controller/get-all-roles.dto';
-import { RoleCreateRequestDto, RoleCreateResponseDto } from 'src/modules/roles/dto/controller/create-role.dto';
-import { RoleUpdateRequestDto, RoleUpdateResponseDto } from 'src/modules/roles/dto/controller/update-role.dto';
-import { RoleDeleteResponseDto } from 'src/modules/roles/dto/controller/delete-role.dto';
-import { GlobalCategoryMaterialGetResponseDto } from 'src/modules/global-category-material/dto/controller/get-global-category-material.dto';
-import { GlobalCategoryMaterialGetAllResponseDto } from 'src/modules/global-category-material/dto/controller/get-all-global-category-materials.dto';
+} from '../../modules/organization/dto/controller/update-organization.dto';
+import { OrganizationDeleteResponseDto } from '../../modules/organization/dto/controller/delete-organization.dto';
+import { ProjectGetResponseDto } from '../../modules/project/dto/controller/get-project.dto';
+import { ProjectGetAllResponseDto } from '../../modules/project/dto/controller/get-all-projects.dto';
+import { ProjectCreateRequestDto, ProjectCreateResponseDto } from '../../modules/project/dto/controller/create-project.dto';
+import { ProjectUpdateRequestDto, ProjectUpdateResponseDto } from '../../modules/project/dto/controller/update-project.dto';
+import { ProjectDeleteResponseDto } from '../../modules/project/dto/controller/delete-project.dto';
+import { HandbookGetResponseDto } from '../../modules/handbook/dto/controller/get-handbook.dto';
+import { HandbookGetAllResponseDto } from '../../modules/handbook/dto/controller/get-all-handbooks.dto';
+import { HandbookCreateRequestDto, HandbookCreateResponseDto } from '../../modules/handbook/dto/controller/create-handbook.dto';
+import { HandbookUpdateRequestDto, HandbookUpdateResponseDto } from '../../modules/handbook/dto/controller/update-handbook.dto';
+import { HandbookDeleteResponseDto } from '../../modules/handbook/dto/controller/delete-handbook.dto';
+import { RoleGetResponseDto } from '../../modules/roles/dto/controller/get-role.dto';
+import { RoleGetAllResponseDto } from '../../modules/roles/dto/controller/get-all-roles.dto';
+import { RoleCreateRequestDto, RoleCreateResponseDto } from '../../modules/roles/dto/controller/create-role.dto';
+import { RoleUpdateRequestDto, RoleUpdateResponseDto } from '../../modules/roles/dto/controller/update-role.dto';
+import { RoleDeleteResponseDto } from '../../modules/roles/dto/controller/delete-role.dto';
+import { GlobalCategoryMaterialGetResponseDto } from '../../modules/global-category-material/dto/controller/get-global-category-material.dto';
+import { GlobalCategoryMaterialGetAllResponseDto } from '../../modules/global-category-material/dto/controller/get-all-global-category-materials.dto';
 import {
   GlobalCategoryMaterialCreateRequestDto,
   GlobalCategoryMaterialCreateResponseDto,
-} from 'src/modules/global-category-material/dto/controller/create-global-category-material.dto';
+} from '../../modules/global-category-material/dto/controller/create-global-category-material.dto';
 import {
   GlobalCategoryMaterialUpdateRequestDto,
   GlobalCategoryMaterialUpdateResponseDto,
-} from 'src/modules/global-category-material/dto/controller/update-global-category-material.dto';
-import { GlobalCategoryMaterialDeleteResponseDto } from 'src/modules/global-category-material/dto/controller/delete-global-category-material.dto';
-import { StatusResourceGetResponseDto } from 'src/modules/status-resource/dto/controller/get-status-resource.dto';
-import { StatusResourceGetAllResponseDto } from 'src/modules/status-resource/dto/controller/get-all-status-resources.dto';
+} from '../../modules/global-category-material/dto/controller/update-global-category-material.dto';
+import { GlobalCategoryMaterialDeleteResponseDto } from '../../modules/global-category-material/dto/controller/delete-global-category-material.dto';
+import { StatusResourceGetResponseDto } from '../../modules/status-resource/dto/controller/get-status-resource.dto';
+import { StatusResourceGetAllResponseDto } from '../../modules/status-resource/dto/controller/get-all-status-resources.dto';
 import {
   StatusResourceUpdateRequestDto,
   StatusResourceUpdateResponseDto,
-} from 'src/modules/status-resource/dto/controller/update-status-resource.dto';
-import { StatusResourceCreateResponseDto } from 'src/modules/status-resource/dto/controller/create-status-resource.dto';
-import { StatusResourceDeleteResponseDto } from 'src/modules/status-resource/dto/controller/delete-status-resource.dto';
-import { CategoryMaterialGetResponseDto } from 'src/modules/category-material/dto/controller/get-category-material.dto';
-import { CategoryMaterialGetAllResponseDto } from 'src/modules/category-material/dto/controller/get-all-category-materials.dto';
+} from '../../modules/status-resource/dto/controller/update-status-resource.dto';
+import { StatusResourceCreateResponseDto } from '../../modules/status-resource/dto/controller/create-status-resource.dto';
+import { StatusResourceDeleteResponseDto } from '../../modules/status-resource/dto/controller/delete-status-resource.dto';
+import { CategoryMaterialGetResponseDto } from '../../modules/category-material/dto/controller/get-category-material.dto';
+import { CategoryMaterialGetAllResponseDto } from '../../modules/category-material/dto/controller/get-all-category-materials.dto';
 import {
   CategoryMaterialUpdateRequestDto,
   CategoryMaterialUpdateResponseDto,
-} from 'src/modules/category-material/dto/controller/update-category-material.dto';
-import { CategoryMaterialCreateRequestDto } from 'src/modules/category-material/dto/controller/create-category-material.dto';
-import { CategoryMaterialDeleteResponseDto } from 'src/modules/category-material/dto/controller/delete-category-material.dto';
-import { ResponsiblePartnerProducerGetResponseDto } from 'src/modules/responsible-partner-producer/dto/controller/get-responsible-partner-producer.dto';
-import { ResponsiblePartnerProducerGetAllResponseDto } from 'src/modules/responsible-partner-producer/dto/controller/get-all-responsible-partner-producers.dto';
+} from '../../modules/category-material/dto/controller/update-category-material.dto';
+import { CategoryMaterialCreateRequestDto } from '../../modules/category-material/dto/controller/create-category-material.dto';
+import { CategoryMaterialDeleteResponseDto } from '../../modules/category-material/dto/controller/delete-category-material.dto';
+import { ResponsiblePartnerProducerGetResponseDto } from '../../modules/responsible-partner-producer/dto/controller/get-responsible-partner-producer.dto';
+import { ResponsiblePartnerProducerGetAllResponseDto } from '../../modules/responsible-partner-producer/dto/controller/get-all-responsible-partner-producers.dto';
 import {
   ResponsiblePartnerProducerCreateRequestDto,
   ResponsiblePartnerProducerCreateResponseDto,
-} from 'src/modules/responsible-partner-producer/dto/controller/create-responsible-partner-producer.dto';
+} from '../../modules/responsible-partner-producer/dto/controller/create-responsible-partner-producer.dto';
 import {
   ResponsiblePartnerProducerUpdateRequestDto,
   ResponsiblePartnerProducerUpdateResponseDto,
-} from 'src/modules/responsible-partner-producer/dto/controller/update-responsible-partner-producer.dto';
-import { ResponsiblePartnerProducerDeleteResponseDto } from 'src/modules/responsible-partner-producer/dto/controller/delete-responsible-partner-producer.dto';
-import { FieldTypeGetResponseDto } from 'src/modules/field-type/dto/controller/get-field-type.dto';
-import { FieldTypeGetAllResponseDto } from 'src/modules/field-type/dto/controller/get-all-field-types.dto';
-import { FieldTypeCreateRequestDto, FieldTypeCreateResponseDto } from 'src/modules/field-type/dto/controller/create-field-type.dto';
-import { FieldTypeUpdateRequestDto, FieldTypeUpdateResponseDto } from 'src/modules/field-type/dto/controller/update-field-type.dto';
-import { FieldTypeDeleteResponseDto } from 'src/modules/field-type/dto/controller/delete-field-type.dto';
-import { FieldUnitMeasurementGetResponseDto } from 'src/modules/field-unit-measurement/dto/controller/get-field-unit-measurement.dto';
-import { FieldUnitMeasurementGetAllResponseDto } from 'src/modules/field-unit-measurement/dto/controller/get-all-field-unit-measurements.dto';
+} from '../../modules/responsible-partner-producer/dto/controller/update-responsible-partner-producer.dto';
+import { ResponsiblePartnerProducerDeleteResponseDto } from '../../modules/responsible-partner-producer/dto/controller/delete-responsible-partner-producer.dto';
+import { FieldTypeGetResponseDto } from '../../modules/field-type/dto/controller/get-field-type.dto';
+import { FieldTypeGetAllResponseDto } from '../../modules/field-type/dto/controller/get-all-field-types.dto';
+import { FieldTypeCreateRequestDto, FieldTypeCreateResponseDto } from '../../modules/field-type/dto/controller/create-field-type.dto';
+import { FieldTypeUpdateRequestDto, FieldTypeUpdateResponseDto } from '../../modules/field-type/dto/controller/update-field-type.dto';
+import { FieldTypeDeleteResponseDto } from '../../modules/field-type/dto/controller/delete-field-type.dto';
+import { FieldUnitMeasurementGetResponseDto } from '../../modules/field-unit-measurement/dto/controller/get-field-unit-measurement.dto';
+import { FieldUnitMeasurementGetAllResponseDto } from '../../modules/field-unit-measurement/dto/controller/get-all-field-unit-measurements.dto';
 import {
   FieldUnitMeasurementCreateRequestDto,
   FieldUnitMeasurementCreateResponseDto,
-} from 'src/modules/field-unit-measurement/dto/controller/create-field-unit-measurement.dto';
+} from '../../modules/field-unit-measurement/dto/controller/create-field-unit-measurement.dto';
 import {
   FieldUnitMeasurementUpdateRequestDto,
   FieldUnitMeasurementUpdateResponseDto,
-} from 'src/modules/field-unit-measurement/dto/controller/update-field-unit-measurement.dto';
-import { FieldUnitMeasurementDeleteResponseDto } from 'src/modules/field-unit-measurement/dto/controller/delete-field-unit-measurement.dto';
-import { FieldVariantsForSelectorFieldTypeGetAllResponseDto } from 'src/modules/field-variants-for-selector-field-type/dto/controller/get-all-field-variants-for-selector-field-type.dto';
-import { FieldVariantsForSelectorFieldTypeGetResponseDto } from 'src/modules/field-variants-for-selector-field-type/dto/controller/get-field-variants-for-selector-field-type.dto';
+} from '../../modules/field-unit-measurement/dto/controller/update-field-unit-measurement.dto';
+import { FieldUnitMeasurementDeleteResponseDto } from '../../modules/field-unit-measurement/dto/controller/delete-field-unit-measurement.dto';
+import { FieldVariantsForSelectorFieldTypeGetAllResponseDto } from '../../modules/field-variants-for-selector-field-type/dto/controller/get-all-field-variants-for-selector-field-type.dto';
+import { FieldVariantsForSelectorFieldTypeGetResponseDto } from '../../modules/field-variants-for-selector-field-type/dto/controller/get-field-variants-for-selector-field-type.dto';
 import {
   FieldVariantsForSelectorFieldTypeCreateRequestDto,
   FieldVariantsForSelectorFieldTypeCreateResponseDto,
-} from 'src/modules/field-variants-for-selector-field-type/dto/controller/create-field-variants-for-selector-field-type.dto';
+} from '../../modules/field-variants-for-selector-field-type/dto/controller/create-field-variants-for-selector-field-type.dto';
 import {
   FieldVariantsForSelectorFieldTypeUpdateRequestDto,
   FieldVariantsForSelectorFieldTypeUpdateResponseDto,
-} from 'src/modules/field-variants-for-selector-field-type/dto/controller/update-field-variants-for-selector-field-type.dto';
-import { FieldVariantsForSelectorFieldTypeDeleteResponseDto } from 'src/modules/field-variants-for-selector-field-type/dto/controller/delete-field-variants-for-selector-field-type.dto';
-import { StatusApproveGetResponseDto } from 'src/modules/status-approve/dto/controller/get-status-approve.dto';
-import { StatusApproveGetAllResponseDto } from 'src/modules/status-approve/dto/controller/get-all-status-approve.dto';
+} from '../../modules/field-variants-for-selector-field-type/dto/controller/update-field-variants-for-selector-field-type.dto';
+import { FieldVariantsForSelectorFieldTypeDeleteResponseDto } from '../../modules/field-variants-for-selector-field-type/dto/controller/delete-field-variants-for-selector-field-type.dto';
+import { StatusApproveGetResponseDto } from '../../modules/status-approve/dto/controller/get-status-approve.dto';
+import { StatusApproveGetAllResponseDto } from '../../modules/status-approve/dto/controller/get-all-status-approve.dto';
 import {
   StatusApproveUpdateRequestDto,
   StatusApproveUpdateResponseDto,
-} from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
-import { StatusApproveCreateResponseDto } from 'src/modules/status-approve/dto/controller/create-status-approve.dto';
-import { StatusApproveDeleteResponseDto } from 'src/modules/status-approve/dto/controller/delete-status-approve.dto';
-import { MaterialGetResponseDto } from 'src/modules/material/dto/controller/get-material.dto';
-import { MaterialGetAllResponseDto } from 'src/modules/material/dto/controller/get-all-materials.dto';
-import { MaterialCreateRequestDto, MaterialCreateResponseDto } from 'src/modules/material/dto/controller/create-material.dto';
-import { MaterialUpdateRequestDto, MaterialUpdateResponseDto } from 'src/modules/material/dto/controller/update-material.dto';
-import { MaterialDeleteResponseDto } from 'src/modules/material/dto/controller/delete-material.dto';
-import { CharacteristicsMaterialGetResponseDto } from 'src/modules/characteristics-material/dto/controller/get-characteristics-material.dto';
-import { CharacteristicsMaterialGetAllResponseDto } from 'src/modules/characteristics-material/dto/controller/get-all-characteristics-materials.dto';
+} from '../../modules/status-approve/dto/controller/update-status-approve.dto';
+import { StatusApproveCreateResponseDto } from '../../modules/status-approve/dto/controller/create-status-approve.dto';
+import { StatusApproveDeleteResponseDto } from '../../modules/status-approve/dto/controller/delete-status-approve.dto';
+import { MaterialGetResponseDto } from '../../modules/material/dto/controller/get-material.dto';
+import { MaterialGetAllResponseDto } from '../../modules/material/dto/controller/get-all-materials.dto';
+import { MaterialCreateRequestDto, MaterialCreateResponseDto } from '../../modules/material/dto/controller/create-material.dto';
+import { MaterialUpdateRequestDto, MaterialUpdateResponseDto } from '../../modules/material/dto/controller/update-material.dto';
+import { MaterialDeleteResponseDto } from '../../modules/material/dto/controller/delete-material.dto';
+import { CharacteristicsMaterialGetResponseDto } from '../../modules/characteristics-material/dto/controller/get-characteristics-material.dto';
+import { CharacteristicsMaterialGetAllResponseDto } from '../../modules/characteristics-material/dto/controller/get-all-characteristics-materials.dto';
 import {
   CharacteristicsMaterialCreateRequestDto,
   CharacteristicsMaterialCreateResponseDto,
-} from 'src/modules/characteristics-material/dto/controller/create-characteristics-material.dto';
+} from '../../modules/characteristics-material/dto/controller/create-characteristics-material.dto';
 import {
   CharacteristicsMaterialUpdateRequestDto,
   CharacteristicsMaterialUpdateResponseDto,
-} from 'src/modules/characteristics-material/dto/controller/update-characteristics-material.dto';
-import { CharacteristicsMaterialDeleteResponseDto } from 'src/modules/characteristics-material/dto/controller/delete-characteristics-material.dto';
+} from '../../modules/characteristics-material/dto/controller/update-characteristics-material.dto';
+import { CharacteristicsMaterialDeleteResponseDto } from '../../modules/characteristics-material/dto/controller/delete-characteristics-material.dto';
 
 interface IAPI_ROUTE {
   METHOD: METHODS;

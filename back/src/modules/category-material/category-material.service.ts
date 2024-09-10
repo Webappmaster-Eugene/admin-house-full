@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CategoryMaterialEntity } from './entities/category-material.entity';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
@@ -8,19 +8,23 @@ import { ICategoryMaterialService } from './types/category-material.service.inte
 import { CategoryMaterialCreateRequestDto } from './dto/controller/create-category-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
-import { IMaterialService } from 'src/modules/material/types/material.service.interface';
-import { ICharacteristicsMaterialService } from 'src/modules/characteristics-material/types/characteristics-material.service.interface';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
+import { IMaterialService } from '../../modules/material/types/material.service.interface';
+import { ICharacteristicsMaterialService } from '../../modules/characteristics-material/types/characteristics-material.service.interface';
+import { MaterialService } from 'src/modules/material/material.service';
 
 @Injectable()
 export class CategoryMaterialService implements ICategoryMaterialService {
   constructor(
     @Inject(KFI.CATEGORY_MATERIAL_REPOSITORY)
     private readonly categoryMaterialRepository: ICategoryMaterialRepository,
-    @Inject(KFI.MATERIAL_SERVICE)
-    private readonly materialService: IMaterialService,
     @Inject(KFI.CHARACTERISTICS_MATERIAL_SERVICE)
     private readonly characteristicsMaterialService: ICharacteristicsMaterialService,
+    //@Inject(KFI.MATERIAL_SERVICE)
+    //private readonly materialService: IMaterialService,
+    //@Inject(forwardRef(() => KFI.MATERIAL_SERVICE)),
+    @Inject(forwardRef(() => KFI.MATERIAL_SERVICE))
+    private readonly materialService: IMaterialService,
   ) {}
 
   async getById(categoryMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {

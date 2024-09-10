@@ -2,15 +2,15 @@ import { IControllerCommon } from '../../../common/types/main/slices/controller.
 import {
   StatusApproveCreateRequestDto,
   StatusApproveCreateResponseDto,
-} from 'src/modules/status-approve/dto/controller/create-status-approve.dto';
+} from '../../../modules/status-approve/dto/controller/create-status-approve.dto';
 import {
   StatusApproveUpdateRequestDto,
   StatusApproveUpdateResponseDto,
-} from 'src/modules/status-approve/dto/controller/update-status-approve.dto';
-import { StatusApproveGetResponseDto } from 'src/modules/status-approve/dto/controller/get-status-approve.dto';
-import { StatusApproveGetAllResponseDto } from 'src/modules/status-approve/dto/controller/get-all-status-approve.dto';
+} from '../../../modules/status-approve/dto/controller/update-status-approve.dto';
+import { StatusApproveGetResponseDto } from '../../../modules/status-approve/dto/controller/get-status-approve.dto';
+import { StatusApproveGetAllResponseDto } from '../../../modules/status-approve/dto/controller/get-all-status-approve.dto';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { StatusApproveDeleteResponseDto } from 'src/modules/status-approve/dto/controller/delete-status-approve.dto';
+import { StatusApproveDeleteResponseDto } from '../../../modules/status-approve/dto/controller/delete-status-approve.dto';
 import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';

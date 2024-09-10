@@ -1,5 +1,4 @@
 import { Material, PriceChanging } from '.prisma/client';
-import { MaterialEntity } from 'src/modules/material/entities/material.entity';
 
 export interface PriceChangingRelatedEntities {
   material: Material;

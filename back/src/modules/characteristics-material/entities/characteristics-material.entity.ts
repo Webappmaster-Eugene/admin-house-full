@@ -1,17 +1,4 @@
-import {
-  CharacteristicsMaterial,
-  EActiveStatuses,
-  FieldOfCategoryMaterial,
-  FieldType,
-  FieldUnitMeasurement,
-  Handbook,
-  Material,
-} from '.prisma/client';
-import { FieldOfCategoryMaterialEntity } from 'src/modules/field-of-category-material/entities/field-of-category-material.entity';
-import { MaterialEntity } from 'src/modules/material/entities/material.entity';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
-import { FieldTypeEntity } from 'src/modules/field-type/entities/field-type.entity';
-import { FieldUnitMeasurementEntity } from 'src/modules/field-unit-measurement/entities/field-unit-measurement.entity';
+import { CharacteristicsMaterial, EActiveStatuses, FieldOfCategoryMaterial, Handbook, Material } from '.prisma/client';
 
 export interface CharacteristicsMaterialRelatedEntities {
   material: Material;

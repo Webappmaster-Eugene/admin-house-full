@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TechLogChangesEntity } from 'src/modules/tech/tech-log-changes/entities/tech-log-changes.entity';
-import { ITechLogChangesService } from 'src/modules/tech/tech-log-changes/types/tech-log-changes.service.interface';
-import { TechLogChangesCreateRequestDto } from 'src/modules/tech/tech-log-changes/dto/controller/create-tech-log-changes.dto';
-import { ITechLogChangesRepository } from 'src/modules/tech/tech-log-changes/types/tech-log-changes.repository.interface';
+import { TechLogChangesEntity } from '../../../modules/tech/tech-log-changes/entities/tech-log-changes.entity';
+import { ITechLogChangesService } from '../../../modules/tech/tech-log-changes/types/tech-log-changes.service.interface';
+import { TechLogChangesCreateRequestDto } from '../../../modules/tech/tech-log-changes/dto/controller/create-tech-log-changes.dto';
+import { ITechLogChangesRepository } from '../../../modules/tech/tech-log-changes/types/tech-log-changes.repository.interface';
 import { InternalResponse, UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../../common/utils/di';
-import { IQueryParams } from 'src/common/decorators/query-params.decorator';
-import { EntityName } from 'src/common/types/entity.enum';
+import { IQueryParams } from '../../../common/decorators/query-params.decorator';
+import { EntityName } from '../../../common/types/entity.enum';
 
 @Injectable()
 export class TechLogChangesService implements ITechLogChangesService {

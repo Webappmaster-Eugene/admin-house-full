@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { COOKIE_KEYS } from '../../consts/cookie-keys';
+import { IConfigService } from '../../types/main/config.service.interface';
 
 export function refreshKeyExtractor(
   context: ExecutionContext,

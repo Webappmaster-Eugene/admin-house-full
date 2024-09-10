@@ -8,8 +8,8 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 import { RoleDeleteResponseDto } from '../dto/controller/delete-role.dto';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
-import { RoleEntity } from 'src/modules/roles/entities/role.entity';
+import { ExternalResponse } from '../../../common/types/responses/universal-external-response.interface';
+import { RoleEntity } from '../../../modules/roles/entities/role.entity';
 
 export interface IRoleController
   extends IControllerCommon<

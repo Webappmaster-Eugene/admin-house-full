@@ -13,9 +13,9 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { errorResponseHandler } from '../../../common/helpers/handlers/error-response.handler';
 import { okResponseHandler } from '../../../common/helpers/handlers/ok-response.handler';
 import { IQueryParams, QueryParams } from '../../../common/decorators/query-params.decorator';
-import { KFI } from 'src/common/utils/di';
+import { KFI } from '../../../common/utils/di';
 import { TechLogChangesGetAllCommand } from 'libs/contracts';
-import { IUrlParams, UrlParams } from 'src/common/decorators/url-params.decorator';
+import { IUrlParams, UrlParams } from '../../../common/decorators/url-params.decorator';
 
 @ApiTags('Работа с технической таблицей для логгирования действий всех пользователей')
 @Controller('tech-log-changes')

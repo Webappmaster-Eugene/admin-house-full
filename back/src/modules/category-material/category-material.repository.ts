@@ -11,11 +11,11 @@ import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repo
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { templateNameMapper } from 'src/common/helpers/handlers/template-name-mapper.handler';
-import { regexFieldCategoryReplacer } from 'src/common/helpers/regex/regexFieldCategoryReplacer';
-import { fieldCategoryMaterialExtractor } from 'src/common/helpers/regex/fieldCategoryMaterialExtractor';
-import { fieldOfCategoryMaterialTemplateReGenerator } from 'src/common/helpers/regex/fieldOfCategoryMaterialRegenerator';
-import { fieldOfCategoryMaterialTemplateGenerator } from 'src/common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
+import { templateNameMapper } from '../../common/helpers/handlers/template-name-mapper.handler';
+import { regexFieldCategoryReplacer } from '../../common/helpers/regex/regexFieldCategoryReplacer';
+import { fieldCategoryMaterialExtractor } from '../../common/helpers/regex/fieldCategoryMaterialExtractor';
+import { fieldOfCategoryMaterialTemplateReGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialRegenerator';
+import { fieldOfCategoryMaterialTemplateGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
 
 @Injectable()
 export class CategoryMaterialRepository implements ICategoryMaterialRepository {

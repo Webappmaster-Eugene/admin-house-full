@@ -13,7 +13,7 @@ import { KFI } from '../../common/utils/di';
 import { IHandbookService } from '../handbook/types/handbook.service.interface';
 import * as argon2 from 'argon2';
 import { UserAddToWorkspaceRequestDto } from './dto/controller/add-to-workspace.dto';
-import { BackendErrorNames, InternalError } from 'src/common/errors/errors-description.backend';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors-description.backend';
 import { CACHE_KEYS } from '../../common/consts/cache-keys';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
 import { cacheGetter } from '../../common/helpers/cashe/cache-getter';
@@ -24,11 +24,11 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { cacheRemoverBatch } from '../../common/helpers/cashe/cache-remover.batch';
 import { TransactionDbClient } from '../../common/types/transaction-prisma-client.type';
-import { UserAddToProjectRequestDto } from 'src/modules/user/dto/controller/add-to-project.dto';
-import { UserAddToOrganizationRequestDto } from 'src/modules/user/dto/controller/add-to-organization.dto';
-import { IProjectService } from 'src/modules/project/types/project.service.interface';
-import { IOrganizationService } from 'src/modules/organization/types/organization.service.interface';
-import { UserUpdateRolesRequestDto } from 'src/modules/user/dto/controller/update-user-roles.dto';
+import { UserAddToProjectRequestDto } from '../../modules/user/dto/controller/add-to-project.dto';
+import { UserAddToOrganizationRequestDto } from '../../modules/user/dto/controller/add-to-organization.dto';
+import { IProjectService } from '../../modules/project/types/project.service.interface';
+import { IOrganizationService } from '../../modules/organization/types/organization.service.interface';
+import { UserUpdateRolesRequestDto } from '../../modules/user/dto/controller/update-user-roles.dto';
 
 @Injectable()
 export class UserService implements IUserService {

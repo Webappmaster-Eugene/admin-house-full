@@ -15,8 +15,8 @@ export class OrganizationService implements IOrganizationService {
   constructor(
     @Inject(KFI.ORGANIZATION_REPOSITORY)
     private readonly organizationRepository: IOrganizationRepository,
-    @Inject(KFI.WORKSPACE_SERVICE)
-    private readonly workspaceService: IWorkspaceService,
+    // @Inject(KFI.WORKSPACE_SERVICE)
+    // private readonly workspaceService: IWorkspaceService,
   ) {}
 
   async getById(organizationId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<OrganizationEntity>> {

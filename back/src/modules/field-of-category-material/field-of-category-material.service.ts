@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
@@ -8,20 +8,36 @@ import { IFieldOfCategoryMaterialService } from './types/field-of-category-mater
 import { FieldOfCategoryMaterialUpdateRequestDto } from './dto/controller/update-field-of-category-material.dto';
 import { FieldOfCategoryMaterialCreateRequestDto } from './dto/controller/create-field-of-category-material.dto';
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
-import { IMaterialService } from 'src/modules/material/types/material.service.interface';
-import { dataInternalExtractor } from 'src/common/helpers/extractors/data-internal.extractor';
-import { ICategoryMaterialService } from 'src/modules/category-material/types/category-material.service.interface';
+import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
+import { ICategoryMaterialService } from '../../modules/category-material/types/category-material.service.interface';
+import { ModuleRef } from '@nestjs/core';
+import { CategoryMaterialService } from '../../modules/category-material/category-material.service';
+import { IMaterialService } from '../../modules/material/types/material.service.interface';
 
 @Injectable()
+// ,OnModuleInit
 export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialService {
+  //private categoryMaterialService: ICategoryMaterialService;
+  //private categoryMaterialService: CategoryMaterialService;
+
   constructor(
     @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_REPOSITORY)
     private readonly fieldOfCategoryMaterialRepository: IFieldOfCategoryMaterialRepository,
-    @Inject(KFI.MATERIAL_SERVICE)
-    private readonly materialService: IMaterialService,
-    @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
+    //@Inject(KFI.FIELD_OF_CATEGORY_MATERIAL__CATEGORY_MATERIAL_SERVICE)
+    //private readonly fieldOfCategoryMaterial_сategoryMaterialService: IFieldOfCategoryMaterial_CategoryMaterialService,
+    // @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
+    // private categoryMaterialService: ICategoryMaterialService,
+    // @Inject(KFI.MATERIAL_SERVICE)
+    // private materialService: IMaterialService,
+    @Inject(forwardRef(() => KFI.CATEGORY_MATERIAL_SERVICE))
     private readonly categoryMaterialService: ICategoryMaterialService,
+
+    //private moduleRef: ModuleRef,
   ) {}
+
+  // async onModuleInit() {
+  //   this.categoryMaterialService = await this.moduleRef.resolve(CategoryMaterialService);
+  // }
 
   async getById(
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -85,6 +101,7 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     if (isCategoryMaterialNameMustChange) {
       oldFieldOfCategoryMaterial.categoriesMaterialsTemplatesIncludesThisField.map(async categoryMaterial => {
         await this.categoryMaterialService.rebuildCategoryMaterialNameById(categoryMaterial.uuid);
+        //await this.fieldOfCategoryMaterial_сategoryMaterialService.rebuildCategoryMaterialNameById(categoryMaterial.uuid);
       });
     }
     return new InternalResponse(updatedFieldOfCategoryMaterial);

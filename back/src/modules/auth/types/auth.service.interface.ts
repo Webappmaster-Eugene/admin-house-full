@@ -5,9 +5,9 @@ import { AuthEntity } from '../entities/auth.entity';
 import { AuthGenerateKeyRequestDto } from '../dto/controller/auth.generate-key.dto';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleRequestParamDto } from '../dto/controller/auth.register-with-role.dto';
 import { AuthLoginRequestDto } from '../dto/controller/auth.login.dto';
-import { AuthRefreshKeysEntity } from 'src/modules/auth/entities/auth-refresh-keys.entity';
+import { AuthRefreshKeysEntity } from '../../../modules/auth/entities/auth-refresh-keys.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { TokenType } from 'src/common/types/token-type.enum';
+import { TokenType } from '../../../common/types/token-type.enum';
 import { EActiveStatuses } from '.prisma/client';
 
 export interface IAuthService {

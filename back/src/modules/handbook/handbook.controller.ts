@@ -25,7 +25,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 
 @ApiTags('Работа с Handbook')
 @Controller('handbook')

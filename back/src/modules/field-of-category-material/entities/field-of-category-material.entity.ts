@@ -7,13 +7,6 @@ import {
   FieldVariantsForSelectorFieldType,
   Handbook,
 } from '.prisma/client';
-import { CategoryMaterialEntity } from 'src/modules/category-material/entities/category-material.entity';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
-import { FieldTypeEntity } from 'src/modules/field-type/entities/field-type.entity';
-import { FieldUnitMeasurementEntity } from 'src/modules/field-unit-measurement/entities/field-unit-measurement.entity';
-import { FieldVariantsForSelectorFieldTypeEntity } from 'src/modules/field-variants-for-selector-field-type/entities/field-variants-for-selector-field-type.entity';
-import { z } from 'zod';
-import { CategoryMaterialBusinessValueSchema } from 'libs/contracts/src/models/category-material/category-material-business-value.schema';
 
 export interface FieldOfCategoryMaterialRelatedEntities {
   categoriesMaterial: CategoryMaterial[];

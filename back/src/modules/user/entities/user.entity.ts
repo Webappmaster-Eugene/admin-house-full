@@ -1,12 +1,4 @@
 import { EActiveStatuses, Handbook, Organization, Project, Role, User, Workspace } from '.prisma/client';
-import { RoleEntity } from 'src/modules/roles/entities/role.entity';
-import { WorkspaceEntity } from 'src/modules/workspace/entities/workspace.entity';
-import { z } from 'zod';
-import { RoleBusinessValueSchema } from 'libs/contracts/src/models/role/role-business-value.schema';
-import { ProjectBusinessValueSchema } from 'libs/contracts/src/models/project/project-business-value.schema';
-import { HandbookBusinessValueSchema } from 'libs/contracts/src/models/handbook/handbook-business-value.schema';
-import { WorkspaceBusinessValueSchema } from 'libs/contracts/src/models/workspace/workspace-business-value.schema';
-import { OrganizationBusinessValueSchema } from 'libs/contracts/src/models/organization/organization-business-value.schema';
 
 export interface UserRelatedEntities {
   roles: Role[];

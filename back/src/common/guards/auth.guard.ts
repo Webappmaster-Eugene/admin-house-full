@@ -8,12 +8,12 @@ import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { KFI } from '../utils/di';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
-import { IUserService } from 'src/modules/user/types/user.service.interface';
-import { BACKEND_ERRORS, BackendErrorNames } from 'src/common/errors';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
-import { IAuthService } from 'src/modules/auth/types/auth.service.interface';
-import { COOKIE_KEYS } from 'src/common/consts/cookie-keys';
+import { IUserService } from '../../modules/user/types/user.service.interface';
+import { BACKEND_ERRORS, BackendErrorNames } from '../../common/errors';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
+import { IConfigService } from '../../common/types/main/config.service.interface';
+import { IAuthService } from '../../modules/auth/types/auth.service.interface';
+import { COOKIE_KEYS } from '../../common/consts/cookie-keys';
 import { EUserTypeVariants } from '.prisma/client';
 
 @Injectable()

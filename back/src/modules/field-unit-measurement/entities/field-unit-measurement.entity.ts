@@ -1,5 +1,4 @@
 import { EActiveStatuses, FieldUnitMeasurement, Handbook } from '.prisma/client';
-import { HandbookEntity } from 'src/modules/handbook/entities/handbook.entity';
 
 export interface FieldUnitMeasurementRelatedEntities {
   handbook: Handbook;

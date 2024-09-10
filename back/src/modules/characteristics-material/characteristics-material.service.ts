@@ -10,7 +10,7 @@ import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { IFieldOfCategoryMaterialService } from '../../modules/field-of-category-material/types/field-of-category-material.service.interface';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { IMaterialService } from 'src/modules/material/types/material.service.interface';
+import { IMaterialService } from '../../modules/material/types/material.service.interface';
 
 @Injectable()
 export class CharacteristicsMaterialService implements ICharacteristicsMaterialService {

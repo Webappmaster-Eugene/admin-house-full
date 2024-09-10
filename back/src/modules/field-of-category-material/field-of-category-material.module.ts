@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { KFI } from '../../common/utils/di';
 import { FieldOfCategoryMaterialService } from './field-of-category-material.service';
 import { FieldOfCategoryMaterialRepository } from './field-of-category-material.repository';
 import { FieldOfCategoryMaterialController } from './field-of-category-material.controller';
+import { CategoryMaterialModule } from '../../modules/category-material/category-material.module';
+import { MaterialModule } from '../../modules/material/material.module';
 
 @Module({
   providers: [
@@ -16,7 +18,11 @@ import { FieldOfCategoryMaterialController } from './field-of-category-material.
     },
   ],
   controllers: [FieldOfCategoryMaterialController],
-  imports: [],
+  imports: [
+    //FieldOfCategoryMaterial_CategoryMaterialModule
+    forwardRef(() => CategoryMaterialModule),
+    //MaterialModule,
+  ],
   exports: [KFI.FIELD_OF_CATEGORY_MATERIAL_SERVICE],
 })
 export class FieldOfCategoryMaterialModule {}

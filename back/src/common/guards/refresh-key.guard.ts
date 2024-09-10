@@ -6,11 +6,11 @@ import { ILogger } from '../types/main/logger.interface';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { KFI } from '../utils/di';
 import { dataInternalExtractor } from '../helpers/extractors/data-internal.extractor';
-import { IUserService } from 'src/modules/user/types/user.service.interface';
-import { BACKEND_ERRORS, BackendErrorNames } from 'src/common/errors/errors-description.backend';
-import { ExternalResponse } from 'src/common/types/responses/universal-external-response.interface';
-import { refreshKeyExtractor } from 'src/common/helpers/extractors/refresh-key.extractor';
-import { IConfigService } from 'src/common/types/main/config.service.interface';
+import { IUserService } from '../../modules/user/types/user.service.interface';
+import { BACKEND_ERRORS, BackendErrorNames } from '../../common/errors/errors-description.backend';
+import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
+import { refreshKeyExtractor } from '../../common/helpers/extractors/refresh-key.extractor';
+import { IConfigService } from '../../common/types/main/config.service.interface';
 
 @Injectable()
 export class RefreshKeyGuard implements CanActivate {
