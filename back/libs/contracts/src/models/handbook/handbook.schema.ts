@@ -4,7 +4,7 @@ import { EActiveStatusVariants } from '../../enums';
 export const HandbookSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
-  handbookStatus: EActiveStatusVariants,
+  handbookStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   description: z.string().nullable().optional(),
   canCustomerView: z.boolean().nullable().optional(),
   workspaceUuid: z.string().uuid().nullable().optional(),

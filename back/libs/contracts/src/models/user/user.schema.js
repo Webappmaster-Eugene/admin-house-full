@@ -7,7 +7,7 @@ exports.UserSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     firstName: zod_1.z.string(),
     secondName: zod_1.z.string().nullable().optional(),
-    userStatus: enums_1.EActiveStatusVariants,
+    userStatus: enums_1.EActiveStatusVariants.nullish().default('ACTIVE'),
     avatar: zod_1.z.string().nullable().optional(),
     phone: zod_1.z
         .string()

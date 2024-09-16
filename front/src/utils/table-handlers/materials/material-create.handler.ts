@@ -26,6 +26,7 @@ export async function materialCreateHandler(
     name: '',
     price: 0,
     unitMeasurementUuid: '',
+    materialStatus: 'ACTIVE',
     sourceInfo: '',
   };
   const newResponsiblePartnerUuid = responsiblePartnerProducers.find(

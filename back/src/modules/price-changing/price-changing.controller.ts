@@ -86,7 +86,7 @@ export class PriceChangingController implements IPriceChangingController {
   @Get()
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<PriceChangingGetAllResponseDto> {
     try {
-      const { ok, data } = await this.priceChangingService.getAll();
+      const { ok, data } = await this.priceChangingService.getAll(queryParams);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);

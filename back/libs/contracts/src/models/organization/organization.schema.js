@@ -6,7 +6,7 @@ const enums_1 = require("../../enums");
 exports.OrganizationSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     name: zod_1.z.string(),
-    organizationStatus: enums_1.EActiveStatusVariants,
+    organizationStatus: enums_1.EActiveStatusVariants.nullish().default('ACTIVE'),
     description: zod_1.z.string().nullable().optional(),
     workspaceUuid: zod_1.z.string().uuid(),
     organizationLeaderUuid: zod_1.z.string().uuid(),

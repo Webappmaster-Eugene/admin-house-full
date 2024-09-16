@@ -16,9 +16,11 @@ export const metadata = {
 export default async function MaterialsPage() {
   const currentUser = (await getCurrentUser()) as UserGetFullInfoCommand.ResponseEntity;
 
-  const workspaceToSearchUuid = (currentUser.memberOfWorkspaceUuid ||
+  const workspaceToSearchUuid = ((currentUser.memberOfWorkspaces &&
+    currentUser.memberOfWorkspaces[0]?.uuid) ||
     currentUser.creatorOfWorkspaceUuid) as string;
-  const handbookToSearchUuid = (currentUser.memberOfWorkspace?.handbookOfWorkspaceUuid ||
+  const handbookToSearchUuid = ((currentUser.memberOfWorkspaces &&
+    currentUser.memberOfWorkspaces[0].handbookOfWorkspaceUuid) ||
     currentUser.creatorOfWorkspace?.handbookOfWorkspaceUuid) as string;
 
   let allMaterialsInCurrentHandbook = await getAllMaterialsInHandbook(

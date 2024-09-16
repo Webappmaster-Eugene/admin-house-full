@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginRelatedEntitiesSchema = void 0;
 const zod_1 = require("zod");
-const role_schema_1 = require("../../role/role.schema");
+const role_business_value_schema_1 = require("../../../models/role/role-business-value.schema");
 exports.LoginRelatedEntitiesSchema = zod_1.z.object({
-    role: role_schema_1.RoleSchema,
+    roles: zod_1.z.array(role_business_value_schema_1.RoleBusinessValueSchema).nullable().optional(),
 });

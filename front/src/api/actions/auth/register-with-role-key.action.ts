@@ -42,16 +42,16 @@ export async function registerWithRoleKey(data: {
       return response?.data as AuthRegisterCommand.ResponseEntity;
     }
 
-    console.error('Standard backend error while register', response);
+    console.error('Standard backend error while register with role', response);
     if (response?.errors) {
       errorObject.error = response?.errors[0];
       return errorObject;
     }
-    console.error('Not standard backend error while register', response);
+    console.error('Not standard backend error while register with role', response);
     errorObject.error = response?.message;
     return errorObject;
   } catch (error: unknown) {
-    console.error('Catched frontend error while register', error);
+    console.error('Catched frontend error while register with role', error);
     if (error instanceof AxiosError) {
       errorObject.error = error.message;
       return errorObject;

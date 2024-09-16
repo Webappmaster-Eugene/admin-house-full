@@ -4,7 +4,7 @@ import { EActiveStatusVariants } from '../../enums';
 export const ResponsiblePartnerProducerSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
-  responsiblePartnerProducerStatus: EActiveStatusVariants,
+  responsiblePartnerProducerStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   numInOrder: z.number().nullable().optional(),
   comment: z.string().nullable().optional(),
   info: z.string().nullable().optional(),

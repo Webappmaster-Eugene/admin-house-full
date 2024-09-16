@@ -17,11 +17,11 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { UserRoles } from 'src/utils/const/user-roles.enum';
+import { isUriImage } from 'src/utils/helpers/is-uri-image';
 import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
 import { useMockedUserData } from 'src/utils/hooks/use-mocked-user';
 
 export default function AccountPopover() {
-  // return <button onClick={async () => logoutUser()}>Rkbr</button>;
   const router = useRouter();
 
   const { mockedData } = useMockedUserData();
@@ -61,7 +61,7 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.avatar ? user?.avatar : mockedData?.photoURL}
+          src={user?.avatar && isUriImage(user?.avatar) ? user?.avatar : mockedData?.photoURL}
           alt={`${user?.firstName?.charAt(0).toUpperCase()}. ${user?.secondName}`}
           sx={{
             width: 36,
@@ -69,7 +69,8 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {`${user?.firstName?.charAt(0).toUpperCase()}`}
+          {((typeof user?.avatar === 'string' && !isUriImage(user?.avatar)) || !user?.avatar) &&
+            `${user?.firstName?.charAt(0).toUpperCase()}. ${user?.secondName && user?.secondName.charAt(0).toUpperCase()}.`}
         </Avatar>
       </IconButton>
 
@@ -89,7 +90,8 @@ export default function AccountPopover() {
         <Stack sx={{ p: 1 }}>
           {AccountPopoverLinks.map(
             (option) =>
-              (!option?.userRoles || option.userRoles.includes(user?.role.name as UserRoles)) && (
+              (!option?.userRoles ||
+                option.userRoles.includes((user?.roles && user?.roles[0].name) as UserRoles)) && (
                 <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
                   {option.label}
                 </MenuItem>

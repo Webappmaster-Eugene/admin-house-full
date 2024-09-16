@@ -50,6 +50,7 @@ axiosAuthedInstance.interceptors.request.use(
 
 axiosAuthedInstance.interceptors.response.use(
   async (res) => {
+    console.log('responseData onFulfilled', res.data);
     const responseData = res.data;
     return responseData;
   },

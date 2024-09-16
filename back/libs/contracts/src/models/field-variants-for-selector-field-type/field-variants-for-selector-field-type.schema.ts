@@ -5,7 +5,7 @@ export const FieldVariantsForSelectorFieldTypeSchema = z.object({
   uuid: z.string().uuid(),
   value: z.string(),
   description: z.string().nullable().optional(),
-  fieldVariantsForSelectorFieldTypeStatus: EActiveStatusVariants,
+  fieldVariantsForSelectorFieldTypeStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   numInOrder: z.number().nullable().optional(),
   handbookUuid: z.string().uuid(),
   fieldOfCategoryMaterialUuid: z.string().uuid(),

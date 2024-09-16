@@ -11,7 +11,6 @@ exports.AuthSchema = zod_1.z.object({
     address: zod_1.z.string().nullable().optional(),
     info: zod_1.z.string().nullable().optional(),
     documents: zod_1.z.string().nullable().optional(),
-    roleUuid: zod_1.z.string(),
     accessToken: zod_1.z.string(),
     refreshToken: zod_1.z.string(),
 });

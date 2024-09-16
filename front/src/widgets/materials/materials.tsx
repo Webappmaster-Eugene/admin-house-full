@@ -63,8 +63,8 @@ import { toRubles } from 'src/utils/helpers/intl';
 import { deepEqualAndIn } from 'src/utils/helpers/deep-equal-and-in';
 import { deepEqualAndInTableKeys } from 'src/utils/helpers/deep-equal-in-tablekeys';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
-import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
 import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
+import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
 import { MaterialColumnSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 import { isEntityCategoryMaterialTG } from 'src/utils/type-guards/is-entity-category-material.type-guard';
 import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-responsible-partner.type-guard';
@@ -146,8 +146,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         ...initialColumnVisibilityModel,
         ...newColumnVisibilityModel,
       };
-      console.log(initialColumnVisibilityModel);
-      console.log(finalNewColumnVisibilityModel);
+      // console.log(initialColumnVisibilityModel);
+      // console.log(finalNewColumnVisibilityModel);
       apiRef.current.setColumnVisibilityModel(finalNewColumnVisibilityModel);
     }
     restrictHideRequiredColumns(requiredCreateColumns, tableStateAtStart);
@@ -190,7 +190,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       setRows((oldRows) => {
         const newRow: TMaterialTableEntity = {
           [MaterialColumnSchema.uuid]: NewMaterialId,
-          [MaterialColumnSchema.numInOrder]: 999,
+          [MaterialColumnSchema.numInOrder]: 9999999,
           [MaterialColumnSchema.name]: 'Наименование материала',
           [MaterialColumnSchema.namePublic]: 'Сокр. наименование',
           [MaterialColumnSchema.comment]: 'Описание нового материала',
@@ -208,7 +208,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       });
 
       setIsCreateRowMode((prevMode) => !prevMode);
-
       setRowModesModel((oldModel) => ({
         [NewMaterialId]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
         ...oldModel,
@@ -322,7 +321,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   };
 
   const handleDeleteRowClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('подтвердить');
     isDialogOpen.onTrue();
   };
 
@@ -354,14 +352,15 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     setIsCreateRowMode((prevValue) => !prevValue);
   };
 
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
+  // const handleEditClick = (id: GridRowId) => () => {
+  //   setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  // };
 
   const handleSaveClick = async () => {
     const id = NewMaterialId;
     const isNewRow = apiRef.current.getRow(id)?.isNew;
-    let finalRow: string | MaterialCreateCommand.ResponseEntity | ErrorFromBackend;
+    let finalRow: string | MaterialCreateCommand.ResponseEntity | ErrorFromBackend = '';
+
     const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
     const responsiblePartners =
       handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
@@ -373,43 +372,43 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     const handbookId = handbookInfo.uuid;
     if (isNewRow) {
       const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-      finalRow = await materialCreateHandler(
+      finalRow = (await materialCreateHandler(
         newRowLocally as TMaterialTableEntity,
         workspaceId as string,
         handbookId,
         responsiblePartners,
         categoryMaterials,
         unitMeasurements
-      );
+      )) as MaterialCreateCommand.ResponseEntity;
     } else {
-      // const updatedRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-      //
-      // await materialEditHandler(
-      //   updatedRowLocally as TMaterialTableEntity,
-      //   workspaceId as string,
-      //   handbookId,
-      //   responsiblePartners
-      // );
+      throw new Error('isNewRow = false, problem with creating a new row');
     }
-    const newRowId = (finalRow && (finalRow as MaterialCreateCommand.ResponseEntity).uuid) || id;
+
     setRowModesModel({
       ...rowModesModel,
-      [newRowId]: { mode: GridRowModes.View },
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
     setIsCreateRowMode((prevValue) => !prevValue);
+    setRows((oldRows) => {
+      const updatedRow = {
+        ...finalRow,
+        isNew: false,
+      } as TMaterialTableEntity;
+      return oldRows.map((row) => (row.uuid === id ? updatedRow : row));
+    });
   };
 
-  const handleDeleteClick = (id: GridRowId) => async () => {
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
-    const categoryMaterials =
-      workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-    const workspaceId = handbookInfo.workspaceUuid;
-    const handbookId = handbookInfo.uuid;
-    const rowLocally = apiRef.current.getRow(id);
-    await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
-    setRows(rows.filter((row) => row.uuid !== id));
-  };
+  // const handleDeleteClick = (id: GridRowId) => async () => {
+  //   const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+  //   handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
+  //   const categoryMaterials =
+  //     workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
+  //   const workspaceId = handbookInfo.workspaceUuid;
+  //   const handbookId = handbookInfo.uuid;
+  //   const rowLocally = apiRef.current.getRow(id);
+  //   await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
+  //   setRows(rows.filter((row) => row.uuid !== id));
+  // };
 
   const processRowUpdate = (newRow: TMaterialTableEntity) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -631,12 +630,12 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
             let charateristicUnitMeasurement;
             if (!isErrorFieldTypeGuard(allFieldUnitMeasurements)) {
               const charateristicUnitMeasurementObject = allFieldUnitMeasurements?.find(
-                (elem) => elem.uuid === curValue.fieldUnitMeasurementUuid
+                (elem) => elem.uuid === curValue.fieldOfCategoryMaterial.unitOfMeasurementUuid
               );
 
               charateristicUnitMeasurement = charateristicUnitMeasurementObject?.name;
             }
-            acc += `${counter}) ${curValue.name} = ${curValue.value}${charateristicUnitMeasurement && charateristicUnitMeasurement !== '-' ? ` (${charateristicUnitMeasurement}); ` : '; '}`;
+            acc += `${counter}) ${curValue.value} = ${curValue.value}${charateristicUnitMeasurement && charateristicUnitMeasurement !== '-' ? ` (${charateristicUnitMeasurement}); ` : '; '}`;
 
             counter += 1;
             return acc;
@@ -677,105 +676,106 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     setRows(rows.filter((row) => row.uuid !== rowIdToDelete));
   };
 
-  const onClickYesDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
-    handleClickDialogYesDeleteRow();
+  const onClickYesDialog = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    await handleClickDialogYesDeleteRow();
     isDialogOpen.onFalse();
   };
 
   return (
     <>
       <Container maxWidth="xl">
-        <Typography variant="h4"> Справочник материалов</Typography>
-        <Box sx={{ width: '100%', maxWidth: '100vw' }}>
-          {materialsDataGridInitialState ? (
-            <DataGrid
-              apiRef={apiRef}
-              localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
-              initialState={{
-                ...columnsInitialState,
-                ...materialsDataGridInitialState,
-              }}
-              rows={rows}
-              columns={[
-                {
-                  ...GRID_CHECKBOX_SELECTION_COL_DEF,
-                  hideable: false,
-                  headerName: 'Выбор строки',
-                  cellClassName: 'MuiDataGrid-cellCheckbox',
-                  headerClassName: 'MuiDataGrid-columnHeaderCheckbox',
-                },
-                ...allMaterialsTableColumns,
-              ]}
-              getRowId={(row) => row.uuid}
-              loading={!workspaceInfo}
-              editMode="row"
-              pageSizeOptions={[5, 10, 20, 50, 100]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={(paginationModelGrid) =>
-                setPaginationModel(paginationModelGrid)
-              }
-              rowModesModel={rowModesModel}
-              onRowModesModelChange={handleRowModesModelChange}
-              onRowEditStop={handleRowEditStop}
-              processRowUpdate={processRowUpdate}
-              isCellEditable={(params) => {
-                const isEditableRow = MaterialEditableColumns.includes(params.field);
-                const isNewRow = params.row?.isNew;
-                return isNewRow || isEditableRow;
-              }}
-              // slots={{ toolbar: GridToolbar }}
-              slots={{
-                noRowsOverlay: CustomNoRowsOverlay,
-                toolbar: editToolbar as GridSlots['toolbar'],
-              }}
-              slotProps={{
-                toolbar: { setRows, setRowModesModel },
-              }}
-              onProcessRowUpdateError={handleProcessRowUpdateError}
-              autoHeight
-              getRowHeight={() => 'auto'}
-              getRowSpacing={(params) => ({
-                top: params.isFirstVisible ? 0 : 5,
-                bottom: params.isLastVisible ? 0 : 5,
-              })}
-              isRowSelectable={(params: GridRowParams) => {
-                if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
-                  return true;
+        {materialsDataGridInitialState ? (
+          <>
+            <Typography variant="h4"> Справочник материалов</Typography>
+            <Box sx={{ width: '100%', maxWidth: '100vw' }}>
+              <DataGrid
+                apiRef={apiRef}
+                localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
+                initialState={{
+                  ...columnsInitialState,
+                  ...materialsDataGridInitialState,
+                }}
+                rows={rows}
+                columns={[
+                  {
+                    ...GRID_CHECKBOX_SELECTION_COL_DEF,
+                    hideable: false,
+                    headerName: 'Выбор строки',
+                    cellClassName: 'MuiDataGrid-cellCheckbox',
+                    headerClassName: 'MuiDataGrid-columnHeaderCheckbox',
+                  },
+                  ...allMaterialsTableColumns,
+                ]}
+                getRowId={(row) => row.uuid}
+                loading={!workspaceInfo}
+                editMode="row"
+                pageSizeOptions={[5, 10, 20, 50, 100]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={(paginationModelGrid) =>
+                  setPaginationModel(paginationModelGrid)
                 }
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={handleRowModesModelChange}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                isCellEditable={(params) => {
+                  const isEditableRow = MaterialEditableColumns.includes(params.field);
+                  const isNewRow = params.row?.isNew;
+                  return isNewRow || isEditableRow;
+                }}
+                // slots={{ toolbar: GridToolbar }}
+                slots={{
+                  noRowsOverlay: CustomNoRowsOverlay,
+                  toolbar: editToolbar as GridSlots['toolbar'],
+                }}
+                slotProps={{
+                  toolbar: { setRows, setRowModesModel },
+                }}
+                onProcessRowUpdateError={handleProcessRowUpdateError}
+                autoHeight
+                getRowHeight={() => 'auto'}
+                getRowSpacing={(params) => ({
+                  top: params.isFirstVisible ? 0 : 5,
+                  bottom: params.isLastVisible ? 0 : 5,
+                })}
+                isRowSelectable={(params: GridRowParams) => {
+                  if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
+                    return true;
+                  }
 
-                return false;
-              }}
-              onRowSelectionModelChange={(newRowSelectionModel) => {
-                setRowSelectionModel(newRowSelectionModel);
-              }}
-              rowSelectionModel={rowSelectionModel}
-              autosizeOptions={{
-                columns: [MaterialColumnSchema.name],
-                includeOutliers: true,
-                includeHeaders: true,
-              }}
-              sx={{
-                [`& .${gridClasses.row}`]: {
-                  bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
-                },
-                '& .MuiDataGrid-cell--editable': {
-                  bgcolor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
-                },
-              }}
-              disableRowSelectionOnClick
-              checkboxSelection
-              disableMultipleRowSelection
-              columnVisibilityModel={columnVisibilityModel}
-              onColumnVisibilityModelChange={(newModel) => {
-                console.log(newModel);
-                setColumnVisibilityModel(newModel);
-              }}
-            />
-          ) : (
-            <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%' }} />
-          )}
-        </Box>
+                  return false;
+                }}
+                onRowSelectionModelChange={(newRowSelectionModel) => {
+                  setRowSelectionModel(newRowSelectionModel);
+                }}
+                rowSelectionModel={rowSelectionModel}
+                autosizeOptions={{
+                  columns: [MaterialColumnSchema.name],
+                  includeOutliers: true,
+                  includeHeaders: true,
+                }}
+                sx={{
+                  [`& .${gridClasses.row}`]: {
+                    bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
+                  },
+                  '& .MuiDataGrid-cell--editable': {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+                  },
+                }}
+                disableRowSelectionOnClick
+                checkboxSelection
+                disableMultipleRowSelection
+                columnVisibilityModel={columnVisibilityModel}
+                onColumnVisibilityModelChange={(newModel) => {
+                  setColumnVisibilityModel(newModel);
+                }}
+              />
+            </Box>
+          </>
+        ) : (
+          <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%' }} />
+        )}
       </Container>
 
       {isDialogOpen && (

@@ -4,7 +4,7 @@ import { EActiveStatusVariants } from '../../enums';
 export const OrganizationSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
-  organizationStatus: EActiveStatusVariants,
+  organizationStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   description: z.string().nullable().optional(),
   workspaceUuid: z.string().uuid(),
   organizationLeaderUuid: z.string().uuid(),

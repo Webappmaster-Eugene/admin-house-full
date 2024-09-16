@@ -33,17 +33,15 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
   }, []);
 
   useEffect(() => {
-    if (openMenu) {
-      handleCloseMenu();
-    }
-  }, [handleCloseMenu, openMenu, pathname]);
+    handleCloseMenu();
+  }, [handleCloseMenu, pathname]);
 
   return (
     <>
       <NavItem
         ref={navRef}
         open={openMenu}
-        onMouseEnter={handleOpenMenu}
+        onMouseMove={handleOpenMenu}
         onMouseLeave={handleCloseMenu}
         //
         title={data.title}

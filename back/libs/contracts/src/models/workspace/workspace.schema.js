@@ -6,7 +6,7 @@ const enums_1 = require("../../enums");
 exports.WorkspaceSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     name: zod_1.z.string().optional().default('Workspace'),
-    workspaceStatus: enums_1.EActiveStatusVariants,
+    workspaceStatus: enums_1.EActiveStatusVariants.nullish().default('ACTIVE'),
     description: zod_1.z.string().nullable().optional().default('A working space to manage work'),
     workspaceCreatorUuid: zod_1.z.string().uuid(),
     handbookOfWorkspaceUuid: zod_1.z.string().uuid().nullable().optional(),

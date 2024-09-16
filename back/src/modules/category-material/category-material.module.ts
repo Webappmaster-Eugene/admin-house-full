@@ -4,7 +4,7 @@ import { CategoryMaterialController } from './category-material.controller';
 import { KFI } from '../../common/utils/di';
 import { CategoryMaterialRepository } from './category-material.repository';
 import { MaterialModule } from '../../modules/material/material.module';
-import { CharacteristicsMaterialModule } from 'src/modules/characteristics-material/characteristics-material.module';
+import { CharacteristicsMaterialModule } from '../../modules/characteristics-material/characteristics-material.module';
 
 @Module({
   providers: [

@@ -5,7 +5,7 @@ export const MaterialSchema = z.object({
   uuid: z.string().uuid(),
   name: z.string(),
   numInOrder: z.number().nullable().optional(),
-  materialStatus: EActiveStatusVariants,
+  materialStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   comment: z.string().nullable().optional(),
   namePublic: z.string().nullable().optional(),
   sourceInfo: z.string().nullable().optional(),

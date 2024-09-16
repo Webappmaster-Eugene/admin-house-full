@@ -17,7 +17,8 @@ type RoleBasedGuardProp = {
 
 export default function RoleBasedGuard({ rolesWithAccess, children, sx }: RoleBasedGuardProp) {
   const currentUser = useCurrentUserStore((state) => state.user);
-  const currentUserRole = currentUser && (currentUser.role.name as UserRoles);
+  const currentUserRole =
+    currentUser && currentUser?.roles && (currentUser.roles[0]?.name as UserRoles);
 
   if (rolesWithAccess.length && currentUserRole && rolesWithAccess.includes(currentUserRole)) {
     return <> {children} </>;

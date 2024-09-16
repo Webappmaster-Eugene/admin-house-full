@@ -9,7 +9,6 @@ export const AuthSchema = z.object({
   address: z.string().nullable().optional(),
   info: z.string().nullable().optional(),
   documents: z.string().nullable().optional(),
-  roleUuid: z.string(),
   accessToken: z.string(),
   refreshToken: z.string(),
 });

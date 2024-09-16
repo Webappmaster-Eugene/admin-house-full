@@ -6,7 +6,7 @@ const enums_1 = require("../../enums");
 exports.CharacteristicsMaterialSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     value: zod_1.z.string(),
-    characteristicsMaterialStatus: enums_1.EActiveStatusVariants,
+    characteristicsMaterialStatus: enums_1.EActiveStatusVariants.nullish().default('ACTIVE'),
     numInOrder: zod_1.z.number().optional().nullable(),
     comment: zod_1.z.string().optional().nullable(),
     fieldOfCategoryMaterialUuid: zod_1.z.string().uuid(),

@@ -11,7 +11,6 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { IMaterialService } from '../../modules/material/types/material.service.interface';
 import { ICharacteristicsMaterialService } from '../../modules/characteristics-material/types/characteristics-material.service.interface';
-import { MaterialService } from 'src/modules/material/material.service';
 
 @Injectable()
 export class CategoryMaterialService implements ICategoryMaterialService {

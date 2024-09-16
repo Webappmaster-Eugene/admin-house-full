@@ -278,8 +278,9 @@ export class UserController {
   @Get('me')
   async getCurrentUserEP(@User() userInfoFromJWT: IJWTPayload, @UrlParams() urlParams: IUrlParams): Promise<UserGetFullInfoResponseDto> {
     try {
-      console.log('Пользователь находится в системе: ' + JSON.stringify(userInfoFromJWT));
+      console.log('Данные пользователя для получения GET /user/me: ' + JSON.stringify(userInfoFromJWT));
       const { ok, data } = await this.userService.getFullInfoById(userInfoFromJWT.uuid);
+      console.log('Пользователь находится в системе: ' + JSON.stringify(data));
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.USER, urlParams);

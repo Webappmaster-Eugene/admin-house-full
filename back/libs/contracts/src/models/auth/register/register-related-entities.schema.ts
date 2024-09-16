@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { RoleSchema } from '../../role/role.schema';
+import { RoleBusinessValueSchema } from '../../../models/role/role-business-value.schema';
 
 export const RegisterRelatedEntitiesSchema = z.object({
-  role: RoleSchema,
+  roles: z.array(RoleBusinessValueSchema).nullable().optional(),
 });

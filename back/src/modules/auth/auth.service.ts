@@ -30,12 +30,12 @@ import { EActiveStatuses } from '.prisma/client';
 export class AuthService implements IAuthService {
   constructor(
     @Inject(KFI.AUTH_REPOSITORY)
-    private readonly authRepository: IAuthRepository,
-    private readonly configService: ConfigService<IConfigService>,
+    private readonly authRepository?: IAuthRepository,
+    private readonly configService?: ConfigService<IConfigService>,
     @Inject(KFI.USER_SERVICE)
-    private readonly userService: IUserService,
-    @Inject(KFI.ROLE_SERVICE)
-    private readonly roleService: IRoleService,
+    private readonly userService?: IUserService,
+    // @Inject(KFI.ROLE_SERVICE)
+    // private readonly roleService: IRoleService,
   ) {}
 
   async register(dto: AuthRegisterRequestDto, response: Response): Promise<UniversalInternalResponse<AuthEntity>> {

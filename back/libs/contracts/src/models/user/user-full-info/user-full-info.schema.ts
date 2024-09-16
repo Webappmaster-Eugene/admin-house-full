@@ -5,7 +5,7 @@ export const UserFullInfoSchema = z.object({
   uuid: z.string().uuid(),
   firstName: z.string(),
   secondName: z.string().nullable().optional(),
-  userStatus: EActiveStatusVariants,
+  userStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   avatar: z.string().nullable().optional(),
   phone: z
     .string()

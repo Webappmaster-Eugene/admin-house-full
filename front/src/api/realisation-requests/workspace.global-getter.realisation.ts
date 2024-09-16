@@ -16,7 +16,8 @@ import { getAllFieldUnitMeasurementsOfHandbook } from 'src/api/actions/field-uni
 
 export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoCommand.ResponseEntity) {
   const currentWorkspace = (currentUserInfo?.creatorOfWorkspace ||
-    currentUserInfo?.memberOfWorkspace) as unknown as WorkspaceGetCommand.ResponseEntity;
+    (currentUserInfo?.memberOfWorkspaces &&
+      currentUserInfo?.memberOfWorkspaces[0])) as unknown as WorkspaceGetCommand.ResponseEntity;
   const workspaceId = currentWorkspace.uuid;
   const handbookId = currentWorkspace.handbookOfWorkspaceUuid as string;
 

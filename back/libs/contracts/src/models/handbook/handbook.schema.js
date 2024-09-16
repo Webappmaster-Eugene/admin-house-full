@@ -6,7 +6,7 @@ const enums_1 = require("../../enums");
 exports.HandbookSchema = zod_1.z.object({
     uuid: zod_1.z.string().uuid(),
     name: zod_1.z.string(),
-    handbookStatus: enums_1.EActiveStatusVariants,
+    handbookStatus: enums_1.EActiveStatusVariants.nullish().default('ACTIVE'),
     description: zod_1.z.string().nullable().optional(),
     canCustomerView: zod_1.z.boolean().nullable().optional(),
     workspaceUuid: zod_1.z.string().uuid().nullable().optional(),

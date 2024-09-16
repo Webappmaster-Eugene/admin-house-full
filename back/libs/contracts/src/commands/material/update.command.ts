@@ -6,6 +6,7 @@ import { MaterialRelatedEntitiesSchema } from '../../models/material/material-re
 const MaterialUpdateResponseEntitySchema = MaterialBusinessValueSchema.merge(MaterialRelatedEntitiesSchema);
 
 const MaterialUpdateRequestSchema = MaterialSchema.pick({
+  name: true,
   price: true,
   comment: true,
   namePublic: true,

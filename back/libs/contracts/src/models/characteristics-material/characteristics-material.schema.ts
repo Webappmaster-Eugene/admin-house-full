@@ -4,7 +4,7 @@ import { EActiveStatusVariants } from '../../enums';
 export const CharacteristicsMaterialSchema = z.object({
   uuid: z.string().uuid(),
   value: z.string(),
-  characteristicsMaterialStatus: EActiveStatusVariants,
+  characteristicsMaterialStatus: EActiveStatusVariants.nullish().default('ACTIVE'),
   numInOrder: z.number().optional().nullable(),
   comment: z.string().optional().nullable(),
   fieldOfCategoryMaterialUuid: z.string().uuid(),

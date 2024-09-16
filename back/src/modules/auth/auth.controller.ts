@@ -29,7 +29,7 @@ export class AuthController implements IAuthController {
   constructor(
     @Inject(KFI.AUTH_SERVICE)
     private readonly authService: IAuthService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: ILogger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger?: ILogger,
   ) {}
 
   //region SWAGGER
@@ -145,6 +145,7 @@ export class AuthController implements IAuthController {
   ): Promise<AuthLoginResponseDto> {
     try {
       const { ok, data } = await this.authService.login(dto, response);
+      console.log(data);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
@@ -196,7 +197,7 @@ export class AuthController implements IAuthController {
   @UseGuards(AuthGuard)
   @ZodSerializerDto(AuthGetKeyResponseDto)
   @Get('strict-admin-key/get')
-  async getStrictAdminKeyEP(@UrlParams() urlParams: IUrlParams): Promise<AuthGetKeyResponseDto> {
+  async getStrictAdminKeyEP(@UrlParams() urlParams?: IUrlParams): Promise<AuthGetKeyResponseDto> {
     // DOC получение ключа для регистрации с ролью
     // DOC каждый раз при вызове запись берется из БД таблицы registerWithRoleKey
     try {
