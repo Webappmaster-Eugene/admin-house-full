@@ -21,8 +21,8 @@ async function bootstrap() {
   app.setGlobalPrefix(config.get<string>('API_PREFIX'));
 
   app.enableCors({
-    // origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    // origin: true,
     // methods: 'all',
     credentials: true,
     exposedHeaders: ['set-cookie'],
