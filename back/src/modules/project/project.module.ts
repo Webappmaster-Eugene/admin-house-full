@@ -3,7 +3,6 @@ import { ProjectService } from './project.service';
 import { ProjectController } from './project.controller';
 import { KFI } from '../../common/utils/di';
 import { ProjectsRepository } from './project.repository';
-import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
   providers: [

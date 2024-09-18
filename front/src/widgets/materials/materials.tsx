@@ -37,6 +37,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import {
   DataGrid,
+  MuiEvent,
   GridRowId,
   GridSlots,
   GridState,
@@ -53,6 +54,7 @@ import {
   GridToolbarContainer,
   GridRowSelectionModel,
   GridRowEditStopReasons,
+  GridCellEditStopParams,
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
@@ -355,6 +357,10 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   // const handleEditClick = (id: GridRowId) => () => {
   //   setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   // };
+
+  const handleCellEditStop = (params: GridCellEditStopParams, event: MuiEvent) => {
+    console.log(params);
+  };
 
   const handleSaveClick = async () => {
     const id = NewMaterialId;
@@ -708,7 +714,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 ]}
                 getRowId={(row) => row.uuid}
                 loading={!workspaceInfo}
-                editMode="row"
+                editMode="cell"
                 pageSizeOptions={[5, 10, 20, 50, 100]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={(paginationModelGrid) =>
@@ -770,6 +776,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 onColumnVisibilityModelChange={(newModel) => {
                   setColumnVisibilityModel(newModel);
                 }}
+                onCellEditStop={handleCellEditStop}
               />
             </Box>
           </>
