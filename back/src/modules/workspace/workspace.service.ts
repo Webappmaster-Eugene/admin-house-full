@@ -29,7 +29,7 @@ export class WorkspaceService implements IWorkspaceService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<WorkspaceEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allWorkspaces = await this.workspaceRepository.getAll(skip, take);
     return new InternalResponse(allWorkspaces);
   }

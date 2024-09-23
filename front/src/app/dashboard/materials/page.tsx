@@ -19,7 +19,7 @@ export default async function MaterialsPage() {
   const workspaceToSearchUuid = ((currentUser.memberOfWorkspaces &&
     currentUser.memberOfWorkspaces[0]?.uuid) ||
     currentUser.creatorOfWorkspaceUuid) as string;
-  console.log('11111111111', currentUser);
+
   const handbookToSearchUuid = ((currentUser?.memberOfWorkspaces &&
     currentUser?.memberOfWorkspaces.length > 0 &&
     currentUser?.memberOfWorkspaces[0].handbookOfWorkspaceUuid) ||

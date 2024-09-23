@@ -4,6 +4,8 @@ import Box, { BoxProps } from '@mui/material/Box';
 
 import { useResponsive } from 'src/utils/hooks/use-responsive';
 
+import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
+
 import { NAV, HEADER } from '../config-layout';
 
 // ----------------------------------------------------------------------
@@ -39,6 +41,22 @@ export default function Main({ children, sx, ...other }: BoxProps) {
       }}
       {...other}
     >
+      <CustomBreadcrumbs
+        // heading="Carousel"
+        sx={{
+          paddingLeft: 3,
+          paddingRight: 3,
+          marginBottom: 2,
+        }}
+        // links={[
+        //   {
+        //     name: 'Дашборд',
+        //     href: paths.dashboard.root,
+        //   },
+        //   { name: `${pathname}` },
+        // ]}
+        // moreLink={['https://react-slick.neostack.com']}
+      />
       {children}
     </Box>
   );

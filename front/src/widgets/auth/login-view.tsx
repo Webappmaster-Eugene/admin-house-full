@@ -47,7 +47,7 @@ export default function LoginView() {
   });
 
   const defaultValues = {
-    email: 'admin@mail.ru',
+    email: 'manager1@mail.ru',
     password: '!qwertY32',
   };
 
@@ -100,7 +100,7 @@ export default function LoginView() {
       </Stack>
 
       <Alert severity="info" sx={{ mb: 3 }}>
-        Почта : <strong>admin@mail.ru</strong> / пароль :<strong> !qwertY32</strong>
+        Почта : <strong>manager1@mail.ru</strong> / пароль :<strong> !qwertY32</strong>
       </Alert>
 
       {!!errorMsg && (
@@ -130,7 +130,13 @@ export default function LoginView() {
             }}
           />
 
-          <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
+          <Link
+            href={paths.auth.forgotPassword}
+            variant="body2"
+            color="inherit"
+            underline="always"
+            sx={{ alignSelf: 'flex-end' }}
+          >
             Забыли пароль?
           </Link>
 

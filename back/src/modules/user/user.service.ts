@@ -84,7 +84,7 @@ export class UserService implements IUserService {
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<UserEntity[]>> {
     const cachedInfo = await cacheGetter<UserEntity[]>(this.cacheManager, CACHE_KEYS.USER_ALL);
     if (!cachedInfo) {
-      const { skip, take } = queryParams;
+      const { skip, take } = queryParams || {};
       const allUsers = await this.userRepository.getAll(skip, take);
       await cacheSetter(this.cacheManager, CACHE_KEYS.USER_ALL, allUsers);
       return new InternalResponse(allUsers);

@@ -33,7 +33,7 @@ export async function getAllFieldVariantsOfCategoryOfHandbook(
     }
 
     console.error(
-      'Standard backend error while get all fields of categories of handbook',
+      'Standard backend error while get all fields of category-materials of handbook',
       response
     );
     if (response?.errors) {
@@ -43,7 +43,10 @@ export async function getAllFieldVariantsOfCategoryOfHandbook(
     errorObject.error = response?.message;
     return errorObject;
   } catch (error: unknown) {
-    console.error('Catched frontend error while get all fields of categories of handbook', error);
+    console.error(
+      'Catched frontend error while get all fields of category-materials of handbook',
+      error
+    );
     if (error instanceof AxiosError) {
       errorObject.error = error.message;
       return errorObject;

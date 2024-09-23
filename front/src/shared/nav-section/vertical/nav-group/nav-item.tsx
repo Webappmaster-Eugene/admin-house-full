@@ -16,11 +16,13 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
   (
     {
       title,
+      titleShort,
       path,
       icon,
       info,
       disabled,
       caption,
+      captionFull,
       roles,
       //
       open,
@@ -65,10 +67,10 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
               {title}
             </Box>
 
-            {caption && (
+            {(caption || captionFull) && (
               <Tooltip title={caption} placement="top-start">
                 <Box component="span" className="caption">
-                  {caption}
+                  {captionFull || caption}
                 </Box>
               </Tooltip>
             )}

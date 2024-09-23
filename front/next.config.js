@@ -23,6 +23,11 @@ module.exports = {
         destination: '/auth/login',
         permanent: true,
       },
+      {
+        source: '/dashboard',
+        destination: '/dashboard/materials',
+        permanent: true,
+      },
     ];
   },
   webpack(config) {

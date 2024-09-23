@@ -28,7 +28,7 @@ export class HandbookService implements IHandbookService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<HandbookEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allHandbooks = await this.handbookRepository.getAll(skip, take);
     return new InternalResponse(allHandbooks);
   }

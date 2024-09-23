@@ -462,9 +462,9 @@
 //       editable: true,
 //       type: 'singleSelect',
 //       valueOptions: (params) => {
-//         const categories =
+//         const category-materials =
 //           workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-//         const categoryNames = categories && categories.map((elem) => elem.name);
+//         const categoryNames = category-materials && category-materials.map((elem) => elem.name);
 //
 //         return categoryNames;
 //       },

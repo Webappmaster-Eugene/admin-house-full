@@ -45,6 +45,7 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         onMouseLeave={handleCloseMenu}
         //
         title={data.title}
+        titleShort={data.titleShort}
         path={data.path}
         icon={data.icon}
         info={data.info}

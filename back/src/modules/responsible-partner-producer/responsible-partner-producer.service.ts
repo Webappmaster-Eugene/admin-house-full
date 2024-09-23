@@ -24,7 +24,7 @@ export class ResponsiblePartnerProducerService implements IResponsiblePartnerPro
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allResponsiblePartnerProducers = await this.responsiblePartnerProducerRepository.getAll(skip, take);
     return new InternalResponse(allResponsiblePartnerProducers);
   }
@@ -33,7 +33,7 @@ export class ResponsiblePartnerProducerService implements IResponsiblePartnerPro
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<ResponsiblePartnerProducerEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allResponsiblePartnerProducers = await this.responsiblePartnerProducerRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allResponsiblePartnerProducers);
   }

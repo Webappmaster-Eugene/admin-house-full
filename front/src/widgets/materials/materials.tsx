@@ -14,6 +14,7 @@ import { MaterialRequiredCreateColumns } from '@/widgets/materials/required-colu
 import {
   HandbookGetCommand,
   MaterialCreateCommand,
+  MaterialUpdateCommand,
   PriceChangingGetAllCommand,
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetCommand,
@@ -37,6 +38,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import {
   DataGrid,
+  MuiEvent,
   GridRowId,
   GridSlots,
   GridState,
@@ -47,13 +49,13 @@ import {
   GridRowParams,
   GridInitialState,
   GridRowModesModel,
-  GridEventListener,
   GridToolbarExport,
   GridPaginationModel,
   GridToolbarContainer,
   GridRowSelectionModel,
-  GridRowEditStopReasons,
+  GridCellEditStopParams,
   GridToolbarFilterButton,
+  GridCellEditStopReasons,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
   GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -65,6 +67,7 @@ import { deepEqualAndInTableKeys } from 'src/utils/helpers/deep-equal-in-tableke
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
 import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
+import { materialUpdateHandler } from 'src/utils/table-handlers/materials/material-update.handler';
 import { MaterialColumnSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 import { isEntityCategoryMaterialTG } from 'src/utils/type-guards/is-entity-category-material.type-guard';
 import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-responsible-partner.type-guard';
@@ -123,11 +126,11 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
     };
   }, [saveMaterialsDataGridState]);
 
-  const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
-  };
+  // const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
+  //   if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+  //     event.defaultMuiPrevented = true;
+  //   }
+  // };
 
   const addRequiredColumnsToTable = (requiredCreateColumns: string[]): void => {
     const tableStateAtStart = apiRef.current.state;
@@ -197,8 +200,12 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
           [MaterialColumnSchema.price]: 0,
           [MaterialColumnSchema.sourceInfo]: 'Укажите источник',
           [MaterialColumnSchema.responsiblePartner]: responsiblePartners[0],
-          [MaterialColumnSchema.categoryMaterial]: categoryMaterials[0],
-          [MaterialColumnSchema.unitMeasurement]: unitMeasurements[0],
+          [MaterialColumnSchema.categoryMaterial]: categoryMaterials.filter(
+            (categoryMaterial) => categoryMaterial.name === 'Общая'
+          )[0],
+          [MaterialColumnSchema.unitMeasurement]: unitMeasurements.filter(
+            (unitMeasurement) => unitMeasurement.name === 'отсутствует'
+          )[0],
           [MaterialColumnSchema.priceChanges]: [],
           [MaterialColumnSchema.characteristicsMaterial]: [],
           [MaterialColumnSchema.updatedAt]: new Date(),
@@ -217,7 +224,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       currentRowsIds.forEach((rowId) => {
         apiRef.current.selectRow(rowId, false, true);
       });
-
+      // apiRef.current.startRowEditMode({ id: NewMaterialId });
       // apiRef.current.restoreState(tableStateBeforeCreate);
     };
 
@@ -356,6 +363,25 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   //   setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   // };
 
+  const handleCellEditStop = async (params: GridCellEditStopParams, event: MuiEvent) => {
+    const rowCurrentState = apiRef.current.getRowWithUpdatedValues(params.id, params.field);
+    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+    const workspaceId = handbookInfo.workspaceUuid;
+    const handbookId = handbookInfo.uuid;
+
+    const updatedRow = (await materialUpdateHandler(
+      { [params.field]: rowCurrentState[params.field] } as TMaterialTableEntity,
+      workspaceId as string,
+      handbookId,
+      params.row.categoryMaterialUuid,
+      params.row.uuid
+    )) as MaterialUpdateCommand.ResponseEntity;
+
+    if (params.reason !== GridCellEditStopReasons.shiftTabKeyDown) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+
   const handleSaveClick = async () => {
     const id = NewMaterialId;
     const isNewRow = apiRef.current.getRow(id)?.isNew;
@@ -410,15 +436,15 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   //   setRows(rows.filter((row) => row.uuid !== id));
   // };
 
-  const processRowUpdate = (newRow: TMaterialTableEntity) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.uuid === newRow.uuid ? updatedRow : row)));
-    return updatedRow;
-  };
+  // const processRowUpdate = (newRow: TMaterialTableEntity) => {
+  //   const updatedRow = { ...newRow, isNew: false };
+  //   setRows(rows.map((row) => (row.uuid === newRow.uuid ? updatedRow : row)));
+  //   return updatedRow;
+  // };
 
-  const handleProcessRowUpdateError = (error: Error) => {
-    console.error('error while update row in table of materials', error);
-  };
+  // const handleProcessRowUpdateError = (error: Error) => {
+  //   console.error('error while update row in table of materials', error);
+  // };
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -708,7 +734,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 ]}
                 getRowId={(row) => row.uuid}
                 loading={!workspaceInfo}
-                editMode="row"
+                editMode={isCreateRowMode ? 'row' : 'cell'}
                 pageSizeOptions={[5, 10, 20, 50, 100]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={(paginationModelGrid) =>
@@ -716,12 +742,16 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 }
                 rowModesModel={rowModesModel}
                 onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
+                // onRowEditStop={handleRowEditStop}
+                // processRowUpdate={processRowUpdate}
+                // onProcessRowUpdateError={handleProcessRowUpdateError}
                 isCellEditable={(params) => {
-                  const isEditableRow = MaterialEditableColumns.includes(params.field);
+                  const isCellInEditableColumn = MaterialEditableColumns.includes(params.field);
+                  const isCellWithoutCharacteristicsMaterial =
+                    params.field === MaterialColumnSchema.name &&
+                    params.row?.characteristicsMaterial?.length === 0;
                   const isNewRow = params.row?.isNew;
-                  return isNewRow || isEditableRow;
+                  return isNewRow || isCellInEditableColumn || isCellWithoutCharacteristicsMaterial;
                 }}
                 // slots={{ toolbar: GridToolbar }}
                 slots={{
@@ -731,13 +761,12 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 slotProps={{
                   toolbar: { setRows, setRowModesModel },
                 }}
-                onProcessRowUpdateError={handleProcessRowUpdateError}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                getRowSpacing={(params) => ({
-                  top: params.isFirstVisible ? 0 : 5,
-                  bottom: params.isLastVisible ? 0 : 5,
-                })}
+                // getRowSpacing={(params) => ({
+                //   top: params.isFirstVisible ? 0 : 5,
+                //   bottom: params.isLastVisible ? 0 : 5,
+                // })}
                 isRowSelectable={(params: GridRowParams) => {
                   if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
                     return true;
@@ -755,13 +784,27 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                   includeHeaders: true,
                 }}
                 sx={{
+                  [`& .${gridClasses.cell}`]: {
+                    border: 'none',
+                    minHeight: '50px',
+                    height: '100%',
+                  },
+                  [`& .${gridClasses.main}`]: {
+                    // bgcolor: `${grey[50]}`,
+                  },
                   [`& .${gridClasses.row}`]: {
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
+                    borderBottom: `0.5px solid ${grey[50]}`,
                   },
                   '& .MuiDataGrid-cell--editable': {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+                    bgcolor: `${grey[50]}`,
                   },
+                  //   [`& .${gridClasses.row}`]: {
+                  //     bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
+                  //   },
+                  //   '& .MuiDataGrid-cell--editable': {
+                  //     bgcolor: (theme) =>
+                  //       theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+                  //   },
                 }}
                 disableRowSelectionOnClick
                 checkboxSelection
@@ -770,6 +813,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 onColumnVisibilityModelChange={(newModel) => {
                   setColumnVisibilityModel(newModel);
                 }}
+                onCellEditStop={handleCellEditStop}
+                // onCellEditStart={handleCellEditStop}
               />
             </Box>
           </>

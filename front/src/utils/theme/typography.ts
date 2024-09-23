@@ -45,11 +45,6 @@ export const secondaryFont = Barlow({
   fallback: ['Helvetica', 'Arial', 'sans-serif'],
 });
 
-// ----------------------------------------------------------------------
-
-// LEARN MORE
-// https://nextjs.org/docs/basic-features/font-optimization#google-fonts
-
 export const typography = {
   fontFamily: primaryFont.style.fontFamily,
   fontSecondaryFamily: secondaryFont.style.fontFamily,

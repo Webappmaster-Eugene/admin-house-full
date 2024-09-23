@@ -30,7 +30,7 @@ export class OrganizationService implements IOrganizationService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<OrganizationEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allOrganizations = await this.organizationRepository.getAll(skip, take);
     //const allOrganizationsCount = await this.roleRepository.getAllCount();
     return new InternalResponse(allOrganizations);
@@ -40,7 +40,7 @@ export class OrganizationService implements IOrganizationService {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<OrganizationEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allOrganizationsInWorkspace = await this.organizationRepository.getAllInWorkspace(workspaceId, skip, take);
     return new InternalResponse(allOrganizationsInWorkspace);
   }

@@ -22,7 +22,7 @@ export class StatusResourceService implements IStatusResourceService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<StatusResourceEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allStatusResources = await this.statusResourceRepository.getAll(skip, take);
     return new InternalResponse(allStatusResources);
   }

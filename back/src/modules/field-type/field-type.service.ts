@@ -22,7 +22,7 @@ export class FieldTypeService implements IFieldTypeService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldTypeEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldTypes = await this.fieldTypeRepository.getAll(skip, take);
     return new InternalResponse(allFieldTypes);
   }

@@ -86,7 +86,6 @@ export default function RegisterView() {
     // });
 
     if (!isErrorFieldTypeGuard(user)) {
-      console.log(user);
       router.push(returnTo || paths.dashboard.root);
     } else {
       const { error } = user;

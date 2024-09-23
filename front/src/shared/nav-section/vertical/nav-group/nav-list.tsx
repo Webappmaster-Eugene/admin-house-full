@@ -45,6 +45,7 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         info={data.info}
         roles={data.roles}
         caption={data.caption}
+        captionFull={data.captionFull}
         disabled={data.disabled}
         //
         depth={depth}

@@ -18,6 +18,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
   (
     {
       title,
+      titleShort,
       path,
       icon,
       info,
@@ -53,9 +54,9 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
           </Box>
         )}
 
-        {title && (
+        {titleShort && (
           <Box component="span" className="label">
-            {title}
+            {titleShort || title}
           </Box>
         )}
 
@@ -151,7 +152,7 @@ const StyledNavItem = styled(ListItemButton, {
       flexShrink: 0,
     },
     label: {
-      textTransform: 'capitalize',
+      textTransform: 'none',
     },
     caption: {
       color: theme.palette.text.disabled,

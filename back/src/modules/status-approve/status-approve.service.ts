@@ -22,7 +22,7 @@ export class StatusApproveService implements IStatusApproveService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<StatusApproveEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allStatusApproves = await this.statusApproveRepository.getAll(skip, take);
     return new InternalResponse(allStatusApproves);
   }

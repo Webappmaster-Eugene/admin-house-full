@@ -2,12 +2,12 @@ import { GuestGuard } from '@/entities/auth/guard';
 
 import { PropsReactNode } from 'src/utils/types';
 
-import AuthLayout from 'src/layouts/auth/auth.layout';
+import AuthShortLayout from 'src/layouts/auth/auth-short.layout';
 
 export default async function Registerayout({ children }: PropsReactNode) {
   return (
     <GuestGuard>
-      <AuthLayout>{children}</AuthLayout>
+      <AuthShortLayout>{children}</AuthShortLayout>
     </GuestGuard>
   );
 }

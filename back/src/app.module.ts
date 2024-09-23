@@ -55,12 +55,12 @@ const logger: LoggerConfig = new LoggerConfig();
           ttl: 10, // seconds
           socket: {
             // DOC данные подключения redis для прода
-            host: 'redis',
-            port: 6379,
+            //host: 'redis',
+            //port: 6379,
 
             // DOC данные подключения redis для dev
-            // host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-            // port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+            host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
+            port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
           },
         }),
       }),

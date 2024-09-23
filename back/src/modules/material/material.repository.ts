@@ -3,7 +3,7 @@ import { MaterialCreateRequestDto } from './dto/controller/create-material.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IMaterialRepository } from './types/material.repository.interface';
 import { MaterialUpdateRequestDto } from './dto/controller/update-material.dto';
-import { EActiveStatusVariants, EntityUrlParamCommand } from 'libs/contracts';
+import { EntityUrlParamCommand } from 'libs/contracts';
 import { MaterialEntity } from './entities/material.entity';
 import { KFI } from '../../common/utils/di';
 import { existenceEntityHandler } from '../../common/helpers/handlers/existance-entity-handler';
@@ -11,9 +11,7 @@ import { EntityName } from '../../common/types/entity.enum';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
-import { ResponsiblePartnerProducerBusinessValueSchema } from 'libs/contracts/src/models/responsible-partner-producer/responsible-partner-producer-business-value.schema';
 import { MaterialUpdateNameRequestDto } from '../../modules/material/dto/controller/update-name-material.dto';
-import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { MaterialUpdateCategoryRequestDto } from '../../modules/material/dto/controller/update-category-material.dto';
 import { EActiveStatuses } from '.prisma/client';
 import { templateNameMapper } from '../../common/helpers/handlers/template-name-mapper.handler';
@@ -187,13 +185,14 @@ export class MaterialRepository implements IMaterialRepository {
   }
 
   async updateById(materialId: EntityUrlParamCommand.RequestUuidParam, dto: MaterialUpdateRequestDto): Promise<MaterialEntity> {
-    const { namePublic, comment, price, materialStatus, responsiblePartnerUuid, unitMeasurementUuid, sourceInfo } = dto;
+    const { name, namePublic, comment, price, materialStatus, responsiblePartnerUuid, unitMeasurementUuid, sourceInfo } = dto;
     try {
       const updatedMaterial = await this.databaseService.material.update({
         where: {
           uuid: materialId,
         },
         data: {
+          name,
           namePublic,
           comment,
           price,

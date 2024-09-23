@@ -31,7 +31,7 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAll(skip, take);
     return new InternalResponse(allFieldVariantsForSelectorFieldTypes);
   }
@@ -40,7 +40,7 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAllInHandbook(
       handbookId,
       skip,
@@ -53,7 +53,7 @@ export class FieldVariantsForSelectorFieldTypeService implements IFieldVariantsF
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldVariantsForSelectorFieldTypeEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldVariantsForSelectorFieldTypes = await this.fieldVariantsForSelectorFieldTypeRepository.getAllInFieldOfCategoryMaterial(
       fieldOfCategoryMaterialId,
       skip,

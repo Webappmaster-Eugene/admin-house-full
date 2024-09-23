@@ -26,7 +26,7 @@ export class ProjectService implements IProjectService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allOrganizations = await this.projectRepository.getAll(skip, take);
     return new InternalResponse<ProjectEntity[]>(allOrganizations);
   }
@@ -35,7 +35,7 @@ export class ProjectService implements IProjectService {
     workspaceId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allOrganizations = await this.projectRepository.getAllInWorkspace(workspaceId, skip, take);
     return new InternalResponse<ProjectEntity[]>(allOrganizations);
   }
@@ -44,7 +44,7 @@ export class ProjectService implements IProjectService {
     organizationId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<ProjectEntity[] | null>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allOrganizations = await this.projectRepository.getAllInOrganization(organizationId, skip, take);
     return new InternalResponse<ProjectEntity[]>(allOrganizations);
   }

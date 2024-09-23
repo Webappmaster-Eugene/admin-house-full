@@ -31,7 +31,7 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAll(skip, take);
     return new InternalResponse(allCharacteristicsMaterials);
   }
@@ -40,7 +40,7 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allCharacteristicsMaterials);
   }
@@ -49,7 +49,7 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAllInCategoryMaterial(
       categoryMaterialId,
       skip,
@@ -62,7 +62,7 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
     materialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<CharacteristicsMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allCharacteristicsMaterials = await this.characteristicsMaterialRepository.getAllInMaterial(materialId, skip, take);
     return new InternalResponse(allCharacteristicsMaterials);
   }

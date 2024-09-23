@@ -50,7 +50,10 @@ axiosAuthedInstance.interceptors.request.use(
 
 axiosAuthedInstance.interceptors.response.use(
   async (res) => {
-    console.log('responseData onFulfilled', res.data);
+    console.log(
+      `FulfilledResponse: [${res.config.method}] ${res.config.baseURL}${res.config.url} statusCode: ${res.status}`,
+      res.data
+    );
     const responseData = res.data;
     return responseData;
   },
@@ -58,6 +61,10 @@ axiosAuthedInstance.interceptors.response.use(
     const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
     const errorPath = error.request?.path;
     const responseData: ResponseClientType = error.response?.data;
+    console.error(
+      `RejectedResponse: [${error.config.method}] ${error.config.baseURL}${error.config.url} }`,
+      responseData
+    );
     if (
       responseData?.statusCode === 403 &&
       errorPath !== AUTH_PATHS.login &&
@@ -82,17 +89,15 @@ axiosAuthedInstance.interceptors.response.use(
         }
       }
     }
-    console.log('responseData onRejected', responseData);
+
     if (
-      responseData?.statusCode &&
+      (responseData?.statusCode === 401 || responseData?.statusCode === 403) &&
       errorPath !== AUTH_PATHS.login &&
       errorPath !== AUTH_PATHS.register
     ) {
       await logoutUser();
-      // redirect('/');
     }
 
-    console.error('Ошибка от сервера: ', responseData);
     return responseData;
   }
 );

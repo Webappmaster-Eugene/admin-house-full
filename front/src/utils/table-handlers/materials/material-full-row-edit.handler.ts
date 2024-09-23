@@ -10,7 +10,7 @@ import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/mater
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { updateMaterial } from 'src/api/actions/material/update-material.action';
 
-export async function materialEditHandler(
+export async function materialFullRowEditHandler(
   updatedMaterialInfo: TMaterialTableEntity,
   workspaceId: string,
   handbookId: string,

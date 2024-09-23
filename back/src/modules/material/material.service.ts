@@ -13,7 +13,6 @@ import { dataInternalExtractor } from '../../common/helpers/extractors/data-inte
 import { MaterialUpdateNameRequestDto } from '../../modules/material/dto/controller/update-name-material.dto';
 import { MaterialUpdateCategoryRequestDto } from '../../modules/material/dto/controller/update-category-material.dto';
 import { ICharacteristicsMaterialService } from '../../modules/characteristics-material/types/characteristics-material.service.interface';
-import { ICategoryMaterialService } from '../../modules/category-material/types/category-material.service.interface';
 import { IFieldOfCategoryMaterialService } from '../../modules/field-of-category-material/types/field-of-category-material.service.interface';
 import { BackendErrorNames, InternalError } from '../../common/errors';
 
@@ -40,7 +39,7 @@ export class MaterialService implements IMaterialService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<MaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allMaterials = await this.materialRepository.getAll(skip, take);
     return new InternalResponse(allMaterials);
   }
@@ -49,7 +48,7 @@ export class MaterialService implements IMaterialService {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allMaterials = await this.materialRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allMaterials);
   }
@@ -58,7 +57,7 @@ export class MaterialService implements IMaterialService {
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allMaterials = await this.materialRepository.getAllInCategoryMaterial(categoryMaterialId, skip, take);
     return new InternalResponse(allMaterials);
   }

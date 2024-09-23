@@ -47,7 +47,7 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAll(skip, take);
     return new InternalResponse(allFieldOfCategoryMaterials);
   }
@@ -56,7 +56,7 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allFieldOfCategoryMaterials);
   }
@@ -65,7 +65,7 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldOfCategoryMaterials = await this.fieldOfCategoryMaterialRepository.getAllInCategoryMaterial(
       categoryMaterialId,
       skip,

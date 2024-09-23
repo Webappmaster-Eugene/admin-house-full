@@ -32,7 +32,7 @@ export class CategoryMaterialService implements ICategoryMaterialService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allCategoryMaterials = await this.categoryMaterialRepository.getAll(skip, take);
     return new InternalResponse(allCategoryMaterials);
   }
@@ -41,7 +41,7 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allCategoryMaterials = await this.categoryMaterialRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allCategoryMaterials);
   }

@@ -37,10 +37,12 @@ export type NavGroupProps = {
 
 export type NavItemBaseProps = {
   title: string;
+  titleShort?: string;
   path: string;
   icon?: React.ReactElement;
   info?: React.ReactElement;
   caption?: string;
+  captionFull?: string;
   disabled?: boolean;
   roles?: UserRoles[];
   children?: any;

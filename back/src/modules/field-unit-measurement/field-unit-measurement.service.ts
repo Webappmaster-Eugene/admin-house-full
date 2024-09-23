@@ -24,7 +24,7 @@ export class FieldUnitMeasurementService implements IFieldUnitMeasurementService
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldUnitMeasurements = await this.fieldUnitMeasurementRepository.getAll(skip, take);
     return new InternalResponse(allFieldUnitMeasurements);
   }
@@ -33,7 +33,7 @@ export class FieldUnitMeasurementService implements IFieldUnitMeasurementService
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<FieldUnitMeasurementEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allFieldUnitMeasurements = await this.fieldUnitMeasurementRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allFieldUnitMeasurements);
   }

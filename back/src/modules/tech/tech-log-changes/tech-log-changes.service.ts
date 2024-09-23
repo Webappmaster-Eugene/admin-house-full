@@ -22,7 +22,7 @@ export class TechLogChangesService implements ITechLogChangesService {
   }
 
   async getAll(queryParams: IQueryParams): Promise<UniversalInternalResponse<TechLogChangesEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allTechLogChanges = await this.techLogChangesRepository.getAll(skip, take);
     return new InternalResponse(allTechLogChanges);
   }
@@ -31,7 +31,7 @@ export class TechLogChangesService implements ITechLogChangesService {
     EntityNameToSearch: EntityName,
     queryParams: IQueryParams,
   ): Promise<UniversalInternalResponse<TechLogChangesEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allTechLogChanges = await this.techLogChangesRepository.getAllFromEntity(EntityNameToSearch, skip, take);
     return new InternalResponse(allTechLogChanges);
   }

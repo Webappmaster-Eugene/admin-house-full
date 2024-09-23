@@ -22,7 +22,7 @@ export class PriceChangingService implements IPriceChangingService {
   }
 
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allPriceChangings = await this.priceChangingRepository.getAll(skip, take);
     return new InternalResponse(allPriceChangings);
   }
@@ -31,7 +31,7 @@ export class PriceChangingService implements IPriceChangingService {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allPriceChangings = await this.priceChangingRepository.getAllInHandbook(handbookId, skip, take);
     return new InternalResponse(allPriceChangings);
   }
@@ -40,7 +40,7 @@ export class PriceChangingService implements IPriceChangingService {
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allPriceChangings = await this.priceChangingRepository.getAllInCategoryMaterial(categoryMaterialId, skip, take);
     return new InternalResponse(allPriceChangings);
   }
@@ -49,7 +49,7 @@ export class PriceChangingService implements IPriceChangingService {
     materialId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
   ): Promise<UniversalInternalResponse<PriceChangingEntity[]>> {
-    const { skip, take } = queryParams;
+    const { skip, take } = queryParams || {};
     const allPriceChangings = await this.priceChangingRepository.getAllInMaterial(materialId, skip, take);
     return new InternalResponse(allPriceChangings);
   }

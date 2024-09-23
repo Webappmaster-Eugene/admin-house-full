@@ -1,11 +1,16 @@
+'use client';
+
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 
+import { usePathname } from 'src/utils/hooks/router-hooks';
+import { PathsTransformerBreadcrumbMap } from 'src/utils/paths-transformer.breadcrumb';
+
 import LinkItem from './link-item';
-import { CustomBreadcrumbsProps } from './types';
+import { BreadcrumbsLinkProps, CustomBreadcrumbsProps } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +23,25 @@ export default function CustomBreadcrumbs({
   sx,
   ...other
 }: CustomBreadcrumbsProps) {
-  const lastLink = links[links.length - 1].name;
+  const pathname = usePathname();
+  const linksTexts = pathname.split('/');
+  const allLinks: BreadcrumbsLinkProps[] = [];
+  const linksMap = linksTexts.reduce((acc, curValue) => {
+    const elem: BreadcrumbsLinkProps = {};
+    if (/[a-zA-Zа-яА-ЯёЁ0-9]{1,}/g.test(curValue)) {
+      elem.name = PathsTransformerBreadcrumbMap[curValue]?.name || curValue;
+      if (curValue !== linksTexts[linksTexts.length - 2]) {
+        elem.href = PathsTransformerBreadcrumbMap[curValue]?.link;
+      }
+      acc.push(elem);
+    }
+    return acc;
+  }, allLinks);
+
+  // console.log(linksMap);
+  links = links || linksMap;
+
+  const lastLink = links && links[links.length - 1].name;
 
   return (
     <Box sx={{ ...sx }}>

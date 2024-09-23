@@ -18,7 +18,6 @@ import { useCurrentUserStore } from 'src/store/auth/user-auth.store';
 export default function NavMini() {
   const loginedUser: CurrentUserInfo = useCurrentUserStore((state) => state.user);
   const themeState = useTheme();
-
   return (
     <Box
       sx={{
