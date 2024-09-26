@@ -37,6 +37,12 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     return new InternalResponse(allCategoryMaterials);
   }
 
+  // async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
+  //   const { skip, take } = queryParams || {};
+  //   const allCategoryMaterials = await this.categoryMaterialRepository.getAll(skip, take);
+  //   return new InternalResponse(allCategoryMaterials);
+  // }
+
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
@@ -114,4 +120,12 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     const deletedCategoryMaterial = await this.categoryMaterialRepository.deleteById(categoryMaterialId);
     return new InternalResponse(deletedCategoryMaterial);
   }
+
+  // async deleteManyByIds(
+  //   categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam,
+  // ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+  //   const categoryMaterialId = dataInternalExtractor(await getAll;
+  //   const deletedCategoryMaterial = await this.categoryMaterialRepository.deleteById(categoryMaterialId);
+  //   return new InternalResponse(deletedCategoryMaterial);
+  // }
 }

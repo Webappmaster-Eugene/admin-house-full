@@ -50,8 +50,8 @@ export default function FileManagerFileDetails({
   const { workspaceInfo } = useWorkspaceInfoStore((state) => state);
   const allFields =
     workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+  const isDeleteDialogOpen = useBoolean();
 
-  const tagsall = ['jlby', 'dva', 'tri'];
   const tagsAll = fieldsOfCategoryMaterials?.map((field) => field.name);
 
   const toggleTags = useBoolean(true);
@@ -109,7 +109,9 @@ export default function FileManagerFileDetails({
               />
             ))
           }
-          renderInput={(params) => <TextField {...params} placeholder="Добавьте" />}
+          renderInput={(params) => (
+            <TextField {...params} placeholder="Добавьте символ или свойство" />
+          )}
         />
       )}
     </Stack>
@@ -290,64 +292,78 @@ export default function FileManagerFileDetails({
   );
 
   return (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      anchor="right"
-      slotProps={{
-        backdrop: { invisible: true },
-      }}
-      PaperProps={{
-        sx: { width: 320 },
-      }}
-      {...other}
-    >
-      <Scrollbar sx={{ height: 1 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-          <Typography variant="h6"> Информация о категории </Typography>
-        </Stack>
+    <>
+      <Drawer
+        open={open}
+        onClose={onClose}
+        anchor="right"
+        slotProps={{
+          backdrop: { invisible: true },
+        }}
+        PaperProps={{
+          sx: { width: 320 },
+        }}
+        {...other}
+      >
+        <Scrollbar sx={{ height: 1 }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
+            <Typography variant="h6"> Информация о категории </Typography>
+          </Stack>
 
-        <Stack
-          spacing={2.5}
-          justifyContent="center"
-          sx={{
-            p: 2.5,
-            bgcolor: 'background.neutral',
-          }}
-        >
-          <FileThumbnail
-            imageView
-            file="folder"
-            sx={{ width: 64, height: 64 }}
-            imgSx={{ borderRadius: 1 }}
-          />
+          <Stack
+            spacing={2.5}
+            justifyContent="center"
+            sx={{
+              p: 2.5,
+              bgcolor: 'background.neutral',
+            }}
+          >
+            <FileThumbnail
+              imageView
+              file="folder"
+              sx={{ width: 64, height: 64 }}
+              imgSx={{ borderRadius: 1 }}
+            />
 
-          <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
-            {name}
-          </Typography>
+            <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
+              {name}
+            </Typography>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+            <Divider sx={{ borderStyle: 'dashed' }} />
 
-          {renderTags}
+            {renderTags}
 
-          {renderProperties}
-        </Stack>
+            {renderProperties}
+          </Stack>
 
-        {renderShared}
-      </Scrollbar>
+          {renderShared}
+        </Scrollbar>
 
-      <Box sx={{ p: 2.5 }}>
-        <Button
-          fullWidth
-          variant="soft"
-          color="error"
-          size="large"
-          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          onClick={onDelete}
-        >
-          Удалить
-        </Button>
-      </Box>
-    </Drawer>
+        <Box sx={{ p: 2.5 }}>
+          <Button
+            fullWidth
+            variant="soft"
+            color="error"
+            size="large"
+            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            onClick={onDelete}
+          >
+            Удалить
+          </Button>
+        </Box>
+      </Drawer>
+
+      {/* {isDeleteDialogOpen && ( */}
+      {/*  <AlertDialog */}
+      {/*    isDialogOpen={isDeleteDialogOpen} */}
+      {/*    onClickYes={onClickYesDialog} */}
+      {/*    titleDialog={DeleteMaterialDialogTexts.titleDialog} */}
+      {/*    textDialog={templaterCreatorTexts( */}
+      {/*      DeleteCategoryDialogTexts.textDialog, */}
+      {/*      rowSelectionModel[0] as string */}
+      {/*    )} */}
+      {/*  /> */}
+      {/* )} */}
+    </>
   );
 }

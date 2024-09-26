@@ -16,13 +16,13 @@ export type TableProps = {
   onChangePage: (event: unknown, newPage: number) => void;
   onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeDense: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onUpdatePageDeleteRow: (totalRowsInPage: number) => void;
+  onUpdatePageDeleteRow: (totalRowsInPage: number | undefined) => void;
   onUpdatePageDeleteRows: ({
     totalRowsInPage,
     totalRowsFiltered,
   }: {
-    totalRowsInPage: number;
-    totalRowsFiltered: number;
+    totalRowsInPage: number | undefined;
+    totalRowsFiltered: number | undefined;
   }) => void;
   //
   setPage: React.Dispatch<React.SetStateAction<number>>;

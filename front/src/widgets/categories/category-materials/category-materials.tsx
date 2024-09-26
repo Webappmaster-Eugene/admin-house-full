@@ -50,14 +50,14 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
     filters,
   });
 
-  const dataInPage = dataFiltered.slice(
+  const dataInPage = dataFiltered?.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
   const canReset = !!filters.name;
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
   const handleChangeView = useCallback(
     (event: React.MouseEvent<HTMLElement>, newView: string | null) => {
@@ -91,9 +91,9 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
 
       setTableData(deleteRow);
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
+      table.onUpdatePageDeleteRow(dataInPage?.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
+    [dataInPage?.length, enqueueSnackbar, table, tableData]
   );
 
   const handleDeleteItems = useCallback(() => {
@@ -106,10 +106,10 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
     setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
+      totalRowsInPage: dataInPage?.length,
+      totalRowsFiltered: dataFiltered?.length,
     });
-  }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
+  }, [dataFiltered?.length, dataInPage?.length, enqueueSnackbar, table, tableData]);
 
   const renderFilters = (
     <Stack
@@ -139,7 +139,7 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
       canReset={canReset}
       onFilters={handleFilters}
       //
-      results={dataFiltered.length}
+      results={dataFiltered?.length || 0}
     />
   );
 

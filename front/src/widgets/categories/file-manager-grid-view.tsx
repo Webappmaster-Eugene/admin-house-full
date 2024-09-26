@@ -11,7 +11,6 @@ import Iconify from 'src/shared/iconify';
 import { TableProps } from 'src/shared/table';
 
 import FileManagerPanel from './file-manager-panel';
-import FileManagerFolderItem from './file-manager-folder-item';
 import FileManagerActionSelected from './file-manager-action-selected';
 import FileManagerNewFolderDialog from './file-manager-new-folder-dialog';
 
@@ -78,16 +77,16 @@ export default function FileManagerGridView({
               lg: 'repeat(4, 1fr)',
             }}
           >
-            {dataFiltered.map((folder) => (
-              <FileManagerFolderItem
-                key={folder.uuid}
-                folder={folder}
-                selected={selected.includes(folder.uuid)}
-                onSelect={() => onSelectItem(folder.uuid)}
-                onDelete={() => onDeleteItem(folder.uuid)}
-                sx={{ maxWidth: 'auto' }}
-              />
-            ))}
+            {/* {dataFiltered.map((folder) => ( */}
+            {/*  <FileManagerFolderItem */}
+            {/*    key={folder.uuid} */}
+            {/*    folder={folder} */}
+            {/*    selected={selected.includes(folder.uuid)} */}
+            {/*    onSelect={() => onSelectItem(folder.uuid)} */}
+            {/*    onDelete={() => onDeleteItem(folder.uuid)} */}
+            {/*    sx={{ maxWidth: 'auto' }} */}
+            {/*  /> */}
+            {/* ))} */}
           </Box>
         </Collapse>
 

@@ -199,4 +199,26 @@ export class CategoryMaterialController implements ICategoryMaterialController {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
   }
+
+  // //region SWAGGER
+  // // @ApiOkResponse({
+  // //   schema: zodToOpenAPI(CategoryMaterialGetAllDeleteCommand.ResponseSchema),
+  // // })
+  // @ApiOperation({
+  //   summary: 'Удаление нескольких CategoryMaterial внутри Workspace менеджера по их id внутри body',
+  // })
+  // @ApiResponse({ status: 200, type: CategoryMaterialGetAllResponseDto })
+  // @ApiBearerAuth('access-token')
+  // //endregion
+  // @ZodSerializerDto(CategoryMaterialGetAllResponseDto)
+  // @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  // @Delete('workspace/:workspaceId/handbook/:handbookId')
+  // async deleteManyByIdsEP(@UrlParams() urlParams: IUrlParams): Promise<CategoryMaterialDeleteResponseDto> {
+  //   try {
+  //     const { ok, data } = await this.categoryMaterialService.deleteManyByIds(categoryMaterialId);
+  //     return okResponseHandler(ok, data, this.logger);
+  //   } catch (error: unknown) {
+  //     errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
+  //   }
+  // }
 }

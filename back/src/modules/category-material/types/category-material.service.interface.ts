@@ -26,4 +26,7 @@ export interface ICategoryMaterialService
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
   deleteById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
+  // deleteManyByIds: (
+  //   categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[],
+  // ) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
 }

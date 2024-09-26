@@ -38,6 +38,7 @@
     "dayjs": "^1.11.13",
     "dotenv-cli": "^7.4.2",
     "framer-motion": "^10.16.16",
+    "highlight.js": "^11.10.0",
     "i18next": "^23.15.1",
     "i18next-browser-languagedetector": "^8.0.0",
     "jwt-decode": "^4.0.0",

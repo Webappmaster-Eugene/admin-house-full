@@ -4,7 +4,6 @@ import moment from 'moment';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
 import { useState, useCallback, useLayoutEffect } from 'react';
-import { AlertDialogTexts } from '@/widgets/materials/dialog-texts';
 import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
 import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
@@ -63,6 +62,7 @@ import {
 
 import { toRubles } from 'src/utils/helpers/intl';
 import { deepEqualAndIn } from 'src/utils/helpers/deep-equal-and-in';
+import { DeleteMaterialDialogTexts } from 'src/utils/const/dialog-texts';
 import { deepEqualAndInTableKeys } from 'src/utils/helpers/deep-equal-in-tablekeys';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
@@ -827,9 +827,9 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         <AlertDialog
           isDialogOpen={isDialogOpen}
           onClickYes={onClickYesDialog}
-          titleDialog={AlertDialogTexts.titleDialog}
+          titleDialog={DeleteMaterialDialogTexts.titleDialog}
           textDialog={templaterCreatorTexts(
-            AlertDialogTexts.textDialog,
+            DeleteMaterialDialogTexts.textDialog,
             rowSelectionModel[0] as string
           )}
         />

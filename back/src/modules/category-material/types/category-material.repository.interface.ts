@@ -3,6 +3,7 @@ import { CategoryMaterialUpdateRequestDto } from '../dto/controller/update-categ
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
 import { CategoryMaterialEntity } from '../entities/category-material.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import { Prisma } from '.prisma/client';
 
 export interface ICategoryMaterialRepository
   extends IRepositoryCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {
@@ -16,4 +17,5 @@ export interface ICategoryMaterialRepository
   ) => Promise<CategoryMaterialEntity>;
   rebuildCategoryMaterialNameById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
   deleteById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
+  // deleteManyByIds: (categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[]) => Promise<Prisma.BatchPayload>;
 }

@@ -41,4 +41,5 @@ export interface ICategoryMaterialController
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
   ) => Promise<CategoryMaterialDeleteResponseDto>;
+  // deleteManyByIdsEP: (urlParams: IUrlParams) => Promise<CategoryMaterialGetAllResponseDto>;
 }

@@ -11,11 +11,9 @@ import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repo
 import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 import { EntityUrlParamCommand } from 'libs/contracts';
-import { templateNameMapper } from '../../common/helpers/handlers/template-name-mapper.handler';
-import { regexFieldCategoryReplacer } from '../../common/helpers/regex/regexFieldCategoryReplacer';
 import { fieldCategoryMaterialExtractor } from '../../common/helpers/regex/fieldCategoryMaterialExtractor';
-import { fieldOfCategoryMaterialTemplateReGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialRegenerator';
 import { fieldOfCategoryMaterialTemplateGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
+import { Prisma } from '.prisma/client';
 
 @Injectable()
 export class CategoryMaterialRepository implements ICategoryMaterialRepository {
@@ -295,4 +293,19 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
       errorRepositoryHandler(error);
     }
   }
+
+  // async deleteManyByIds(categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[]): Promise<Prisma.BatchPayload> {
+  //   try {
+  //     const deletedCategoryMaterials: Prisma.BatchPayload = await this.databaseService.categoryMaterial.deleteMany({
+  //       where: {
+  //         uuid: {
+  //           in: categoryMaterialIds,
+  //         },
+  //       },
+  //     });
+  //     return deletedCategoryMaterials;
+  //   } catch (error: unknown) {
+  //     errorRepositoryHandler(error);
+  //   }
+  // }
 }
