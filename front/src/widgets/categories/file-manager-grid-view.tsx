@@ -138,7 +138,7 @@ export default function FileManagerGridView({
         onCreate={() => {
           newFolder.onFalse();
           setFolderName('');
-          console.info('CREATE NEW FOLDER', folderName);
+          console.info('CREATE NEW FOLDERR', folderName);
         }}
         folderName={folderName}
         onChangeFolderName={handleChangeFolderName}
