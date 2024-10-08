@@ -2,7 +2,12 @@
 
 import { useSnackbar } from 'notistack';
 import { useState, useCallback } from 'react';
-import { CategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
+import {
+  CategoryMaterialGetCommand,
+  CategoryMaterialGetAllCommand,
+  GlobalCategoryMaterialGetAllCommand,
+  FieldOfCategoryMaterialGetAllCommand,
+} from '@numart/house-admin-contracts';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -18,12 +23,17 @@ import Iconify from 'src/shared/iconify';
 import EmptyContent from 'src/shared/empty-content';
 import { ConfirmDialog } from 'src/shared/custom-dialog';
 import { useTable, getComparator } from 'src/shared/table';
+import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
+import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { defaultFilters } from 'src/widgets/categories/category-materials/consts';
-import FileManagerNewFolderDialog from 'src/widgets/categories/file-manager-new-folder-dialog';
+import EditCategoryForm from 'src/shared/popups/edit-category-form/edit-category-form';
+import CreateNewCategoryDialog from 'src/widgets/categories/create-new-category-dialog';
+import CreateCategoryForm from 'src/shared/popups/create-category-form/create-category-form';
 import { IFileFilters, IFileFilterValue } from 'src/widgets/categories/category-materials/types';
 import { CategoryMaterialProps } from 'src/widgets/categories/category-materials/category-materials.props';
 import FileManagerTable from 'src/widgets/categories/category-materials/category-table/file-manager-table';
 import { applyFilterHandler } from 'src/widgets/categories/category-materials/helpers/apply-filter.handler';
+import FileManagerGridView from 'src/widgets/categories/category-materials/category-grid/file-manager-grid-view';
 import FileManagerFilters from 'src/widgets/categories/category-materials/category-filters/file-manager-filters';
 
 import FileManagerFiltersResult from '../file-manager-filters-result';
@@ -31,13 +41,26 @@ import FileManagerFiltersResult from '../file-manager-filters-result';
 export default function CategoryMaterials({ materials, categories }: CategoryMaterialProps) {
   const { enqueueSnackbar } = useSnackbar();
 
+  const { workspaceInfo } = useWorkspaceInfoStore((state) => state);
+
+  const allFields =
+    workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+
+  const allGlobalCategories =
+    workspaceInfo?.allGlobalCategories as GlobalCategoryMaterialGetAllCommand.ResponseEntity;
+
   const table = useTable({ defaultRowsPerPage: 10 });
 
   const confirm = useBoolean();
 
-  const upload = useBoolean();
+  const isCreatingNewCategory = useBoolean();
+
+  const isChangingCategory = useBoolean();
 
   const [view, setView] = useState('list');
+
+  const [categoryToChange, setCategoryToChange] =
+    useState<CategoryMaterialGetCommand.ResponseEntity>();
 
   const [tableData, setTableData] =
     useState<CategoryMaterialGetAllCommand.ResponseEntity>(categories);
@@ -67,6 +90,14 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
     },
     []
   );
+
+  const handleChangeCategory = (
+    event: React.MouseEvent<HTMLElement>,
+    categoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity
+  ) => {
+    isChangingCategory.onTrue();
+    setCategoryToChange(categoryInfoToChange);
+  };
 
   const handleFilters = useCallback(
     (name: string, value: IFileFilterValue) => {
@@ -158,7 +189,7 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
           <IconButton
             size="small"
             color="primary"
-            onClick={upload.onTrue}
+            onClick={isCreatingNewCategory.onTrue}
             sx={{
               width: 24,
               height: 24,
@@ -172,6 +203,16 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
             <Iconify icon="mingcute:add-line" />
           </IconButton>
         </Stack>
+        <CustomBreadcrumbs
+          // heading="Carousel"
+          sx={{
+            paddingRight: 3,
+            marginBottom: 2,
+            marginTop: 1,
+            width: '100%',
+            maxWidth: 'xl',
+          }}
+        />
         <Stack
           spacing={2.5}
           sx={{
@@ -193,27 +234,32 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
           />
         ) : (
           <>
-            {/* {view === 'list' ? ( */}
-            <FileManagerTable
-              table={table}
-              dataFiltered={dataFiltered}
-              onDeleteRow={handleDeleteItem}
-              notFound={notFound}
-              onOpenConfirm={confirm.onTrue}
-            />
-            {/* ) : ( */}
-            {/* <FileManagerGridView */}
-            {/*  table={table} */}
-            {/*  dataFiltered={dataFiltered} */}
-            {/*  onDeleteItem={handleDeleteItem} */}
-            {/*  onOpenConfirm={confirm.onTrue} */}
-            {/* /> */}
-            {/* )} */}
+            {view === 'list' ? (
+              <FileManagerTable
+                table={table}
+                dataFiltered={dataFiltered}
+                onDeleteRow={handleDeleteItem}
+                notFound={notFound}
+                onOpenConfirm={confirm.onTrue}
+                onOpenChangerPopup={handleChangeCategory}
+              />
+            ) : (
+              <FileManagerGridView
+                table={table}
+                dataFiltered={dataFiltered}
+                onDeleteItem={handleDeleteItem}
+                onOpenConfirm={confirm.onTrue}
+                onOpenChangerPopup={handleChangeCategory}
+              />
+            )}
           </>
         )}
       </Container>
 
-      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} />
+      <CreateNewCategoryDialog
+        open={isCreatingNewCategory.value}
+        onClose={isCreatingNewCategory.onFalse}
+      />
 
       <ConfirmDialog
         open={confirm.value}
@@ -239,7 +285,22 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
         }
       />
 
-      {/* <FileManagerNewFolderDialog */}
+      <EditCategoryForm
+        allFields={allFields}
+        allGlobalCategories={allGlobalCategories}
+        currentCategoryInfo={categoryToChange as CategoryMaterialGetCommand.ResponseEntity}
+        open={isChangingCategory.value}
+        onClose={isChangingCategory.onFalse}
+      />
+
+      <CreateCategoryForm
+        openCreateCategoryPopup={isCreatingNewCategory.value}
+        allGlobalCategories={allGlobalCategories}
+        onCloseCreateCategoryPopup={isCreatingNewCategory.onFalse}
+        allFields={allFields}
+      />
+
+      {/* <CreateNewCategoryDialog */}
       {/*  open={newFolder.value} */}
       {/*  onClose={newFolder.onFalse} */}
       {/*  title="Создание новой категории" */}

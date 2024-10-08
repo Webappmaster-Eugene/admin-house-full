@@ -21,6 +21,7 @@ export default function CustomBreadcrumbs({
   moreLink,
   activeLast,
   sx,
+  concreteCrumbName,
   ...other
 }: CustomBreadcrumbsProps) {
   const pathname = usePathname();
@@ -29,7 +30,7 @@ export default function CustomBreadcrumbs({
   const linksMap = linksTexts.reduce((acc, curValue) => {
     const elem: BreadcrumbsLinkProps = {};
     if (/[a-zA-Zа-яА-ЯёЁ0-9]{1,}/g.test(curValue)) {
-      elem.name = PathsTransformerBreadcrumbMap[curValue]?.name || curValue;
+      elem.name = PathsTransformerBreadcrumbMap[curValue]?.name || concreteCrumbName || curValue;
       if (curValue !== linksTexts[linksTexts.length - 2]) {
         elem.href = PathsTransformerBreadcrumbMap[curValue]?.link;
       }

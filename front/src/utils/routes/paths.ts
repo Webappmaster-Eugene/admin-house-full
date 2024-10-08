@@ -20,6 +20,7 @@ export const paths = {
   dashboard: {
     root: ROOTS.DASHBOARD,
     categoryMaterials: `${ROOTS.DASHBOARD}/category-materials`,
+    concreteCategoryMaterial: `${ROOTS.DASHBOARD}/category-materials/:categoryMaterialId`,
     materials: `${ROOTS.DASHBOARD}/materials`,
     fields: `${ROOTS.DASHBOARD}/fields`,
     characteristics: `${ROOTS.DASHBOARD}/characteristics`,

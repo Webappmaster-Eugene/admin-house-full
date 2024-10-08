@@ -3,7 +3,10 @@
 #lint, tests
 
 name: Check
-on: push
+on:
+  push:
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0
 
 jobs:
   job-front-lint:

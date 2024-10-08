@@ -13,7 +13,7 @@ import { NavListProps, NavSubListProps } from 'src/shared/nav-section/types';
 export default function NavList({ data, depth, slotProps }: NavListProps) {
   const pathname = usePathname();
 
-  const active = useActiveLink(data.path, !!data.children);
+  const active = useActiveLink(data?.path, !!data.children);
 
   const [openMenu, setOpenMenu] = useState(active);
 
@@ -50,7 +50,8 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         //
         depth={depth}
         hasChild={!!data.children}
-        externalLink={data.path.includes('http')}
+        needButtonLink={data.needButtonLink}
+        externalLink={data?.path?.includes('http')}
         currentRole={slotProps?.currentRole}
         //
         active={active}

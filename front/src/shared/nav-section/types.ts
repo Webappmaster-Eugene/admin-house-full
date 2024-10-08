@@ -38,7 +38,8 @@ export type NavGroupProps = {
 export type NavItemBaseProps = {
   title: string;
   titleShort?: string;
-  path: string;
+  needButtonLink?: boolean;
+  path?: string;
   icon?: React.ReactElement;
   info?: React.ReactElement;
   caption?: string;
@@ -56,11 +57,13 @@ export type SlotProps = {
   currentRole?: UserRoles;
 };
 
+export type NavItems = {
+  roles?: UserRoles[];
+  subheader: string;
+  items: NavItemBaseProps[];
+}[];
+
 export type NavProps = StackProps & {
-  data: {
-    roles?: UserRoles[];
-    subheader: string;
-    items: NavItemBaseProps[];
-  }[];
+  data: NavItems;
   slotProps?: SlotProps;
 };

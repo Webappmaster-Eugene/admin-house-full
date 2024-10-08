@@ -1,7 +1,9 @@
 import { forwardRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha, styled } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -22,6 +24,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
       info,
       disabled,
       caption,
+      needButtonLink,
       captionFull,
       roles,
       //
@@ -36,6 +39,16 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
     ref
   ) => {
     const subItem = depth !== 1;
+    const router = useRouter();
+
+    const hasButton = hasChild && path && needButtonLink;
+
+    const handleClickHeader = (event: any) => {
+      if (path) {
+        event.stopPropagation();
+        router.push(path);
+      }
+    };
 
     const renderContent = (
       <StyledNavItem
@@ -63,7 +76,11 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
 
         {title && (
           <Box component="span" sx={{ flex: '1 1 auto', minWidth: 0 }}>
-            <Box component="span" className="label">
+            <Box
+              component="span"
+              className="label"
+              sx={{ cursor: 'pointer', ':hover': { color: 'primary.main' } }}
+            >
               {title}
             </Box>
 
@@ -81,6 +98,21 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
           <Box component="span" className="info">
             {info}
           </Box>
+        )}
+
+        {hasButton && (
+          <Button
+            variant="contained"
+            onClick={(event) => handleClickHeader(event)}
+            color="success"
+            sx={{
+              fontSize: '9px',
+              padding: '4px 2px 6px 2px',
+              minWidth: '50px',
+            }}
+          >
+            Перейти
+          </Button>
         )}
 
         {hasChild && (
@@ -123,7 +155,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
     return (
       <Link
         component={RouterLink}
-        href={path}
+        href={path || '#'}
         color="inherit"
         underline="none"
         sx={{

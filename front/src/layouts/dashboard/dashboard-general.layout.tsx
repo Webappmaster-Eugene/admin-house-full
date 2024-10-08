@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 
 import { PropsReactNode } from 'src/utils/types';
 import { useBoolean } from 'src/utils/hooks/use-boolean';
-import { useResponsive } from 'src/utils/hooks/use-responsive';
 
 import Main from 'src/layouts/dashboard/main';
 import Header from 'src/layouts/dashboard/header/header';
@@ -24,7 +23,6 @@ export default function DashboardGeneralLayout({ children }: PropsReactNode) {
 
   const isMiniVisible = settings.themeLayout === 'mini';
   const isVerticalVisible = settings.themeLayout === 'vertical';
-  const isMediaMoreThanLg = useResponsive('up', 'lg');
 
   return (
     <>

@@ -20,6 +20,7 @@ import {
   FieldUnitMeasurementGetAllCommand,
   CharacteristicsMaterialGetAllCommand,
   ResponsiblePartnerProducerGetCommand,
+  FieldOfCategoryMaterialGetAllCommand,
   ResponsiblePartnerProducerGetAllCommand,
 } from '@numart/house-admin-contracts';
 
@@ -74,6 +75,7 @@ import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-re
 import { isEntityFieldUnitMeasurementTG } from 'src/utils/type-guards/is-entity-field-unit-measurement.type-guard';
 
 import { MaterialsProps } from 'src/widgets/materials/material.props';
+import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { CustomNoRowsOverlay } from 'src/shared/no-rows-overlay/NoRowsOverlay';
@@ -481,7 +483,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       editable: true,
       hideable: false,
       hideSortIcons: true,
-      resizable: false,
+      // resizable: true,
       sortable: false,
     },
     {
@@ -650,18 +652,22 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         if (characteristicsMaterial && characteristicsMaterial.length > 0) {
           finishValue = '';
           let counter = 1;
-          const allFieldUnitMeasurements = workspaceInfo?.allFieldsUnitMeasurementsOfHandbook;
+          const allFieldUnitMeasurements =
+            workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
+          const allFieldsOfCategoryMaterial =
+            workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
 
           finishValue = characteristicsMaterial.reduce((acc, curValue) => {
-            let charateristicUnitMeasurement;
-            if (!isErrorFieldTypeGuard(allFieldUnitMeasurements)) {
-              const charateristicUnitMeasurementObject = allFieldUnitMeasurements?.find(
-                (elem) => elem.uuid === curValue.fieldOfCategoryMaterial.unitOfMeasurementUuid
-              );
+            const thisCharateristicFieldOfCategoryMaterial = allFieldsOfCategoryMaterial.find(
+              (elem) => elem.uuid === curValue.fieldOfCategoryMaterialUuid
+            );
 
-              charateristicUnitMeasurement = charateristicUnitMeasurementObject?.name;
+            let thisCharateristicUnitMeasurementName: string;
+            if (allFieldUnitMeasurements && !isErrorFieldTypeGuard(allFieldUnitMeasurements)) {
+              thisCharateristicUnitMeasurementName = thisCharateristicFieldOfCategoryMaterial
+                ?.unitOfMeasurement?.name as string;
+              acc += `${counter}) ${thisCharateristicFieldOfCategoryMaterial?.name} = ${curValue.value}${thisCharateristicUnitMeasurementName && thisCharateristicUnitMeasurementName !== '-' ? ` (${thisCharateristicUnitMeasurementName}); ` : '; '}`;
             }
-            acc += `${counter}) ${curValue.value} = ${curValue.value}${charateristicUnitMeasurement && charateristicUnitMeasurement !== '-' ? ` (${charateristicUnitMeasurement}); ` : '; '}`;
 
             counter += 1;
             return acc;
@@ -713,10 +719,25 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         {materialsDataGridInitialState ? (
           <>
             <Typography variant="h4"> Справочник материалов</Typography>
+            <CustomBreadcrumbs
+              // heading="Carousel"
+              sx={{
+                paddingRight: 3,
+                marginBottom: 2,
+                marginTop: 1,
+                width: '100%',
+                maxWidth: 'xl',
+              }}
+              concreteCrumbName="Листовые"
+            />
             <Box sx={{ width: '100%', maxWidth: '100vw' }}>
               <DataGrid
                 apiRef={apiRef}
-                localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
+                localeText={{
+                  columnsManagementReset: 'Сбросить',
+                  columnsManagementShowHideAllText: 'Показать/скрыть все',
+                  ...ruRU.components.MuiDataGrid.defaultProps.localeText,
+                }}
                 initialState={{
                   ...columnsInitialState,
                   ...materialsDataGridInitialState,
@@ -768,7 +789,11 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 //   bottom: params.isLastVisible ? 0 : 5,
                 // })}
                 isRowSelectable={(params: GridRowParams) => {
-                  if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
+                  //   if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
+                  //     return true;
+                  //   }
+
+                  if (!isCreateRowMode) {
                     return true;
                   }
 

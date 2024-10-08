@@ -163,7 +163,7 @@ export class UserRepository implements IUserRepository {
           documents,
           avatar,
           roles: {
-            connect: rolesUuids.map(roleUuid => ({ uuid: roleUuid })) || [],
+            connect: rolesUuids?.map(roleUuid => ({ uuid: roleUuid })) || [],
           },
         },
         include: {
@@ -229,7 +229,7 @@ export class UserRepository implements IUserRepository {
         },
         data: {
           roles: {
-            connect: dto.rolesIds.map(roleId => ({ idRole: roleId })) || [],
+            connect: dto.rolesIds?.map(roleId => ({ idRole: roleId })) || [],
           },
         },
         include: {

@@ -1,54 +1,58 @@
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
+import { CategoryMaterialGetCommand } from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
-import { CardProps } from '@mui/material/Card';
+import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { fData } from 'src/utils/format-number';
 import { useBoolean } from 'src/utils/hooks/use-boolean';
+import { fCountMaterial } from 'src/utils/format-number';
 import { useCopyToClipboard } from 'src/utils/hooks/use-copy-to-clipboard';
 
 import Iconify from 'src/shared/iconify';
-import { usePopover } from 'src/shared/custom-popover';
-import { IFolderManager } from 'src/widgets/categories/category-materials/types';
-
-import FileManagerNewFolderDialog from './file-manager-new-folder-dialog';
+import CustomPopover, { usePopover } from 'src/shared/custom-popover';
+import CreateNewCategoryDialog from 'src/widgets/categories/create-new-category-dialog';
+import { CategoryItemProps } from 'src/widgets/categories/category-materials/category-item/category-item.props';
+import FileManagerFileDetails from 'src/widgets/categories/category-materials/category-details/file-manager-file-details';
 
 // ----------------------------------------------------------------------
 
-interface Props extends CardProps {
-  folder: IFolderManager;
-  selected?: boolean;
-  onSelect?: VoidFunction;
-  onDelete: VoidFunction;
-}
-
 export default function FileManagerFolderItem({
-  folder,
+  category,
   selected,
   onSelect,
   onDelete,
   sx,
   ...other
-}: Props) {
+}: CategoryItemProps) {
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+
+  const {
+    name,
+    templateName,
+    uuid,
+    comment,
+    globalCategoryMaterial,
+    fieldsOfCategoryMaterials,
+    materials,
+    fieldsOfCategoryMaterialsInTemplate,
+  } = category as CategoryMaterialGetCommand.ResponseEntity;
 
   const { copy } = useCopyToClipboard();
 
-  const [inviteEmail, setInviteEmail] = useState('');
-
-  const [folderName, setFolderName] = useState(folder.name);
+  const [folderName, setFolderName] = useState(category.name);
 
   const editFolder = useBoolean();
 
   const checkbox = useBoolean();
-
-  const share = useBoolean();
 
   const popover = usePopover();
 
@@ -56,20 +60,18 @@ export default function FileManagerFolderItem({
 
   const details = useBoolean();
 
-  const favorite = useBoolean(folder.isFavorited);
-
-  const handleChangeInvite = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setInviteEmail(event.target.value);
-  }, []);
-
   const handleChangeFolderName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setFolderName(event.target.value);
   }, []);
 
   const handleCopy = useCallback(() => {
-    enqueueSnackbar('Copied!');
-    copy(folder.url);
-  }, [copy, enqueueSnackbar, folder.url]);
+    enqueueSnackbar('Шаблон скопирован!');
+    if (category?.templateName) {
+      copy(category?.templateName);
+    } else {
+      copy(category?.name);
+    }
+  }, [copy, enqueueSnackbar, category]);
 
   const renderAction = (
     <Stack
@@ -112,10 +114,10 @@ export default function FileManagerFolderItem({
   const renderText = (
     <ListItemText
       onClick={details.onTrue}
-      primary={folder.name}
+      primary={category.name}
       secondary={
         <>
-          {fData(folder.size)}
+          {}
           <Box
             component="span"
             sx={{
@@ -126,7 +128,7 @@ export default function FileManagerFolderItem({
               bgcolor: 'currentColor',
             }}
           />
-          {folder.totalFiles} files
+          {fCountMaterial(category && materials?.length)}
         </>
       }
       primaryTypographyProps={{
@@ -164,6 +166,7 @@ export default function FileManagerFolderItem({
           }),
           ...sx,
         }}
+        // onClick={(event) => {}}
         {...other}
       >
         <Box onMouseEnter={checkbox.onTrue} onMouseLeave={checkbox.onFalse}>
@@ -175,57 +178,46 @@ export default function FileManagerFolderItem({
         {renderText}
       </Stack>
 
-      {/* <CustomPopover */}
-      {/*  open={popover.open} */}
-      {/*  onClose={popover.onClose} */}
-      {/*  arrow="right-top" */}
-      {/*  sx={{ width: 160 }} */}
-      {/* > */}
-      {/*  <MenuItem */}
-      {/*    onClick={() => { */}
-      {/*      popover.onClose(); */}
-      {/*      handleCopy(); */}
-      {/*    }} */}
-      {/*  > */}
-      {/*    <Iconify icon="eva:link-2-fill" /> */}
-      {/*    Copy Link */}
-      {/*  </MenuItem> */}
+      <CustomPopover
+        open={popover.open}
+        onClose={popover.onClose}
+        arrow="right-top"
+        sx={{ width: 160 }}
+      >
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            handleCopy();
+          }}
+        >
+          <Iconify icon="eva:link-2-fill" />
+          Скопировать
+        </MenuItem>
 
-      {/*  <MenuItem */}
-      {/*    onClick={() => { */}
-      {/*      popover.onClose(); */}
-      {/*      share.onTrue(); */}
-      {/*    }} */}
-      {/*  > */}
-      {/*    <Iconify icon="solar:share-bold" /> */}
-      {/*    Share */}
-      {/*  </MenuItem> */}
+        <MenuItem
+          onClick={() => {
+            router.push(`${uuid}`);
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Подробно
+        </MenuItem>
 
-      {/*  <MenuItem */}
-      {/*    onClick={() => { */}
-      {/*      popover.onClose(); */}
-      {/*      editFolder.onTrue(); */}
-      {/*    }} */}
-      {/*  > */}
-      {/*    <Iconify icon="solar:pen-bold" /> */}
-      {/*    Edit */}
-      {/*  </MenuItem> */}
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
-      {/*  <Divider sx={{ borderStyle: 'dashed' }} /> */}
+        <MenuItem
+          onClick={() => {
+            confirm.onTrue();
+            popover.onClose();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+          Удалить
+        </MenuItem>
+      </CustomPopover>
 
-      {/*  <MenuItem */}
-      {/*    onClick={() => { */}
-      {/*      confirm.onTrue(); */}
-      {/*      popover.onClose(); */}
-      {/*    }} */}
-      {/*    sx={{ color: 'error.main' }} */}
-      {/*  > */}
-      {/*    <Iconify icon="solar:trash-bin-trash-bold" /> */}
-      {/*    Delete */}
-      {/*  </MenuItem> */}
-      {/* </CustomPopover> */}
-
-      <FileManagerNewFolderDialog
+      <CreateNewCategoryDialog
         open={editFolder.value}
         onClose={editFolder.onFalse}
         title="Edit Folder"
@@ -249,6 +241,14 @@ export default function FileManagerFolderItem({
       {/*    </Button> */}
       {/*  } */}
       {/* /> */}
+
+      <FileManagerFileDetails
+        item={category}
+        onCopyLink={handleCopy}
+        open={details.value}
+        onClose={details.onFalse}
+        onDelete={onDelete}
+      />
     </>
   );
 }

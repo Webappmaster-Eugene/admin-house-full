@@ -65,7 +65,7 @@ export default function TableSelectedAction({
           }),
         }}
       >
-        {numSelected} selected
+        {numSelected} записей выбрано
       </Typography>
 
       {action && action}

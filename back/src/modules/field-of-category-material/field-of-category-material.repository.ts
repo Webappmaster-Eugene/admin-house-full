@@ -174,11 +174,9 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           fieldTypeUuid,
           isRequired,
           categoriesMaterial: {
-            connect: [
-              ...categoriesMaterial.map(categoryMaterial => ({
-                uuid: categoryMaterial.uuid,
-              })),
-            ],
+            connect: categoriesMaterial?.map(categoryMaterial => ({
+              uuid: categoryMaterial.uuid,
+            })),
           },
           unitOfMeasurementUuid,
           handbookUuid: handbookId,
@@ -248,16 +246,12 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           fieldOfCategoryMaterialStatus,
           fieldTypeUuid,
           categoriesMaterial: {
-            disconnect: [
-              ...oldCategoriesOfFieldOfCategoryMaterial.categoriesMaterial.map(categoryMaterial => ({
-                uuid: categoryMaterial.uuid,
-              })),
-            ],
-            connect: [
-              ...categoriesMaterial.map(categoryMaterial => ({
-                uuid: categoryMaterial.uuid,
-              })),
-            ],
+            disconnect: oldCategoriesOfFieldOfCategoryMaterial.categoriesMaterial?.map(categoryMaterial => ({
+              uuid: categoryMaterial.uuid,
+            })),
+            connect: categoriesMaterial?.map(categoryMaterial => ({
+              uuid: categoryMaterial.uuid,
+            })),
           },
           // categoriesMaterialsTemplatesIncludesThisField: {
           //   disconnect: [

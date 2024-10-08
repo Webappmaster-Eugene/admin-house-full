@@ -13,7 +13,7 @@ import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handl
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { fieldCategoryMaterialExtractor } from '../../common/helpers/regex/fieldCategoryMaterialExtractor';
 import { fieldOfCategoryMaterialTemplateGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
-import { Prisma } from '.prisma/client';
+import { RegexTemplateNameTester } from '../../common/helpers/regex/regexTemplateNameTester';
 
 @Injectable()
 export class CategoryMaterialRepository implements ICategoryMaterialRepository {
@@ -113,18 +113,14 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         data: {
           name,
           fieldsOfCategoryMaterials: {
-            connect: [
-              ...fieldsOfCategoryMaterials.map(fieldOfCategoryMaterial => ({
-                uuid: fieldOfCategoryMaterial.uuid,
-              })),
-            ],
+            connect: fieldsOfCategoryMaterials?.map(fieldOfCategoryMaterial => ({
+              uuid: fieldOfCategoryMaterial.uuid,
+            })),
           },
           fieldsOfCategoryMaterialsInTemplate: {
-            connect: [
-              ...fieldsOfCategoryMaterialsInTemplate.map(fieldOfCategoryMaterialsInTemplate => ({
-                uuid: fieldOfCategoryMaterialsInTemplate.uuid,
-              })),
-            ],
+            connect: fieldsOfCategoryMaterialsInTemplate?.map(fieldOfCategoryMaterialsInTemplate => ({
+              uuid: fieldOfCategoryMaterialsInTemplate.uuid,
+            })),
           },
           numInOrder,
           comment,
@@ -182,28 +178,20 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
           comment,
           categoryMaterialStatus,
           fieldsOfCategoryMaterials: {
-            disconnect: [
-              ...oldCategoryMaterialInfo.fieldsOfCategoryMaterials.map(fieldOfCategoryMaterial => ({
-                uuid: fieldOfCategoryMaterial.uuid,
-              })),
-            ],
-            connect: [
-              ...fieldsOfCategoryMaterials.map(fieldOfCategoryMaterial => ({
-                uuid: fieldOfCategoryMaterial.uuid,
-              })),
-            ],
+            disconnect: oldCategoryMaterialInfo.fieldsOfCategoryMaterials?.map(fieldOfCategoryMaterial => ({
+              uuid: fieldOfCategoryMaterial.uuid,
+            })),
+            connect: fieldsOfCategoryMaterials?.map(fieldOfCategoryMaterial => ({
+              uuid: fieldOfCategoryMaterial.uuid,
+            })),
           },
           fieldsOfCategoryMaterialsInTemplate: {
-            disconnect: [
-              ...oldCategoryMaterialInfo.fieldsOfCategoryMaterialsInTemplate.map(categoryMaterial => ({
-                uuid: categoryMaterial.uuid,
-              })),
-            ],
-            connect: [
-              ...fieldsOfCategoryMaterialsInTemplate.map(fieldOfCategoryMaterialsInTemplate => ({
-                uuid: fieldOfCategoryMaterialsInTemplate.uuid,
-              })),
-            ],
+            disconnect: oldCategoryMaterialInfo.fieldsOfCategoryMaterialsInTemplate?.map(categoryMaterial => ({
+              uuid: categoryMaterial.uuid,
+            })),
+            connect: fieldsOfCategoryMaterialsInTemplate?.map(fieldOfCategoryMaterialsInTemplate => ({
+              uuid: fieldOfCategoryMaterialsInTemplate.uuid,
+            })),
           },
         },
         include: {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
 import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
@@ -46,13 +47,19 @@ export default function FileManagerFileDetails({
     fieldsOfCategoryMaterialsInTemplate,
     materials,
     fieldsOfCategoryMaterials,
+    uuid,
   } = item;
+  const router = useRouter();
   const { workspaceInfo } = useWorkspaceInfoStore((state) => state);
   const allFields =
     workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
   const isDeleteDialogOpen = useBoolean();
 
-  const tagsAll = fieldsOfCategoryMaterials?.map((field) => field.name);
+  const onMoreClick = (event: any) => {
+    router.push(uuid);
+  };
+
+  const tagsAll = allFields?.map((field) => field.name);
 
   const toggleTags = useBoolean(true);
 
@@ -84,6 +91,7 @@ export default function FileManagerFileDetails({
 
       {toggleTags.value && (
         <Autocomplete
+          disabled
           multiple
           freeSolo
           options={tagsAll || []}
@@ -110,7 +118,11 @@ export default function FileManagerFileDetails({
             ))
           }
           renderInput={(params) => (
-            <TextField {...params} placeholder="Добавьте символ или свойство" />
+            <TextField
+              {...params}
+              // placeholder="Добавьте символ или свойство"
+              placeholder={tagsForInput?.length !== 0 ? '' : 'Шаблонное имя не задано'}
+            />
           )}
         />
       )}
@@ -287,7 +299,18 @@ export default function FileManagerFileDetails({
 
   const renderShared = (
     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-      <Typography variant="subtitle2"> Возможные действия: </Typography>
+      {/* <Typography variant="subtitle2"> Подробнее: </Typography> */}
+
+      <Button
+        fullWidth
+        variant="soft"
+        color="success"
+        size="large"
+        endIcon={<Iconify icon="solar:info-circle-broken" />}
+        onClick={onMoreClick}
+      >
+        Перейти
+      </Button>
     </Stack>
   );
 

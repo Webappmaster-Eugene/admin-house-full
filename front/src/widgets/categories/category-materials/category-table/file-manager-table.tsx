@@ -25,6 +25,7 @@ export default function FileManagerTable({
   onDeleteRow,
   dataFiltered,
   onOpenConfirm,
+  onOpenChangerPopup,
 }: CategoryTableProps) {
   const theme = useTheme();
 
@@ -64,19 +65,11 @@ export default function FileManagerTable({
             )
           }
           action={
-            <>
-              <Tooltip title="Share">
-                <IconButton color="primary">
-                  <Iconify icon="solar:share-bold" />
-                </IconButton>
-              </Tooltip>
-
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={onOpenConfirm}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            </>
+            <Tooltip title="Delete">
+              <IconButton color="primary" onClick={onOpenConfirm}>
+                <Iconify icon="solar:trash-bin-trash-bold" />
+              </IconButton>
+            </Tooltip>
           }
           sx={{
             pl: 1,
@@ -139,6 +132,7 @@ export default function FileManagerTable({
                     selected={selected.includes(row.uuid)}
                     onSelectRow={() => onSelectRow(row.uuid)}
                     onDeleteRow={() => onDeleteRow(row.uuid)}
+                    onOpenChangerPopup={onOpenChangerPopup}
                   />
                 ))}
 

@@ -14,7 +14,7 @@ export function NavGroup({ subheader, items, slotProps }: NavGroupProps) {
     setOpen((prev) => !prev);
   }, []);
 
-  const renderContent = items.map((navBlock) => (
+  const renderContent = items?.map((navBlock) => (
     <NavList key={navBlock.title} data={navBlock} depth={1} slotProps={slotProps} />
   ));
 

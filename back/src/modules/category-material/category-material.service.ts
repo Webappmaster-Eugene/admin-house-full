@@ -57,7 +57,9 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
     const createdCategoryMaterial = await this.categoryMaterialRepository.create(dto, handbookId);
-    const isTemplateCreatedWithCategories = dto.fieldsOfCategoryMaterialsInTemplate.length > 0;
+    const isTemplateCreatedWithCategories =
+      Array.isArray(dto.fieldsOfCategoryMaterialsInTemplate) && dto.fieldsOfCategoryMaterialsInTemplate?.length > 0;
+
     if (isTemplateCreatedWithCategories) {
       const allMaterialsInCategory = dataInternalExtractor(
         await this.materialService.getAllInCategoryMaterial(createdCategoryMaterial.uuid),
@@ -74,11 +76,12 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: CategoryMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
-    const findedCategoryMaterialIds = dataInternalExtractor(await this.getById(categoryMaterialId)).fieldsOfCategoryMaterialsInTemplate.map(
-      fieldOfCategoryMaterialsInTemplate => fieldOfCategoryMaterialsInTemplate.uuid,
-    );
+    const findedCategoryMaterialIds = dataInternalExtractor(
+      await this.getById(categoryMaterialId),
+    ).fieldsOfCategoryMaterialsInTemplate?.map(fieldOfCategoryMaterialsInTemplate => fieldOfCategoryMaterialsInTemplate.uuid);
+
     const isTemplateUpdatedWithCategories =
-      findedCategoryMaterialIds.length !== dto.fieldsOfCategoryMaterialsInTemplate.length ||
+      (Array.isArray(findedCategoryMaterialIds) && findedCategoryMaterialIds?.length !== dto.fieldsOfCategoryMaterialsInTemplate.length) ||
       dto.fieldsOfCategoryMaterialsInTemplate.some(fieldOfCategoryMaterialsInTemplate => {
         return findedCategoryMaterialIds.indexOf(fieldOfCategoryMaterialsInTemplate.uuid) === -1;
       });

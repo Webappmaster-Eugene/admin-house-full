@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/navigation';
 import {
   CategoryMaterialGetCommand,
   FieldOfCategoryMaterialGetAllCommand,
@@ -38,8 +39,10 @@ export default function FileManagerTableRow({
   selected,
   onSelectRow,
   onDeleteRow,
+  onOpenChangerPopup,
 }: CategoryTableRowProps) {
   const theme = useTheme();
+  const router = useRouter();
 
   const {
     name,
@@ -94,6 +97,7 @@ export default function FileManagerTableRow({
       <TableRow
         selected={selected}
         sx={{
+          cursor: 'pointer',
           borderRadius: 2,
           [`&.${tableRowClasses.selected}, &:hover`]: {
             backgroundColor: 'background.paper',
@@ -202,14 +206,23 @@ export default function FileManagerTableRow({
           Скопировать
         </MenuItem>
 
-        {/* <MenuItem */}
-        {/*  onClick={() => { */}
-        {/*    popover.onClose(); */}
-        {/*  }} */}
-        {/* > */}
-        {/*  <Iconify icon="solar:share-bold" /> */}
-        {/*  Share */}
-        {/* </MenuItem> */}
+        <MenuItem
+          onClick={() => {
+            router.push(`${uuid}`);
+          }}
+        >
+          <Iconify icon="foundation:info" />
+          Подробно
+        </MenuItem>
+
+        <MenuItem
+          onClick={(event) => {
+            onOpenChangerPopup(event, row);
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Изменить
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

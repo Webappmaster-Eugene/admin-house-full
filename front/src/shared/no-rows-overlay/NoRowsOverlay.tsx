@@ -17,7 +17,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 
 export function CustomNoRowsOverlay() {
   return (
-    <StyledGridOverlay>
+    <StyledGridOverlay sx={{ mt: 5 }}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -43,7 +43,7 @@ export function CustomNoRowsOverlay() {
           d="M0 10C0 4.477 4.477 0 10 0h380c5.523 0 10 4.477 10 10s-4.477 10-10 10H10C4.477 20 0 15.523 0 10ZM0 59c0-5.523 4.477-10 10-10h231c5.523 0 10 4.477 10 10s-4.477 10-10 10H10C4.477 69 0 64.523 0 59ZM0 106c0-5.523 4.477-10 10-10h203c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10ZM0 153c0-5.523 4.477-10 10-10h195.5c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10ZM0 200c0-5.523 4.477-10 10-10h203c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10ZM0 247c0-5.523 4.477-10 10-10h231c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10Z"
         />
       </svg>
-      <Box sx={{ mt: 2 }}>No rows</Box>
+      <Box sx={{ mt: 1 }}>Записей не найдено</Box>
     </StyledGridOverlay>
   );
 }

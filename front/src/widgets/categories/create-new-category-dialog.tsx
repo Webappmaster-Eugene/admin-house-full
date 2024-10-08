@@ -25,8 +25,8 @@ interface Props extends DialogProps {
   onClose: VoidFunction;
 }
 
-export default function FileManagerNewFolderDialog({
-  title = 'Upload Files',
+export default function CreateNewCategoryDialog({
+  title = 'Создание категории',
   open,
   onClose,
   //

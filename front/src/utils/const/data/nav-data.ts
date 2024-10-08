@@ -3,18 +3,38 @@ import { paths } from '@/utils/routes/paths';
 
 import { UserRoles } from 'src/utils/const/user-roles.enum';
 
-export const NavData = [
+import { NavItems } from 'src/shared/nav-section/types';
+
+// export type NavItem = {
+//   title: string;
+//   titleShort?: string;
+//   caption?: string;
+//   captionFull?: string;
+//   path?: string;
+//   icon?: JSX.Element;
+//   roles?: UserRoles[];
+//   children?: NavItem[];
+// };
+//
+// export type NavSection = {
+//   subheader: string;
+//   roles?: UserRoles[];
+//   items: NavItem[];
+// }[];
+
+export const NavData: NavItems = [
   // MAIN MENU
   {
     subheader: 'Справочник',
     roles: [UserRoles.MANAGER],
     items: [
       {
-        title: 'Категории материалов',
+        title: 'Категории',
         titleShort: 'Категории',
         caption: 'Категории материалов в справочнике',
-        captionFull: 'Все категории материалов в справочнике',
+        captionFull: 'Все категории',
         path: paths.dashboard.categoryMaterials,
+        needButtonLink: true,
         icon: ICONS.folder,
         roles: [UserRoles.MANAGER],
       },
@@ -57,6 +77,7 @@ export const NavData = [
       {
         title: 'Личный кабинет',
         titleShort: 'Кабинет',
+
         path: paths.profile.profile,
         icon: ICONS.user,
         children: [
