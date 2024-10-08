@@ -49,6 +49,7 @@ export default function NavVertical({ isOpenedNav, onCloseNav }: NavVerticalProp
         return newState;
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

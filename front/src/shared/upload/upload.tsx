@@ -7,6 +7,10 @@ import { alpha } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { UploadIllustration } from 'src/utils/assets/illustrations';
+
+import Iconify from 'src/shared/iconify';
+
 import { UploadProps } from './types';
 import MultiFilePreview from './preview-multi-file';
 import RejectionFiles from './errors-rejection-files';

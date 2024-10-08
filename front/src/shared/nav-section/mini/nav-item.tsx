@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-import { RouterLink } from '@/shared/router-link';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -102,7 +101,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
 
     return (
       <Link
-        component={RouterLink}
+        // component={RouterLink}
         href={path}
         color="inherit"
         underline="none"

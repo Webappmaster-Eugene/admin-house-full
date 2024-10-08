@@ -68,6 +68,7 @@ export default function CreateCategoryForm({
       tagsTemplate: [''],
       globalCategoryMaterialName: defaultGlobalCategoryName as unknown as string,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -146,9 +147,9 @@ export default function CreateCategoryForm({
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <Button
                 variant="outlined"
-                loading={isSubmitting}
+                // loading={isSubmitting}
                 onClick={() => {
-                  onCloseCreateCategoryPopupose();
+                  onCloseCreateCategoryPopup();
                   reset();
                 }}
               >
