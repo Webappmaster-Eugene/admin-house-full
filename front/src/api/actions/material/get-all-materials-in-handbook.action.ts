@@ -21,7 +21,7 @@ export async function getAllMaterialsInHandbook(workspaceId: string, handbookId:
         .replace(':handbookId', handbookId)
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as MaterialGetAllCommand.ResponseEntity;
     }
 

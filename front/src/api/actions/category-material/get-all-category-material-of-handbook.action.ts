@@ -20,7 +20,7 @@ export async function getAllCategoryMaterialOfHandbook(workspaceId: string, hand
         .replace(':workspaceId', workspaceId)
         .replace(':handbookId', handbookId)
     );
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as CategoryMaterialGetAllCommand.ResponseEntity;
     }
 

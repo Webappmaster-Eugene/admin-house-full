@@ -20,7 +20,7 @@ export async function getAllUsers() {
     );
     console.log(response.data);
 
-    if (response.statusCode && isGoodHttpCode(response.statusCode)) {
+    if (response?.statusCode && isGoodHttpCode(response?.statusCode)) {
       return response.data as UserGetAllCommand.ResponseEntity;
     }
 

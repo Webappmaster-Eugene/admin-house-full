@@ -28,7 +28,7 @@ export async function getAllFieldVariantsOfCategoryOfHandbook(
           .replace(':categoryMaterialId', categoryMaterialId)
           .replace(':fieldOfCategoryMaterialId', fieldOfCategoryMaterialId)
       );
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
     }
 

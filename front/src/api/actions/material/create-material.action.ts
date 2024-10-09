@@ -28,7 +28,7 @@ export async function createMaterial(
       createDto
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as MaterialCreateCommand.ResponseEntity;
     }
 

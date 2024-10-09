@@ -26,7 +26,7 @@ export async function getAllMaterialsInCategoryMaterial(
         .replace(':categoryMaterialId', categoryMaterialId)
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as MaterialGetAllCommand.ResponseEntity;
     }
 

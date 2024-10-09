@@ -24,7 +24,7 @@ export async function getAllResponsiblePartnersProducersInHandbook(
         .replace(':handbookId', handbookId)
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
     }
 

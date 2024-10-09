@@ -25,7 +25,7 @@ export async function getOneCategoryMaterialOfHandbook(
         .replace(':handbookId', handbookId)
         .replace(':categoryMaterialId', categoryId)
     );
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as CategoryMaterialGetCommand.ResponseEntity;
     }
 

@@ -30,7 +30,7 @@ export async function updateMaterial(
       updateMaterialDto
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as MaterialUpdateCommand.ResponseEntity;
     }
 

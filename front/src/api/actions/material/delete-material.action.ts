@@ -28,7 +28,7 @@ export async function deleteMaterial(
         .replace(':materialId', materialId)
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as MaterialDeleteCommand.ResponseEntity;
     }
 

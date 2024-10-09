@@ -28,7 +28,7 @@ export async function updateCategoryMaterial(
       updateCategoryMaterialDto
     );
 
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as CategoryMaterialUpdateCommand.ResponseEntity;
     }
 

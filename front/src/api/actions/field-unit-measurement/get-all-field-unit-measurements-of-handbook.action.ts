@@ -23,7 +23,7 @@ export async function getAllFieldUnitMeasurementsOfHandbook(
         .replace(':workspaceId', workspaceId)
         .replace(':handbookId', handbookId)
     );
-    if (isGoodHttpCode(response.statusCode)) {
+    if (isGoodHttpCode(response?.statusCode)) {
       return response.data as FieldUnitMeasurementGetAllCommand.ResponseEntity;
     }
 
