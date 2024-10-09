@@ -1,4 +1,4 @@
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileRejection } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -20,7 +20,8 @@ export default function UploadAvatar({
   sx,
   ...other
 }: UploadProps) {
-  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
+  // eslint-disable-next-line prefer-const
+  let { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     disabled,
     accept: {
@@ -28,6 +29,7 @@ export default function UploadAvatar({
     },
     ...other,
   });
+  fileRejections = fileRejections as FileRejection[];
 
   const hasFile = !!file;
 

@@ -51,10 +51,10 @@ axiosAuthedInstance.interceptors.request.use(
 axiosAuthedInstance.interceptors.response.use(
   async (res) => {
     console.log(
-      `FulfilledResponse: [${res.config.method}] ${res.config.baseURL}${res.config.url} statusCode: ${res.status}`,
-      res.data
+      `FulfilledResponse: [${res?.config?.method}] ${res?.config?.baseURL}${res?.config?.url} statusCode: ${res?.status}`,
+      res?.data
     );
-    const responseData = res.data;
+    const responseData = res?.data;
     return responseData;
   },
   async (error) => {
@@ -62,7 +62,7 @@ axiosAuthedInstance.interceptors.response.use(
     const errorPath = error.request?.path;
     const responseData: ResponseClientType = error.response?.data;
     console.error(
-      `RejectedResponse: [${error.config.method}] ${error.config.baseURL}${error.config.url} }`,
+      `RejectedResponse: [${error?.config?.method}] ${error?.config?.baseURL}${error?.config?.url} }`,
       responseData
     );
     if (
@@ -78,7 +78,7 @@ axiosAuthedInstance.interceptors.response.use(
       try {
         const { data } = await axiosAuthedInstance.post(axiosEndpoints.auth.refresh_keys);
 
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${data?.accessToken}`;
         const responseRetry = await axiosAuthedInstance(originalRequest);
         return responseRetry;
       } catch (errorRefresh: unknown) {
