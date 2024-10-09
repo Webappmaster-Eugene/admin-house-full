@@ -72,7 +72,7 @@ export class WorkspaceMembersGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
           [errorRoles],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(
@@ -81,7 +81,7 @@ export class WorkspaceMembersGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       this.logger.error(JSON.stringify(error));

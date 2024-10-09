@@ -43,7 +43,7 @@ export class RefreshKeyGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
           [errorRelogin],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'invalid token') {
@@ -54,7 +54,7 @@ export class RefreshKeyGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'invalid signature') {
@@ -65,7 +65,7 @@ export class RefreshKeyGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.name === 'TokenExpiredError') {
@@ -75,7 +75,7 @@ export class RefreshKeyGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       this.logger.error(JSON.stringify(error));
       return false;

@@ -42,7 +42,7 @@ export class IsManagerInBodyGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.INTERNAL_ERROR].error.description,
           [errorUser],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       this.logger.error(JSON.stringify(error));
       return false;

@@ -22,7 +22,7 @@ export class ProcessExceptionsFilter extends BaseExceptionFilter<ServiceError> {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     if (exception instanceof ServiceError) {
-      const statusCode = exception.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      const statusCode = exception?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR;
       response.status(statusCode).json({
         errorCode: exception.errorCode ?? ErrorCode.InternalServerError,
         statusCode: statusCode,

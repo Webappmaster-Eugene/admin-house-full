@@ -14,7 +14,7 @@ export function errorResponseHandler(instanceLogger: ILogger, error: unknown, en
     const { statusCode, fullError, message } = internalFullError;
     const response = new ExternalResponse(null, statusCode, message, [fullError]);
     loggerError(instanceLogger, internalFullError);
-    throw new HttpException(response, response.statusCode);
+    throw new HttpException(response, response?.statusCode);
   } else {
     loggerError(instanceLogger, error);
     const response = new ExternalResponse(
@@ -23,6 +23,6 @@ export function errorResponseHandler(instanceLogger: ILogger, error: unknown, en
       BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.INTERNAL_ERROR].error.description,
       [error],
     );
-    throw new HttpException(response, response.statusCode);
+    throw new HttpException(response, response?.statusCode);
   }
 }

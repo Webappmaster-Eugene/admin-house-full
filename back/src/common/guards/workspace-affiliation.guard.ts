@@ -71,7 +71,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.WORKSPACE_MISMATCH].error.description,
           [errorTypeUser],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'Login under the user with the appropriate role') {
@@ -86,7 +86,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
           [errorRoles],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(
@@ -95,7 +95,7 @@ export class WorkspaceAffiliationGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       this.logger.error(JSON.stringify(error));

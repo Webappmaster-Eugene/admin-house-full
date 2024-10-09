@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
         BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
         [BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED]],
       );
-      throw new HttpException(response, response.statusCode);
+      throw new HttpException(response, response?.statusCode);
     }
 
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
@@ -56,7 +56,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'invalid token') {
@@ -67,7 +67,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'invalid signature') {
@@ -78,7 +78,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.name === 'TokenExpiredError') {
@@ -89,7 +89,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       this.logger.error(JSON.stringify(error));
       return false;
@@ -107,7 +107,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'invalid token') {
@@ -118,7 +118,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.message === 'invalid signature') {
@@ -129,7 +129,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
 
       if (error.name === 'TokenExpiredError') {
@@ -140,7 +140,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.REFRESH_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       this.logger.error(JSON.stringify(error));
       return false;
@@ -180,7 +180,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.UNAUTHORIZED_ACCESS].error.description,
           [errorRoles],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       if (error.name === 'TokenExpiredError') {
         const response = new ExternalResponse(
@@ -189,7 +189,7 @@ export class AuthGuard implements CanActivate {
           BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.ACCESS_KEY_EXPIRED].error.description,
           [error],
         );
-        throw new HttpException(response, response.statusCode);
+        throw new HttpException(response, response?.statusCode);
       }
       this.logger.error(JSON.stringify(error));
       return false;
