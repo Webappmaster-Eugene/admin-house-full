@@ -77,7 +77,7 @@ function NavSubList({ data, depth, slotProps }: NavSubListProps) {
   return (
     <>
       {data.map((list) => (
-        <NavList key={list.title} data={list} depth={depth + 1} slotProps={slotProps} />
+        <NavList key={list.path} data={list} depth={depth + 1} slotProps={slotProps} />
       ))}
     </>
   );

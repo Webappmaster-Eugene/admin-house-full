@@ -33,7 +33,7 @@ export default function EditCategoryForm({
 
   const tagsAll = allFields?.map((field) => field.name);
   const tagsForInput = categoryTemplateNameToTagsParser(
-    currentCategoryInfo.templateName,
+    currentCategoryInfo?.templateName,
     allFields
   );
 
@@ -146,25 +146,25 @@ export default function EditCategoryForm({
               placeholder="Выбор глобальной категории"
               fullWidth
               disabled
-              options={allGlobalCategories.map((value) => value?.nameRu as string)}
-              value={currentCategoryInfo.globalCategoryMaterial.nameRu}
+              options={allGlobalCategories?.map((value) => value?.nameRu as string)}
+              value={currentCategoryInfo?.globalCategoryMaterial?.nameRu}
               getOptionLabel={(option) => option}
             />
 
-            <RHFTextField name="name" label="Наименование" value={currentCategoryInfo.name} />
+            <RHFTextField name="name" label="Наименование" value={currentCategoryInfo?.name} />
 
             <RHFTextField
               disabled
               name="numInOrder"
               label="Номер п/п"
-              value={currentCategoryInfo.numInOrder}
+              value={currentCategoryInfo?.numInOrder}
             />
 
             <RHFTextField
               multiline
               name="comment"
               label="Описание категории"
-              value={currentCategoryInfo.comment}
+              value={currentCategoryInfo?.comment}
             />
 
             {Array.isArray(tagsForInput) && tagsAll && (
