@@ -28,6 +28,7 @@ import {
 import Iconify from 'src/shared/iconify';
 import Scrollbar from 'src/shared/scrollbar';
 import FileThumbnail from 'src/shared/file-thumbnail';
+import { ConfirmDialog } from 'src/shared/custom-dialog';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { CategoryDetailsProps } from 'src/widgets/categories/category-materials/category-details/category-details.props';
 
@@ -47,6 +48,7 @@ export default function FileManagerFileDetails({
     fieldsOfCategoryMaterialsInTemplate,
     materials,
     fieldsOfCategoryMaterials,
+    isDefault,
     uuid,
   } = item;
   const router = useRouter();
@@ -225,7 +227,7 @@ export default function FileManagerFileDetails({
               Обязатель&shy;ные поля:
             </Box>
             {fRequiredFieldsConstructor(
-              fieldsOfCategoryMaterialsInTemplate as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
+              fieldsOfCategoryMaterials as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
             )}
           </Stack>
 
@@ -247,7 +249,7 @@ export default function FileManagerFileDetails({
               Необязатель&shy;ные поля:
             </Box>
             {fNotRequiredFieldsConstructor(
-              fieldsOfCategoryMaterialsInTemplate as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
+              fieldsOfCategoryMaterials as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
             )}
           </Stack>
 
@@ -368,25 +370,26 @@ export default function FileManagerFileDetails({
             variant="soft"
             color="error"
             size="large"
+            disabled={isDefault}
             startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={onDelete}
+            onClick={isDeleteDialogOpen.onTrue}
           >
             Удалить
           </Button>
         </Box>
       </Drawer>
 
-      {/* {isDeleteDialogOpen && ( */}
-      {/*  <AlertDialog */}
-      {/*    isDialogOpen={isDeleteDialogOpen} */}
-      {/*    onClickYes={onClickYesDialog} */}
-      {/*    titleDialog={DeleteMaterialDialogTexts.titleDialog} */}
-      {/*    textDialog={templaterCreatorTexts( */}
-      {/*      DeleteCategoryDialogTexts.textDialog, */}
-      {/*      rowSelectionModel[0] as string */}
-      {/*    )} */}
-      {/*  /> */}
-      {/* )} */}
+      <ConfirmDialog
+        open={isDeleteDialogOpen.value}
+        onClose={isDeleteDialogOpen.onFalse}
+        title="Удалить"
+        content="Вы уверены что хотите удалить категорию?"
+        action={
+          <Button variant="contained" color="error" onClick={onDelete}>
+            Удалить
+          </Button>
+        }
+      />
     </>
   );
 }

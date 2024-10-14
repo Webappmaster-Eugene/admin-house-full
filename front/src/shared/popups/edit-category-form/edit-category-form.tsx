@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -19,19 +20,29 @@ import { categoryTemplateNameToTagsParser } from 'src/utils/helpers/parsers/cate
 import { RHFSelect } from 'src/shared/hook-form/rhf-select';
 import FormProvider, { RHFTextField } from 'src/shared/hook-form';
 import RHFAutocomplete from 'src/shared/hook-form/rhf-autocomplete';
+import { RHFFieldsAutocomplete } from 'src/shared/hook-form/rhf-fields-autocomplete';
 import { EditCategoryProps } from 'src/shared/popups/edit-category-form/edit-category-form.props';
 import RHFAutocompleteTemplateName from 'src/shared/hook-form/rhf-autocomplete-category-template-name/rhf-autocomplete-template-name';
 
 export default function EditCategoryForm({
   currentCategoryInfo,
-  open,
-  onClose,
+  isOpenEditCategoryForm,
+  onCloseEditCategoryForm,
   allFields,
   allGlobalCategories,
 }: EditCategoryProps) {
   const { enqueueSnackbar } = useSnackbar();
 
   const tagsAll = allFields?.map((field) => field.name);
+
+  const allRequiredFieldsOfCategoryInWorkspace = currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
+    (field) => field.isRequired
+  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+
+  const allNotRequiredFieldsOfCategoryInWorkspace = currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
+    (field) => !field.isRequired
+  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+
   const tagsForInput = categoryTemplateNameToTagsParser(
     currentCategoryInfo?.templateName,
     allFields
@@ -44,6 +55,8 @@ export default function EditCategoryForm({
     categoryMaterialStatus: Yup.string().required('Необходимо заполнить статус категории'),
     numInOrder: Yup.number().required('Необходимо заполнить порядковый номер категории'),
     tagsTemplate: Yup.array().of(Yup.string()),
+    requiredFieldsInCategory: Yup.array().of(Yup.object()),
+    notRequiredFieldsInCategory: Yup.array().of(Yup.object()),
     globalCategoryMaterialName: Yup.string().required(
       'Необходимо заполнить наименование глобальной категории для текущей категории'
     ),
@@ -57,6 +70,8 @@ export default function EditCategoryForm({
       categoryMaterialStatus: currentCategoryInfo?.categoryMaterialStatus || 'ACTIVE',
       numInOrder: currentCategoryInfo?.numInOrder as number,
       tagsTemplate: tagsForInput,
+      requiredFieldsInCategory: allRequiredFieldsOfCategoryInWorkspace,
+      notRequiredFieldsInCategory: allNotRequiredFieldsOfCategoryInWorkspace,
       globalCategoryMaterialName: currentCategoryInfo?.globalCategoryMaterial?.name || '',
     }),
     [tagsForInput, currentCategoryInfo]
@@ -68,6 +83,7 @@ export default function EditCategoryForm({
   });
 
   const {
+    // resetField,
     reset,
     handleSubmit,
     formState: { isSubmitting },
@@ -75,125 +91,166 @@ export default function EditCategoryForm({
 
   const onSubmitForm = handleSubmit(async (data) => {
     try {
-      await reset();
-      onClose();
-      enqueueSnackbar('Обновление категории успешно!');
+
+      reset();
+      onCloseEditCategoryForm();
+      enqueueSnackbar('Обновление категории прошло успешно!');
     } catch (error) {
       console.error(error);
     }
   });
 
+  interface Movie {
+    title: string;
+    year: number;
+  }
+
+  const options: Movie[] = [
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'The Godfather', year: 1972 },
+  ];
+
   return (
-    <Dialog
-      fullWidth
-      maxWidth={false}
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: { maxWidth: 720 },
-      }}
-    >
-      <FormProvider methods={methods} onSubmit={onSubmitForm}>
-        <DialogTitle>Изменение категории</DialogTitle>
+    currentCategoryInfo && (
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={isOpenEditCategoryForm}
+        onClose={onCloseEditCategoryForm}
+        PaperProps={{
+          sx: { maxWidth: 920 },
+        }}
+      >
+        <FormProvider methods={methods} onSubmit={onSubmitForm}>
+          <DialogTitle>Изменение категории</DialogTitle>
 
-        <DialogContent>
-          {currentCategoryInfo && currentCategoryInfo?.materials?.length === 0 && (
-            <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-              В категории отсутствуют материалы
-            </Alert>
-          )}
-
-          <Box
-            rowGap={3}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            }}
-          >
-            <RHFSelect
-              name="categoryMaterialStatus"
-              label="Статус"
-              sx={{
-                mt: '10px',
-              }}
-              disabled
-              defaultValue={
-                currentCategoryInfo?.categoryMaterialStatus
-                  ? currentCategoryInfo?.categoryMaterialStatus
-                  : 'ACTIVE'
-              }
-            >
-              {[
-                { label: 'Активный', value: 'ACTIVE' },
-                { label: 'Отключен', value: 'INACTIVE' },
-                { label: 'Удален', value: 'DELETED' },
-              ].map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect>
-
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
-            <RHFTextField name="uuid" disabled label="Id" value={currentCategoryInfo?.uuid} />
-
-            <RHFAutocomplete
-              name="globalCategoryMaterialName"
-              type="global-category"
-              label="Глобальная категория"
-              placeholder="Выбор глобальной категории"
-              fullWidth
-              disabled
-              options={allGlobalCategories?.map((value) => value?.nameRu as string)}
-              value={currentCategoryInfo?.globalCategoryMaterial?.nameRu}
-              getOptionLabel={(option) => option}
-            />
-
-            <RHFTextField name="name" label="Наименование" value={currentCategoryInfo?.name} />
-
-            <RHFTextField
-              disabled
-              name="numInOrder"
-              label="Номер п/п"
-              value={currentCategoryInfo?.numInOrder}
-            />
-
-            <RHFTextField
-              multiline
-              name="comment"
-              label="Описание категории"
-              value={currentCategoryInfo?.comment}
-            />
-
-            {Array.isArray(tagsForInput) && tagsAll && (
-              <RHFAutocompleteTemplateName
-                name="tagsTemplate"
-                options={tagsAll}
-                defValue={tagsForInput}
-                disabled={false}
-              />
+          <DialogContent>
+            {currentCategoryInfo && currentCategoryInfo?.materials?.length === 0 && (
+              <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
+                В категории отсутствуют материалы
+              </Alert>
             )}
-          </Box>
-        </DialogContent>
 
-        <DialogActions>
-          <Button
-            variant="outlined"
-            onClick={(event) => {
-              onClose();
-              reset();
-            }}
-          >
-            Отменить
-          </Button>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFSelect
+                name="categoryMaterialStatus"
+                label="Статус"
+                sx={{
+                  mt: '10px',
+                }}
+                disabled
+                defaultValue={
+                  currentCategoryInfo?.categoryMaterialStatus
+                    ? currentCategoryInfo?.categoryMaterialStatus
+                    : 'ACTIVE'
+                }
+              >
+                {[
+                  { label: 'Активный', value: 'ACTIVE' },
+                  { label: 'Отключен', value: 'INACTIVE' },
+                  { label: 'Удален', value: 'DELETED' },
+                ].map((status) => (
+                  <MenuItem key={status.value} value={status.value}>
+                    {status.label}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Сохранить
-          </LoadingButton>
-        </DialogActions>
-      </FormProvider>
-    </Dialog>
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
+              <RHFTextField name="uuid" disabled label="Id" value={currentCategoryInfo?.uuid} />
+
+              <RHFAutocomplete
+                name="globalCategoryMaterialName"
+                type="global-category"
+                label="Глобальная категория"
+                placeholder="Выбор глобальной категории"
+                fullWidth
+                disabled
+                options={allGlobalCategories?.map((value) => value?.nameRu as string)}
+                value={currentCategoryInfo?.globalCategoryMaterial?.nameRu}
+                getOptionLabel={(option) => option}
+              />
+
+              <RHFTextField name="name" label="Наименование" value={currentCategoryInfo?.name} />
+
+              <RHFTextField
+                disabled
+                name="numInOrder"
+                label="Номер п/п"
+                value={currentCategoryInfo?.numInOrder}
+              />
+
+              <RHFTextField
+                multiline
+                name="comment"
+                label="Описание категории"
+                value={currentCategoryInfo?.comment}
+              />
+
+              {Array.isArray(tagsForInput) && currentCategoryInfo && (
+                <RHFAutocompleteTemplateName
+                  name="tagsTemplate"
+                  options={tagsAll}
+                  defValue={tagsForInput}
+                  disabled={currentCategoryInfo.isDefault}
+                />
+              )}
+
+              {currentCategoryInfo && (
+                <RHFFieldsAutocomplete
+                  type="required"
+                  disabled={currentCategoryInfo.isDefault}
+                  name="requiredFieldsInCategory"
+                  options={allRequiredFieldsOfCategoryInWorkspace}
+                  defValue={
+                    currentCategoryInfo?.fieldsOfCategoryMaterials
+                      ?.filter((field) => field.isRequired)
+                      .map((field) => field) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
+                  }
+                />
+              )}
+
+              {currentCategoryInfo && (
+                <RHFFieldsAutocomplete
+                  type="not-required"
+                  disabled={currentCategoryInfo.isDefault}
+                  name="notRequiredFieldsInCategory"
+                  options={allNotRequiredFieldsOfCategoryInWorkspace}
+                  defValue={
+                    currentCategoryInfo?.fieldsOfCategoryMaterials
+                      ?.filter((field) => !field.isRequired)
+                      .map((field) => field) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
+                  }
+                />
+              )}
+            </Box>
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              variant="outlined"
+              onClick={(event) => {
+                reset();
+                onCloseEditCategoryForm();
+              }}
+            >
+              Отменить
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              Сохранить
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+    )
   );
 }

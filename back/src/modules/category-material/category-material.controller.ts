@@ -24,6 +24,10 @@ import { okResponseHandler } from '../../common/helpers/handlers/ok-response.han
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
 import { IQueryParams, QueryParams } from '../../common/decorators/query-params.decorator';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import {
+  CategoryMaterialDeleteManyRequestDto,
+  CategoryMaterialDeleteManyResponseDto,
+} from 'src/modules/category-material/dto/controller/delete-many-category-material.dto';
 
 @ApiTags('Работа с CategoryMaterial')
 @Controller('category-material')
@@ -140,6 +144,7 @@ export class CategoryMaterialController implements ICategoryMaterialController {
       const { ok, data } = await this.categoryMaterialService.create(dto, handbookId);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
+      console.log('createEP category Controller' + JSON.stringify(error));
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
     }
   }
@@ -200,25 +205,28 @@ export class CategoryMaterialController implements ICategoryMaterialController {
     }
   }
 
-  // //region SWAGGER
-  // // @ApiOkResponse({
-  // //   schema: zodToOpenAPI(CategoryMaterialGetAllDeleteCommand.ResponseSchema),
-  // // })
-  // @ApiOperation({
-  //   summary: 'Удаление нескольких CategoryMaterial внутри Workspace менеджера по их id внутри body',
+  //region SWAGGER
+  // @ApiOkResponse({
+  //   schema: zodToOpenAPI(CategoryMaterialGetAllDeleteCommand.ResponseSchema),
   // })
-  // @ApiResponse({ status: 200, type: CategoryMaterialGetAllResponseDto })
-  // @ApiBearerAuth('access-token')
-  // //endregion
-  // @ZodSerializerDto(CategoryMaterialGetAllResponseDto)
-  // @UseGuards(AuthGuard, WorkspaceCreatorGuard)
-  // @Delete('workspace/:workspaceId/handbook/:handbookId')
-  // async deleteManyByIdsEP(@UrlParams() urlParams: IUrlParams): Promise<CategoryMaterialDeleteResponseDto> {
-  //   try {
-  //     const { ok, data } = await this.categoryMaterialService.deleteManyByIds(categoryMaterialId);
-  //     return okResponseHandler(ok, data, this.logger);
-  //   } catch (error: unknown) {
-  //     errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
-  //   }
-  // }
+  @ApiOperation({
+    summary: 'Удаление нескольких CategoryMaterial внутри Workspace менеджера по их id внутри body',
+  })
+  @ApiResponse({ status: 200, type: CategoryMaterialDeleteManyResponseDto })
+  @ApiBearerAuth('access-token')
+  //endregion
+  @ZodSerializerDto(CategoryMaterialDeleteManyResponseDto)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @Post('batch/workspace/:workspaceId/handbook/:handbookId')
+  async deleteManyByIdsEP(
+    @Body() dto: CategoryMaterialDeleteManyRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<CategoryMaterialDeleteManyResponseDto> {
+    try {
+      const { ok, data } = await this.categoryMaterialService.deleteManyByIds(dto);
+      return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
+    }
+  }
 }

@@ -78,8 +78,9 @@ import { MaterialsProps } from 'src/widgets/materials/material.props';
 import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
-import { CustomNoRowsOverlay } from 'src/shared/no-rows-overlay/NoRowsOverlay';
+import {CustomNoResultsOverlay, CustomNoRowsOverlay} from 'src/shared/no-rows-overlay/NoRowsOverlay';
 import { columnsInitialState } from 'src/widgets/materials/table-initial-state';
+import EmptyContent from "@/shared/empty-content";
 
 export default function Materials({ materialsInfo }: MaterialsProps) {
   const settings = useSettingsContext();
@@ -730,7 +731,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
               }}
               concreteCrumbName="Листовые"
             />
-            <Box sx={{ width: '100%', maxWidth: '100vw' }}>
+            <Box sx={{ width: '100%' }}>
               <DataGrid
                 apiRef={apiRef}
                 localeText={{
@@ -777,6 +778,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 // slots={{ toolbar: GridToolbar }}
                 slots={{
                   noRowsOverlay: CustomNoRowsOverlay,
+                  noResultsOverlay: CustomNoResultsOverlay,
                   toolbar: editToolbar as GridSlots['toolbar'],
                 }}
                 slotProps={{
@@ -809,19 +811,26 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                   includeHeaders: true,
                 }}
                 sx={{
+                  // [`& .${gridClasses.main}`]: {
+                  //   width: '100%',
+                  // },
                   [`& .${gridClasses.cell}`]: {
                     border: 'none',
                     minHeight: '50px',
                     height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start'
                   },
                   [`& .${gridClasses.main}`]: {
                     // bgcolor: `${grey[50]}`,
                   },
-                  [`& .${gridClasses.row}`]: {
-                    borderBottom: `0.5px solid ${grey[50]}`,
-                  },
+                  // [`& .${gridClasses.row}`]: {
+                  //   borderBottom: `0.5px solid ${grey[50]}`,
+                  // },
                   '& .MuiDataGrid-cell--editable': {
-                    bgcolor: `${grey[50]}`,
+                    bgcolor: (theme) => (theme.palette.mode === 'light' ? `#DBDBDE24` : `rgba(9, 9, 9, 0.11)`),
                   },
                   //   [`& .${gridClasses.row}`]: {
                   //     bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
@@ -838,6 +847,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 onColumnVisibilityModelChange={(newModel) => {
                   setColumnVisibilityModel(newModel);
                 }}
+
                 onCellEditStop={handleCellEditStop}
                 // onCellEditStart={handleCellEditStop}
               />

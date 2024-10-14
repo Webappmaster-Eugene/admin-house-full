@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import EmptyContent from "@/shared/empty-content";
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -45,5 +46,11 @@ export function CustomNoRowsOverlay() {
       </svg>
       <Box sx={{ mt: 1 }}>Записей не найдено</Box>
     </StyledGridOverlay>
+  );
+}
+
+export function CustomNoResultsOverlay() {
+  return (
+    <EmptyContent title="Результат поиска отсутствует" />
   );
 }

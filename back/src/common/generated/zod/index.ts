@@ -32,7 +32,7 @@ export const FieldTypeScalarFieldEnumSchema = z.enum(['uuid','name','description
 
 export const GlobalCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','nameRu','comment','color','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','templateName','categoryMaterialStatus','globalCategoryMaterialUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
+export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','isDefault','numInOrder','templateName','categoryMaterialStatus','globalCategoryMaterialUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
 export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','handbookUuid','fieldUnitMeasurementStatus','lastChangeByUserUuid','createdAt','updatedAt']);
 
@@ -410,6 +410,7 @@ export const CategoryMaterialSchema = z.object({
   uuid: z.string(),
   name: z.string(),
   comment: z.string().nullish(),
+  isDefault: z.boolean(),
   numInOrder: z.number().nullish(),
   templateName: z.string().nullish(),
   globalCategoryMaterialUuid: z.string(),
@@ -427,6 +428,7 @@ export type CategoryMaterial = z.infer<typeof CategoryMaterialSchema>
 export const CategoryMaterialOptionalDefaultsSchema = CategoryMaterialSchema.merge(z.object({
   categoryMaterialStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
+  isDefault: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 }))

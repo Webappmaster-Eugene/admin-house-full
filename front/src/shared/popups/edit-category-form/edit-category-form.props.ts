@@ -5,8 +5,8 @@ import {
 } from '@numart/house-admin-contracts';
 
 export type EditCategoryProps = {
-  open: boolean;
-  onClose: VoidFunction;
+  isOpenEditCategoryForm: boolean;
+  onCloseEditCategoryForm: VoidFunction;
   currentCategoryInfo: CategoryMaterialGetCommand.ResponseEntity;
   allFields: FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
   allGlobalCategories: GlobalCategoryMaterialGetAllCommand.ResponseEntity;

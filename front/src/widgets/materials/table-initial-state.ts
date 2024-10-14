@@ -37,7 +37,7 @@ export const columnsInitialState: GridInitialState = {
       name: {
         maxWidth: -1,
         minWidth: 220,
-        width: 503,
+        // width: 703,
         // width: 160,
         // width: undefined,
         flex: 1,

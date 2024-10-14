@@ -3,6 +3,8 @@
 import { useSnackbar } from 'notistack';
 import { useState, useCallback } from 'react';
 import {
+  HandbookGetCommand,
+  WorkspaceGetCommand,
   CategoryMaterialGetCommand,
   CategoryMaterialGetAllCommand,
   GlobalCategoryMaterialGetAllCommand,
@@ -27,7 +29,6 @@ import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { defaultFilters } from 'src/widgets/categories/category-materials/consts';
 import EditCategoryForm from 'src/shared/popups/edit-category-form/edit-category-form';
-import CreateNewCategoryDialog from 'src/widgets/categories/create-new-category-dialog';
 import CreateCategoryForm from 'src/shared/popups/create-category-form/create-category-form';
 import { IFileFilters, IFileFilterValue } from 'src/widgets/categories/category-materials/types';
 import { CategoryMaterialProps } from 'src/widgets/categories/category-materials/category-materials.props';
@@ -35,13 +36,26 @@ import FileManagerTable from 'src/widgets/categories/category-materials/category
 import { applyFilterHandler } from 'src/widgets/categories/category-materials/helpers/apply-filter.handler';
 import FileManagerGridView from 'src/widgets/categories/category-materials/category-grid/file-manager-grid-view';
 import FileManagerFilters from 'src/widgets/categories/category-materials/category-filters/file-manager-filters';
+import { deleteOneCategoryMaterial } from 'src/api/actions/category-material/delete-one-category-material.action';
+import { deleteManyCategoryMaterial } from 'src/api/actions/category-material/delete-many-category-material.action';
 
 import FileManagerFiltersResult from '../file-manager-filters-result';
 
-export default function CategoryMaterials({ materials, categories }: CategoryMaterialProps) {
+export default function CategoryMaterials({
+  materials,
+  allCategoriesInWorkspace,
+}: CategoryMaterialProps) {
   const { enqueueSnackbar } = useSnackbar();
 
+  const [categoryToChange, setCategoryToChange] = useState<
+    CategoryMaterialGetCommand.ResponseEntity | undefined
+  >(undefined);
+
   const { workspaceInfo } = useWorkspaceInfoStore((state) => state);
+  const currentWorkspaceInfo =
+    workspaceInfo?.currentWorkspaceInfo as WorkspaceGetCommand.ResponseEntity;
+  const currentHandbookInfo =
+    workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
 
   const allFields =
     workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
@@ -59,11 +73,8 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
 
   const [view, setView] = useState('list');
 
-  const [categoryToChange, setCategoryToChange] =
-    useState<CategoryMaterialGetCommand.ResponseEntity>();
-
   const [tableData, setTableData] =
-    useState<CategoryMaterialGetAllCommand.ResponseEntity>(categories);
+    useState<CategoryMaterialGetAllCommand.ResponseEntity>(allCategoriesInWorkspace);
 
   const [filters, setFilters] = useState<IFileFilters>(defaultFilters);
 
@@ -82,21 +93,18 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
 
   const notFound = (!dataFiltered?.length && canReset) || !dataFiltered?.length;
 
-  const handleChangeView = useCallback(
-    (event: React.MouseEvent<HTMLElement>, newView: string | null) => {
-      if (newView !== null) {
-        setView(newView);
-      }
-    },
-    []
-  );
+  const handleChangeView = (event: React.MouseEvent<HTMLElement>, newView: string | null) => {
+    if (newView !== null) {
+      setView(newView);
+    }
+  };
 
   const handleChangeCategory = (
     event: React.MouseEvent<HTMLElement>,
-    categoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity
+    newCategoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity
   ) => {
+    setCategoryToChange(newCategoryInfoToChange);
     isChangingCategory.onTrue();
-    setCategoryToChange(categoryInfoToChange);
   };
 
   const handleFilters = useCallback(
@@ -115,32 +123,37 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
   }, []);
 
   const handleDeleteItem = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row) => row.uuid !== id);
+    async (id: string) => {
+      const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
+      await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
 
-      enqueueSnackbar('Удаление успешно произведено!');
-
-      setTableData(deleteRow);
+      setTableData(allRowsWithoutDeleted);
 
       table.onUpdatePageDeleteRow(dataInPage?.length);
+      enqueueSnackbar('Удаление успешно произведено!');
     },
     [dataInPage?.length, enqueueSnackbar, table, tableData]
   );
 
-  const handleDeleteItems = useCallback(() => {
-    const deleteRows = tableData.filter(
-      (categoryMaterial) => !table.selected.includes(categoryMaterial.uuid)
+  const handleDeleteItems = useCallback(async () => {
+    const selectedCategoriesToDelete = table.selected;
+    const allRowsWithoutDeleted = tableData.filter(
+      (categoryMaterialInTable) => !table.selected.includes(categoryMaterialInTable?.uuid as string)
+    );
+    await deleteManyCategoryMaterial(
+      currentWorkspaceInfo?.uuid,
+      currentHandbookInfo?.uuid,
+      selectedCategoriesToDelete
     );
 
-    enqueueSnackbar('Удаление успешно произведено!');
-
-    setTableData(deleteRows);
+    setTableData(allRowsWithoutDeleted);
 
     table.onUpdatePageDeleteRows({
       totalRowsInPage: dataInPage?.length,
       totalRowsFiltered: dataFiltered?.length,
     });
-  }, [dataFiltered?.length, dataInPage?.length, enqueueSnackbar, table, tableData]);
+    enqueueSnackbar('Удаление успешно произведено!');
+  }, [dataInPage?.length, enqueueSnackbar, table, tableData]);
 
   const renderFilters = (
     <Stack
@@ -227,7 +240,7 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
         {notFound ? (
           <EmptyContent
             filled
-            title="No Data"
+            title="Данные отсутствуют"
             sx={{
               py: 10,
             }}
@@ -256,20 +269,20 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
         )}
       </Container>
 
-      <CreateNewCategoryDialog
-        open={isCreatingNewCategory.value}
-        onClose={isCreatingNewCategory.onFalse}
-      />
-
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Удаление категории"
         content={
-          <Typography>
-            Вы уверены, что хотите удалить <strong> {table.selected.length} </strong> категор(ий)и?
-            (Материалы внутри категорий не будут удалены, а переместятся в общую категорию)
-          </Typography>
+          <>
+            <Typography>
+              Вы уверены, что хотите удалить <strong> {table.selected.length} </strong>{' '}
+              категор(ий)и?
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'gray' }}>
+              (материалы внутри категорий не будут удалены, а переместятся в общую категорию)
+            </Typography>
+          </>
         }
         action={
           <Button
@@ -284,34 +297,24 @@ export default function CategoryMaterials({ materials, categories }: CategoryMat
           </Button>
         }
       />
+      {categoryToChange && (
+        <EditCategoryForm
+          allFields={allFields}
+          allGlobalCategories={allGlobalCategories}
+          currentCategoryInfo={categoryToChange as CategoryMaterialGetCommand.ResponseEntity}
+          isOpenEditCategoryForm={isChangingCategory.value}
+          onCloseEditCategoryForm={isChangingCategory.onFalse}
+        />
+      )}
 
-      <EditCategoryForm
-        allFields={allFields}
-        allGlobalCategories={allGlobalCategories}
-        currentCategoryInfo={categoryToChange as CategoryMaterialGetCommand.ResponseEntity}
-        open={isChangingCategory.value}
-        onClose={isChangingCategory.onFalse}
-      />
-
-      <CreateCategoryForm
-        openCreateCategoryPopup={isCreatingNewCategory.value}
-        allGlobalCategories={allGlobalCategories}
-        onCloseCreateCategoryPopup={isCreatingNewCategory.onFalse}
-        allFields={allFields}
-      />
-
-      {/* <CreateNewCategoryDialog */}
-      {/*  open={newFolder.value} */}
-      {/*  onClose={newFolder.onFalse} */}
-      {/*  title="Создание новой категории" */}
-      {/*  onCreate={() => { */}
-      {/*    newFolder.onFalse(); */}
-      {/*    setFolderName(''); */}
-      {/*    console.info('CREATE NEW FOLDER', folderName); */}
-      {/*  }} */}
-      {/*  folderName={folderName} */}
-      {/*  onChangeFolderName={handleChangeFolderName} */}
-      {/* /> */}
+      {workspaceInfo && (
+        <CreateCategoryForm
+          isOpenCreateCategoryPopup={isCreatingNewCategory.value}
+          allGlobalCategories={allGlobalCategories}
+          onCloseCreateCategoryPopup={isCreatingNewCategory.onFalse}
+          allFields={allFields}
+        />
+      )}
     </>
   );
 }

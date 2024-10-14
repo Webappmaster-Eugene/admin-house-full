@@ -19,9 +19,6 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     private readonly categoryMaterialRepository: ICategoryMaterialRepository,
     @Inject(KFI.CHARACTERISTICS_MATERIAL_SERVICE)
     private readonly characteristicsMaterialService: ICharacteristicsMaterialService,
-    //@Inject(KFI.MATERIAL_SERVICE)
-    //private readonly materialService: IMaterialService,
-    //@Inject(forwardRef(() => KFI.MATERIAL_SERVICE)),
     @Inject(forwardRef(() => KFI.MATERIAL_SERVICE))
     private readonly materialService: IMaterialService,
   ) {}
@@ -31,17 +28,25 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     return new InternalResponse(findedCategoryMaterial);
   }
 
+  async getDefaultCategory(): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+    const findedCategoryMaterial = await this.categoryMaterialRepository.getDefaultCategory();
+    return new InternalResponse(findedCategoryMaterial);
+  }
+
   async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
     const { skip, take } = queryParams || {};
     const allCategoryMaterials = await this.categoryMaterialRepository.getAll(skip, take);
     return new InternalResponse(allCategoryMaterials);
   }
 
-  // async getAll(queryParams?: IQueryParams): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
-  //   const { skip, take } = queryParams || {};
-  //   const allCategoryMaterials = await this.categoryMaterialRepository.getAll(skip, take);
-  //   return new InternalResponse(allCategoryMaterials);
-  // }
+  async getAllWithIds(
+    categoryIds: EntityUrlParamCommand.RequestUuidParam[],
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
+    const { skip, take } = queryParams || {};
+    const allCategoryMaterialsWithIds = await this.categoryMaterialRepository.getAllWithIds(categoryIds, skip, take);
+    return new InternalResponse(allCategoryMaterialsWithIds);
+  }
 
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
@@ -76,25 +81,26 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: CategoryMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
-    const findedCategoryMaterialIds = dataInternalExtractor(
+    const findedFieldsOfCategoryMaterialInTemplateIds = dataInternalExtractor(
       await this.getById(categoryMaterialId),
     ).fieldsOfCategoryMaterialsInTemplate?.map(fieldOfCategoryMaterialsInTemplate => fieldOfCategoryMaterialsInTemplate.uuid);
 
-    const isTemplateUpdatedWithCategories =
-      (Array.isArray(findedCategoryMaterialIds) && findedCategoryMaterialIds?.length !== dto.fieldsOfCategoryMaterialsInTemplate.length) ||
-      dto.fieldsOfCategoryMaterialsInTemplate.some(fieldOfCategoryMaterialsInTemplate => {
-        return findedCategoryMaterialIds.indexOf(fieldOfCategoryMaterialsInTemplate.uuid) === -1;
+    const isTemplateUpdatedWithCurrentCategory =
+      (Array.isArray(findedFieldsOfCategoryMaterialInTemplateIds) &&
+        findedFieldsOfCategoryMaterialInTemplateIds?.length !== dto.fieldsOfCategoryMaterialsInTemplate.length) ||
+      dto.fieldsOfCategoryMaterialsInTemplate.some(newFieldOfCategoryMaterialsInTemplate => {
+        return findedFieldsOfCategoryMaterialInTemplateIds.indexOf(newFieldOfCategoryMaterialsInTemplate.uuid) === -1;
       });
     const updatedCategoryMaterial = await this.categoryMaterialRepository.updateById(categoryMaterialId, dto);
 
-    if (isTemplateUpdatedWithCategories) {
+    if (isTemplateUpdatedWithCurrentCategory) {
       const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
       allMaterialsInCategory.map(async materialInCategory => {
         const allCharacteristicsOfCurrentMaterial = dataInternalExtractor(
           await this.characteristicsMaterialService.getAllInMaterial(materialInCategory.uuid),
         );
         const unusedCharacteristicsOfMaterial = allCharacteristicsOfCurrentMaterial.filter(characteristicOfCurrentMaterial => {
-          return !findedCategoryMaterialIds.includes(characteristicOfCurrentMaterial.fieldOfCategoryMaterial.uuid);
+          return !findedFieldsOfCategoryMaterialInTemplateIds.includes(characteristicOfCurrentMaterial.fieldOfCategoryMaterial.uuid);
         });
         unusedCharacteristicsOfMaterial.map(async unusedCharacteristicOfMaterial => {
           await this.characteristicsMaterialService.updateById(unusedCharacteristicOfMaterial.uuid, {
@@ -113,6 +119,8 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     const updatedCategoryMaterial = await this.categoryMaterialRepository.rebuildCategoryMaterialNameById(categoryMaterialId);
 
     const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
+    console.log('allMaterialsInCategory' + JSON.stringify(allMaterialsInCategory));
+
     allMaterialsInCategory.map(async materialInCategory => {
       await this.materialService.rebuildNameForMaterialById(materialInCategory.uuid);
     });
@@ -120,15 +128,29 @@ export class CategoryMaterialService implements ICategoryMaterialService {
   }
 
   async deleteById(categoryMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+    const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
+    const materialIdsToReplace = allMaterialsInCategory.map(materialInCategory => materialInCategory.uuid);
+    const commonCategoryOfCurrentWorkspace = dataInternalExtractor(await this.getDefaultCategory());
+    await this.materialService.changeManyMaterialsCategoryById(materialIdsToReplace, commonCategoryOfCurrentWorkspace.uuid);
+    await this.categoryMaterialRepository.disconnectMaterials(categoryMaterialId, materialIdsToReplace);
     const deletedCategoryMaterial = await this.categoryMaterialRepository.deleteById(categoryMaterialId);
     return new InternalResponse(deletedCategoryMaterial);
   }
 
-  // async deleteManyByIds(
-  //   categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam,
-  // ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
-  //   const categoryMaterialId = dataInternalExtractor(await getAll;
-  //   const deletedCategoryMaterial = await this.categoryMaterialRepository.deleteById(categoryMaterialId);
-  //   return new InternalResponse(deletedCategoryMaterial);
-  // }
+  async deleteManyByIds(
+    categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[],
+  ): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
+    const deletedCategoriesToResponse = dataInternalExtractor(await this.getAllWithIds(categoryMaterialIds));
+    const commonCategoryOfCurrentWorkspace = dataInternalExtractor(await this.getDefaultCategory());
+
+    categoryMaterialIds.map(async categoryMaterialId => {
+      const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
+      const materialIdsToReplace = allMaterialsInCategory.map(materialInCategory => materialInCategory.uuid);
+      await this.materialService.changeManyMaterialsCategoryById(materialIdsToReplace, commonCategoryOfCurrentWorkspace.uuid);
+      await this.categoryMaterialRepository.disconnectMaterials(categoryMaterialId, materialIdsToReplace);
+    });
+
+    const deletedCategoryMaterials = await this.categoryMaterialRepository.deleteManyByIds(categoryMaterialIds);
+    return new InternalResponse(deletedCategoriesToResponse);
+  }
 }

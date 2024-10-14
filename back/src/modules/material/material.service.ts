@@ -44,6 +44,15 @@ export class MaterialService implements IMaterialService {
     return new InternalResponse(allMaterials);
   }
 
+  async getAllWithIds(
+    ids: EntityUrlParamCommand.RequestUuidParam[],
+    queryParams?: IQueryParams,
+  ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
+    const { skip, take } = queryParams || {};
+    const allMaterialsWithIds = await this.materialRepository.getAllWithIds(ids, skip, take);
+    return new InternalResponse(allMaterialsWithIds);
+  }
+
   async getAllInHandbook(
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
@@ -85,13 +94,6 @@ export class MaterialService implements IMaterialService {
     const requiredCharacteristics = oldMaterialData.characteristicsMaterial
       .filter(characteristic => characteristic.characteristicsMaterialStatus === 'ACTIVE')
       .map(characteristic => characteristic.fieldOfCategoryMaterialUuid);
-    // if (
-    //   dto?.name &&
-    //   requiredCharacteristics.length === requiredFieldsOfMaterial.length &&
-    //   requiredFieldsOfMaterial.every(fieldOfMaterial => requiredCharacteristics.indexOf(fieldOfMaterial) !== -1)
-    // ) {
-    //   throw new InternalResponse(new InternalError(BackendErrorNames.CANT_CHANGE_NAME_MATERIAL_ERROR));
-    // }
     if (
       requiredCharacteristics.length !== 0 &&
       requiredFieldsOfMaterial.some(fieldOfMaterial => requiredCharacteristics.indexOf(fieldOfMaterial) === -1)
@@ -155,32 +157,52 @@ export class MaterialService implements IMaterialService {
     return new InternalResponse(rebuildedMaterial);
   }
 
-  async changeCategoryMaterialById(
+  async changeManyMaterialsCategoryById(
+    materialIds: EntityUrlParamCommand.RequestUuidParam[],
+    newCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
+    const updatedMaterials = materialIds.map(async materialId => {
+      console.log('updatedMaterials' + materialId);
+      await this.changeMaterialCategoryById(materialId, { categoryMaterialUuid: newCategoryMaterialId });
+    });
+    const updatedMaterialsToResponse = dataInternalExtractor(await this.getAllWithIds(materialIds));
+    return new InternalResponse(updatedMaterialsToResponse);
+  }
+
+  async changeMaterialCategoryById(
     materialId: EntityUrlParamCommand.RequestUuidParam,
     dto: MaterialUpdateCategoryRequestDto,
   ): Promise<UniversalInternalResponse<MaterialEntity>> {
+    //console.log('updatedMaterial0' + materialId + JSON.stringify(dto));
+    // инфо о категории на начальный момент
     const oldMaterialData = dataInternalExtractor(await this.getById(materialId));
-    const requiredFieldsOfMaterial = dataInternalExtractor(
-      await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(oldMaterialData.categoryMaterialUuid),
-    )
-      .filter(fieldOfCategoryMaterial => fieldOfCategoryMaterial.isRequired)
-      .map(fieldOfCategoryMaterial => fieldOfCategoryMaterial.uuid);
-    const requiredCharacteristics = oldMaterialData.characteristicsMaterial
-      .filter(characteristic => characteristic.characteristicsMaterialStatus === 'ACTIVE')
-      .map(characteristic => characteristic.fieldOfCategoryMaterialUuid);
-    if (
-      requiredCharacteristics.length !== 0 &&
-      requiredFieldsOfMaterial.some(fieldOfMaterial => requiredCharacteristics.indexOf(fieldOfMaterial) === -1)
-    ) {
-      throw new InternalResponse(new InternalError(BackendErrorNames.REQUIRED_CHARCS_ARE_EMPTY_ERROR));
-    }
-    const updatedMaterial = await this.materialRepository.changeCategoryMaterialById(materialId, dto);
+    console.log('updatedMaterial555' + materialId + JSON.stringify(oldMaterialData));
+    // взять только обязательные поля из старой категории материала
+    // const requiredFieldsOfMaterial = dataInternalExtractor(
+    //   await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(oldMaterialData.categoryMaterialUuid),
+    // )
+    //   .filter(fieldOfCategoryMaterial => fieldOfCategoryMaterial.isRequired)
+    //   .map(fieldOfCategoryMaterial => fieldOfCategoryMaterial.uuid);
+    //
+    // // взять все характеристики материала
+    // const allMaterialCharacteristics = oldMaterialData.characteristicsMaterial
+    //   .filter(characteristic => characteristic.characteristicsMaterialStatus === 'ACTIVE')
+    //   .map(characteristic => characteristic.fieldOfCategoryMaterialUuid);
 
-    const inActiveCharacteristics = dataInternalExtractor(
-      await this.characteristicsMaterialService.updateManyStatusByMaterialId(materialId, { characteristicsMaterialStatus: 'INACTIVE' }),
-    );
-    const updatedMaterialWithoutCharcs = await this.materialRepository.getById(materialId);
-    return new InternalResponse(updatedMaterialWithoutCharcs);
+    // if (
+    //     allMaterialCharacteristics.length !== 0 &&
+    //   requiredFieldsOfMaterial.some(fieldOfMaterial => requiredCharacteristics.indexOf(fieldOfMaterial) === -1)
+    // ) {
+    //   throw new InternalResponse(new InternalError(BackendErrorNames.REQUIRED_CHARCS_ARE_EMPTY_ERROR));
+    // }
+
+    const updatedMaterial = await this.materialRepository.changeCategoryMaterialById(materialId, dto);
+    //
+    // const inActiveCharacteristics = dataInternalExtractor(
+    //   await this.characteristicsMaterialService.updateManyStatusByMaterialId(materialId, { characteristicsMaterialStatus: 'INACTIVE' }),
+    // );
+    const updatedMaterialWithoutCharacteristics = await this.materialRepository.getById(materialId);
+    return new InternalResponse(updatedMaterialWithoutCharacteristics);
   }
 
   async deleteById(materialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<MaterialEntity>> {

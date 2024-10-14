@@ -19,3 +19,4 @@ __exportStar(require("./get-all.command"), exports);
 __exportStar(require("./create.command"), exports);
 __exportStar(require("./update.command"), exports);
 __exportStar(require("./delete.command"), exports);
+__exportStar(require("./delete-many.command"), exports);

@@ -273,6 +273,7 @@ model CategoryMaterial {
   uuid                                String                    @id @default(uuid()) @db.Uuid
   name                                String
   comment                             String?
+  isDefault                           Boolean                   @default(false) @map("is_default")
   numInOrder                          Int?
   templateName                        String?                   @map("template_name")
   fieldsOfCategoryMaterialsInTemplate FieldOfCategoryMaterial[] @relation("categories_materials_in_template")

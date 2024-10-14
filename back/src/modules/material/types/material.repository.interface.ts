@@ -6,10 +6,12 @@ import { MaterialEntity } from '../entities/material.entity';
 import { MaterialUpdateNameRequestDto } from '../../../modules/material/dto/controller/update-name-material.dto';
 import { MaterialUpdateCategoryRequestDto } from '../../../modules/material/dto/controller/update-category-material.dto';
 import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
+import { Prisma } from '.prisma/client';
 
 export interface IMaterialRepository extends IRepositoryCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {
   getById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<MaterialEntity>;
   getAll: (skip?: number, take?: number) => Promise<MaterialEntity[]>;
+  getAllWithIds: (materialIds: EntityUrlParamCommand.RequestUuidParam[], skip?: number, take?: number) => Promise<MaterialEntity[]>;
   getAllInHandbook: (handbookId: EntityUrlParamCommand.RequestUuidParam, skip?: number, take?: number) => Promise<MaterialEntity[]>;
   getAllInCategoryMaterial: (
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
@@ -22,6 +24,10 @@ export interface IMaterialRepository extends IRepositoryCommon<MaterialCreateReq
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<MaterialEntity>;
   updateById: (materialId: EntityUrlParamCommand.RequestUuidParam, dto: MaterialUpdateRequestDto) => Promise<MaterialEntity>;
+  updateMaterialsCategoryById: (
+    materialIds: EntityUrlParamCommand.RequestUuidParam[],
+    newCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<Prisma.BatchPayload>;
   rebuildNameForMaterialById: (material: MaterialEntity, newName?: string) => Promise<MaterialEntity>;
   updateNameForMaterialById: (
     materialId: EntityUrlParamCommand.RequestUuidParam,

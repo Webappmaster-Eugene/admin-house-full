@@ -83,6 +83,7 @@ export const axiosEndpoints = {
       'category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
     delete:
       'category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
+    delete_many: 'category-material/batch/workspace/:workspaceId/handbook/:handbookId',
   },
   // DOC material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId
   material: {

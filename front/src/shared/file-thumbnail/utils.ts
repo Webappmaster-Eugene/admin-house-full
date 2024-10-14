@@ -1,8 +1,5 @@
 import { ExtendFile } from './types';
 
-// ----------------------------------------------------------------------
-
-// Define more types here
 const FORMAT_PDF = ['pdf'];
 const FORMAT_TEXT = ['txt'];
 const FORMAT_PHOTOSHOP = ['psd'];
@@ -16,8 +13,6 @@ const FORMAT_IMG = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg'];
 const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
 
 const iconUrl = (icon: string) => `/assets/icons/files/${icon}.svg`;
-
-// ----------------------------------------------------------------------
 
 export function fileFormat(fileUrl: string | undefined) {
   let format;
@@ -71,6 +66,9 @@ export function fileThumb(fileUrl: string) {
   switch (fileFormat(fileUrl)) {
     case 'folder':
       thumb = iconUrl('ic_folder');
+      break;
+    case 'folder-default':
+      thumb = iconUrl('ic_folder_default');
       break;
     case 'txt':
       thumb = iconUrl('ic_txt');

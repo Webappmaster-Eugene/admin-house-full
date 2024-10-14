@@ -18,7 +18,7 @@ import { CharacteristicsMaterialModule } from '../../modules/characteristics-mat
     },
   ],
   controllers: [CategoryMaterialController],
-  imports: [forwardRef(() => MaterialModule), CharacteristicsMaterialModule, CharacteristicsMaterialModule],
+  imports: [forwardRef(() => MaterialModule), CharacteristicsMaterialModule],
   exports: [KFI.CATEGORY_MATERIAL_SERVICE],
 })
 export class CategoryMaterialModule {}

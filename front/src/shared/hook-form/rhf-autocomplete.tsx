@@ -48,6 +48,7 @@ export default function RHFAutocomplete<
           return (
             <Autocomplete
               {...field}
+              noOptionsText="Вариантов не найдено"
               id={`autocomplete-${name}`}
               autoHighlight={!multiple}
               disableCloseOnSelect={multiple}

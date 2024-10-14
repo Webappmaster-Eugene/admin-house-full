@@ -61,11 +61,15 @@ export default function FileManagerTable({
           onSelectAllRows={(checked) =>
             onSelectAllRows(
               checked,
-              dataFiltered.map((row) => row.uuid)
+              dataFiltered.map((row) => {
+                if (!row.isDefault) {
+                  return row.uuid;
+                }
+              })
             )
           }
           action={
-            <Tooltip title="Delete">
+            <Tooltip title="Удалить">
               <IconButton color="primary" onClick={onOpenConfirm}>
                 <Iconify icon="solar:trash-bin-trash-bold" />
               </IconButton>
@@ -91,8 +95,8 @@ export default function FileManagerTable({
             size={dense ? 'small' : 'medium'}
             sx={{
               minWidth: 960,
-              borderCollapse: 'separate',
-              borderSpacing: '0 16px',
+              // borderCollapse: 'separate',
+              // borderSpacing: '0 16px',
             }}
           >
             <TableHeadCustom

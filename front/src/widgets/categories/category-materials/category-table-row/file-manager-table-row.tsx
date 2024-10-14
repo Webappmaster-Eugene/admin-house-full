@@ -52,6 +52,7 @@ export default function FileManagerTableRow({
     globalCategoryMaterial,
     fieldsOfCategoryMaterials,
     materials,
+    isDefault,
     fieldsOfCategoryMaterialsInTemplate,
   } = row as CategoryMaterialGetCommand.ResponseEntity;
 
@@ -123,6 +124,7 @@ export default function FileManagerTableRow({
         <TableCell padding="checkbox">
           <Checkbox
             checked={selected}
+            disabled={isDefault}
             onDoubleClick={() => console.info('ON DOUBLE CLICK')}
             onClick={onSelectRow}
           />
@@ -130,7 +132,10 @@ export default function FileManagerTableRow({
 
         <TableCell onClick={handleClick}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <FileThumbnail file="folder" sx={{ width: 36, height: 36 }} />
+            <FileThumbnail
+              file={isDefault ? 'folder-default' : 'folder'}
+              sx={{ width: 36, height: 36 }}
+            />
 
             <Typography
               noWrap
@@ -159,7 +164,7 @@ export default function FileManagerTableRow({
         </TableCell>
 
         <TableCell onClick={handleClick}>
-          {`Поля для формирования шаблонного имени: ${fTemplateNameFieldsConstructor(
+          {`${fTemplateNameFieldsConstructor(
             fieldsOfCategoryMaterialsInTemplate as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
           )}`}
         </TableCell>
@@ -196,15 +201,18 @@ export default function FileManagerTableRow({
         arrow="right-top"
         sx={{ width: 160 }}
       >
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-            handleCopy();
-          }}
-        >
-          <Iconify icon="eva:link-2-fill" />
-          Скопировать
-        </MenuItem>
+        {fieldsOfCategoryMaterialsInTemplate &&
+          fieldsOfCategoryMaterialsInTemplate?.length >= 1 && (
+            <MenuItem
+              onClick={() => {
+                popover.onClose();
+                handleCopy();
+              }}
+            >
+              <Iconify icon="eva:link-2-fill" />
+              Скопировать
+            </MenuItem>
+          )}
 
         <MenuItem
           onClick={() => {
@@ -224,18 +232,20 @@ export default function FileManagerTableRow({
           Изменить
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {!isDefault && <Divider sx={{ borderStyle: 'dashed' }} />}
 
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Удалить
-        </MenuItem>
+        {!isDefault && (
+          <MenuItem
+            onClick={() => {
+              confirm.onTrue();
+              popover.onClose();
+            }}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon="solar:trash-bin-trash-bold" />
+            Удалить
+          </MenuItem>
+        )}
       </CustomPopover>
 
       <ConfirmDialog

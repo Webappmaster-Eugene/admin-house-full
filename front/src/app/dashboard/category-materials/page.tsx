@@ -51,8 +51,9 @@ export default async function Page() {
   }
 
   const dataForWork: CategoryMaterialProps = {
+    allCategoriesInWorkspace:
+      allCategoriesInCurrentHandbook as CategoryMaterialGetAllCommand.ResponseEntity,
     materials: allMaterialsInCurrentHandbook as MaterialGetAllCommand.ResponseEntity,
-    categories: allCategoriesInCurrentHandbook as CategoryMaterialGetAllCommand.ResponseEntity,
   };
 
   return <CategoryMaterials {...dataForWork} />;

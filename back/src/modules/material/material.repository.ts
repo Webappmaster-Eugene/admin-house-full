@@ -13,7 +13,7 @@ import { QUANTITY_LIMIT } from '../../common/consts/take-quantity.limitation';
 import { limitTakeHandler } from '../../common/helpers/handlers/take-limit.handler';
 import { MaterialUpdateNameRequestDto } from '../../modules/material/dto/controller/update-name-material.dto';
 import { MaterialUpdateCategoryRequestDto } from '../../modules/material/dto/controller/update-category-material.dto';
-import { EActiveStatuses } from '.prisma/client';
+import { EActiveStatuses, Prisma } from '.prisma/client';
 import { templateNameMapper } from '../../common/helpers/handlers/template-name-mapper.handler';
 
 @Injectable()
@@ -25,6 +25,7 @@ export class MaterialRepository implements IMaterialRepository {
 
   async getById(materialId: EntityUrlParamCommand.RequestUuidParam): Promise<MaterialEntity> {
     try {
+      //console.log('updatedMaterial6' + materialId);
       const findedMaterial = await this.databaseService.material.findUnique({
         where: {
           uuid: materialId,
@@ -42,7 +43,7 @@ export class MaterialRepository implements IMaterialRepository {
           priceChanges: true,
         },
       });
-
+      //console.log('updatedMaterial7' + JSON.stringify(findedMaterial));
       return existenceEntityHandler(findedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
     } catch (error: unknown) {
       errorRepositoryHandler(error);
@@ -70,6 +71,41 @@ export class MaterialRepository implements IMaterialRepository {
         },
       });
       return existenceEntityHandler(allMaterials, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllWithIds(
+    ids: EntityUrlParamCommand.RequestUuidParam[],
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
+  ): Promise<MaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allMaterialsWithIds = await this.databaseService.material.findMany({
+        where: {
+          uuid: {
+            in: ids,
+          },
+        },
+        skip,
+        take,
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
+          priceChanges: true,
+        },
+      });
+      return existenceEntityHandler(allMaterialsWithIds, MaterialEntity, EntityName.MATERIAL) as MaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -221,6 +257,28 @@ export class MaterialRepository implements IMaterialRepository {
     }
   }
 
+  async updateMaterialsCategoryById(
+    materialIds: EntityUrlParamCommand.RequestUuidParam[],
+    newCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<Prisma.BatchPayload> {
+    try {
+      const updatedMaterials = await this.databaseService.material.updateMany({
+        where: {
+          uuid: {
+            in: materialIds,
+          },
+        },
+        data: {
+          categoryMaterialUuid: newCategoryMaterialId,
+        },
+      });
+
+      return updatedMaterials;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async updateNameForMaterialById(
     materialId: EntityUrlParamCommand.RequestUuidParam,
     { name }: MaterialUpdateNameRequestDto,
@@ -287,6 +345,15 @@ export class MaterialRepository implements IMaterialRepository {
     { categoryMaterialUuid }: MaterialUpdateCategoryRequestDto,
   ): Promise<MaterialEntity> {
     try {
+      // console.log('updatedMaterial1' + materialId);
+      // console.log('updatedMaterial2' + categoryMaterialUuid);
+      const updatedMaterial1 = await this.databaseService.material.findFirst({
+        where: {
+          uuid: materialId,
+        },
+      });
+
+      //console.log('updatedMaterial3' + JSON.stringify(updatedMaterial1));
       const updatedMaterial = await this.databaseService.material.update({
         where: {
           uuid: materialId,
@@ -307,6 +374,7 @@ export class MaterialRepository implements IMaterialRepository {
           priceChanges: true,
         },
       });
+      console.log('updatedMaterial4' + JSON.stringify(updatedMaterial));
 
       return existenceEntityHandler(updatedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
     } catch (error: unknown) {

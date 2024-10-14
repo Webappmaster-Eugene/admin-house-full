@@ -12,6 +12,10 @@ import { MaterialUpdateCategoryRequestDto } from '../../../modules/material/dto/
 export interface IMaterialService extends IServiceCommon<MaterialCreateRequestDto, MaterialUpdateRequestDto, MaterialEntity> {
   getById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<MaterialEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
+  getAllWithIds: (
+    materialIds: EntityUrlParamCommand.RequestUuidParam[],
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
   getAllInHandbook: (
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
@@ -35,7 +39,11 @@ export interface IMaterialService extends IServiceCommon<MaterialCreateRequestDt
     dto: MaterialUpdateNameRequestDto,
   ) => Promise<UniversalInternalResponse<MaterialEntity>>;
   rebuildNameForMaterialById: (materialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<MaterialEntity>>;
-  changeCategoryMaterialById: (
+  changeManyMaterialsCategoryById: (
+    materialIds: EntityUrlParamCommand.RequestUuidParam[],
+    newCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<MaterialEntity[]>>;
+  changeMaterialCategoryById: (
     materialId: EntityUrlParamCommand.RequestUuidParam,
     dto: MaterialUpdateCategoryRequestDto,
   ) => Promise<UniversalInternalResponse<MaterialEntity>>;

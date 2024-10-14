@@ -1010,6 +1010,7 @@ async function main() {
   const CATEGORY_MATERIAL_6 = await prisma?.categoryMaterial?.create({
     data: {
       name: 'Общая',
+      isDefault: true,
       numInOrder: 7,
       comment: 'Общая',
       globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,

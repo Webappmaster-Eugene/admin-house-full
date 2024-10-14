@@ -1,1 +1,1 @@
-export const RegexTemplateNameTester = new RegExp(/^.+$/gm);
+export const RegexTemplateNameTester = new RegExp(/^.+$/m);

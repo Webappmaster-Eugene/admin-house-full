@@ -18,7 +18,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-
+    console.error(JSON.stringify(request.originalUrl));
     console.error('Исключение обработано на верхнем уровне: ', exception);
 
     if (exception instanceof ForbiddenException) {
@@ -26,7 +26,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         data: null,
         statusCode: status,
         message: exception.message,
-        errors: [exception.stack],
+        errors: [JSON.stringify(exception.stack)],
       });
     } else if (exception instanceof ZodValidationException) {
       return response.status(status).json({
@@ -47,7 +47,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         data: null,
         statusCode: status,
         message: exception.message,
-        errors: [exception.stack],
+        errors: [JSON.stringify(exception.stack)],
       });
     } else if (exception['response']) {
       return response.status(status).json(exception['response']);
@@ -56,7 +56,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         data: null,
         statusCode: status,
         message: exception.message,
-        errors: [exception.stack],
+        errors: [JSON.stringify(exception.stack)],
         // path: request.url,
         // timestamp: new Date().toISOString(),
       });

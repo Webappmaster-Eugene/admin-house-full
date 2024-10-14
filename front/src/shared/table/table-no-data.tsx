@@ -18,7 +18,7 @@ export default function TableNoData({ notFound, sx }: Props) {
         <TableCell colSpan={12}>
           <EmptyContent
             filled
-            title="No Data"
+            title="Данные отсутствуют"
             sx={{
               py: 10,
               ...sx,

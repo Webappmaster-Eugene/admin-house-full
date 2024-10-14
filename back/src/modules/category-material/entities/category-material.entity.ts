@@ -13,6 +13,7 @@ export class CategoryMaterialEntity implements CategoryMaterial, CategoryMateria
   uuid: string;
   name: string;
   comment: string;
+  isDefault: boolean;
   numInOrder: number;
   categoryMaterialStatus: EActiveStatuses;
   globalCategoryMaterialUuid: string;

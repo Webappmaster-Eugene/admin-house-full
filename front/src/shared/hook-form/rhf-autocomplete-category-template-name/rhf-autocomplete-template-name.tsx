@@ -13,39 +13,32 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
   defValue,
   disabled = false,
 }) => {
-  const { control, setValue } = useFormContext();
-  // const [currentInputValueInAutocomplete, setCurrentInputValueInAutocomplete] = useState<string>();
+  const { control, setValue, getValues } = useFormContext();
 
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={defValue}
+      shouldUnregister
       render={({ field: { onChange, value } }) => (
         <Autocomplete
-          disabled={disabled}
-          limitTags={3}
+          noOptionsText="Вариантов не найдено"
           // forcePopupIcon
           // autoSelect
-          multiple
           // selectOnFocus
           // clearOnBlur
           // handleHomeEndKeys
+          disabled={disabled}
+          limitTags={3}
+          multiple
           onKeyDown={(
             event: React.KeyboardEvent<HTMLDivElement> & {
               defaultMuiPrevented?: boolean | undefined;
             }
           ) => {
-            // if (event.key === '') {
-            // }
             if (event.key === 'Enter' && 'value' in event.target && event.target?.value) {
               setValue(name, value.concat(event.target?.value));
-            }
-            if (event.key === 'Enter') {
-              // const values = getValues().tagsTemplate;
-              // const finalValues = values.push(currentInputValueInAutocomplete);
-              // console.log(values);
-              // setValue(name, finalValues);
             }
           }}
           // groupBy={(option) => option}
@@ -57,10 +50,7 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
           }}
           isOptionEqualToValue={(option, valueToInput) => {
             const isEqual = option === valueToInput;
-            if (isEqual) {
-              return true;
-            }
-            return false;
+            return isEqual;
           }}
           freeSolo
           options={options}
@@ -69,10 +59,11 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
           onChange={(event, newValue) => {
             setValue(name, value);
             onChange(newValue);
+            const valuesOfForm = getValues();
+            console.log("valuesOfForm" , valuesOfForm)
           }}
           onInputChange={(event, newInputValue) => {
             console.log(newInputValue);
-            // setCurrentInputValueInAutocomplete(newInputValue);
           }}
           renderOption={(props, option) => (
             <li {...props} key={option}>
@@ -93,8 +84,8 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Multiple Select"
-              placeholder={defValue?.length === 0 ? 'Шаблонное имя не задано' : ''}
+              label="Шаблонное имя"
+              placeholder={!value ? 'Шаблонное имя не задано' : ''}
             />
           )}
         />

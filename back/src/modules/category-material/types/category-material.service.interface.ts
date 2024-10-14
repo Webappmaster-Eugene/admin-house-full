@@ -9,7 +9,12 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 export interface ICategoryMaterialService
   extends IServiceCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {
   getById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
+  getDefaultCategory: () => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
   getAll: (queryParams?: IQueryParams) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
+  getAllWithIds: (
+    categoryIds: EntityUrlParamCommand.RequestUuidParam[],
+    queryParams?: IQueryParams,
+  ) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
   getAllInHandbook: (
     handbookId: EntityUrlParamCommand.RequestUuidParam,
     queryParams?: IQueryParams,
@@ -26,7 +31,7 @@ export interface ICategoryMaterialService
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
   deleteById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<CategoryMaterialEntity>>;
-  // deleteManyByIds: (
-  //   categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[],
-  // ) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
+  deleteManyByIds: (
+    categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[],
+  ) => Promise<UniversalInternalResponse<CategoryMaterialEntity[]>>;
 }

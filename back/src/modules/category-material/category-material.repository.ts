@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryMaterialCreateRequestDto } from './dto/controller/create-category-material.dto';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { ICategoryMaterialRepository } from './types/category-material.repository.interface';
@@ -14,6 +14,7 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 import { fieldCategoryMaterialExtractor } from '../../common/helpers/regex/fieldCategoryMaterialExtractor';
 import { fieldOfCategoryMaterialTemplateGenerator } from '../../common/helpers/regex/fieldOfCategoryMaterialTemplateGenerator';
 import { RegexTemplateNameTester } from '../../common/helpers/regex/regexTemplateNameTester';
+import { Prisma } from '.prisma/client';
 
 @Injectable()
 export class CategoryMaterialRepository implements ICategoryMaterialRepository {
@@ -27,6 +28,27 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
       const findedCategoryMaterial = await this.databaseService.categoryMaterial.findUnique({
         where: {
           uuid: categoryMaterialId,
+        },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
+      });
+
+      return existenceEntityHandler(findedCategoryMaterial, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getDefaultCategory(): Promise<CategoryMaterialEntity> {
+    try {
+      const findedCategoryMaterial = await this.databaseService.categoryMaterial.findFirst({
+        where: {
+          isDefault: true,
         },
         include: {
           materials: true,
@@ -59,6 +81,40 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         },
       });
       return existenceEntityHandler(allCategoryMaterials, CategoryMaterialEntity, EntityName.CATEGORY_MATERIAL) as CategoryMaterialEntity[];
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
+  async getAllWithIds(
+    categoryIds: EntityUrlParamCommand.RequestUuidParam[],
+    skip = 0,
+    take = QUANTITY_LIMIT.TAKE_MAX_LIMIT,
+  ): Promise<CategoryMaterialEntity[]> {
+    limitTakeHandler(take);
+
+    try {
+      const allCategoryMaterialsWithIds = await this.databaseService.categoryMaterial.findMany({
+        where: {
+          uuid: {
+            in: categoryIds,
+          },
+        },
+        take,
+        skip,
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
+      });
+      return existenceEntityHandler(
+        allCategoryMaterialsWithIds,
+        CategoryMaterialEntity,
+        EntityName.CATEGORY_MATERIAL,
+      ) as CategoryMaterialEntity[];
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
@@ -101,13 +157,23 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         comment,
         globalCategoryMaterialUuid,
       } = dto;
+      let newTemplateName: string;
       const lastCategoryMaterialInHandbook = await this.databaseService.material.findFirst({
         where: {
           handbookUuid: handbookId,
         },
       });
       const numInOrder = lastCategoryMaterialInHandbook?.numInOrder + 1 || 1;
-      const newTemplateName = RegexTemplateNameTester.test(templateName) ? templateName : null;
+      if (templateName) {
+        if (RegexTemplateNameTester.test(templateName)) {
+          newTemplateName = templateName;
+        } else {
+          throw new NotFoundException({
+            message: `This category material "templateName" is bad (RegexTemplateNameTester)`,
+            description: 'This category material "templateName" in request is bad due to (RegexTemplateNameTester)',
+          });
+        }
+      }
 
       const newCategoryMaterial = await this.databaseService.categoryMaterial.create({
         data: {
@@ -127,7 +193,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
           globalCategoryMaterialUuid,
           categoryMaterialStatus,
           handbookUuid: handbookId,
-          templateName: newTemplateName,
+          templateName: newTemplateName ?? newTemplateName,
         },
         include: {
           materials: true,
@@ -155,8 +221,18 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
       fieldsOfCategoryMaterials,
     }: CategoryMaterialUpdateRequestDto,
   ): Promise<CategoryMaterialEntity> {
+    let newTemplateName: string;
     try {
-      const newTemplateName = RegexTemplateNameTester.test(templateName) ? templateName : null;
+      if (templateName) {
+        if (RegexTemplateNameTester.test(templateName)) {
+          newTemplateName = templateName;
+        } else {
+          throw new NotFoundException({
+            message: `Strict admin key not found`,
+            description: 'Strict admin key from your request did not found in the database',
+          });
+        }
+      }
 
       const oldCategoryMaterialInfo = await this.databaseService.categoryMaterial.findFirst({
         where: {
@@ -174,7 +250,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         },
         data: {
           name,
-          templateName: newTemplateName,
+          templateName: newTemplateName ?? newTemplateName,
           comment,
           categoryMaterialStatus,
           fieldsOfCategoryMaterials: {
@@ -257,11 +333,48 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     }
   }
 
+  async disconnectMaterials(
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+    materialsToDisconnectIds: EntityUrlParamCommand.RequestUuidParam[],
+  ): Promise<CategoryMaterialEntity> {
+    try {
+      const updatedCategoryMaterial = await this.databaseService.categoryMaterial.update({
+        where: {
+          uuid: categoryMaterialId,
+          isDefault: false,
+        },
+        data: {
+          materials: {
+            disconnect: materialsToDisconnectIds?.map(materialToDisconnectId => ({
+              uuid: materialToDisconnectId,
+            })),
+          },
+        },
+        include: {
+          materials: true,
+          fieldsOfCategoryMaterials: true,
+          fieldsOfCategoryMaterialsInTemplate: true,
+          globalCategoryMaterial: true,
+          handbook: true,
+        },
+      });
+
+      return existenceEntityHandler(
+        updatedCategoryMaterial,
+        CategoryMaterialEntity,
+        EntityName.CATEGORY_MATERIAL,
+      ) as CategoryMaterialEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async deleteById(categoryMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
     try {
       const deletedCategoryMaterial = await this.databaseService.categoryMaterial.delete({
         where: {
           uuid: categoryMaterialId,
+          isDefault: false,
         },
         include: {
           materials: true,
@@ -282,18 +395,19 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     }
   }
 
-  // async deleteManyByIds(categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[]): Promise<Prisma.BatchPayload> {
-  //   try {
-  //     const deletedCategoryMaterials: Prisma.BatchPayload = await this.databaseService.categoryMaterial.deleteMany({
-  //       where: {
-  //         uuid: {
-  //           in: categoryMaterialIds,
-  //         },
-  //       },
-  //     });
-  //     return deletedCategoryMaterials;
-  //   } catch (error: unknown) {
-  //     errorRepositoryHandler(error);
-  //   }
-  // }
+  async deleteManyByIds(categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[]): Promise<Prisma.BatchPayload> {
+    try {
+      const deletedCategoryMaterials: Prisma.BatchPayload = await this.databaseService.categoryMaterial.deleteMany({
+        where: {
+          uuid: {
+            in: categoryMaterialIds,
+          },
+          isDefault: false,
+        },
+      });
+      return deletedCategoryMaterials;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
 }

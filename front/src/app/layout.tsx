@@ -57,7 +57,6 @@ export default async function RootLayout({ children }: PropsReactNode) {
       workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
     }
   }
-  console.log(appInfo);
 
   return (
     <html lang="ru" className={primaryFont.className}>

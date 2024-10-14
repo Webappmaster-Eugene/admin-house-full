@@ -245,7 +245,7 @@ export class MaterialController implements IMaterialController {
     @User() userInfoFromJWT: IJWTPayload,
   ): Promise<MaterialUpdateCategoryResponseDto> {
     try {
-      const { ok, data } = await this.materialService.changeCategoryMaterialById(materialId, dto);
+      const { ok, data } = await this.materialService.changeMaterialCategoryById(materialId, dto);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);

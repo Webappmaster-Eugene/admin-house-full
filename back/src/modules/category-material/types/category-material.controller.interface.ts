@@ -8,6 +8,10 @@ import { IJWTPayload } from '../../../common/types/jwt.payload.interface';
 import { IUrlParams } from '../../../common/decorators/url-params.decorator';
 import { IQueryParams } from '../../../common/decorators/query-params.decorator';
 import { EntityUrlParamCommand } from 'libs/contracts';
+import {
+  CategoryMaterialDeleteManyRequestDto,
+  CategoryMaterialDeleteManyResponseDto,
+} from 'src/modules/category-material/dto/controller/delete-many-category-material.dto';
 
 export interface ICategoryMaterialController
   extends IControllerCommon<
@@ -41,5 +45,5 @@ export interface ICategoryMaterialController
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
   ) => Promise<CategoryMaterialDeleteResponseDto>;
-  // deleteManyByIdsEP: (urlParams: IUrlParams) => Promise<CategoryMaterialGetAllResponseDto>;
+  deleteManyByIdsEP: (dto: CategoryMaterialDeleteManyRequestDto, urlParams: IUrlParams) => Promise<CategoryMaterialDeleteManyResponseDto>;
 }

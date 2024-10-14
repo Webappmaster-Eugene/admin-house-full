@@ -23,26 +23,10 @@ export default function FileManagerGridView({
 
   const containerRef = useRef(null);
 
-  const [folderName, setFolderName] = useState('');
-
-  const newFolder = useBoolean();
-
   const folders = useBoolean();
 
-  const handleChangeFolderName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setFolderName(event.target.value);
-  }, []);
-
   return (
-    <>
       <Box ref={containerRef}>
-        {/* <FileManagerPanel */}
-        {/*  title="Категории справочника" */}
-        {/*  subTitle={`Всего: ${dataFiltered.length} категорий`} */}
-        {/*  onOpen={newFolder.onTrue} */}
-        {/*  collapse={folders.value} */}
-        {/*  onCollapse={folders.onToggle} */}
-        {/* /> */}
 
         <Collapse in={!folders.value} unmountOnExit>
           <Box
@@ -62,6 +46,7 @@ export default function FileManagerGridView({
                 selected={selected.includes(category.uuid)}
                 onSelect={() => onSelectItem(category.uuid)}
                 onDelete={() => onDeleteItem(category.uuid)}
+                onOpenChangerPopup={onOpenChangerPopup}
                 sx={{ maxWidth: 'auto' }}
               />
             ))}
@@ -94,21 +79,5 @@ export default function FileManagerGridView({
           />
         )}
       </Box>
-
-      {/* <CreateNewCategoryDialog open={upload.value} onClose={upload.onFalse} /> */}
-
-      <CreateNewCategoryDialog
-        open={newFolder.value}
-        onClose={newFolder.onFalse}
-        title="New Folder"
-        onCreate={() => {
-          newFolder.onFalse();
-          setFolderName('');
-          console.info('CREATE NEW FOLDERR', folderName);
-        }}
-        folderName={folderName}
-        onChangeFolderName={handleChangeFolderName}
-      />
-    </>
   );
 }

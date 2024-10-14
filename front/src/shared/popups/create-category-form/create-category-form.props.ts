@@ -4,7 +4,7 @@ import {
 } from '@numart/house-admin-contracts';
 
 export type CreateCategoryProps = {
-  openCreateCategoryPopup: boolean;
+  isOpenCreateCategoryPopup: boolean;
   onCloseCreateCategoryPopup: VoidFunction;
   allFields: FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
   allGlobalCategories: GlobalCategoryMaterialGetAllCommand.ResponseEntity;
