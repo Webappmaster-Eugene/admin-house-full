@@ -1,13 +1,12 @@
 import { useCallback } from 'react';
+import Iconify from '@/shared/iconify';
+import { IFileFilters, IFileFilterValue } from '@/widgets/categories/category-materials/types';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Stack, { StackProps } from '@mui/material/Stack';
-
-import Iconify from 'src/shared/iconify';
-import { IFileFilters, IFileFilterValue } from 'src/widgets/categories/category-materials/types';
 
 // ----------------------------------------------------------------------
 

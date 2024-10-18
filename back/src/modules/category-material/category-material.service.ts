@@ -28,8 +28,8 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     return new InternalResponse(findedCategoryMaterial);
   }
 
-  async getDefaultCategory(): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
-    const findedCategoryMaterial = await this.categoryMaterialRepository.getDefaultCategory();
+  async getDefaultCategory(handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+    const findedCategoryMaterial = await this.categoryMaterialRepository.getDefaultCategory(handbookId);
     return new InternalResponse(findedCategoryMaterial);
   }
 
@@ -127,30 +127,41 @@ export class CategoryMaterialService implements ICategoryMaterialService {
     return new InternalResponse(updatedCategoryMaterial);
   }
 
-  async deleteById(categoryMaterialId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
+  async deleteById(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<CategoryMaterialEntity>> {
     const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
+
     const materialIdsToReplace = allMaterialsInCategory.map(materialInCategory => materialInCategory.uuid);
-    const commonCategoryOfCurrentWorkspace = dataInternalExtractor(await this.getDefaultCategory());
-    await this.materialService.changeManyMaterialsCategoryById(materialIdsToReplace, commonCategoryOfCurrentWorkspace.uuid);
-    await this.categoryMaterialRepository.disconnectMaterials(categoryMaterialId, materialIdsToReplace);
+    console.log('deleteById1 ');
+    const commonCategoryOfCurrentWorkspace = dataInternalExtractor(await this.getDefaultCategory(handbookId));
+    //await this.categoryMaterialRepository.disconnectMaterials(categoryMaterialId, materialIdsToReplace);
+    //await this.materialService.changeManyMaterialsCategoryById(materialIdsToReplace, commonCategoryOfCurrentWorkspace.uuid);
+    console.log('deleteById2 ');
+    console.log('deleteById3 ');
     const deletedCategoryMaterial = await this.categoryMaterialRepository.deleteById(categoryMaterialId);
+    //const deletedCategoryMaterial = await this.categoryMaterialRepository.getById(categoryMaterialId);
+    console.log('deleteById4 ');
     return new InternalResponse(deletedCategoryMaterial);
   }
 
   async deleteManyByIds(
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
     categoryMaterialIds: EntityUrlParamCommand.RequestUuidParam[],
   ): Promise<UniversalInternalResponse<CategoryMaterialEntity[]>> {
     const deletedCategoriesToResponse = dataInternalExtractor(await this.getAllWithIds(categoryMaterialIds));
-    const commonCategoryOfCurrentWorkspace = dataInternalExtractor(await this.getDefaultCategory());
+    const commonCategoryOfCurrentWorkspace = dataInternalExtractor(await this.getDefaultCategory(handbookId));
 
     categoryMaterialIds.map(async categoryMaterialId => {
       const allMaterialsInCategory = dataInternalExtractor(await this.materialService.getAllInCategoryMaterial(categoryMaterialId));
       const materialIdsToReplace = allMaterialsInCategory.map(materialInCategory => materialInCategory.uuid);
       await this.materialService.changeManyMaterialsCategoryById(materialIdsToReplace, commonCategoryOfCurrentWorkspace.uuid);
       await this.categoryMaterialRepository.disconnectMaterials(categoryMaterialId, materialIdsToReplace);
+      const deletedCategoryMaterial = await this.categoryMaterialRepository.deleteById(categoryMaterialId);
     });
 
-    const deletedCategoryMaterials = await this.categoryMaterialRepository.deleteManyByIds(categoryMaterialIds);
+    //const deletedCategoryMaterials = await this.categoryMaterialRepository.deleteManyByIds(categoryMaterialIds);
     return new InternalResponse(deletedCategoriesToResponse);
   }
 }

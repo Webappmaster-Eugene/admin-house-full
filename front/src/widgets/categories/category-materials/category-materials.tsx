@@ -2,6 +2,10 @@
 
 import { useSnackbar } from 'notistack';
 import { useState, useCallback } from 'react';
+import AllCategoriesTable from '@/widgets/categories/category-materials/category-table/category-table';
+import CategoryFilters from '@/widgets/categories/category-materials/category-filters/category-filters';
+import AllCategoriesGridView from '@/widgets/categories/category-materials/category-grid/category-grid-view';
+import { deleteOneCategoryMaterial } from '@/api/actions/category-material/delete-one-category-material.action';
 import {
   HandbookGetCommand,
   WorkspaceGetCommand,
@@ -32,14 +36,10 @@ import EditCategoryForm from 'src/shared/popups/edit-category-form/edit-category
 import CreateCategoryForm from 'src/shared/popups/create-category-form/create-category-form';
 import { IFileFilters, IFileFilterValue } from 'src/widgets/categories/category-materials/types';
 import { CategoryMaterialProps } from 'src/widgets/categories/category-materials/category-materials.props';
-import FileManagerTable from 'src/widgets/categories/category-materials/category-table/file-manager-table';
 import { applyFilterHandler } from 'src/widgets/categories/category-materials/helpers/apply-filter.handler';
-import FileManagerGridView from 'src/widgets/categories/category-materials/category-grid/file-manager-grid-view';
-import FileManagerFilters from 'src/widgets/categories/category-materials/category-filters/file-manager-filters';
-import { deleteOneCategoryMaterial } from 'src/api/actions/category-material/delete-one-category-material.action';
 import { deleteManyCategoryMaterial } from 'src/api/actions/category-material/delete-many-category-material.action';
 
-import FileManagerFiltersResult from '../file-manager-filters-result';
+import FileManagerFiltersResult from '../unused-components/file-manager-filters-result';
 
 export default function CategoryMaterials({
   materials,
@@ -65,11 +65,13 @@ export default function CategoryMaterials({
 
   const table = useTable({ defaultRowsPerPage: 10 });
 
-  const confirm = useBoolean();
+  const isDeletingManyCategoriesPopupOpened = useBoolean();
+  const isDeletingOneCategoryPopupOpenedTable = useBoolean();
+  const isDeletingOneCategoryPopupOpenedGrid = useBoolean();
 
-  const isCreatingNewCategory = useBoolean();
+  const isCreatingNewCategoryPopupOpened = useBoolean();
 
-  const isChangingCategory = useBoolean();
+  const isChangingCategoryPopupOpened = useBoolean();
 
   const [view, setView] = useState('list');
 
@@ -104,7 +106,7 @@ export default function CategoryMaterials({
     newCategoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity
   ) => {
     setCategoryToChange(newCategoryInfoToChange);
-    isChangingCategory.onTrue();
+    isChangingCategoryPopupOpened.onTrue();
   };
 
   const handleFilters = useCallback(
@@ -122,20 +124,36 @@ export default function CategoryMaterials({
     setFilters(defaultFilters);
   }, []);
 
-  const handleDeleteItem = useCallback(
-    async (id: string) => {
-      const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
-      await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
+  // const handleDeleteOneItem = useCallback(
+  //   async (id: string) => {
+  //     // const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
+  //     // await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
+  //     // console.log(`deleteOneCategoryMaterial1 + ${JSON.stringify(deleteOneCategoryMaterial)}`);
+  //
+  //     // table.onUpdatePageDeleteRow(dataInPage?.length);
+  //     // setTableData((prevCategories) => prevCategories.filter((category) => category.uuid !== id));
+  //     confirmDeletingOneCategory.onFalse();
+  //     // setTableData(allCategoriesInWorkspace);
+  //     console.log(confirmDeletingOneCategory.value);
+  //     enqueueSnackbar('Удаление успешно произведено!');
+  //   },
+  //   [dataInPage?.length, enqueueSnackbar, table, tableData, allCategoriesInWorkspace]
+  // );
 
-      setTableData(allRowsWithoutDeleted);
+  const handleDeleteOneCategory = async (id: string) => {
+    const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
+    await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
+    // console.log(`deleteOneCategoryMaterial1 + ${JSON.stringify(deleteOneCategoryMaterial)}`);
+    //
+    table.onUpdatePageDeleteRow(dataInPage?.length);
+    setTableData((prevCategories) => prevCategories.filter((category) => category.uuid !== id));
+    // console.log(`allCategoriesInWorkspace0 ${JSON.stringify(allCategoriesInWorkspace)}`);
+    // setTableData(allCategoriesInWorkspace);
 
-      table.onUpdatePageDeleteRow(dataInPage?.length);
-      enqueueSnackbar('Удаление успешно произведено!');
-    },
-    [dataInPage?.length, enqueueSnackbar, table, tableData]
-  );
+    enqueueSnackbar('Удаление одной категории успешно произведено!');
+  };
 
-  const handleDeleteItems = useCallback(async () => {
+  const handleDeleteManyCategories = useCallback(async () => {
     const selectedCategoriesToDelete = table.selected;
     const allRowsWithoutDeleted = tableData.filter(
       (categoryMaterialInTable) => !table.selected.includes(categoryMaterialInTable?.uuid as string)
@@ -146,14 +164,20 @@ export default function CategoryMaterials({
       selectedCategoriesToDelete
     );
 
-    setTableData(allRowsWithoutDeleted);
-
     table.onUpdatePageDeleteRows({
       totalRowsInPage: dataInPage?.length,
       totalRowsFiltered: dataFiltered?.length,
     });
+
+    // setTableData((prevCategories) =>
+    //   prevCategories.filter((category) => !selectedCategoriesToDelete.includes(category.uuid))
+    // );
+
+    setTableData(allCategoriesInWorkspace);
+    isDeletingManyCategoriesPopupOpened.onFalse();
+
     enqueueSnackbar('Удаление успешно произведено!');
-  }, [dataInPage?.length, enqueueSnackbar, table, tableData]);
+  }, [dataInPage?.length, enqueueSnackbar, table, tableData, allCategoriesInWorkspace]);
 
   const renderFilters = (
     <Stack
@@ -161,7 +185,7 @@ export default function CategoryMaterials({
       direction={{ xs: 'column', md: 'row' }}
       alignItems={{ xs: 'flex-end', md: 'center' }}
     >
-      <FileManagerFilters filters={filters} onFilters={handleFilters} />
+      <CategoryFilters filters={filters} onFilters={handleFilters} />
 
       <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChangeView}>
         <ToggleButton value="list">
@@ -202,7 +226,7 @@ export default function CategoryMaterials({
           <IconButton
             size="small"
             color="primary"
-            onClick={isCreatingNewCategory.onTrue}
+            onClick={isCreatingNewCategoryPopupOpened.onTrue}
             sx={{
               width: 24,
               height: 24,
@@ -248,21 +272,21 @@ export default function CategoryMaterials({
         ) : (
           <>
             {view === 'list' ? (
-              <FileManagerTable
+              <AllCategoriesTable
                 table={table}
                 dataFiltered={dataFiltered}
-                onDeleteRow={handleDeleteItem}
+                onDeleteCategory={handleDeleteOneCategory}
+                onOpenDeletingOneCategoryPopup={isDeletingOneCategoryPopupOpenedTable.onTrue}
                 notFound={notFound}
-                onOpenConfirm={confirm.onTrue}
-                onOpenChangerPopup={handleChangeCategory}
+                onOpenChangerCategoryPopup={handleChangeCategory}
               />
             ) : (
-              <FileManagerGridView
+              <AllCategoriesGridView
                 table={table}
                 dataFiltered={dataFiltered}
-                onDeleteItem={handleDeleteItem}
-                onOpenConfirm={confirm.onTrue}
-                onOpenChangerPopup={handleChangeCategory}
+                onDeleteCategory={handleDeleteOneCategory}
+                onOpenDeletingOneCategoryPopup={isDeletingOneCategoryPopupOpenedGrid.onTrue}
+                onOpenChangerCategoryPopup={handleChangeCategory}
               />
             )}
           </>
@@ -270,9 +294,9 @@ export default function CategoryMaterials({
       </Container>
 
       <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Удаление категории"
+        open={isDeletingManyCategoriesPopupOpened.value}
+        onClose={isDeletingManyCategoriesPopupOpened.onFalse}
+        title="Удаление нескольких категорий"
         content={
           <>
             <Typography>
@@ -288,9 +312,9 @@ export default function CategoryMaterials({
           <Button
             variant="contained"
             color="error"
-            onClick={() => {
-              handleDeleteItems();
-              confirm.onFalse();
+            onClick={async () => {
+              await handleDeleteManyCategories();
+              isDeletingManyCategoriesPopupOpened.onFalse();
             }}
           >
             Удалить
@@ -302,17 +326,19 @@ export default function CategoryMaterials({
           allFields={allFields}
           allGlobalCategories={allGlobalCategories}
           currentCategoryInfo={categoryToChange as CategoryMaterialGetCommand.ResponseEntity}
-          isOpenEditCategoryForm={isChangingCategory.value}
-          onCloseEditCategoryForm={isChangingCategory.onFalse}
+          isOpenEditCategoryForm={isChangingCategoryPopupOpened.value}
+          onCloseEditCategoryForm={isChangingCategoryPopupOpened.onFalse}
+          setTableData={setTableData}
         />
       )}
 
       {workspaceInfo && (
         <CreateCategoryForm
-          isOpenCreateCategoryPopup={isCreatingNewCategory.value}
+          isOpenCreateCategoryPopup={isCreatingNewCategoryPopupOpened.value}
           allGlobalCategories={allGlobalCategories}
-          onCloseCreateCategoryPopup={isCreatingNewCategory.onFalse}
+          onCloseCreateCategoryPopup={isCreatingNewCategoryPopupOpened.onFalse}
           allFields={allFields}
+          setTableData={setTableData}
         />
       )}
     </>

@@ -20,13 +20,13 @@ export function Error({ sx }: ForbiddenProps) {
     <Container component={MotionContainer} sx={{ textAlign: 'center', ...sx }}>
       <m.div variants={varBounce().in}>
         <Typography variant="h3" sx={{ mb: 2 }}>
-          Ошибка запроса
+          Ошибка запроса к серверу
         </Typography>
       </m.div>
 
       <m.div variants={varBounce().in}>
         <Typography sx={{ color: 'text.secondary' }}>
-          К сожалению, произошла ошибка, обратитесь к администратору
+          К сожалению, произошла ошибка, пожалуйста, обратитесь к администратору!
         </Typography>
       </m.div>
 

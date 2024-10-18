@@ -1,14 +1,14 @@
+import Iconify from '@/shared/iconify';
+
 import Box from '@mui/material/Box';
 import Portal from '@mui/material/Portal';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import { Theme, SxProps } from '@mui/material/styles';
 
-import Iconify from 'src/shared/iconify';
-
 // ----------------------------------------------------------------------
 
-type Props = {
+type CategoryActionSelectedProps = {
   rowCount: number;
   numSelected: number;
   selected?: string[];
@@ -17,7 +17,7 @@ type Props = {
   sx?: SxProps<Theme>;
 };
 
-export default function FileManagerActionSelected({
+export default function CategoryActionSelected({
   action,
   selected,
   rowCount,
@@ -25,7 +25,7 @@ export default function FileManagerActionSelected({
   onSelectAllItems,
   sx,
   ...other
-}: Props) {
+}: CategoryActionSelectedProps) {
   return (
     <Portal>
       <Box

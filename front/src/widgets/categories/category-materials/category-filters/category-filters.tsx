@@ -8,7 +8,7 @@ import Iconify from 'src/shared/iconify';
 import { usePopover } from 'src/shared/custom-popover';
 import { CategoryFiltersProps } from 'src/widgets/categories/category-materials/category-filters/category-filters.props';
 
-export default function FileManagerFilters({ filters, onFilters }: CategoryFiltersProps) {
+export default function CategoryFilters({ filters, onFilters }: CategoryFiltersProps) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(

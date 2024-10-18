@@ -8,6 +8,7 @@ export const enum BackendPErrorCodes {
   PRISMA_CONFLICT_ERROR = 'P2002',
   PRISMA_INVALID_UUID = 'P2023',
   PRISMA_NOT_FOUND_ERROR = 'P2025',
+  PRISMA_RELATIONS_ERROR = 'P2014',
 }
 
 export const enum BackendErrorNames {

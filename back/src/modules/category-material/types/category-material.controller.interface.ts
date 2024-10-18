@@ -44,6 +44,11 @@ export interface ICategoryMaterialController
   deleteByIdEP: (
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<CategoryMaterialDeleteResponseDto>;
-  deleteManyByIdsEP: (dto: CategoryMaterialDeleteManyRequestDto, urlParams: IUrlParams) => Promise<CategoryMaterialDeleteManyResponseDto>;
+  deleteManyByIdsEP: (
+    dto: CategoryMaterialDeleteManyRequestDto,
+    urlParams: IUrlParams,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<CategoryMaterialDeleteManyResponseDto>;
 }

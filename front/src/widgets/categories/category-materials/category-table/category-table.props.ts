@@ -9,10 +9,10 @@ export type CategoryTableProps = {
   table: TableProps;
   notFound: boolean;
   dataFiltered: CategoryMaterialGetAllCommand.ResponseEntity;
-  onOpenConfirm: VoidFunction;
-  onOpenChangerPopup: (
+  onOpenDeletingOneCategoryPopup: VoidFunction;
+  onOpenChangerCategoryPopup: (
     event: React.MouseEvent<HTMLElement>,
     categoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity
   ) => void;
-  onDeleteRow: (id: string) => void;
+  onDeleteCategory: (id: string) => void;
 };

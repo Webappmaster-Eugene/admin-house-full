@@ -9,7 +9,7 @@ import { QUANTITY_LIMIT } from 'src/common/consts/take-quantity.limitation';
 export interface ICategoryMaterialRepository
   extends IRepositoryCommon<CategoryMaterialCreateRequestDto, CategoryMaterialUpdateRequestDto, CategoryMaterialEntity> {
   getById: (categoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
-  getDefaultCategory: () => Promise<CategoryMaterialEntity>;
+  getDefaultCategory: (handbookId: EntityUrlParamCommand.RequestUuidParam) => Promise<CategoryMaterialEntity>;
   getAll: (skip?: number, take?: number) => Promise<CategoryMaterialEntity[]>;
   getAllWithIds: (categoryIds: EntityUrlParamCommand.RequestUuidParam[], skip?: number, take?: number) => Promise<CategoryMaterialEntity[]>;
   getAllInHandbook: (handbookId: EntityUrlParamCommand.RequestUuidParam, skip?: number, take?: number) => Promise<CategoryMaterialEntity[]>;

@@ -1,9 +1,20 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useMemo, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
+import { StatusesEntities } from '@/utils/types/statuses-entities.type';
+import { useWorkspaceInfoStore } from '@/store/workspace/workspace.store';
+import { isErrorFieldTypeGuard } from '@/utils/type-guards/is-error-field.type-guard';
+import { updateCategoryMaterial } from '@/api/actions/category-material/update-category-material.action';
+import {
+  HandbookGetCommand,
+  WorkspaceGetCommand,
+  CategoryMaterialUpdateCommand,
+  CategoryMaterialGetAllCommand,
+  FieldOfCategoryMaterialGetCommand,
+  FieldOfCategoryMaterialGetAllCommand,
+} from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -30,18 +41,28 @@ export default function EditCategoryForm({
   onCloseEditCategoryForm,
   allFields,
   allGlobalCategories,
+  setTableData,
 }: EditCategoryProps) {
+  const { workspaceInfo, setWorkspaceInfo } = useWorkspaceInfoStore((state) => state);
+
+  const currentWorkspaceInfo =
+    workspaceInfo?.currentWorkspaceInfo as WorkspaceGetCommand.ResponseEntity;
+  const currentHandbookInfo =
+    workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+
   const { enqueueSnackbar } = useSnackbar();
 
   const tagsAll = allFields?.map((field) => field.name);
 
-  const allRequiredFieldsOfCategoryInWorkspace = currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
-    (field) => field.isRequired
-  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+  const allRequiredFieldsOfCategoryInWorkspace =
+    currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
+      (field) => field.isRequired
+    ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
 
-  const allNotRequiredFieldsOfCategoryInWorkspace = currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
-    (field) => !field.isRequired
-  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+  const allNotRequiredFieldsOfCategoryInWorkspace =
+    currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
+      (field) => !field.isRequired
+    ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
 
   const tagsForInput = categoryTemplateNameToTagsParser(
     currentCategoryInfo?.templateName,
@@ -84,13 +105,117 @@ export default function EditCategoryForm({
 
   const {
     // resetField,
+    watch,
     reset,
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
+  const values = watch();
+  useEffect(() => {
+    const allFieldsNamesInRequiredFields =
+      values?.requiredFieldsInCategory &&
+      values.requiredFieldsInCategory.map(
+        (field) => ('name' in field && typeof field?.name === 'string' && field?.name) || ''
+      );
+
+    const allFieldsNamesInNotRequiredFields =
+      values?.notRequiredFieldsInCategory &&
+      values.notRequiredFieldsInCategory.map(
+        (field) => ('name' in field && typeof field?.name === 'string' && field?.name) || ''
+      );
+
+    values.tagsTemplate?.forEach((tag) => {
+      const fieldOfCategoryMaterial = allFields.find((field) => field.name === tag);
+      if (
+        allFieldsNamesInRequiredFields &&
+        Array.isArray(allFieldsNamesInRequiredFields) &&
+        !allFieldsNamesInRequiredFields?.includes(tag as string) &&
+        fieldOfCategoryMaterial &&
+        fieldOfCategoryMaterial.isRequired
+      ) {
+        setValue('requiredFieldsInCategory', [
+          ...(values?.requiredFieldsInCategory || []),
+          fieldOfCategoryMaterial,
+        ]);
+      }
+
+      if (
+        allFieldsNamesInNotRequiredFields &&
+        Array.isArray(allFieldsNamesInNotRequiredFields) &&
+        !allFieldsNamesInNotRequiredFields?.includes(tag as string) &&
+        fieldOfCategoryMaterial &&
+        !fieldOfCategoryMaterial.isRequired
+      ) {
+        setValue('notRequiredFieldsInCategory', [
+          ...(values?.notRequiredFieldsInCategory || []),
+          fieldOfCategoryMaterial,
+        ]);
+      }
+    });
+  }, [values.tagsTemplate]);
+
   const onSubmitForm = handleSubmit(async (data) => {
     try {
+      const globalCategoryMaterialUuid = allGlobalCategories?.find(
+        (globalCategory) => globalCategory.nameRu === data.globalCategoryMaterialName
+      )?.uuid as string;
+
+      const tagsInTemplate: Array<FieldOfCategoryMaterialGetCommand.ResponseEntity> = [];
+      const allFieldsToCreateCategory: Array<FieldOfCategoryMaterialGetCommand.ResponseEntity> = [
+        ...((data?.requiredFieldsInCategory as Array<FieldOfCategoryMaterialGetCommand.ResponseEntity>) ||
+          []),
+        ...((data?.notRequiredFieldsInCategory as Array<FieldOfCategoryMaterialGetCommand.ResponseEntity>) ||
+          []),
+      ];
+
+      const templateName =
+        data?.tagsTemplate &&
+        allFields &&
+        data.tagsTemplate.reduce((acc, tag) => {
+          if (tag) {
+            if (tagsAll.includes(tag)) {
+              const fieldOfCategoryInNewCategory = allFields?.find((field) => field.name === tag);
+              if (fieldOfCategoryInNewCategory) {
+                tagsInTemplate.push(fieldOfCategoryInNewCategory);
+                // @ts-ignore
+                acc += fieldOfCategoryInNewCategory?.uniqueNameForTemplate || '';
+              }
+            } else {
+              acc += tag;
+            }
+          }
+          return acc;
+        }, '');
+
+      const updateCategoryDto: CategoryMaterialUpdateCommand.Request = {
+        name: data.name,
+        comment: data.comment,
+        categoryMaterialStatus: data?.categoryMaterialStatus as StatusesEntities,
+        templateName,
+        fieldsOfCategoryMaterials: allFieldsToCreateCategory,
+        fieldsOfCategoryMaterialsInTemplate: tagsInTemplate,
+      };
+
+      const updatedCreatedCategoryMaterial = await updateCategoryMaterial(
+        currentWorkspaceInfo?.uuid,
+        currentHandbookInfo?.uuid,
+        currentCategoryInfo?.uuid,
+        updateCategoryDto
+      );
+
+      if (!isErrorFieldTypeGuard(updatedCreatedCategoryMaterial)) {
+        setTableData((prevData: CategoryMaterialGetAllCommand.ResponseEntity) => {
+          const newDataToReturn = prevData.map((category) => {
+            if (category.uuid === updatedCreatedCategoryMaterial?.uuid) {
+              return updatedCreatedCategoryMaterial;
+            }
+            return category;
+          });
+          return newDataToReturn;
+        });
+      }
 
       reset();
       onCloseEditCategoryForm();
@@ -179,20 +304,24 @@ export default function EditCategoryForm({
                 getOptionLabel={(option) => option}
               />
 
-              <RHFTextField name="name" label="Наименование" value={currentCategoryInfo?.name} />
+              <RHFTextField
+                name="name"
+                label="Наименование"
+                defaultValue={currentCategoryInfo?.name}
+              />
 
               <RHFTextField
                 disabled
                 name="numInOrder"
                 label="Номер п/п"
-                value={currentCategoryInfo?.numInOrder}
+                defaultValue={currentCategoryInfo?.numInOrder}
               />
 
               <RHFTextField
                 multiline
                 name="comment"
                 label="Описание категории"
-                value={currentCategoryInfo?.comment}
+                defaultValue={currentCategoryInfo?.comment}
               />
 
               {Array.isArray(tagsForInput) && currentCategoryInfo && (
@@ -210,6 +339,7 @@ export default function EditCategoryForm({
                   disabled={currentCategoryInfo.isDefault}
                   name="requiredFieldsInCategory"
                   options={allRequiredFieldsOfCategoryInWorkspace}
+                  tagsInTemplate={values.tagsTemplate as string[]}
                   defValue={
                     currentCategoryInfo?.fieldsOfCategoryMaterials
                       ?.filter((field) => field.isRequired)
@@ -224,6 +354,7 @@ export default function EditCategoryForm({
                   disabled={currentCategoryInfo.isDefault}
                   name="notRequiredFieldsInCategory"
                   options={allNotRequiredFieldsOfCategoryInWorkspace}
+                  tagsInTemplate={values.tagsTemplate as string[]}
                   defValue={
                     currentCategoryInfo?.fieldsOfCategoryMaterials
                       ?.filter((field) => !field.isRequired)

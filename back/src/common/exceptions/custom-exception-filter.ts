@@ -55,8 +55,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
       return response.status(status).json({
         data: null,
         statusCode: status,
-        message: exception.message,
-        errors: [JSON.stringify(exception.stack)],
+        message: exception?.message,
+        errors: [JSON.stringify(exception?.stack)],
         // path: request.url,
         // timestamp: new Date().toISOString(),
       });

@@ -1,7 +1,8 @@
+import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
 import { CategoryMaterialGetCommand } from '@numart/house-admin-contracts';
+import CategoryViewDetails from '@/widgets/categories/category-materials/category-details/category-view-details';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -19,36 +20,30 @@ import { useCopyToClipboard } from 'src/utils/hooks/use-copy-to-clipboard';
 import Iconify from 'src/shared/iconify';
 import CustomPopover, { usePopover } from 'src/shared/custom-popover';
 import { CategoryItemProps } from 'src/widgets/categories/category-materials/category-item/category-item.props';
-import FileManagerFileDetails from 'src/widgets/categories/category-materials/category-details/file-manager-file-details';
-import Button from "@mui/material/Button";
-import {ConfirmDialog} from "@/shared/custom-dialog";
 
-export default function FileManagerFolderItem({
+export default function CategoryItem({
   category,
   selected,
   onSelect,
   onDelete,
   sx,
   onOpenChangerPopup,
+  // isDeletingPopupOpened,
+  // onOpenDeletingOneCategoryPopup,
+  // onCloseDeletingOneCategoryPopup,
   ...other
 }: CategoryItemProps) {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
 
-  const {
-    uuid,
-    materials,
-    isDefault,
-    fieldsOfCategoryMaterialsInTemplate,
-  } = category as CategoryMaterialGetCommand.ResponseEntity;
+  const { uuid, materials, isDefault, fieldsOfCategoryMaterialsInTemplate } =
+    category as CategoryMaterialGetCommand.ResponseEntity;
 
   const { copy } = useCopyToClipboard();
 
   const checkbox = useBoolean();
 
   const popover = usePopover();
-
-  const confirm = useBoolean();
 
   const details = useBoolean();
 
@@ -214,33 +209,33 @@ export default function FileManagerFolderItem({
 
         {!isDefault && <Divider sx={{ borderStyle: 'dashed' }} />}
 
-        {!isDefault && (
-          <MenuItem
-            onClick={() => {
-              confirm.onTrue();
-              popover.onClose();
-            }}
-            sx={{ color: 'error.main' }}
-          >
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Удалить
-          </MenuItem>
-        )}
+        {/* {!isDefault && ( */}
+        {/*  <MenuItem */}
+        {/*    onClick={() => { */}
+        {/*      onOpenDeletingOneCategoryPopup(); */}
+        {/*      popover.onClose(); */}
+        {/*    }} */}
+        {/*    sx={{ color: 'error.main' }} */}
+        {/*  > */}
+        {/*    <Iconify icon="solar:trash-bin-trash-bold" /> */}
+        {/*    Удалить */}
+        {/*  </MenuItem> */}
+        {/* )} */}
       </CustomPopover>
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Удалить"
-        content="Вы уверены что хотите удалить категорию?"
-        action={
-          <Button variant="contained" color="error" onClick={onDelete}>
-            Удалить
-          </Button>
-        }
-      />
+      {/* <ConfirmDialog */}
+      {/*  open={isDeletingPopupOpened} */}
+      {/*  onClose={onCloseDeletingOneCategoryPopup} */}
+      {/*  title="Удалить" */}
+      {/*  content="Вы уверены что хотите удалить категорию?" */}
+      {/*  action={ */}
+      {/*    <Button variant="contained" color="error" onClick={onDelete}> */}
+      {/*      Удалить */}
+      {/*    </Button> */}
+      {/*  } */}
+      {/* /> */}
 
-      <FileManagerFileDetails
+      <CategoryViewDetails
         item={category}
         onCopyLink={handleCopy}
         open={details.value}

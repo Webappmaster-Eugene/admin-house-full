@@ -16,6 +16,7 @@ export interface RHFAutocompleteFields {
   options: FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
   defValue?: FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
   disabled?: boolean;
+  tagsInTemplate?: string[];
 }
 
 export const RHFFieldsAutocomplete: React.FC<RHFAutocompleteFields> = ({
@@ -24,6 +25,7 @@ export const RHFFieldsAutocomplete: React.FC<RHFAutocompleteFields> = ({
   options,
   defValue,
   disabled = false,
+  tagsInTemplate,
 }) => {
   const { control, setValue } = useFormContext();
   let label: string = 'Свойство';
@@ -86,6 +88,7 @@ export const RHFFieldsAutocomplete: React.FC<RHFAutocompleteFields> = ({
             selected.map((option, index) => (
               <Chip
                 {...getTagProps({ index })}
+                disabled={!!tagsInTemplate?.includes(option.name)}
                 key={option.uuid + index}
                 label={option.name}
                 variant="soft"

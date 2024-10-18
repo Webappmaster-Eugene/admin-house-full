@@ -1,11 +1,14 @@
 import * as Yup from 'yup';
+import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isErrorFieldTypeGuard } from '@/utils/type-guards/is-error-field.type-guard';
 import {
   HandbookGetCommand,
   WorkspaceGetCommand,
   CategoryMaterialCreateCommand,
+  CategoryMaterialGetAllCommand,
   FieldOfCategoryMaterialGetCommand,
   FieldOfCategoryMaterialGetAllCommand,
 } from '@numart/house-admin-contracts';
@@ -21,17 +24,13 @@ import DialogContent from '@mui/material/DialogContent';
 
 import { useRouter } from 'src/utils/hooks/router-hooks';
 import { StatusesEntities } from 'src/utils/types/statuses-entities.type';
-import { isCurrentUserTypeGuard } from 'src/utils/type-guards/is-current-user.type-guard';
-import { isUserWithRelatedWorkspaceTG } from 'src/utils/type-guards/is-user-with-related-workspace.type-guard';
 
 import { RHFSelect } from 'src/shared/hook-form/rhf-select';
 import FormProvider, { RHFTextField } from 'src/shared/hook-form';
 import RHFAutocomplete from 'src/shared/hook-form/rhf-autocomplete';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
-import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 import { RHFFieldsAutocomplete } from 'src/shared/hook-form/rhf-fields-autocomplete';
 import { CreateCategoryProps } from 'src/shared/popups/create-category-form/create-category-form.props';
-import { getFullWorkspaceInfo } from 'src/api/realisation-requests/workspace.global-getter.realisation';
 import { createCategoryMaterial } from 'src/api/actions/category-material/create-category-material.action';
 import RHFAutocompleteTemplateName from 'src/shared/hook-form/rhf-autocomplete-category-template-name/rhf-autocomplete-template-name';
 
@@ -40,6 +39,7 @@ export default function CreateCategoryForm({
   onCloseCreateCategoryPopup,
   allFields,
   allGlobalCategories,
+  setTableData,
 }: CreateCategoryProps) {
   const router = useRouter();
 
@@ -77,8 +77,6 @@ export default function CreateCategoryForm({
       (allGlobalCategories!.find((value) => value?.name === 'MATERIALS')?.nameRu as string),
   };
 
-  // console.log(JSON.stringify(defaultValues));
-
   const methods = useForm({
     resolver: yupResolver(CreateNewCategorySchema),
     defaultValues,
@@ -93,6 +91,50 @@ export default function CreateCategoryForm({
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const values = watch();
+  useEffect(() => {
+    const allFieldsNamesInRequiredFields =
+      values?.requiredFieldsInCategory &&
+      values.requiredFieldsInCategory.map(
+        (field) => ('name' in field && typeof field?.name === 'string' && field?.name) || ''
+      );
+
+    const allFieldsNamesInNotRequiredFields =
+      values?.notRequiredFieldsInCategory &&
+      values.notRequiredFieldsInCategory.map(
+        (field) => ('name' in field && typeof field?.name === 'string' && field?.name) || ''
+      );
+
+    values.tagsTemplate?.forEach((tag) => {
+      const fieldOfCategoryMaterial = allFields.find((field) => field.name === tag);
+      if (
+        allFieldsNamesInRequiredFields &&
+        Array.isArray(allFieldsNamesInRequiredFields) &&
+        !allFieldsNamesInRequiredFields?.includes(tag as string) &&
+        fieldOfCategoryMaterial &&
+        fieldOfCategoryMaterial.isRequired
+      ) {
+        setValue('requiredFieldsInCategory', [
+          ...(values?.requiredFieldsInCategory || []),
+          fieldOfCategoryMaterial,
+        ]);
+      }
+
+      if (
+        allFieldsNamesInNotRequiredFields &&
+        Array.isArray(allFieldsNamesInNotRequiredFields) &&
+        !allFieldsNamesInNotRequiredFields?.includes(tag as string) &&
+        fieldOfCategoryMaterial &&
+        !fieldOfCategoryMaterial.isRequired
+      ) {
+        setValue('notRequiredFieldsInCategory', [
+          ...(values?.notRequiredFieldsInCategory || []),
+          fieldOfCategoryMaterial,
+        ]);
+      }
+    });
+  }, [values.tagsTemplate]);
 
   const allRequiredFieldsOfCategoryInWorkspace = allFields?.filter(
     (field) => field.isRequired
@@ -135,7 +177,6 @@ export default function CreateCategoryForm({
           return acc;
         }, '');
 
-      // console.log(templateName);
       const createCategoryDto: CategoryMaterialCreateCommand.Request = {
         name: data.name,
         comment: data.comment,
@@ -151,34 +192,16 @@ export default function CreateCategoryForm({
         currentHandbookInfo?.uuid,
         createCategoryDto
       );
-      console.info('DATA1', createdCategoryMaterial);
 
-      const currentUserInfo = await getCurrentUser();
-      if (
-        isCurrentUserTypeGuard(currentUserInfo) &&
-        isUserWithRelatedWorkspaceTG(currentUserInfo)
-      ) {
-        const updatedWorkspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
-        setWorkspaceInfo(updatedWorkspaceInfo);
+      if (!isErrorFieldTypeGuard(createdCategoryMaterial)) {
+        setTableData((prevData: CategoryMaterialGetAllCommand.ResponseEntity) => [
+          ...prevData,
+          createdCategoryMaterial,
+        ]);
       }
-      // if (!isErrorFieldTypeGuard(createdCategoryMaterial)) {
-      //   const updateCategoryDto: CategoryMaterialUpdateCommand.Request = {
-      //     fieldsOfCategoryMaterials: allFieldsToCreateCategory,
-      //     fieldsOfCategoryMaterialsInTemplate: tagsInTemplate,
-      //   };
-      //   const updatedCreatedCategoryMaterial = await updateCategoryMaterial(
-      //     currentWorkspaceInfo?.uuid,
-      //     currentHandbookInfo?.uuid,
-      //     createdCategoryMaterial?.uuid,
-      //     updateCategoryDto
-      //   );
-      //   console.info('DATA2', updateCategoryDto);
-      //   console.info('DATA3', updatedCreatedCategoryMaterial);
-      // }
 
       reset();
       onCloseCreateCategoryPopup();
-      // router.push(paths.dashboard.categoryMaterials);
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Новая категория не создана, произошда ошибка', error);
@@ -231,15 +254,6 @@ export default function CreateCategoryForm({
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            {/* {allGlobalCategories[0] && ( */}
-            {/*  <RHFGlobalCategoriesAutocomplete */}
-            {/*    type="global-category" */}
-            {/*    name="globalCategoryMaterialName" */}
-            {/*    options={allGlobalCategories} */}
-            {/*    defValue={allGlobalCategories[0]} */}
-            {/*  /> */}
-            {/* )} */}
-
             {allGlobalCategories[0] && (
               <RHFAutocomplete
                 name="globalCategoryMaterialName"
@@ -263,7 +277,12 @@ export default function CreateCategoryForm({
             <RHFTextField multiline name="comment" label="Описание категории" />
 
             {Array.isArray(tagsAll) && (
-              <RHFAutocompleteTemplateName name="tagsTemplate" options={tagsAll} defValue={[]} />
+              <RHFAutocompleteTemplateName
+                name="tagsTemplate"
+                options={tagsAll}
+                defValue={[]}
+                // nameForRequiredFields="requiredFieldsInCategory"
+              />
             )}
 
             <RHFFieldsAutocomplete
@@ -271,6 +290,7 @@ export default function CreateCategoryForm({
               name="requiredFieldsInCategory"
               options={allRequiredFieldsOfCategoryInWorkspace}
               defValue={[]}
+              tagsInTemplate={values.tagsTemplate as string[]}
             />
 
             <RHFFieldsAutocomplete
@@ -278,6 +298,7 @@ export default function CreateCategoryForm({
               name="notRequiredFieldsInCategory"
               options={allNotRequiredFieldsOfCategoryInWorkspace}
               defValue={[]}
+              tagsInTemplate={values.tagsTemplate as string[]}
             />
           </Box>
         </DialogContent>

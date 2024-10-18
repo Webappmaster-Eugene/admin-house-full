@@ -196,9 +196,11 @@ export class CategoryMaterialController implements ICategoryMaterialController {
     @Param('categoryMaterialId', ParseUUIDPipe)
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<CategoryMaterialDeleteResponseDto> {
     try {
-      const { ok, data } = await this.categoryMaterialService.deleteById(categoryMaterialId);
+      const { ok, data } = await this.categoryMaterialService.deleteById(handbookId, categoryMaterialId);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);
@@ -221,9 +223,11 @@ export class CategoryMaterialController implements ICategoryMaterialController {
   async deleteManyByIdsEP(
     @Body() dto: CategoryMaterialDeleteManyRequestDto,
     @UrlParams() urlParams: IUrlParams,
+    @Param('handbookId', ParseUUIDPipe)
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<CategoryMaterialDeleteManyResponseDto> {
     try {
-      const { ok, data } = await this.categoryMaterialService.deleteManyByIds(dto);
+      const { ok, data } = await this.categoryMaterialService.deleteManyByIds(handbookId, dto);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.CATEGORY_MATERIAL, urlParams);

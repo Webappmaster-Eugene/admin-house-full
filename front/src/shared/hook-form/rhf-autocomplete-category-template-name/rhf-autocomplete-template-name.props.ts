@@ -3,4 +3,5 @@ export default interface RHFAutocompleteTemplateNameProps {
   options: string[];
   defValue?: string[];
   disabled?: boolean;
+  nameForRequiredFields?: string;
 }

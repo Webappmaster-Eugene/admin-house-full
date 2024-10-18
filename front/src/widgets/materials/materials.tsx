@@ -26,7 +26,6 @@ import {
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import Container from '@mui/material/Container';
 import { ruRU } from '@mui/x-data-grid/locales';
@@ -78,11 +77,13 @@ import { MaterialsProps } from 'src/widgets/materials/material.props';
 import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
-import {CustomNoResultsOverlay, CustomNoRowsOverlay} from 'src/shared/no-rows-overlay/NoRowsOverlay';
 import { columnsInitialState } from 'src/widgets/materials/table-initial-state';
-import EmptyContent from "@/shared/empty-content";
+import {
+  CustomNoRowsOverlay,
+  CustomNoResultsOverlay,
+} from 'src/shared/no-rows-overlay/NoRowsOverlay';
 
-export default function Materials({ materialsInfo }: MaterialsProps) {
+export default function Materials({ materialsInfo, additionalFields }: MaterialsProps) {
   const settings = useSettingsContext();
   const isDialogOpen = useBoolean();
 
@@ -95,6 +96,18 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   const [isCreateRowMode, setIsCreateRowMode] = useState<boolean>(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const { workspaceInfo } = useWorkspaceInfoStore();
+
+  const additionalFieldsNames = additionalFields?.map((field) => field.name);
+
+  const fieldsInTable = additionalFields?.map((field) => ({
+    field: field.uuid,
+    headerName: field.name,
+    minWidth: 90,
+    align: 'left',
+    headerAlign: 'left',
+  }));
+  console.log(fieldsInTable);
+
   const apiRef = useGridApiRef();
   const [gridStateBeforeCreate, setGridStateBeforeCreate] = useState<GridState>(
     apiRef.current.state
@@ -152,8 +165,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
         ...initialColumnVisibilityModel,
         ...newColumnVisibilityModel,
       };
-      // console.log(initialColumnVisibilityModel);
-      // console.log(finalNewColumnVisibilityModel);
       apiRef.current.setColumnVisibilityModel(finalNewColumnVisibilityModel);
     }
     restrictHideRequiredColumns(requiredCreateColumns, tableStateAtStart);
@@ -227,8 +238,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
       currentRowsIds.forEach((rowId) => {
         apiRef.current.selectRow(rowId, false, true);
       });
-      // apiRef.current.startRowEditMode({ id: NewMaterialId });
-      // apiRef.current.restoreState(tableStateBeforeCreate);
     };
 
     const isCreateRowButtonVisible = () => {
@@ -435,7 +444,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
   //   const workspaceId = handbookInfo.workspaceUuid;
   //   const handbookId = handbookInfo.uuid;
   //   const rowLocally = apiRef.current.getRow(id);
-  //   await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
+  //   await fieldsOfCategoryMaterialsDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
   //   setRows(rows.filter((row) => row.uuid !== id));
   // };
 
@@ -811,9 +820,13 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                   includeHeaders: true,
                 }}
                 sx={{
-                  // [`& .${gridClasses.main}`]: {
-                  //   width: '100%',
-                  // },
+                  [`& .${gridClasses.main}`]: {
+                    //   #element::-webkit-scrollbar-track {
+                    // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+                    // border-radius: 10px;
+                    // background-color: #f9f9fd;
+                    // }
+                  },
                   [`& .${gridClasses.cell}`]: {
                     border: 'none',
                     minHeight: '50px',
@@ -821,7 +834,7 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                     width: '100%',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'flex-start'
+                    justifyContent: 'flex-start',
                   },
                   [`& .${gridClasses.main}`]: {
                     // bgcolor: `${grey[50]}`,
@@ -830,7 +843,8 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                   //   borderBottom: `0.5px solid ${grey[50]}`,
                   // },
                   '& .MuiDataGrid-cell--editable': {
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? `#DBDBDE24` : `rgba(9, 9, 9, 0.11)`),
+                    bgcolor: (theme) =>
+                      theme.palette.mode === 'light' ? `#DBDBDE24` : `rgba(9, 9, 9, 0.11)`,
                   },
                   //   [`& .${gridClasses.row}`]: {
                   //     bgcolor: (theme) => (theme.palette.mode === 'light' ? grey[200] : grey[900]),
@@ -847,7 +861,6 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
                 onColumnVisibilityModelChange={(newModel) => {
                   setColumnVisibilityModel(newModel);
                 }}
-
                 onCellEditStop={handleCellEditStop}
                 // onCellEditStart={handleCellEditStop}
               />

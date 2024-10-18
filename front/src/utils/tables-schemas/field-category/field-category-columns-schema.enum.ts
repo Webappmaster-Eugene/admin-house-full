@@ -1,14 +1,23 @@
-export enum FieldCategoryColumnSchema {
+export enum FieldOfCategoryMaterialColumnSchema {
   uuid = 'uuid',
   name = 'name',
-  namePublic = 'namePublic',
-  price = 'price',
-  sourceInfo = 'sourceInfo',
-  responsiblePartner = 'responsiblePartner',
-  categoryMaterial = 'categoryMaterial',
-  unitMeasurement = 'unitMeasurement',
-  priceChanges = 'priceChanges',
-  characteristicsMaterial = 'characteristicsMaterial',
-  updatedAt = 'updatedAt',
-  actions = 'actions',
+  numInOrder = 'numInOrder',
+  comment = 'comment',
+  isRequired = 'isRequired',
+  unitOfMeasurement = 'unitOfMeasurement',
+  defaultValue = 'defaultValue',
+  categoriesMaterial = 'categoriesMaterial',
+  fieldType = 'fieldType',
+  fieldVariantsForSelectorFieldType = 'fieldVariantsForSelectorFieldType',
+  categoriesMaterialsTemplatesIncludesThisField = 'categoriesMaterialsTemplatesIncludesThisField',
+}
+
+export enum FieldOfCategoryMaterialColumnEditableFullSchema {
+  name = 'name',
+  comment = 'comment',
+  isRequired = 'isRequired',
+  unitOfMeasurement = 'unitOfMeasurement',
+  defaultValue = 'defaultValue',
+  categoriesMaterial = 'categoriesMaterial',
+  fieldType = 'fieldType',
 }

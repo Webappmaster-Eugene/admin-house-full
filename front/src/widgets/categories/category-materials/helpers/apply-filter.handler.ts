@@ -21,9 +21,11 @@ export function applyFilterHandler({
     return a[1] - b[1];
   });
 
-  inputData = stabilizedThis?.map((el) => el[0]);
+  if (stabilizedThis && stabilizedThis?.length > 0) {
+    inputData = stabilizedThis?.map((el) => el[0]);
+  }
 
-  if (name) {
+  if (name && Array.isArray(inputData)) {
     inputData = inputData?.filter(
       (file) => file.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );

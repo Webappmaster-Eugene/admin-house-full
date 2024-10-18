@@ -3,6 +3,7 @@ import {
   MaterialGetAllCommand,
   UserGetFullInfoCommand,
   CategoryMaterialGetCommand,
+  FieldOfCategoryMaterialGetAllCommand,
 } from '@numart/house-admin-contracts';
 
 import { PageProps } from 'src/utils/types/page-props/page-props.type';
@@ -89,6 +90,11 @@ export default async function ConcreteCategoryPage({ params, searchParams }: Pag
   return isErrorFieldTypeGuard(allMaterialsInCurrentHandbook) ? (
     <Error />
   ) : (
-    <Materials materialsInfo={allMaterialsInCurrentHandbook} />
+    <Materials
+      materialsInfo={allMaterialsInCurrentHandbook}
+      additionalFields={
+        currentCategory?.fieldsOfCategoryMaterials as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
+      }
+    />
   );
 }

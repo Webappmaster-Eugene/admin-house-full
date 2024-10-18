@@ -1,3 +1,5 @@
+import CategoryTableRow from '@/widgets/categories/category-materials/category-table-row/category-table-row';
+
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import Tooltip from '@mui/material/Tooltip';
@@ -16,16 +18,15 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/shared/table';
-import FileManagerTableRow from 'src/widgets/categories/category-materials/category-table-row/file-manager-table-row';
 import { CategoryTableHeaders } from 'src/widgets/categories/category-materials/category-table/category-table.headers';
 
-export default function FileManagerTable({
+export default function AllCategoriesTable({
   table,
   notFound,
-  onDeleteRow,
+  onDeleteCategory,
   dataFiltered,
-  onOpenConfirm,
-  onOpenChangerPopup,
+  onOpenDeletingOneCategoryPopup,
+  onOpenChangerCategoryPopup,
 }: CategoryTableProps) {
   const theme = useTheme();
 
@@ -39,6 +40,7 @@ export default function FileManagerTable({
     selected,
     onSelectRow,
     onSelectAllRows,
+    setSelected,
     //
     onSort,
     onChangeDense,
@@ -58,19 +60,19 @@ export default function FileManagerTable({
           dense={dense}
           numSelected={selected.length}
           rowCount={dataFiltered.length}
-          onSelectAllRows={(checked) =>
-            onSelectAllRows(
-              checked,
-              dataFiltered.map((row) => {
-                if (!row.isDefault) {
-                  return row.uuid;
-                }
-              })
-            )
-          }
+          onSelectAllRows={(checked) => {
+            const newSelected = dataFiltered.map((row) => {
+              if (!row.isDefault) {
+                return row.uuid;
+              }
+            }) as string[];
+
+            setSelected(newSelected);
+            return onSelectAllRows(checked, newSelected);
+          }}
           action={
             <Tooltip title="Удалить">
-              <IconButton color="primary" onClick={onOpenConfirm}>
+              <IconButton color="primary" onClick={onOpenDeletingOneCategoryPopup}>
                 <Iconify icon="solar:trash-bin-trash-bold" />
               </IconButton>
             </Tooltip>
@@ -109,7 +111,11 @@ export default function FileManagerTable({
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.uuid)
+                  dataFiltered.map((row) => {
+                    if (!row.isDefault) {
+                      return row.uuid;
+                    }
+                  }) as string[]
                 )
               }
               sx={{
@@ -130,13 +136,14 @@ export default function FileManagerTable({
               {dataFiltered
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
-                  <FileManagerTableRow
+                  <CategoryTableRow
                     key={row.uuid}
                     row={row}
                     selected={selected.includes(row.uuid)}
                     onSelectRow={() => onSelectRow(row.uuid)}
-                    onDeleteRow={() => onDeleteRow(row.uuid)}
-                    onOpenChangerPopup={onOpenChangerPopup}
+                    onDeleteRow={() => onDeleteCategory(row.uuid)}
+                    onOpenDeletingOneCategoryPopup={onOpenDeletingOneCategoryPopup}
+                    onOpenChangerPopup={onOpenChangerCategoryPopup}
                   />
                 ))}
 

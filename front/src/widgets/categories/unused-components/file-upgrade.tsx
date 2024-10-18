@@ -1,9 +1,9 @@
+import { bgGradient } from '@/utils/theme/css';
+
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 import Stack, { StackProps } from '@mui/material/Stack';
-
-import { bgGradient } from 'src/utils/theme/css';
 
 // ----------------------------------------------------------------------
 

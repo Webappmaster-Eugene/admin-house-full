@@ -345,21 +345,9 @@ export class MaterialRepository implements IMaterialRepository {
     { categoryMaterialUuid }: MaterialUpdateCategoryRequestDto,
   ): Promise<MaterialEntity> {
     try {
-      // console.log('updatedMaterial1' + materialId);
-      // console.log('updatedMaterial2' + categoryMaterialUuid);
-      const updatedMaterial1 = await this.databaseService.material.findFirst({
+      const currentMaterial = await this.databaseService.material.findUnique({
         where: {
           uuid: materialId,
-        },
-      });
-
-      //console.log('updatedMaterial3' + JSON.stringify(updatedMaterial1));
-      const updatedMaterial = await this.databaseService.material.update({
-        where: {
-          uuid: materialId,
-        },
-        data: {
-          categoryMaterialUuid,
         },
         include: {
           responsiblePartner: true,
@@ -374,10 +362,42 @@ export class MaterialRepository implements IMaterialRepository {
           priceChanges: true,
         },
       });
-      console.log('updatedMaterial4' + JSON.stringify(updatedMaterial));
+
+      const updatedMaterial = await this.databaseService.material.update({
+        where: {
+          uuid: materialId,
+        },
+        data: {
+          categoryMaterialUuid,
+          // characteristicsMaterial: {
+          //   disconnect: currentMaterial.characteristicsMaterial?.map(characteristic => ({
+          //     uuid: characteristic.uuid,
+          //   })),
+          // },
+          characteristicsMaterial: {
+            deleteMany: currentMaterial.characteristicsMaterial?.map(characteristic => ({
+              uuid: characteristic.uuid,
+            })),
+          },
+        },
+        include: {
+          responsiblePartner: true,
+          unitMeasurement: true,
+          handbook: true,
+          categoryMaterial: true,
+          characteristicsMaterial: {
+            where: {
+              characteristicsMaterialStatus: EActiveStatuses.ACTIVE,
+            },
+          },
+          priceChanges: true,
+        },
+      });
+      console.log('updatedMaterial111 ' + JSON.stringify(updatedMaterial));
 
       return existenceEntityHandler(updatedMaterial, MaterialEntity, EntityName.MATERIAL) as MaterialEntity;
     } catch (error: unknown) {
+      console.log('updatedMaterial112 ' + JSON.stringify(error));
       errorRepositoryHandler(error);
     }
   }

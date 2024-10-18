@@ -1,11 +1,11 @@
+import Iconify from '@/shared/iconify';
+import { RouterLink } from '@/shared/router-link';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
-
-import Iconify from 'src/shared/iconify';
-import { RouterLink } from 'src/shared/router-link';
 
 // ----------------------------------------------------------------------
 

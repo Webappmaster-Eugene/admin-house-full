@@ -12,6 +12,7 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
   options,
   defValue,
   disabled = false,
+  nameForRequiredFields,
 }) => {
   const { control, setValue, getValues } = useFormContext();
 
@@ -39,6 +40,7 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
           ) => {
             if (event.key === 'Enter' && 'value' in event.target && event.target?.value) {
               setValue(name, value.concat(event.target?.value));
+              // setValue(nameForRequiredFields, value.concat(event.target?.value));
             }
           }}
           // groupBy={(option) => option}
@@ -60,7 +62,7 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
             setValue(name, value);
             onChange(newValue);
             const valuesOfForm = getValues();
-            console.log("valuesOfForm" , valuesOfForm)
+            console.log('valuesOfForm', valuesOfForm);
           }}
           onInputChange={(event, newInputValue) => {
             console.log(newInputValue);

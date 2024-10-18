@@ -162,7 +162,6 @@ export class MaterialService implements IMaterialService {
     newCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<MaterialEntity[]>> {
     const updatedMaterials = materialIds.map(async materialId => {
-      console.log('updatedMaterials' + materialId);
       await this.changeMaterialCategoryById(materialId, { categoryMaterialUuid: newCategoryMaterialId });
     });
     const updatedMaterialsToResponse = dataInternalExtractor(await this.getAllWithIds(materialIds));
@@ -176,7 +175,7 @@ export class MaterialService implements IMaterialService {
     //console.log('updatedMaterial0' + materialId + JSON.stringify(dto));
     // инфо о категории на начальный момент
     const oldMaterialData = dataInternalExtractor(await this.getById(materialId));
-    console.log('updatedMaterial555' + materialId + JSON.stringify(oldMaterialData));
+    console.log('updatedMaterial11 ' + JSON.stringify(oldMaterialData));
     // взять только обязательные поля из старой категории материала
     // const requiredFieldsOfMaterial = dataInternalExtractor(
     //   await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(oldMaterialData.categoryMaterialUuid),
@@ -197,11 +196,15 @@ export class MaterialService implements IMaterialService {
     // }
 
     const updatedMaterial = await this.materialRepository.changeCategoryMaterialById(materialId, dto);
-    //
+
+    console.log('updatedMaterial12 ' + JSON.stringify(updatedMaterial));
+
     // const inActiveCharacteristics = dataInternalExtractor(
     //   await this.characteristicsMaterialService.updateManyStatusByMaterialId(materialId, { characteristicsMaterialStatus: 'INACTIVE' }),
     // );
     const updatedMaterialWithoutCharacteristics = await this.materialRepository.getById(materialId);
+    console.log('updatedMaterial13 ' + JSON.stringify(updatedMaterialWithoutCharacteristics));
+
     return new InternalResponse(updatedMaterialWithoutCharacteristics);
   }
 

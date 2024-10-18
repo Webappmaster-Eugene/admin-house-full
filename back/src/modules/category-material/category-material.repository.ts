@@ -44,11 +44,12 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
     }
   }
 
-  async getDefaultCategory(): Promise<CategoryMaterialEntity> {
+  async getDefaultCategory(handbookId: EntityUrlParamCommand.RequestUuidParam): Promise<CategoryMaterialEntity> {
     try {
       const findedCategoryMaterial = await this.databaseService.categoryMaterial.findFirst({
         where: {
           isDefault: true,
+          handbookUuid: handbookId,
         },
         include: {
           materials: true,
@@ -365,6 +366,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         EntityName.CATEGORY_MATERIAL,
       ) as CategoryMaterialEntity;
     } catch (error: unknown) {
+      console.log('deleteById2' + error);
       errorRepositoryHandler(error);
     }
   }
@@ -391,6 +393,7 @@ export class CategoryMaterialRepository implements ICategoryMaterialRepository {
         EntityName.CATEGORY_MATERIAL,
       ) as CategoryMaterialEntity;
     } catch (error: unknown) {
+      console.log('deleteById1' + error);
       errorRepositoryHandler(error);
     }
   }

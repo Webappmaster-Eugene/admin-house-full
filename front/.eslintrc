@@ -60,6 +60,8 @@
     "import/no-extraneous-dependencies": 0,
     "react-hooks/exhaustive-deps": "warn",
     "no-unsafe-optional-chaining": "warn",
+    "consistent-return": "warn",
+    "array-callback-return": "warn",
     "react/jsx-no-useless-fragment": [
       1,
       {

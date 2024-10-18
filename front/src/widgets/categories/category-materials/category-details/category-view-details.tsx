@@ -28,11 +28,10 @@ import {
 import Iconify from 'src/shared/iconify';
 import Scrollbar from 'src/shared/scrollbar';
 import FileThumbnail from 'src/shared/file-thumbnail';
-import { ConfirmDialog } from 'src/shared/custom-dialog';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { CategoryDetailsProps } from 'src/widgets/categories/category-materials/category-details/category-details.props';
 
-export default function FileManagerFileDetails({
+export default function CategoryViewDetails({
   item,
   open,
   onCopyLink,
@@ -317,79 +316,65 @@ export default function FileManagerFileDetails({
   );
 
   return (
-    <>
-      <Drawer
-        open={open}
-        onClose={onClose}
-        anchor="right"
-        slotProps={{
-          backdrop: { invisible: true },
-        }}
-        PaperProps={{
-          sx: { width: 320 },
-        }}
-        {...other}
-      >
-        <Scrollbar sx={{ height: 1 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-            <Typography variant="h6"> Информация о категории </Typography>
-          </Stack>
+    <Drawer
+      open={open}
+      onClose={onClose}
+      anchor="right"
+      slotProps={{
+        backdrop: { invisible: true },
+      }}
+      PaperProps={{
+        sx: { width: 320 },
+      }}
+      {...other}
+    >
+      <Scrollbar sx={{ height: 1 }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
+          <Typography variant="h6"> Информация о категории </Typography>
+        </Stack>
 
-          <Stack
-            spacing={2.5}
-            justifyContent="center"
-            sx={{
-              p: 2.5,
-              bgcolor: 'background.neutral',
-            }}
-          >
-            <FileThumbnail
-              imageView
-              file="folder"
-              sx={{ width: 64, height: 64 }}
-              imgSx={{ borderRadius: 1 }}
-            />
+        <Stack
+          spacing={2.5}
+          justifyContent="center"
+          sx={{
+            p: 2.5,
+            bgcolor: 'background.neutral',
+          }}
+        >
+          <FileThumbnail
+            imageView
+            file="folder"
+            sx={{ width: 64, height: 64 }}
+            imgSx={{ borderRadius: 1 }}
+          />
 
-            <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
-              {name}
-            </Typography>
+          <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
+            {name}
+          </Typography>
 
-            <Divider sx={{ borderStyle: 'dashed' }} />
+          <Divider sx={{ borderStyle: 'dashed' }} />
 
-            {renderTags}
+          {renderTags}
 
-            {renderProperties}
-          </Stack>
+          {renderProperties}
+        </Stack>
 
-          {renderShared}
-        </Scrollbar>
+        {renderShared}
+      </Scrollbar>
 
-        <Box sx={{ p: 2.5 }}>
-          <Button
-            fullWidth
-            variant="soft"
-            color="error"
-            size="large"
-            disabled={isDefault}
-            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={isDeleteDialogOpen.onTrue}
-          >
-            Удалить
-          </Button>
-        </Box>
-      </Drawer>
-
-      <ConfirmDialog
-        open={isDeleteDialogOpen.value}
-        onClose={isDeleteDialogOpen.onFalse}
-        title="Удалить"
-        content="Вы уверены что хотите удалить категорию?"
-        action={
-          <Button variant="contained" color="error" onClick={onDelete}>
-            Удалить
-          </Button>
-        }
-      />
-    </>
+      <Box sx={{ p: 2.5 }}>
+        <Button
+          fullWidth
+          variant="soft"
+          color="error"
+          size="large"
+          disabled={isDefault}
+          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+          onClick={isDeleteDialogOpen.onTrue}
+        >
+          Удалить
+        </Button>
+      </Box>
+    </Drawer>
   );
 }

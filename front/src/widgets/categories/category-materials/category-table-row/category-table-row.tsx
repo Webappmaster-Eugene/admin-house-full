@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
+import CategoryViewDetails from '@/widgets/categories/category-materials/category-details/category-view-details';
 import {
   CategoryMaterialGetCommand,
   FieldOfCategoryMaterialGetAllCommand,
@@ -31,14 +32,14 @@ import Iconify from 'src/shared/iconify';
 import FileThumbnail from 'src/shared/file-thumbnail';
 import { ConfirmDialog } from 'src/shared/custom-dialog';
 import CustomPopover, { usePopover } from 'src/shared/custom-popover';
-import FileManagerFileDetails from 'src/widgets/categories/category-materials/category-details/file-manager-file-details';
 import { CategoryTableRowProps } from 'src/widgets/categories/category-materials/category-table-row/category-table-row.props';
 
-export default function FileManagerTableRow({
+export default function CategoryTableRow({
   row,
   selected,
   onSelectRow,
   onDeleteRow,
+  onOpenDeletingOneCategoryPopup,
   onOpenChangerPopup,
 }: CategoryTableRowProps) {
   const theme = useTheme();
@@ -60,9 +61,9 @@ export default function FileManagerTableRow({
 
   const { copy } = useCopyToClipboard();
 
-  const details = useBoolean();
-
   const confirm = useBoolean();
+
+  const details = useBoolean();
 
   const popover = usePopover();
 
@@ -252,15 +253,22 @@ export default function FileManagerTableRow({
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Удалить"
-        content="Вы уверены что хотите удалить категорию?"
+        content="Вы уверены что хотите удалить данную категорию?"
         action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              onDeleteRow();
+              confirm.onFalse();
+            }}
+          >
             Удалить
           </Button>
         }
       />
 
-      <FileManagerFileDetails
+      <CategoryViewDetails
         item={row}
         onCopyLink={handleCopy}
         open={details.value}

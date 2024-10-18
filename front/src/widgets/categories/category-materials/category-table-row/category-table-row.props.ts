@@ -5,6 +5,7 @@ export type CategoryTableRowProps = {
   selected: boolean;
   onSelectRow: VoidFunction;
   onDeleteRow: VoidFunction;
+  onOpenDeletingOneCategoryPopup: VoidFunction;
   onOpenChangerPopup: (
     event: React.MouseEvent<HTMLElement>,
     categoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity

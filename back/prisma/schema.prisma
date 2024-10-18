@@ -399,8 +399,8 @@ model Material {
   handbook                Handbook                    @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   unitMeasurementUuid     String?                     @map("unit_measurement_uuid") @db.Uuid
   unitMeasurement         FieldUnitMeasurement?       @relation(fields: [unitMeasurementUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  categoryMaterialUuid    String                      @map("category_material_uuid") @db.Uuid
-  categoryMaterial        CategoryMaterial            @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  categoryMaterialUuid    String?                     @map("category_material_uuid") @db.Uuid
+  categoryMaterial        CategoryMaterial?           @relation(fields: [categoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   responsiblePartnerUuid  String?                     @map("responsible_partner_uuid") @db.Uuid
   responsiblePartner      ResponsiblePartnerProducer? @relation(fields: [responsiblePartnerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   priceChanges            PriceChanging[]
@@ -425,8 +425,8 @@ model CharacteristicsMaterial {
   fieldOfCategoryMaterial       FieldOfCategoryMaterial @relation(fields: [fieldOfCategoryMaterialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   handbookUuid                  String                  @map("handbook_uuid") @db.Uuid
   handbook                      Handbook                @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  materialUuid                  String                  @map("material_uuid") @db.Uuid
-  material                      Material                @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  materialUuid                  String?                 @map("material_uuid") @db.Uuid
+  material                      Material?               @relation(fields: [materialUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   lastChangeByUserUuid          String?                 @map("last_change_by_user_uuid") @db.Uuid
   // If you delete a CharacteristicsMaterial, the CharacteristicsMaterial is removed from all logs by setting the field value to Null,
   // because of the SetNull referential action. To allow this, CharacteristicsMaterial and CharacteristicsMaterialId must be optional fields in TechLogChanges.

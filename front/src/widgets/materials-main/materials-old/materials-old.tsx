@@ -14,8 +14,8 @@
 // import { deepEqualAndInTableKeys } from '@/utils/helpers/deep-equal-in-tablekeys';
 // import { isErrorFieldTypeGuard } from '@/utils/type-guards/is-error-field.type-guard';
 // import { materialEditHandler } from '@/utils/table-handlers/materials/material-edit.handler';
-// import { materialCreateHandler } from '@/utils/table-handlers/materials/material-create.handler';
-// import { materialDeleteHandler } from '@/utils/table-handlers/materials/material-delete.handler';
+// import { fieldsOfCategoryMaterialsCreateHandler } from '@/utils/table-handlers/materials/material-create.handler';
+// import { fieldsOfCategoryMaterialsDeleteHandler } from '@/utils/table-handlers/materials/material-delete.handler';
 // import { MaterialColumnSchema } from '@/utils/tables-schemas/material/material-columns-schema.enum';
 // import { isEntityCategoryMaterialTG } from '@/utils/type-guards/is-entity-category-material.type-guard';
 // import { isEntityResponsiblePartnerTG } from '@/utils/type-guards/is-entity-responsible-partner.type-guard';
@@ -67,7 +67,7 @@
 //   GRID_CHECKBOX_SELECTION_COL_DEF,
 // } from '@mui/x-data-grid';
 //
-// export default function Materials({ materialsInfo }: MaterialsProps) {
+// export default function FieldsOfCategoryMaterials({ materialsInfo }: MaterialsProps) {
 //   const settings = useSettingsContext();
 //
 //   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -185,7 +185,7 @@
 //       const workspaceId = handbookInfo.workspaceUuid;
 //       const handbookId = handbookInfo.uuid;
 //       const rowLocally = apiRef.current.getRow(id);
-//       await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
+//       await fieldsOfCategoryMaterialsDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
 //       setRows(rows.filter((row) => row.uuid !== id));
 //     };
 //
@@ -198,7 +198,7 @@
 //         workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
 //       const workspaceId = handbookInfo.workspaceUuid;
 //       const handbookId = handbookInfo.uuid;
-//       await materialDeleteHandler(rowInfo, workspaceId as string, handbookId, categoryMaterials);
+//       await fieldsOfCategoryMaterialsDeleteHandler(rowInfo, workspaceId as string, handbookId, categoryMaterials);
 //       setRows(rows.filter((row) => row.uuid !== rowIdToDelete));
 //     };
 //
@@ -272,7 +272,7 @@
 //     const handbookId = handbookInfo.uuid;
 //     if (isNewRow) {
 //       const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-//       await materialCreateHandler(
+//       await fieldsOfCategoryMaterialsCreateHandler(
 //         newRowLocally as TMaterialTableEntity,
 //         workspaceId as string,
 //         handbookId,
@@ -301,7 +301,7 @@
 //     const workspaceId = handbookInfo.workspaceUuid;
 //     const handbookId = handbookInfo.uuid;
 //     const rowLocally = apiRef.current.getRow(id);
-//     await materialDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
+//     await fieldsOfCategoryMaterialsDeleteHandler(rowLocally, workspaceId as string, handbookId, categoryMaterials);
 //     setRows(rows.filter((row) => row.uuid !== id));
 //   };
 //

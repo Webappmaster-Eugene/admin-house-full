@@ -9,7 +9,8 @@ export type TableProps = {
   //
   selected: string[];
   onSelectRow: (id: string) => void;
-  onSelectAllRows: (checked: boolean, newSelecteds: (string | undefined)[]) => void;
+  // onSelectAllRows: (checked: boolean, newSelecteds: (string | undefined)[]) => void;
+  onSelectAllRows: (checked: boolean, newSelecteds: string[]) => void;
   //
   onResetPage: VoidFunction;
   onSort: (id: string) => void;
