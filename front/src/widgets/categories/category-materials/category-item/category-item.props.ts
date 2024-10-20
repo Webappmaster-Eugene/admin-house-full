@@ -7,9 +7,6 @@ export interface CategoryItemProps extends CardProps {
   selected?: boolean;
   onSelect?: VoidFunction;
   onDelete: VoidFunction;
-  // isDeletingPopupOpened: boolean;
-  // onCloseDeletingOneCategoryPopup: VoidFunction;
-  // onOpenDeletingOneCategoryPopup: VoidFunction;
   onOpenChangerPopup: (
     event: React.MouseEvent<HTMLElement>,
     categoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity

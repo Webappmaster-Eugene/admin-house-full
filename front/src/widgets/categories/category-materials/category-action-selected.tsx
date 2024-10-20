@@ -64,7 +64,7 @@ export default function CategoryActionSelected({
               color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
             }}
           >
-            {selected.length} категорий(ии) выбрано для удаления
+            {numSelected === rowCount ? numSelected - 1 : numSelected} записей выбрано
           </Typography>
         )}
 

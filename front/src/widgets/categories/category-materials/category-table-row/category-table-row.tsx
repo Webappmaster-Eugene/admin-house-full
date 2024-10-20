@@ -39,7 +39,6 @@ export default function CategoryTableRow({
   selected,
   onSelectRow,
   onDeleteRow,
-  onOpenDeletingOneCategoryPopup,
   onOpenChangerPopup,
 }: CategoryTableRowProps) {
   const theme = useTheme();

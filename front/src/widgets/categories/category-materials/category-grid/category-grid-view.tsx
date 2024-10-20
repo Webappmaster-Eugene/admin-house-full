@@ -16,7 +16,7 @@ export default function AllCategoriesGridView({
   dataFiltered,
   onDeleteCategory,
   onOpenChangerCategoryPopup,
-  onOpenDeletingOneCategoryPopup,
+  onOpenDeletingManyCategoriesPopup,
 }: CategoryGridProps) {
   const { selected, onSelectRow: onSelectItem, onSelectAllRows: onSelectAllItems } = table;
 
@@ -56,19 +56,22 @@ export default function AllCategoriesGridView({
           numSelected={selected.length}
           rowCount={dataFiltered.length}
           selected={selected}
-          onSelectAllItems={(checked) =>
-            onSelectAllItems(
-              checked,
-              dataFiltered.map((row) => row.uuid)
-            )
-          }
+          onSelectAllItems={(checked) => {
+            const newSelected = dataFiltered.map((row) => {
+              if (!row.isDefault) {
+                return row.uuid;
+              }
+            }) as string[];
+
+            return onSelectAllItems(checked, newSelected);
+          }}
           action={
             <Button
               size="small"
               color="error"
               variant="contained"
               startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              onClick={onOpenDeletingOneCategoryPopup}
+              onClick={onOpenDeletingManyCategoriesPopup}
               sx={{ mr: 1 }}
             >
               Удалить

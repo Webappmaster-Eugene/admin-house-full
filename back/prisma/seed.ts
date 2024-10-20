@@ -1042,6 +1042,119 @@ async function main() {
   });
   //endregion
 
+  //DOC CATEGORY_MATERIALS DEMO - создаем дополнительные категории материалов для удобного тестирования
+  //region CATEGORY_MATERIALS
+  const CATEGORY_MATERIAL_001 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест1',
+      numInOrder: 10,
+      comment: 'Описание Тест1',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_002 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест2',
+      numInOrder: 11,
+      comment: 'Описание Тест2',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_003 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест3',
+      numInOrder: 12,
+      comment: 'Описание Тест3',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_004 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест4',
+      numInOrder: 13,
+      comment: 'Описание Тест4',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_005 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест5',
+      numInOrder: 14,
+      comment: 'Описание Тест5',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_006 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест6',
+      numInOrder: 15,
+      comment: 'Описание Тест6',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_007 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест7',
+      numInOrder: 16,
+      comment: 'Описание Тест7',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_008 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест8',
+      numInOrder: 17,
+      comment: 'Описание Тест8',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_009 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест9',
+      numInOrder: 18,
+      comment: 'Описание Тест9',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+
+  const CATEGORY_MATERIAL_010 = await prisma?.categoryMaterial?.create({
+    data: {
+      name: 'Тест10',
+      numInOrder: 19,
+      comment: 'Описание Тест10',
+      globalCategoryMaterialUuid: GLOBAL_CATEGORY_MATERIALS.uuid,
+      templateName: null,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+    },
+  });
+  //endregion
+
   //DOC FIELD_OF_CATEGORY_MATERIALS - создаем поля категорий материалов
   //region FIELD_OF_CATEGORY_MATERIALS
   const FIELD_OF_CATEGORY_MATERIAL_0 = await prisma?.fieldOfCategoryMaterial?.create({
@@ -1759,11 +1872,224 @@ async function main() {
   });
   //endregion
 
-  const newNameGluhar = await templateNameMapper(prisma, MATERIAL_UNIT_0);
-  const newNameFanera = await templateNameMapper(prisma, MATERIAL_UNIT_1);
+  // DOC CREATE MATERIALS_DEMO создаем дополнительные материалы
+  // region CREATE_DEMO_MATERIAL
+  const MATERIAL_UNIT_011 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест1',
+      comment: 'Материал1 из Тест1',
+      price: 11,
+      namePublic: 'Материал11',
+      numInOrder: 6,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_001.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_012 = await prisma?.material?.create({
+    data: {
+      name: 'Материал2 из Тест1',
+      comment: 'Материал2 из Тест1',
+      price: 12,
+      namePublic: 'Материал12',
+      numInOrder: 7,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_001.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_013 = await prisma?.material?.create({
+    data: {
+      name: 'Материал3 из Тест1',
+      comment: 'Материал3 из Тест1',
+      price: 13,
+      namePublic: 'Материал13',
+      numInOrder: 8,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_001.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_021 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест2',
+      comment: 'Материал1 из Тест2',
+      price: 21,
+      namePublic: 'Материал21',
+      numInOrder: 9,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_002.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_022 = await prisma?.material?.create({
+    data: {
+      name: 'Материал2 из Тест2',
+      comment: 'Материал2 из Тест2',
+      price: 22,
+      namePublic: 'Материал22',
+      numInOrder: 10,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_002.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_031 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест3',
+      comment: 'Материал1 из Тест3',
+      price: 22,
+      namePublic: 'Материал31',
+      numInOrder: 11,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_003.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_041 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест4',
+      comment: 'Материал1 из Тест4',
+      price: 22,
+      namePublic: 'Материал41',
+      numInOrder: 12,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_004.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_051 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест5',
+      comment: 'Материал1 из Тест5',
+      price: 22,
+      namePublic: 'Материал51',
+      numInOrder: 13,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_005.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_061 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест6',
+      comment: 'Материал1 из Тест6',
+      price: 22,
+      namePublic: 'Материал61',
+      numInOrder: 14,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_006.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_071 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест7',
+      comment: 'Материал1 из Тест7',
+      price: 22,
+      namePublic: 'Материал71',
+      numInOrder: 15,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_007.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_081 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест8',
+      comment: 'Материал1 из Тест8',
+      price: 22,
+      namePublic: 'Материал81',
+      numInOrder: 16,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_008.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_091 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест9',
+      comment: 'Материал1 из Тест9',
+      price: 22,
+      namePublic: 'Материал91',
+      numInOrder: 17,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_009.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_0101 = await prisma?.material?.create({
+    data: {
+      name: 'Материал1 из Тест10',
+      comment: 'Материал1 из Тест10',
+      price: 22,
+      namePublic: 'Материал101',
+      numInOrder: 18,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_010.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_0102 = await prisma?.material?.create({
+    data: {
+      name: 'Материал2 из Тест10',
+      comment: 'Материал2 из Тест10',
+      price: 22,
+      namePublic: 'Материал102',
+      numInOrder: 19,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_010.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_0103 = await prisma?.material?.create({
+    data: {
+      name: 'Материал3 из Тест10',
+      comment: 'Материал3 из Тест10',
+      price: 22,
+      namePublic: 'Материал103',
+      numInOrder: 20,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_010.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+  //endregion
 
   // DOC UPDATE MATERIAL обновляем имя материала согласно характеристикам и шаблону категории
   // region UPDATED_MATERIAL
+  const newNameGluhar = await templateNameMapper(prisma, MATERIAL_UNIT_0);
+  const newNameFanera = await templateNameMapper(prisma, MATERIAL_UNIT_1);
+
   const UPDATED_MATERIAL_GLUHAR = await prisma?.material?.update({
     where: {
       uuid: MATERIAL_UNIT_0.uuid,

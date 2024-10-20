@@ -25,8 +25,8 @@ export default function AllCategoriesTable({
   notFound,
   onDeleteCategory,
   dataFiltered,
-  onOpenDeletingOneCategoryPopup,
   onOpenChangerCategoryPopup,
+  onOpenDeletingManyCategoriesPopup,
 }: CategoryTableProps) {
   const theme = useTheme();
 
@@ -72,7 +72,7 @@ export default function AllCategoriesTable({
           }}
           action={
             <Tooltip title="Удалить">
-              <IconButton color="primary" onClick={onOpenDeletingOneCategoryPopup}>
+              <IconButton color="primary" onClick={onOpenDeletingManyCategoriesPopup}>
                 <Iconify icon="solar:trash-bin-trash-bold" />
               </IconButton>
             </Tooltip>
@@ -142,7 +142,6 @@ export default function AllCategoriesTable({
                     selected={selected.includes(row.uuid)}
                     onSelectRow={() => onSelectRow(row.uuid)}
                     onDeleteRow={() => onDeleteCategory(row.uuid)}
-                    onOpenDeletingOneCategoryPopup={onOpenDeletingOneCategoryPopup}
                     onOpenChangerPopup={onOpenChangerCategoryPopup}
                   />
                 ))}

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
+import { ConfirmDialog } from '@/shared/custom-dialog';
 import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
@@ -54,7 +55,8 @@ export default function CategoryViewDetails({
   const { workspaceInfo } = useWorkspaceInfoStore((state) => state);
   const allFields =
     workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
-  const isDeleteDialogOpen = useBoolean();
+
+  const confirm = useBoolean();
 
   const onMoreClick = (event: any) => {
     router.push(uuid);
@@ -316,65 +318,86 @@ export default function CategoryViewDetails({
   );
 
   return (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      anchor="right"
-      slotProps={{
-        backdrop: { invisible: true },
-      }}
-      PaperProps={{
-        sx: { width: 320 },
-      }}
-      {...other}
-    >
-      <Scrollbar sx={{ height: 1 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-          <Typography variant="h6"> Информация о категории </Typography>
-        </Stack>
+    <>
+      <Drawer
+        open={open}
+        onClose={onClose}
+        anchor="right"
+        slotProps={{
+          backdrop: { invisible: true },
+        }}
+        PaperProps={{
+          sx: { width: 320 },
+        }}
+        {...other}
+      >
+        <Scrollbar sx={{ height: 1 }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
+            <Typography variant="h6"> Информация о категории </Typography>
+          </Stack>
 
-        <Stack
-          spacing={2.5}
-          justifyContent="center"
-          sx={{
-            p: 2.5,
-            bgcolor: 'background.neutral',
-          }}
-        >
-          <FileThumbnail
-            imageView
-            file="folder"
-            sx={{ width: 64, height: 64 }}
-            imgSx={{ borderRadius: 1 }}
-          />
+          <Stack
+            spacing={2.5}
+            justifyContent="center"
+            sx={{
+              p: 2.5,
+              bgcolor: 'background.neutral',
+            }}
+          >
+            <FileThumbnail
+              imageView
+              file="folder"
+              sx={{ width: 64, height: 64 }}
+              imgSx={{ borderRadius: 1 }}
+            />
 
-          <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
-            {name}
-          </Typography>
+            <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
+              {name}
+            </Typography>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+            <Divider sx={{ borderStyle: 'dashed' }} />
 
-          {renderTags}
+            {renderTags}
 
-          {renderProperties}
-        </Stack>
+            {renderProperties}
+          </Stack>
 
-        {renderShared}
-      </Scrollbar>
+          {renderShared}
+        </Scrollbar>
 
-      <Box sx={{ p: 2.5 }}>
-        <Button
-          fullWidth
-          variant="soft"
-          color="error"
-          size="large"
-          disabled={isDefault}
-          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          onClick={isDeleteDialogOpen.onTrue}
-        >
-          Удалить
-        </Button>
-      </Box>
-    </Drawer>
+        <Box sx={{ p: 2.5 }}>
+          <Button
+            fullWidth
+            variant="soft"
+            color="error"
+            size="large"
+            disabled={isDefault}
+            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            onClick={confirm.onTrue}
+          >
+            Удалить
+          </Button>
+        </Box>
+      </Drawer>
+
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Удалить"
+        content="Вы уверены что хотите удалить данную категорию?"
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              onDelete();
+              confirm.onFalse();
+            }}
+          >
+            Удалить
+          </Button>
+        }
+      />
+    </>
   );
 }

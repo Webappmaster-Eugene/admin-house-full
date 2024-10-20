@@ -9,7 +9,7 @@ export type CategoryTableProps = {
   table: TableProps;
   notFound: boolean;
   dataFiltered: CategoryMaterialGetAllCommand.ResponseEntity;
-  onOpenDeletingOneCategoryPopup: VoidFunction;
+  onOpenDeletingManyCategoriesPopup: VoidFunction;
   onOpenChangerCategoryPopup: (
     event: React.MouseEvent<HTMLElement>,
     categoryInfoToChange: CategoryMaterialGetCommand.ResponseEntity

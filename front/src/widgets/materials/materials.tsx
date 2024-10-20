@@ -5,7 +5,6 @@ import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
 import { useState, useCallback, useLayoutEffect } from 'react';
 import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
-import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
 import { NewMaterialId } from '@/widgets/materials/new-material-id.const';
 import { MaterialEditableColumns } from '@/widgets/materials/editable-columns';
@@ -99,14 +98,14 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
 
   const additionalFieldsNames = additionalFields?.map((field) => field.name);
 
-  const fieldsInTable = additionalFields?.map((field) => ({
-    field: field.uuid,
-    headerName: field.name,
-    minWidth: 90,
-    align: 'left',
-    headerAlign: 'left',
-  }));
-  console.log(fieldsInTable);
+  // const fieldsInTable = additionalFields?.map((field) => ({
+  //   field: field.uuid,
+  //   headerName: field.name,
+  //   minWidth: 90,
+  //   align: 'left',
+  //   headerAlign: 'left',
+  // }));
+  // console.log(fieldsInTable);
 
   const apiRef = useGridApiRef();
   const [gridStateBeforeCreate, setGridStateBeforeCreate] = useState<GridState>(
@@ -258,17 +257,20 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       const curTableState = apiRef.current.state;
       const initialState = columnsInitialState;
 
-      const isEqColumns = !deepEqualAndIn(curTableState, initialState);
+      const isNotEqWithDefaultColumns = !deepEqualAndIn(curTableState, initialState);
 
       const columnsCurrent = apiRef.current.state.columns.lookup;
       const columnsInitial = columnsInitialState.columns?.dimensions;
-      const isEqWidths = deepEqualAndInTableKeys(columnsCurrent, columnsInitial);
-      return isEqColumns || isEqWidths;
+      const isNotEqWithDefaultWidthsOfColumns = deepEqualAndInTableKeys(
+        columnsCurrent,
+        columnsInitial
+      );
+      return isNotEqWithDefaultColumns || isNotEqWithDefaultWidthsOfColumns;
     };
 
     const handleClickResetSettingsTable = () => {
-      apiRef.current.restoreState(columnsInitialState);
       localStorage.setItem('materialsDataGridState', JSON.stringify(columnsInitialState));
+      apiRef.current.restoreState(columnsInitialState);
     };
 
     const isDeleteRowVisible = (): boolean => {
@@ -397,7 +399,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
   const handleSaveClick = async () => {
     const id = NewMaterialId;
     const isNewRow = apiRef.current.getRow(id)?.isNew;
-    let finalRow: string | MaterialCreateCommand.ResponseEntity | ErrorFromBackend = '';
+    let finalRow: MaterialCreateCommand.ResponseEntity;
 
     const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
     const responsiblePartners =
@@ -485,9 +487,11 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
     {
       field: MaterialColumnSchema.name,
       headerName: 'Наименование',
-      minWidth: 160,
+      minWidth: 220,
       width: materialsDataGridInitialState?.columns?.dimensions?.name?.width,
-      flex: materialsDataGridInitialState?.columns?.dimensions?.name?.width ? undefined : 1,
+      flex: 1,
+      // width: materialsDataGridInitialState?.columns?.dimensions?.name?.width,
+      // flex: materialsDataGridInitialState?.columns?.dimensions?.name?.width ? undefined : 1,
       align: 'left',
       headerAlign: 'left',
       editable: true,
@@ -513,7 +517,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
     {
       field: MaterialColumnSchema.comment,
       headerName: 'Описание',
-      minWidth: 190,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.comment?.width,
       align: 'left',
       headerAlign: 'left',
@@ -528,7 +532,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       field: MaterialColumnSchema.price,
       valueFormatter: (value) => toRubles(Number(value)),
       headerName: 'Цена',
-      minWidth: 140,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.price?.width,
       type: 'number',
       align: 'left',
@@ -551,7 +555,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
         }
         return finishValue;
       },
-      minWidth: 150,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.sourceInfo?.width,
       align: 'left',
       headerAlign: 'left',
@@ -579,7 +583,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       valueGetter: (value: ResponsiblePartnerProducerGetCommand.ResponseEntity, row) =>
         isEntityResponsiblePartnerTG(value) ? value.name : value,
       headerName: 'Поставщик',
-      minWidth: 110,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.responsiblePartner?.width,
       align: 'left',
       headerAlign: 'left',
@@ -595,7 +599,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       headerName: 'Категория',
       align: 'left',
       headerAlign: 'left',
-      minWidth: 100,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.categoryMaterial?.width,
       editable: true,
       type: 'singleSelect',
@@ -614,7 +618,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       headerName: 'Ед. изм.',
       align: 'left',
       headerAlign: 'left',
-      minWidth: 100,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.unitMeasurement?.width,
       editable: true,
       type: 'singleSelect',
@@ -647,7 +651,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
         return finishValue;
       },
       headerName: 'Изменения цены',
-      minWidth: 130,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.priceChanges?.width,
       align: 'left',
       headerAlign: 'left',
@@ -688,7 +692,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       headerName: 'Характеристики',
       align: 'left',
       headerAlign: 'left',
-      minWidth: 250,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.characteristicsMaterial?.width,
     },
     {
@@ -700,7 +704,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       },
       resizable: false,
       headerName: 'Дата обновления',
-      minWidth: 170,
+      minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
     },
   ];
@@ -738,7 +742,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
                 width: '100%',
                 maxWidth: 'xl',
               }}
-              concreteCrumbName="Листовые"
+              // concreteCrumbName="Листовые"
             />
             <Box sx={{ width: '100%' }}>
               <DataGrid
@@ -814,11 +818,11 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
                   setRowSelectionModel(newRowSelectionModel);
                 }}
                 rowSelectionModel={rowSelectionModel}
-                autosizeOptions={{
-                  columns: [MaterialColumnSchema.name],
-                  includeOutliers: true,
-                  includeHeaders: true,
-                }}
+                // autosizeOptions={{
+                //   columns: [MaterialColumnSchema.name],
+                //   includeOutliers: true,
+                //   includeHeaders: true,
+                // }}
                 sx={{
                   [`& .${gridClasses.main}`]: {
                     //   #element::-webkit-scrollbar-track {
@@ -831,11 +835,16 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
                     border: 'none',
                     minHeight: '50px',
                     height: '100%',
-                    width: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'flex-start',
                   },
+                  // [`& .${gridClasses.cellOffsetLeft}`]: {
+                  //   // minWidth: '100%',
+                  //   backgroundColor: (theme) =>
+                  //     theme.palette.mode === 'light' ? grey[800] : grey[900],
+                  //   width: '100%',
+                  // },
                   [`& .${gridClasses.main}`]: {
                     // bgcolor: `${grey[50]}`,
                   },

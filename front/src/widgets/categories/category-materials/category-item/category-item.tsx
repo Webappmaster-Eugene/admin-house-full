@@ -1,12 +1,14 @@
 import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
+import { ConfirmDialog } from '@/shared/custom-dialog';
 import { CategoryMaterialGetCommand } from '@numart/house-admin-contracts';
 import CategoryViewDetails from '@/widgets/categories/category-materials/category-details/category-view-details';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,9 +30,6 @@ export default function CategoryItem({
   onDelete,
   sx,
   onOpenChangerPopup,
-  // isDeletingPopupOpened,
-  // onOpenDeletingOneCategoryPopup,
-  // onCloseDeletingOneCategoryPopup,
   ...other
 }: CategoryItemProps) {
   const { enqueueSnackbar } = useSnackbar();
@@ -44,6 +43,8 @@ export default function CategoryItem({
   const checkbox = useBoolean();
 
   const popover = usePopover();
+
+  const confirm = useBoolean();
 
   const details = useBoolean();
 
@@ -209,31 +210,38 @@ export default function CategoryItem({
 
         {!isDefault && <Divider sx={{ borderStyle: 'dashed' }} />}
 
-        {/* {!isDefault && ( */}
-        {/*  <MenuItem */}
-        {/*    onClick={() => { */}
-        {/*      onOpenDeletingOneCategoryPopup(); */}
-        {/*      popover.onClose(); */}
-        {/*    }} */}
-        {/*    sx={{ color: 'error.main' }} */}
-        {/*  > */}
-        {/*    <Iconify icon="solar:trash-bin-trash-bold" /> */}
-        {/*    Удалить */}
-        {/*  </MenuItem> */}
-        {/* )} */}
+        {!isDefault && (
+          <MenuItem
+            onClick={() => {
+              confirm.onTrue();
+              popover.onClose();
+            }}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon="solar:trash-bin-trash-bold" />
+            Удалить
+          </MenuItem>
+        )}
       </CustomPopover>
 
-      {/* <ConfirmDialog */}
-      {/*  open={isDeletingPopupOpened} */}
-      {/*  onClose={onCloseDeletingOneCategoryPopup} */}
-      {/*  title="Удалить" */}
-      {/*  content="Вы уверены что хотите удалить категорию?" */}
-      {/*  action={ */}
-      {/*    <Button variant="contained" color="error" onClick={onDelete}> */}
-      {/*      Удалить */}
-      {/*    </Button> */}
-      {/*  } */}
-      {/* /> */}
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Удалить"
+        content="Вы уверены что хотите удалить категорию?"
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              confirm.onFalse();
+              onDelete();
+            }}
+          >
+            Удалить
+          </Button>
+        }
+      />
 
       <CategoryViewDetails
         item={category}

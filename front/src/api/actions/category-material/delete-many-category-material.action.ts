@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { CategoryMaterialDeleteManyCommand } from '@numart/house-admin-contracts/src/commands/category-material/delete-many.command';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -27,6 +28,7 @@ export async function deleteManyCategoryMaterial(
     );
 
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath('/dashboard/category-materials/');
       return response.data as CategoryMaterialDeleteManyCommand.ResponseEntity;
     }
 

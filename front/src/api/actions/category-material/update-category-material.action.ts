@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { CategoryMaterialUpdateCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -29,6 +30,7 @@ export async function updateCategoryMaterial(
     );
 
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath('/dashboard/category-materials/');
       return response.data as CategoryMaterialUpdateCommand.ResponseEntity;
     }
 

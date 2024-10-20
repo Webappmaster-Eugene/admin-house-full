@@ -8,7 +8,7 @@ import { TableProps } from 'src/shared/table';
 export type CategoryGridProps = {
   table: TableProps;
   dataFiltered: CategoryMaterialGetAllCommand.ResponseEntity;
-  onOpenDeletingOneCategoryPopup: VoidFunction;
+  onOpenDeletingManyCategoriesPopup: VoidFunction;
   onDeleteCategory: (id: string) => void;
   onOpenChangerCategoryPopup: (
     event: React.MouseEvent<HTMLElement>,

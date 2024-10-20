@@ -1,7 +1,7 @@
 'use client';
 
 import { useSnackbar } from 'notistack';
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AllCategoriesTable from '@/widgets/categories/category-materials/category-table/category-table';
 import CategoryFilters from '@/widgets/categories/category-materials/category-filters/category-filters';
 import AllCategoriesGridView from '@/widgets/categories/category-materials/category-grid/category-grid-view';
@@ -78,6 +78,10 @@ export default function CategoryMaterials({
   const [tableData, setTableData] =
     useState<CategoryMaterialGetAllCommand.ResponseEntity>(allCategoriesInWorkspace);
 
+  useEffect(() => {
+    setTableData(allCategoriesInWorkspace);
+  }, [allCategoriesInWorkspace]);
+
   const [filters, setFilters] = useState<IFileFilters>(defaultFilters);
 
   const dataFiltered = applyFilterHandler({
@@ -124,40 +128,21 @@ export default function CategoryMaterials({
     setFilters(defaultFilters);
   }, []);
 
-  // const handleDeleteOneItem = useCallback(
-  //   async (id: string) => {
-  //     // const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
-  //     // await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
-  //     // console.log(`deleteOneCategoryMaterial1 + ${JSON.stringify(deleteOneCategoryMaterial)}`);
-  //
-  //     // table.onUpdatePageDeleteRow(dataInPage?.length);
-  //     // setTableData((prevCategories) => prevCategories.filter((category) => category.uuid !== id));
-  //     confirmDeletingOneCategory.onFalse();
-  //     // setTableData(allCategoriesInWorkspace);
-  //     console.log(confirmDeletingOneCategory.value);
-  //     enqueueSnackbar('Удаление успешно произведено!');
-  //   },
-  //   [dataInPage?.length, enqueueSnackbar, table, tableData, allCategoriesInWorkspace]
-  // );
-
   const handleDeleteOneCategory = async (id: string) => {
-    const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
+    // const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
     await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
-    // console.log(`deleteOneCategoryMaterial1 + ${JSON.stringify(deleteOneCategoryMaterial)}`);
-    //
+
     table.onUpdatePageDeleteRow(dataInPage?.length);
     setTableData((prevCategories) => prevCategories.filter((category) => category.uuid !== id));
-    // console.log(`allCategoriesInWorkspace0 ${JSON.stringify(allCategoriesInWorkspace)}`);
     // setTableData(allCategoriesInWorkspace);
-
     enqueueSnackbar('Удаление одной категории успешно произведено!');
   };
 
   const handleDeleteManyCategories = useCallback(async () => {
     const selectedCategoriesToDelete = table.selected;
-    const allRowsWithoutDeleted = tableData.filter(
-      (categoryMaterialInTable) => !table.selected.includes(categoryMaterialInTable?.uuid as string)
-    );
+    // const allRowsWithoutDeleted = tableData.filter(
+    //   (categoryMaterialInTable) => !table.selected.includes(categoryMaterialInTable?.uuid as string)
+    // );
     await deleteManyCategoryMaterial(
       currentWorkspaceInfo?.uuid,
       currentHandbookInfo?.uuid,
@@ -169,14 +154,13 @@ export default function CategoryMaterials({
       totalRowsFiltered: dataFiltered?.length,
     });
 
-    // setTableData((prevCategories) =>
-    //   prevCategories.filter((category) => !selectedCategoriesToDelete.includes(category.uuid))
-    // );
+    setTableData((prevCategories) =>
+      prevCategories.filter((category) => !selectedCategoriesToDelete.includes(category.uuid))
+    );
 
-    setTableData(allCategoriesInWorkspace);
     isDeletingManyCategoriesPopupOpened.onFalse();
 
-    enqueueSnackbar('Удаление успешно произведено!');
+    enqueueSnackbar('Удаление категорий успешно произведено!');
   }, [dataInPage?.length, enqueueSnackbar, table, tableData, allCategoriesInWorkspace]);
 
   const renderFilters = (
@@ -276,7 +260,7 @@ export default function CategoryMaterials({
                 table={table}
                 dataFiltered={dataFiltered}
                 onDeleteCategory={handleDeleteOneCategory}
-                onOpenDeletingOneCategoryPopup={isDeletingOneCategoryPopupOpenedTable.onTrue}
+                onOpenDeletingManyCategoriesPopup={isDeletingManyCategoriesPopupOpened.onTrue}
                 notFound={notFound}
                 onOpenChangerCategoryPopup={handleChangeCategory}
               />
@@ -285,7 +269,7 @@ export default function CategoryMaterials({
                 table={table}
                 dataFiltered={dataFiltered}
                 onDeleteCategory={handleDeleteOneCategory}
-                onOpenDeletingOneCategoryPopup={isDeletingOneCategoryPopupOpenedGrid.onTrue}
+                onOpenDeletingManyCategoriesPopup={isDeletingManyCategoriesPopupOpened.onTrue}
                 onOpenChangerCategoryPopup={handleChangeCategory}
               />
             )}

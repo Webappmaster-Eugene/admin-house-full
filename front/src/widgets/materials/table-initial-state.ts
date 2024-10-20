@@ -88,7 +88,7 @@ export const columnsInitialState: GridInitialState = {
     columnVisibilityModel: columnsInitialVisibilityModel,
   },
   density: 'compact',
-  pagination: { paginationModel: { page: 0, pageSize: 10 } },
+  // pagination: { paginationModel: { page: 0, pageSize: 10 } },
   preferencePanel: { open: false },
   sorting: { sortModel: [{ field: 'updatedAt', sort: 'desc' }] },
 };
