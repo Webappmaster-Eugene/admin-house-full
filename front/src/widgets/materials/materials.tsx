@@ -782,11 +782,11 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
                 // onProcessRowUpdateError={handleProcessRowUpdateError}
                 isCellEditable={(params) => {
                   const isCellInEditableColumn = MaterialEditableColumns.includes(params.field);
-                  const isCellWithoutCharacteristicsMaterial =
-                    params.field === MaterialColumnSchema.name &&
-                    params.row?.characteristicsMaterial?.length === 0;
+                  // const isCellWithoutCharacteristicsMaterial =
+                  //   params.field === MaterialColumnSchema.name &&
+                  //   params.row?.characteristicsMaterial?.length === 0;
                   const isNewRow = params.row?.isNew;
-                  return isNewRow || isCellInEditableColumn || isCellWithoutCharacteristicsMaterial;
+                  return isNewRow || isCellInEditableColumn;
                 }}
                 // slots={{ toolbar: GridToolbar }}
                 slots={{

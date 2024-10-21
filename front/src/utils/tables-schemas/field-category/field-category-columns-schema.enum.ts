@@ -18,6 +18,5 @@ export enum FieldOfCategoryMaterialColumnEditableFullSchema {
   isRequired = 'isRequired',
   unitOfMeasurement = 'unitOfMeasurement',
   defaultValue = 'defaultValue',
-  categoriesMaterial = 'categoriesMaterial',
   fieldType = 'fieldType',
 }

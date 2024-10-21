@@ -56,17 +56,17 @@ export const NavData: NavItems = [
         icon: ICONS.file,
         roles: [UserRoles.MANAGER],
       },
-      {
-        title: 'Характеристики',
-        titleShort: 'Харак-ки',
-        caption:
-          'Характеристики/свойства материалов в соответствии с требуемыми в категории полями',
-        captionFull:
-          'Конкретные характеристики/свойства для всех материалов в соответствии с требуемыми в категории полями',
-        path: paths.dashboard.characteristics,
-        icon: ICONS.blank,
-        roles: [UserRoles.MANAGER],
-      },
+      // {
+      //   title: 'Характеристики',
+      //   titleShort: 'Харак-ки',
+      //   caption:
+      //     'Характеристики/свойства материалов в соответствии с требуемыми в категории полями',
+      //   captionFull:
+      //     'Конкретные характеристики/свойства для всех материалов в соответствии с требуемыми в категории полями',
+      //   path: paths.dashboard.characteristics,
+      //   icon: ICONS.blank,
+      //   roles: [UserRoles.MANAGER],
+      // },
     ],
   },
 

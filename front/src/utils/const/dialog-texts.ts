@@ -7,3 +7,8 @@ export const DeleteCategoryDialogTexts = {
   titleDialog: 'Внимание, удаление несет необратимые последствия',
   textDialog: 'Вы уверены, что хотите удалить данную категорию навсегда?',
 };
+
+export const DeleteFieldDialogTexts = {
+  titleDialog: 'Внимание, удаление несет необратимые последствия',
+  textDialog: 'Вы уверены, что хотите удалить данное поле категории c id=(#fieldId) навсегда?',
+};

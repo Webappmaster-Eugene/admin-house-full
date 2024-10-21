@@ -1,20 +1,19 @@
-import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
+import { FieldOfCategoryMaterialColumnEditableFullSchema } from '@/utils/tables-schemas/field-category/field-category-columns-schema.enum';
 
-export const MaterialEditableColumns: string[] = [
-  MaterialColumnEditableFullSchema.namePublic,
-  MaterialColumnEditableFullSchema.comment,
-  MaterialColumnEditableFullSchema.price,
-  MaterialColumnEditableFullSchema.sourceInfo,
-  MaterialColumnEditableFullSchema.responsiblePartner,
+export const FieldOfCategoryMaterialEditableColumns: string[] = [
+  FieldOfCategoryMaterialColumnEditableFullSchema.comment,
+  FieldOfCategoryMaterialColumnEditableFullSchema.fieldType,
+  FieldOfCategoryMaterialColumnEditableFullSchema.defaultValue,
+  FieldOfCategoryMaterialColumnEditableFullSchema.isRequired,
+  FieldOfCategoryMaterialColumnEditableFullSchema.unitOfMeasurement,
+  FieldOfCategoryMaterialColumnEditableFullSchema.name,
 ];
 
-export const MaterialEditableCreateColumns: string[] = [
-  MaterialColumnEditableFullSchema.name,
-  MaterialColumnEditableFullSchema.namePublic,
-  MaterialColumnEditableFullSchema.comment,
-  MaterialColumnEditableFullSchema.price,
-  MaterialColumnEditableFullSchema.sourceInfo,
-  MaterialColumnEditableFullSchema.responsiblePartner,
-  MaterialColumnEditableFullSchema.categoryMaterial,
-  MaterialColumnEditableFullSchema.unitMeasurement,
+export const FieldOfCategoryMaterialEditableCreateColumns: string[] = [
+  FieldOfCategoryMaterialColumnEditableFullSchema.comment,
+  FieldOfCategoryMaterialColumnEditableFullSchema.fieldType,
+  FieldOfCategoryMaterialColumnEditableFullSchema.defaultValue,
+  FieldOfCategoryMaterialColumnEditableFullSchema.isRequired,
+  FieldOfCategoryMaterialColumnEditableFullSchema.unitOfMeasurement,
+  FieldOfCategoryMaterialColumnEditableFullSchema.name,
 ];

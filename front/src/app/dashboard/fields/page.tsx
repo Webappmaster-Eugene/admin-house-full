@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------
 
+import FieldsOfCategoryMaterials from '@/widgets/field-of-category-materials/fields-of-category-materials';
 import { getAllFieldOfCategoryOfHandbook } from '@/api/actions/project/get-all-projects-of-workspace.action';
 import {
   UserGetFullInfoCommand,
@@ -40,7 +41,6 @@ export default async function FieldsOfCategoryMaterialsPage() {
   return isErrorFieldTypeGuard(allFieldsInCurrentHandbook) ? (
     <Error />
   ) : (
-    <Error />
-    // <FieldsOfCategoryMaterials fieldsOfCategoryMaterialsInfo={allFieldsInCurrentHandbook} />
+    <FieldsOfCategoryMaterials fieldsOfCategoryMaterialsInfo={allFieldsInCurrentHandbook} />
   );
 }
