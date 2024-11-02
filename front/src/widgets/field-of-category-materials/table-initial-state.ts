@@ -2,18 +2,17 @@ import { GridInitialState } from '@mui/x-data-grid';
 
 export const columnsInitialVisibilityModel = {
   __check__: true,
-  categoryMaterial: true,
-  unitMeasurement: true,
-  price: true,
-  updatedAt: false,
   uuid: false,
-  numInOrder: false,
-  characteristicsMaterial: false,
+  name: true,
+  numInOrder: true,
   comment: false,
-  namePublic: false,
-  priceChanges: false,
-  responsiblePartner: false,
-  sourceInfo: false,
+  isRequired: true,
+  unitOfMeasurement: true,
+  defaultValue: false,
+  categoriesMaterial: false,
+  fieldType: true,
+  fieldVariantsForSelectorFieldType: false,
+  categoriesMaterialsTemplatesIncludesThisField: false,
 };
 
 export const columnsInitialState: GridInitialState = {
@@ -90,5 +89,8 @@ export const columnsInitialState: GridInitialState = {
   density: 'compact',
   pagination: { paginationModel: { page: 0, pageSize: 10 } },
   preferencePanel: { open: false },
-  sorting: { sortModel: [{ field: 'updatedAt', sort: 'desc' }] },
+  // sorting: { sortModel: [{ field: 'updatedAt', sort: 'desc' }] },
+  sorting: {
+    sortModel: [{ field: 'numInOrder', sort: 'asc' }],
+  },
 };

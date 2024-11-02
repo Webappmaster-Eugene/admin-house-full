@@ -2148,7 +2148,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
       },
     },
-    //DOC field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
+    //DOC field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
     FIELD_VARIANTS: {
       ROOT_PATH: 'field-variants',
       DESCRIPTION_ENTITY: 'Роуты для работы с вариантами значений для полей категории с типом SELECTOR (Array)',
@@ -2157,7 +2157,7 @@ export const API_PATHS: IAPI_PATHS = {
         GET: {
           METHOD: METHODS.GET,
           FULL_PATH:
-            'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+            'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
           DESCRIPTION: 'Получить один вариант значения SELECTOR',
           ROLES: [],
           MIDDLEWARES: {
@@ -2221,33 +2221,10 @@ export const API_PATHS: IAPI_PATHS = {
           RESPONSE: FieldVariantsForSelectorFieldTypeGetAllResponseDto,
           EFFECTS: [],
         },
-        GET_ALL_IN_CATEGORY_MATERIAL: {
-          METHOD: METHODS.GET,
-          FULL_PATH:
-            'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
-          DESCRIPTION: 'Получить все варианты значений SELECTOR внутри category-material внутри handbook',
-          ROLES: [],
-          MIDDLEWARES: {
-            GUARDS: [GUARDS.AUTH_GUARD, GUARDS.WORKSPACE_MEMBERS_GUARD],
-            INTERCEPTORS: [],
-            PIPES: [],
-            FILTERS: [],
-          },
-          REQUEST_INFO: {
-            HEADERS: [],
-            PARAMS: ['categoryMaterialId'],
-            QUERY_PARAMS: [QueryParamsAll],
-            USER_FROM_JWT: false,
-            BODY: null,
-            ADDITIONS: [ADDITIONAL_INFO.URL_PARAMS],
-          },
-          RESPONSE: FieldVariantsForSelectorFieldTypeGetAllResponseDto,
-          EFFECTS: [],
-        },
         GET_ALL_IN_FIELD_OF_CATEGORY_MATERIAL: {
           METHOD: METHODS.GET,
           FULL_PATH:
-            'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/get-all-in-field-of-category-material',
+            'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/get-all-in-field-of-category-material',
           DESCRIPTION: 'Получить все варианты значений SELECTOR внутри field-of-category-material внутри category-material внутри handbook',
           ROLES: [],
           MIDDLEWARES: {
@@ -2269,8 +2246,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
         CREATE: {
           METHOD: METHODS.POST,
-          FULL_PATH:
-            'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+          FULL_PATH: 'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId',
           DESCRIPTION: 'Создать один вариант значения SELECTOR в handbook в fieldOfCategoryMaterialId в приложении',
           ROLES: [],
           MIDDLEWARES: {
@@ -2293,7 +2269,7 @@ export const API_PATHS: IAPI_PATHS = {
         UPDATE: {
           METHOD: METHODS.PUT,
           FULL_PATH:
-            'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+            'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
           DESCRIPTION: 'Обновить один вариант значения SELECTOR в handbook в fieldOfCategoryMaterialId в приложении',
           ROLES: [],
           MIDDLEWARES: {
@@ -2316,7 +2292,7 @@ export const API_PATHS: IAPI_PATHS = {
         DELETE: {
           METHOD: METHODS.DELETE,
           FULL_PATH:
-            'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+            'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
           DESCRIPTION: 'Удалить один вариант значения SELECTOR в приложении',
           ROLES: [],
           MIDDLEWARES: {
@@ -2338,7 +2314,7 @@ export const API_PATHS: IAPI_PATHS = {
         },
       },
     },
-    //DOC field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
+    //DOC material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId
     MATERIALS: {
       ROOT_PATH: 'material',
       DESCRIPTION_ENTITY: 'Роуты для работы с материалами',

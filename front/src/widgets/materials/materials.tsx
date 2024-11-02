@@ -206,7 +206,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       setRows((oldRows) => {
         const newRow: TMaterialTableEntity = {
           [MaterialColumnSchema.uuid]: NewMaterialId,
-          [MaterialColumnSchema.numInOrder]: 9999999,
+          [MaterialColumnSchema.numInOrder]: 0,
           [MaterialColumnSchema.name]: 'Наименование материала',
           [MaterialColumnSchema.namePublic]: 'Сокр. наименование',
           [MaterialColumnSchema.comment]: 'Описание нового материала',
@@ -348,7 +348,6 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
   const handleCancelRowClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const startTableState = gridStateBeforeCreate;
     const oldColumnVisibilityModel = startTableState.columns.columnVisibilityModel;
-    // console.log(oldColumnVisibilityModel);
     if (typeof startTableState === 'object' && Object.keys(startTableState).length !== 0) {
       apiRef.current.restoreState(startTableState);
       apiRef.current.setColumnVisibilityModel(oldColumnVisibilityModel);
@@ -713,7 +712,6 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
     const rowIdToDelete = rowSelectionModel[0];
     const rowInfo = apiRef.current.getRow(rowIdToDelete);
     const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
     const categoryMaterials =
       workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
     const workspaceId = handbookInfo.workspaceUuid;
@@ -871,7 +869,6 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
                   setColumnVisibilityModel(newModel);
                 }}
                 onCellEditStop={handleCellEditStop}
-                // onCellEditStart={handleCellEditStop}
               />
             </Box>
           </>

@@ -2,6 +2,7 @@
 
 import { WorkspaceGetCommand, UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 import { getAllGlobalCategories } from '@/api/actions/global-category/get-all-global-category.action';
+import { getAllFieldVariantsInHandbook } from '@/api/actions/field-variants/get-all-field-variants-in-handbook.action';
 
 import { isErrorInArrayFieldTypeGuard } from 'src/utils/type-guards/are-error-in-array-of-fields.type-guard';
 
@@ -39,6 +40,7 @@ export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoComma
   );
   const allGlobalCategories = await getAllGlobalCategories();
   const allFieldTypes = await getAllFieldTypes();
+  const allFieldsVariantsOfHandbook = await getAllFieldVariantsInHandbook(workspaceId, handbookId);
 
   if (
     !isErrorInArrayFieldTypeGuard([
@@ -50,6 +52,7 @@ export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoComma
       allFieldsUnitMeasurementsOfHandbook,
       allGlobalCategories,
       allFieldTypes,
+      allFieldsVariantsOfHandbook,
     ])
   ) {
     const appState: AppState = {
@@ -61,6 +64,7 @@ export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoComma
       allFieldsUnitMeasurementsOfHandbook,
       allGlobalCategories,
       allFieldTypes,
+      allFieldsVariantsOfHandbook,
       error: false,
     };
     return appState;
@@ -74,6 +78,7 @@ export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoComma
     allFieldsUnitMeasurementsOfHandbook,
     allGlobalCategories,
     allFieldTypes,
+    allFieldsVariantsOfHandbook,
     error: true,
   };
 

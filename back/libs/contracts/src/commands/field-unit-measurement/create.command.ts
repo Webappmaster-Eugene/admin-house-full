@@ -1,22 +1,17 @@
 import { z } from 'zod';
 import { FieldUnitMeasurementSchema, ResponseClientSchema } from '../../models';
 import { FieldUnitMeasurementRelatedEntitiesSchema } from '../../models/field-unit-measurement/field-unit-measurement-related-entities.schema';
-
-const FieldUnitMeasurementCreateResponseEntitySchema = FieldUnitMeasurementSchema.pick({
-  name: true,
-  comment: true,
-  uuid: true,
-  handbookUuid: true,
-  lastChangeByUserUuid: true,
-  fieldUnitMeasurementStatus: true,
-  numInOrder: true,
-}).merge(FieldUnitMeasurementRelatedEntitiesSchema);
+import { FieldUnitMeasurementBusinessValueSchema } from '../../models/field-unit-measurement/field-unit-measurement-business-value.schema';
 
 const FieldUnitMeasurementCreateRequestSchema = FieldUnitMeasurementSchema.pick({
   name: true,
   comment: true,
   fieldUnitMeasurementStatus: true,
 });
+
+const FieldUnitMeasurementCreateResponseEntitySchema = FieldUnitMeasurementBusinessValueSchema.merge(
+  FieldUnitMeasurementRelatedEntitiesSchema,
+);
 
 const FieldUnitMeasurementCreateResponseSchema = z
   .object({

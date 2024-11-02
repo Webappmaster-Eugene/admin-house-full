@@ -5,7 +5,7 @@
   "description": "Admin House - frontend",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env.development -- next dev -p 8096",
+    "dev": "dotenv -e .env.development -- next dev -p 8080",
     "start": "dotenv -e .env.production -- next start -p 8080",
     "build": "dotenv -e .env.production next build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -30,7 +30,7 @@
     "@mui/material": "^5.15.20",
     "@mui/x-data-grid": "^7.7.0",
     "@mui/x-date-pickers": "^7.18.0",
-    "@numart/house-admin-contracts": "^2.1.12",
+    "@numart/house-admin-contracts": "^2.1.14",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.2",
     "clsx": "^2.1.1",

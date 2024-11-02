@@ -5,6 +5,7 @@ import { FieldOfCategoryMaterialRepository } from './field-of-category-material.
 import { FieldOfCategoryMaterialController } from './field-of-category-material.controller';
 import { CategoryMaterialModule } from '../../modules/category-material/category-material.module';
 import { MaterialModule } from '../../modules/material/material.module';
+import { FieldTypeModule } from '../field-type/field-type.module';
 
 @Module({
   providers: [
@@ -19,6 +20,7 @@ import { MaterialModule } from '../../modules/material/material.module';
   ],
   controllers: [FieldOfCategoryMaterialController],
   imports: [
+    FieldTypeModule,
     //FieldOfCategoryMaterial_CategoryMaterialModule
     forwardRef(() => CategoryMaterialModule),
     //MaterialModule,

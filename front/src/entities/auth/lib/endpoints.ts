@@ -128,18 +128,17 @@ export const axiosEndpoints = {
   },
   // DOC field-of-category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId
   field_category_material: {
-    get: 'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+    get: 'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId',
     get_all: 'field-of-category-material',
     get_all_in_handbook:
       'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
     get_all_in_category_material:
-      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
-    create:
-      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
+      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/get-all-in-category-material',
+    create: 'field-of-category-material/workspace/:workspaceId/handbook/:handbookId',
     update:
-      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId',
     delete:
-      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+      'field-of-category-material/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId',
   },
   // DOC responsible-partner-producer/workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId
   responsible_partner_producer: {
@@ -153,21 +152,19 @@ export const axiosEndpoints = {
     delete:
       'responsible-partner-producer/workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId',
   },
-  // DOC field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
+  // DOC field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
   field_variants: {
-    get: 'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+    get: 'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
     get_all: 'field-variants',
     get_all_in_handbook:
       'field-variants/workspace/:workspaceId/handbook/:handbookId/get-all-in-handbook',
-    get_all_in_category_material:
-      'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material',
     get_all_in_field_of_category_material:
-      'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/get-all-in-field-of-category-material',
+      'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/get-all-in-field-of-category-material',
     create:
-      'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
+      'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId',
     update:
-      'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+      'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
     delete:
-      'field-variants/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+      'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
   },
 };

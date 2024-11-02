@@ -50,20 +50,46 @@ const logger: LoggerConfig = new LoggerConfig();
     // }),
     CacheModule.registerAsync({
       isGlobal: true,
-      useFactory: async () => ({
-        store: await redisStore({
-          ttl: 10, // seconds
-          socket: {
-            // DOC данные подключения redis для прода
-            host: 'redis',
-            port: 6379,
+      useFactory: async () => {
+        try {
+          const store = await redisStore({
+            ttl: 10, // seconds
+            socket: {
+              // DOC данные подключения redis для прода
+              // host: 'redis',
+              // port: 6379,
+              // DOC данные подключения redis для dev
+              host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
+              port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+            },
+          });
+          // Проверяем подключение к Redis
+          await new Promise((resolve, reject) => {
+            reject('Redis отключен или недоступен');
+          });
 
-            // DOC данные подключения redis для dev
-            // host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-            // port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
-          },
-        }),
-      }),
+          return { store: store };
+        } catch (error) {
+          console.warn('Redis not available, falling back to in-memory cache', error);
+          return {
+            store: undefined, // Указываем, что store не доступен
+          };
+        }
+      },
+      // useFactory: async () => ({
+      //   store: await redisStore({
+      //     ttl: 10, // seconds
+      //     socket: {
+      //       // DOC данные подключения redis для прода
+      //       // host: 'redis',
+      //       // port: 6379,
+      //
+      //       // DOC данные подключения redis для dev
+      //       host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
+      //       port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+      //     },
+      //   }),
+      // }),
     }),
     // ServeStaticModule.forRoot({
     //   rootPath: path.resolve(__dirname, './static'),

@@ -298,6 +298,7 @@ model FieldUnitMeasurement {
   uuid                       String                    @id @default(uuid()) @db.Uuid
   name                       String
   comment                    String?
+  isDefault                  Boolean                   @default(false) @map("is_default")
   numInOrder                 Int?
   handbookUuid               String                    @map("handbook_uuid") @db.Uuid
   handbook                   Handbook                  @relation(fields: [handbookUuid], references: [uuid], onDelete: Restrict, onUpdate: Cascade)

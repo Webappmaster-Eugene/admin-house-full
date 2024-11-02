@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -21,6 +22,8 @@ export async function getAllFieldOfCategoryOfHandbook(workspaceId: string, handb
         .replace(':handbookId', handbookId)
     );
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath('/dashboard/category-materials/');
+      revalidatePath('/dashboard/fields/');
       return response.data as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
     }
 

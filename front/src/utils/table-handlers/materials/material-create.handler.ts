@@ -1,6 +1,6 @@
 import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
 import { MaterialEditableCreateColumns } from '@/widgets/materials/editable-columns';
-import { isEntityMaterialTG } from '@/utils/type-guards/is-entity-material-when-create.type-guard';
+import { isEntityMaterialTypeGuard } from '@/utils/type-guards/is-entity-material.type-guard';
 import {
   MaterialCreateCommand,
   CategoryMaterialGetAllCommand,
@@ -91,7 +91,7 @@ export async function materialCreateHandler(
   }
   const newMaterialCreated: MaterialCreateCommand.ResponseEntity | ErrorFromBackend =
     await createMaterial(workspaceId, handbookId, newCategoryMaterialUuid, createMaterialDto);
-  if (isEntityMaterialTG(newMaterialCreated)) {
+  if (isEntityMaterialTypeGuard(newMaterialCreated)) {
     return newMaterialCreated;
   }
   return newMaterialCreated;

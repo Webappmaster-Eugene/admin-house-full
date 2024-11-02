@@ -1,4 +1,5 @@
 import { MaterialEditableColumns } from '@/widgets/materials/editable-columns';
+import { isEntityMaterialTypeGuard } from '@/utils/type-guards/is-entity-material.type-guard';
 import {
   MaterialUpdateCommand,
   ResponsiblePartnerProducerGetCommand,
@@ -59,4 +60,9 @@ export async function materialFullRowEditHandler(
     updatedMaterialInfo.uuid,
     updateSelfDto
   );
+
+  if (isEntityMaterialTypeGuard(updatedMaterial)) {
+    return updatedMaterial;
+  }
+  return updatedMaterial;
 }

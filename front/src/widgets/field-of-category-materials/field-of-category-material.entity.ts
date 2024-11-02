@@ -8,7 +8,7 @@ export const FieldsOfCategoryMaterialTableEntity =
     numInOrder: true,
     comment: true,
     isRequired: true,
-    unitOfMeasurementUuid: true,
+    // unitOfMeasurementUuid: true,
     unitOfMeasurement: true,
     defaultValue: true,
     uniqueNameForTemplate: true,

@@ -34,7 +34,7 @@ export const GlobalCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name'
 
 export const CategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','comment','isDefault','numInOrder','templateName','categoryMaterialStatus','globalCategoryMaterialUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
-export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','numInOrder','handbookUuid','fieldUnitMeasurementStatus','lastChangeByUserUuid','createdAt','updatedAt']);
+export const FieldUnitMeasurementScalarFieldEnumSchema = z.enum(['uuid','name','comment','isDefault','numInOrder','handbookUuid','fieldUnitMeasurementStatus','lastChangeByUserUuid','createdAt','updatedAt']);
 
 export const FieldOfCategoryMaterialScalarFieldEnumSchema = z.enum(['uuid','name','uniqueNameForTemplate','comment','numInOrder','fieldOfCategoryMaterialStatus','isRequired','defaultValue','unitOfMeasurementUuid','fieldTypeUuid','handbookUuid','lastChangeByUserUuid','createdAt','updatedAt']);
 
@@ -444,6 +444,7 @@ export const FieldUnitMeasurementSchema = z.object({
   uuid: z.string(),
   name: z.string(),
   comment: z.string().nullish(),
+  isDefault: z.boolean(),
   numInOrder: z.number().nullish(),
   handbookUuid: z.string(),
   lastChangeByUserUuid: z.string().nullish(),
@@ -459,6 +460,7 @@ export type FieldUnitMeasurement = z.infer<typeof FieldUnitMeasurementSchema>
 export const FieldUnitMeasurementOptionalDefaultsSchema = FieldUnitMeasurementSchema.merge(z.object({
   fieldUnitMeasurementStatus: EActiveStatusesSchema.optional(),
   uuid: z.string().optional(),
+  isDefault: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 }))

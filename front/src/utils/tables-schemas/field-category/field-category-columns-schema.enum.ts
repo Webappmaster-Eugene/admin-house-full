@@ -8,6 +8,7 @@ export enum FieldOfCategoryMaterialColumnSchema {
   defaultValue = 'defaultValue',
   categoriesMaterial = 'categoriesMaterial',
   fieldType = 'fieldType',
+  fieldTypeUuid = 'fieldTypeUuid',
   fieldVariantsForSelectorFieldType = 'fieldVariantsForSelectorFieldType',
   categoriesMaterialsTemplatesIncludesThisField = 'categoriesMaterialsTemplatesIncludesThisField',
 }

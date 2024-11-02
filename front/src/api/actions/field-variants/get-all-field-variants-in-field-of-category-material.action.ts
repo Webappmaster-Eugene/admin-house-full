@@ -12,7 +12,6 @@ import { axiosEndpoints } from 'src/entities/auth/lib';
 export async function getAllFieldVariantsOfCategoryOfHandbook(
   workspaceId: string,
   handbookId: string,
-  categoryMaterialId: string,
   fieldOfCategoryMaterialId: string
 ) {
   const errorObject: ErrorFromBackend = {
@@ -25,7 +24,6 @@ export async function getAllFieldVariantsOfCategoryOfHandbook(
         axiosEndpoints.field_variants.get_all_in_field_of_category_material
           .replace(':workspaceId', workspaceId)
           .replace(':handbookId', handbookId)
-          .replace(':categoryMaterialId', categoryMaterialId)
           .replace(':fieldOfCategoryMaterialId', fieldOfCategoryMaterialId)
       );
     if (isGoodHttpCode(response?.statusCode)) {
@@ -33,7 +31,7 @@ export async function getAllFieldVariantsOfCategoryOfHandbook(
     }
 
     console.error(
-      'Standard backend error while get all fields of category-materials of handbook',
+      'Standard backend error while get all field-variants in field of category material of handbook',
       response
     );
     if (response?.errors) {
@@ -44,7 +42,7 @@ export async function getAllFieldVariantsOfCategoryOfHandbook(
     return errorObject;
   } catch (error: unknown) {
     console.error(
-      'Catched frontend error while get all fields of category-materials of handbook',
+      'Catched frontend error while get all field-variants in field of category material of handbook',
       error
     );
     if (error instanceof AxiosError) {

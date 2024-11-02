@@ -3,6 +3,7 @@ import { FieldOfCategoryMaterialCreateRequestDto } from '../dto/controller/creat
 import { FieldOfCategoryMaterialUpdateRequestDto } from '../dto/controller/update-field-of-category-material.dto';
 import { FieldOfCategoryMaterialEntity } from '../entities/field-of-category-material.entity';
 import { IRepositoryCommon } from '../../../common/types/main/slices/repository.interface';
+import { UniversalInternalResponse } from '../../../common/types/responses/universal-internal-response.interface';
 
 export interface IFieldOfCategoryMaterialRepository
   extends IRepositoryCommon<
@@ -30,6 +31,9 @@ export interface IFieldOfCategoryMaterialRepository
   updateById: (
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfCategoryMaterialUpdateRequestDto,
+  ) => Promise<FieldOfCategoryMaterialEntity>;
+  deleteOldFieldVariantsOfFieldOfCategoryById: (
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldOfCategoryMaterialEntity>;
   deleteById: (fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam) => Promise<FieldOfCategoryMaterialEntity>;
 }

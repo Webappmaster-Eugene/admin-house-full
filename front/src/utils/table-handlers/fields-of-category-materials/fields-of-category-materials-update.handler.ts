@@ -1,28 +1,35 @@
-import { ResponsiblePartnerProducerGetAllCommand } from '@numart/house-admin-contracts';
-
-import { isEntityMaterialTG } from 'src/utils/type-guards/is-entity-material-when-create.type-guard';
-
-import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
-import { updateMaterial } from 'src/api/actions/material/update-material.action';
+import { FieldTypeGetAllCommand } from '@numart/house-admin-contracts';
+import { TFieldsOfCategoryMaterialTableEntity } from '@/widgets/field-of-category-materials/field-of-category-material.entity';
+import { updateFieldOfCategoryMaterial } from '@/api/actions/field-category-material/update-field-of-category-material.action';
+import { isEntityFieldOfCategoryMaterialTypeGuard } from '@/utils/type-guards/is-entity-field-of-category-material.type-guard';
 
 export async function fieldsOfCategoryMaterialsUpdateHandler(
-  updatedMaterialInfo: TMaterialTableEntity,
+  updatedFieldOfCategoryMaterialInfo: TFieldsOfCategoryMaterialTableEntity,
   workspaceId: string,
   handbookId: string,
-  categoryMaterialId: string,
-  materialId: string,
-  responsiblePartnerProducers?: ResponsiblePartnerProducerGetAllCommand.ResponseEntity
+  fieldOfCategoryMaterialId: string,
+  allFieldTypes: FieldTypeGetAllCommand.ResponseEntity
 ) {
-  console.log(updatedMaterialInfo);
-  const updatedMaterial = await updateMaterial(
+  if (updatedFieldOfCategoryMaterialInfo.fieldType) {
+    updatedFieldOfCategoryMaterialInfo.fieldTypeUuid = allFieldTypes.find(
+      (fieldType) =>
+        fieldType?.name ===
+        (typeof updatedFieldOfCategoryMaterialInfo?.fieldType === 'string'
+          ? updatedFieldOfCategoryMaterialInfo?.fieldType
+          : updatedFieldOfCategoryMaterialInfo?.fieldType?.name)
+    )?.uuid as string;
+    // @ts-ignore
+    delete updatedFieldOfCategoryMaterialInfo.fieldType;
+  }
+
+  const updatedFieldOfCategoryMaterial = await updateFieldOfCategoryMaterial(
     workspaceId,
     handbookId,
-    categoryMaterialId,
-    materialId,
-    updatedMaterialInfo
+    fieldOfCategoryMaterialId,
+    updatedFieldOfCategoryMaterialInfo
   );
-  if (isEntityMaterialTG(updatedMaterial)) {
-    return updatedMaterial;
+  if (isEntityFieldOfCategoryMaterialTypeGuard(updatedFieldOfCategoryMaterial)) {
+    return updatedFieldOfCategoryMaterial;
   }
-  return updatedMaterial;
+  return updatedFieldOfCategoryMaterial;
 }

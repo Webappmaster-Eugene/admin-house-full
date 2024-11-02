@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
 import { KFI } from '../../common/utils/di';
@@ -10,19 +10,14 @@ import { FieldOfCategoryMaterialCreateRequestDto } from './dto/controller/create
 import { IQueryParams } from '../../common/decorators/query-params.decorator';
 import { dataInternalExtractor } from '../../common/helpers/extractors/data-internal.extractor';
 import { ICategoryMaterialService } from '../../modules/category-material/types/category-material.service.interface';
-import { ModuleRef } from '@nestjs/core';
-import { CategoryMaterialService } from '../../modules/category-material/category-material.service';
-import { IMaterialService } from '../../modules/material/types/material.service.interface';
 
 @Injectable()
-// ,OnModuleInit
 export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialService {
-  //private categoryMaterialService: ICategoryMaterialService;
-  //private categoryMaterialService: CategoryMaterialService;
-
   constructor(
     @Inject(KFI.FIELD_OF_CATEGORY_MATERIAL_REPOSITORY)
     private readonly fieldOfCategoryMaterialRepository: IFieldOfCategoryMaterialRepository,
+    @Inject(forwardRef(() => KFI.FIELD_TYPE_SERVICE))
+    private readonly fieldTypeService: ICategoryMaterialService,
     //@Inject(KFI.FIELD_OF_CATEGORY_MATERIAL__CATEGORY_MATERIAL_SERVICE)
     //private readonly fieldOfCategoryMaterial_сategoryMaterialService: IFieldOfCategoryMaterial_CategoryMaterialService,
     // @Inject(KFI.CATEGORY_MATERIAL_SERVICE)
@@ -85,32 +80,60 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
   }
 
   async updateById(
-    fieldOfCategoryMaterialIdId: EntityUrlParamCommand.RequestUuidParam,
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfCategoryMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>> {
-    const oldFieldOfCategoryMaterial = dataInternalExtractor(await this.getById(fieldOfCategoryMaterialIdId));
+    const oldFieldOfCategoryMaterial = dataInternalExtractor(await this.getById(fieldOfCategoryMaterialId));
     //DOC categoriesMaterialsTemplatesIncludesThisField может изменяться только со стороны категории
     //DOC так как составить шаблон можно только при изменении категории с помощью специального инпута и никак иначе
+    if (dto.fieldTypeUuid && oldFieldOfCategoryMaterial.fieldType.jsType === 'array') {
+      const updatedFieldOfCategoryMaterialWithoutFieldVariants =
+        await this.deleteOldFieldVariantsOfFieldOfCategoryById(fieldOfCategoryMaterialId);
+    }
+
+    if (dto.fieldTypeUuid && oldFieldOfCategoryMaterial.fieldType.jsType === 'array') {
+      const updatedFieldOfCategoryMaterialWithoutFieldVariants =
+        await this.deleteOldFieldVariantsOfFieldOfCategoryById(fieldOfCategoryMaterialId);
+    }
 
     // DOC в самом репозитории внутри проиcходит изменение templateName (если необходимо)
-    const updatedFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.updateById(fieldOfCategoryMaterialIdId, dto);
+    const updatedFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.updateById(fieldOfCategoryMaterialId, dto);
 
-    // DOC если шаблон не пустой и если данное поле участвует в составлении шаблона и если isNameOrTypeChanged=true
+    // DOC если шаблон не пустой и если данное поле участвует в составлении шаблона и если dto.fieldTypeUuid || dto.name===true
     const isCategoryMaterialNameMustChange =
       (dto.fieldTypeUuid || dto.name) && oldFieldOfCategoryMaterial.categoriesMaterialsTemplatesIncludesThisField.length > 0;
+
+    //DOC то меняем CategoryMaterialName
     if (isCategoryMaterialNameMustChange) {
       oldFieldOfCategoryMaterial.categoriesMaterialsTemplatesIncludesThisField.map(async categoryMaterial => {
         await this.categoryMaterialService.rebuildCategoryMaterialNameById(categoryMaterial.uuid);
-        //await this.fieldOfCategoryMaterial_сategoryMaterialService.rebuildCategoryMaterialNameById(categoryMaterial.uuid);
       });
     }
+
+    return new InternalResponse(updatedFieldOfCategoryMaterial);
+  }
+
+  async deleteOldFieldVariantsOfFieldOfCategoryById(
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>> {
+    const updatedFieldOfCategoryMaterial =
+      await this.fieldOfCategoryMaterialRepository.deleteOldFieldVariantsOfFieldOfCategoryById(fieldOfCategoryMaterialId);
     return new InternalResponse(updatedFieldOfCategoryMaterial);
   }
 
   async deleteById(
-    fieldOfCategoryMaterialIdId: EntityUrlParamCommand.RequestUuidParam,
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>> {
-    const deletedFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.deleteById(fieldOfCategoryMaterialIdId);
+    const fieldOfCategoryMaterialBeforeDelete = dataInternalExtractor(await this.getById(fieldOfCategoryMaterialId));
+    const deletedFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.deleteById(fieldOfCategoryMaterialId);
+    const categoriesMaterialUpdated = fieldOfCategoryMaterialBeforeDelete.categoriesMaterialsTemplatesIncludesThisField.map(
+      async categoryMaterial => {
+        const updatedCategory = dataInternalExtractor(
+          await this.categoryMaterialService.rebuildCategoryMaterialNameById(categoryMaterial.uuid),
+        );
+        return updatedCategory.uuid;
+      },
+    );
     return new InternalResponse(deletedFieldOfCategoryMaterial);
   }
 }

@@ -10,6 +10,7 @@ export class FieldUnitMeasurementEntity implements FieldUnitMeasurement, FieldUn
   name: string;
   numInOrder: number;
   handbookUuid: string;
+  isDefault: boolean;
   fieldUnitMeasurementStatus: EActiveStatuses;
   lastChangeByUserUuid: string;
   createdAt: Date;

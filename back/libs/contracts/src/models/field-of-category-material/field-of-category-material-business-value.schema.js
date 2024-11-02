@@ -15,4 +15,5 @@ exports.FieldOfCategoryMaterialBusinessValueSchema = field_of_category_material_
     lastChangeByUserUuid: true,
     handbookUuid: true,
     uuid: true,
+    updatedAt: true,
 });

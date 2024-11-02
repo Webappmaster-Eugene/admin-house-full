@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { FieldOfCategoryMaterialUpdateCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -24,11 +25,13 @@ export async function updateFieldOfCategoryMaterial(
       axiosEndpoints.field_category_material.update
         .replace(':workspaceId', workspaceId)
         .replace(':handbookId', handbookId)
-        .replace(':materialId', fieldOfCategoryMaterialId),
+        .replace(':fieldOfCategoryMaterialId', fieldOfCategoryMaterialId),
       updateFieldOfCategoryMaterialDto
     );
 
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath('/dashboard/category-materials/');
+      revalidatePath('/dashboard/fields/');
       return response.data as FieldOfCategoryMaterialUpdateCommand.ResponseEntity;
     }
 

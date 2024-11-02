@@ -13,4 +13,5 @@ export const FieldOfCategoryMaterialBusinessValueSchema = FieldOfCategoryMateria
   lastChangeByUserUuid: true,
   handbookUuid: true,
   uuid: true,
+  updatedAt: true,
 });

@@ -9,6 +9,7 @@ import { AlertDialogProps } from 'src/shared/dialogs/alert-dialog/alert-dialog.p
 export default function AlertDialog({
   isDialogOpen,
   onClickYes,
+  onClickNo,
   titleDialog,
   textDialog,
 }: AlertDialogProps) {
@@ -19,7 +20,15 @@ export default function AlertDialog({
       <DialogContent sx={{ color: 'text.secondary' }}>{textDialog || 'Вы уверены?'}</DialogContent>
 
       <DialogActions>
-        <Button variant="outlined" onClick={isDialogOpen.onFalse}>
+        <Button
+          variant="outlined"
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            if (onClickNo) {
+              onClickNo(event);
+            }
+            isDialogOpen.onFalse();
+          }}
+        >
           Отменить
         </Button>
         <Button variant="contained" onClick={onClickYes} autoFocus>

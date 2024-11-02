@@ -4,9 +4,11 @@ import { FieldVariantsForSelectorFieldTypeBusinessValueSchema } from '../field-v
 import { FieldUnitMeasurementBusinessValueSchema } from '../field-unit-measurement/field-unit-measurement-business-value.schema';
 import { FieldTypeBusinessValueSchema } from '../field-type/field-type-business-value.schema';
 import { HandbookBusinessValueSchema } from '../handbook/handbook-business-value.schema';
+import { CharacteristicsMaterialBusinessValueSchema } from '../characteristics-material/characteristics-material-business-value.schema';
 
 export const FieldOfCategoryMaterialRelatedEntitiesSchema = z.object({
   handbook: HandbookBusinessValueSchema,
+  characteristicsMaterial: z.array(CharacteristicsMaterialBusinessValueSchema).nullable().optional(),
   categoriesMaterial: z.array(CategoryMaterialBusinessValueSchema).nullable().optional(),
   categoriesMaterialsTemplatesIncludesThisField: z.array(CategoryMaterialBusinessValueSchema).nullable().optional(),
   fieldType: FieldTypeBusinessValueSchema,

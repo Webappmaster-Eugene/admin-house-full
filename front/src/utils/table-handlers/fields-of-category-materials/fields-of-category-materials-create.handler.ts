@@ -1,98 +1,81 @@
 import { ErrorFromBackend } from '@/utils/types/error-from-backend.type';
-import { MaterialEditableCreateColumns } from '@/widgets/materials/editable-columns';
-import { isEntityMaterialTG } from '@/utils/type-guards/is-entity-material-when-create.type-guard';
+import { FieldOfCategoryMaterialEditableCreateColumns } from '@/widgets/field-of-category-materials/editable-columns';
 import {
-  MaterialCreateCommand,
-  CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetAllCommand,
-  ResponsiblePartnerProducerGetCommand,
-  ResponsiblePartnerProducerGetAllCommand,
+  FieldOfCategoryMaterialCreateCommand,
 } from '@numart/house-admin-contracts';
+import { TFieldsOfCategoryMaterialTableEntity } from '@/widgets/field-of-category-materials/field-of-category-material.entity';
+import { createFieldOfCategoryMaterial } from '@/api/actions/field-category-material/create-field-of-category-material.action';
+import { isEntityFieldOfCategoryMaterialTypeGuard } from '@/utils/type-guards/is-entity-field-of-category-material.type-guard';
+import { FieldOfCategoryMaterialColumnEditableFullSchema } from '@/utils/tables-schemas/field-category/field-category-columns-schema.enum';
 
-import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
-
-import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
-import { createMaterial } from 'src/api/actions/material/create-material.action';
-
-export async function fieldsOfCategoryMaterialsCreateHandler(
-  newMaterial: TMaterialTableEntity,
+export async function fieldOfCategoryMaterialCreateHandler(
+  newFieldsOfCategoryMaterialsMaterialInfo: TFieldsOfCategoryMaterialTableEntity,
   workspaceId: string,
   handbookId: string,
-  responsiblePartnerProducers: ResponsiblePartnerProducerGetAllCommand.ResponseEntity,
-  categoryMaterials: CategoryMaterialGetAllCommand.ResponseEntity,
   unitMeasurements: FieldUnitMeasurementGetAllCommand.ResponseEntity
 ) {
-  const createMaterialDto: MaterialCreateCommand.Request = {
+  const createFieldOfCategoryMaterialDto: FieldOfCategoryMaterialCreateCommand.Request = {
     name: '',
-    price: 0,
-    unitMeasurementUuid: '',
-    materialStatus: 'ACTIVE',
-    sourceInfo: '',
+    fieldTypeUuid: '',
+    isRequired: true,
+    unitOfMeasurementUuid: '',
+    fieldOfCategoryMaterialStatus: 'ACTIVE',
   };
-  const newResponsiblePartnerUuid = responsiblePartnerProducers.find(
-    (partner: ResponsiblePartnerProducerGetCommand.ResponseEntity) => {
-      const responsiblePartnerName =
-        typeof newMaterial.responsiblePartner === 'string'
-          ? newMaterial.responsiblePartner
-          : newMaterial.responsiblePartner?.name;
-      return partner.name === responsiblePartnerName;
-    }
-  )!.uuid;
-
-  const newCategoryMaterialUuid = categoryMaterials?.find((categoryMaterial) => {
-    const categoryMaterialName =
-      typeof newMaterial.categoryMaterial === 'string'
-        ? newMaterial.categoryMaterial
-        : newMaterial.categoryMaterial?.name;
-    return categoryMaterial.name === categoryMaterialName;
-  })!.uuid;
-
   const newUnitMeasurementUuid = unitMeasurements?.find((unitMeasurement) => {
     const unitMeasurementName =
-      typeof newMaterial.unitMeasurement === 'string'
-        ? newMaterial.unitMeasurement
-        : newMaterial.unitMeasurement?.name;
+      typeof newFieldsOfCategoryMaterialsMaterialInfo.unitOfMeasurement === 'string'
+        ? newFieldsOfCategoryMaterialsMaterialInfo.unitOfMeasurement
+        : newFieldsOfCategoryMaterialsMaterialInfo.unitOfMeasurement?.name;
     return unitMeasurement.name === unitMeasurementName;
   })!.uuid;
 
-  Object.entries(newMaterial).forEach(([key, value]) => {
-    if (MaterialEditableCreateColumns.includes(key)) {
+  Object.entries(newFieldsOfCategoryMaterialsMaterialInfo).forEach(([key, value]) => {
+    if (FieldOfCategoryMaterialEditableCreateColumns.includes(key)) {
       switch (key) {
-        case MaterialColumnEditableFullSchema.sourceInfo:
-          if (value !== 'Укажите источник') {
-            createMaterialDto[key] = newMaterial[key];
-          }
-          break;
-        case MaterialColumnEditableFullSchema.price:
-          createMaterialDto[key] = Number(value);
-          break;
-        case MaterialColumnEditableFullSchema.responsiblePartner:
-          createMaterialDto.responsiblePartnerUuid = newResponsiblePartnerUuid;
-          break;
-        case MaterialColumnEditableFullSchema.unitMeasurement:
-          createMaterialDto.unitMeasurementUuid = newUnitMeasurementUuid;
-          break;
-        case MaterialColumnEditableFullSchema.categoryMaterial:
-          break;
+        // case FieldOfCategoryMaterialColumnEditableFullSchema.fieldType:
+        //   createFieldOfCategoryMaterialDto[key] = newFieldsOfCategoryMaterialsMaterialInfo[key];
+        //   break;
+        // case FieldOfCategoryMaterialColumnEditableFullSchema.:
+        //   createFieldOfCategoryMaterialDto[key] = Number(value);
+        //   break;
+        // case FieldOfCategoryMaterialColumnEditableFullSchema.responsiblePartner:
+        //   createFieldOfCategoryMaterialDto.responsiblePartnerUuid = newResponsiblePartnerUuid;
+        //   break;
+        // case FieldOfCategoryMaterialColumnEditableFullSchema.:
+        //   createFieldOfCategoryMaterialDto.unitMeasurementUuid = newUnitMeasurementUuid;
+        //   break;
+        // case FieldOfCategoryMaterialColumnEditableFullSchema.categoryMaterial:
+        //   break;
         default:
-          if (key === MaterialColumnEditableFullSchema.name) {
-            createMaterialDto[key] = newMaterial.name;
-          } else if (key === MaterialColumnEditableFullSchema.namePublic) {
-            createMaterialDto[key] = newMaterial.namePublic;
-          } else if (key === MaterialColumnEditableFullSchema.comment) {
-            createMaterialDto[key] = newMaterial.comment;
+          if (key === FieldOfCategoryMaterialColumnEditableFullSchema.name) {
+            createFieldOfCategoryMaterialDto[key] = newFieldsOfCategoryMaterialsMaterialInfo.name;
+          } else if (key === FieldOfCategoryMaterialColumnEditableFullSchema.defaultValue) {
+            createFieldOfCategoryMaterialDto[key] =
+              newFieldsOfCategoryMaterialsMaterialInfo.defaultValue;
+          } else if (key === FieldOfCategoryMaterialColumnEditableFullSchema.comment) {
+            createFieldOfCategoryMaterialDto[key] =
+              newFieldsOfCategoryMaterialsMaterialInfo.comment;
+          } else if (key === FieldOfCategoryMaterialColumnEditableFullSchema.isRequired) {
+            createFieldOfCategoryMaterialDto[key] =
+              newFieldsOfCategoryMaterialsMaterialInfo.isRequired;
           }
       }
     }
   });
 
-  if (!createMaterialDto?.name) {
+  if (!createFieldOfCategoryMaterialDto?.name) {
     return 'Ошибка при отправке данных. Введите имя, цену, категорию и единицу измерения';
   }
-  const newMaterialCreated: MaterialCreateCommand.ResponseEntity | ErrorFromBackend =
-    await createMaterial(workspaceId, handbookId, newCategoryMaterialUuid, createMaterialDto);
-  if (isEntityMaterialTG(newMaterialCreated)) {
-    return newMaterialCreated;
+  const newFieldOfCategoryMaterialCreated:
+    | FieldOfCategoryMaterialCreateCommand.ResponseEntity
+    | ErrorFromBackend = await createFieldOfCategoryMaterial(
+    workspaceId,
+    handbookId,
+    createFieldOfCategoryMaterialDto
+  );
+  if (isEntityFieldOfCategoryMaterialTypeGuard(newFieldOfCategoryMaterialCreated)) {
+    return newFieldOfCategoryMaterialCreated;
   }
-  return newMaterialCreated;
+  return newFieldOfCategoryMaterialCreated;
 }

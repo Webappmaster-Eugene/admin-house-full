@@ -7,7 +7,9 @@ exports.FieldUnitMeasurementBusinessValueSchema = field_unit_measurement_1.Field
     comment: true,
     uuid: true,
     handbookUuid: true,
+    isDefault: true,
     fieldUnitMeasurementStatus: true,
     numInOrder: true,
     lastChangeByUserUuid: true,
+    updatedAt: true,
 });

@@ -7,6 +7,7 @@ export const FieldUnitMeasurementSchema = z.object({
   comment: z.string().nullable().optional(),
   numInOrder: z.number().nullable().optional(),
   fieldUnitMeasurementStatus: EActiveStatusVariants,
+  isDefault: z.boolean().default(false),
   handbookUuid: z.string().uuid(),
   lastChangeByUserUuid: z.string().uuid().nullable().optional(),
   createdAt: z.coerce.date(),

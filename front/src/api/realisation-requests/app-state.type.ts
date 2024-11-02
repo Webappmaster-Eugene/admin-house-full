@@ -7,6 +7,7 @@ import {
   FieldUnitMeasurementGetAllCommand,
   GlobalCategoryMaterialGetAllCommand,
   FieldOfCategoryMaterialGetAllCommand,
+  FieldVariantsForSelectorFieldTypeGetAllCommand,
 } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -21,6 +22,9 @@ export type AppState = {
     | ErrorFromBackend;
   allFieldsUnitMeasurementsOfHandbook:
     | FieldUnitMeasurementGetAllCommand.ResponseEntity
+    | ErrorFromBackend;
+  allFieldsVariantsOfHandbook:
+    | FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity
     | ErrorFromBackend;
   allGlobalCategories: GlobalCategoryMaterialGetAllCommand.ResponseEntity | ErrorFromBackend;
   allFieldTypes: FieldTypeGetAllCommand.ResponseEntity | ErrorFromBackend;

@@ -9,6 +9,7 @@ exports.FieldUnitMeasurementSchema = zod_1.z.object({
     comment: zod_1.z.string().nullable().optional(),
     numInOrder: zod_1.z.number().nullable().optional(),
     fieldUnitMeasurementStatus: enums_1.EActiveStatusVariants,
+    isDefault: zod_1.z.boolean().default(false),
     handbookUuid: zod_1.z.string().uuid(),
     lastChangeByUserUuid: zod_1.z.string().uuid().nullable().optional(),
     createdAt: zod_1.z.coerce.date(),

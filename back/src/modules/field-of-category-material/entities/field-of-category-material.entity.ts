@@ -1,5 +1,6 @@
 import {
   CategoryMaterial,
+  CharacteristicsMaterial,
   EActiveStatuses,
   FieldOfCategoryMaterial,
   FieldType,
@@ -9,6 +10,7 @@ import {
 } from '.prisma/client';
 
 export interface FieldOfCategoryMaterialRelatedEntities {
+  characteristicsMaterial: CharacteristicsMaterial[];
   categoriesMaterial: CategoryMaterial[];
   handbook: Handbook;
   fieldType: FieldType;
@@ -24,7 +26,6 @@ export class FieldOfCategoryMaterialEntity implements FieldOfCategoryMaterial, F
   numInOrder: number;
   fieldOfCategoryMaterialStatus: EActiveStatuses;
   uniqueNameForTemplate: string;
-  categoryMaterialUuid: string;
   fieldTypeUuid: string;
   isRequired: boolean;
   defaultValue: string | null;
@@ -36,6 +37,7 @@ export class FieldOfCategoryMaterialEntity implements FieldOfCategoryMaterial, F
   categoriesMaterial: CategoryMaterial[];
   handbook: Handbook;
   fieldType: FieldType;
+  characteristicsMaterial: CharacteristicsMaterial[];
   unitOfMeasurement: FieldUnitMeasurement;
   fieldVariantsForSelectorFieldType: FieldVariantsForSelectorFieldType[];
   categoriesMaterialsTemplatesIncludesThisField: CategoryMaterial[];

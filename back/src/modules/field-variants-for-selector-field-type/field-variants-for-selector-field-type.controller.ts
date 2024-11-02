@@ -62,7 +62,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetResponseDto)
   @Get(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+    'workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
   )
   async getByIdEP(
     @Param('fieldVariantsForSelectorFieldTypeId', ParseUUIDPipe)
@@ -161,7 +161,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeGetAllResponseDto)
   @Get(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/get-all-in-field-of-category-material',
+    'workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/get-all-in-field-of-category-material',
   )
   async getAllInFieldOfCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
@@ -196,9 +196,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   //endregion
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeCreateResponseDto)
-  @Post(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId',
-  )
+  @Post('workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId')
   async createEP(
     @Body() dto: FieldVariantsForSelectorFieldTypeCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
@@ -234,7 +232,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeUpdateResponseDto)
   @Put(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+    'workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
   )
   async updateByIdEP(
     @Param('fieldVariantsForSelectorFieldTypeId', ParseUUIDPipe)
@@ -266,7 +264,7 @@ export class FieldVariantsForSelectorFieldTypeController implements IFieldVarian
   @ZodSerializerDto(FieldVariantsForSelectorFieldTypeDeleteResponseDto)
   @UseGuards(AuthGuard, WorkspaceCreatorGuard)
   @Delete(
-    'workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
+    'workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',
   )
   async deleteByIdEP(
     @Param('fieldVariantsForSelectorFieldTypeId', ParseUUIDPipe)

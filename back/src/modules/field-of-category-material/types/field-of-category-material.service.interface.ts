@@ -30,6 +30,9 @@ export interface IFieldOfCategoryMaterialService
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     dto: FieldOfCategoryMaterialUpdateRequestDto,
   ) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>>;
+  deleteOldFieldVariantsOfFieldOfCategoryById: (
+    fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
+  ) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>>;
   deleteById: (
     fieldOfCategoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>>;

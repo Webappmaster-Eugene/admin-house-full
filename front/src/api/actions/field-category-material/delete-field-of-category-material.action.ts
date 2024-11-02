@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { FieldOfCategoryMaterialDeleteCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -27,6 +28,8 @@ export async function deleteFieldOfCategoryMaterial(
     );
 
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath('/dashboard/category-materials/');
+      revalidatePath('/dashboard/fields/');
       return response.data as FieldOfCategoryMaterialDeleteCommand.ResponseEntity;
     }
 
