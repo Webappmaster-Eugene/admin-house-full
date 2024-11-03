@@ -18,20 +18,15 @@ export const columnsInitialVisibilityModel = {
 export const columnsInitialState: GridInitialState = {
   columns: {
     dimensions: {
-      categoryMaterial: {
+      uuid: {
         maxWidth: -1,
-        minWidth: 50,
-        width: 100,
+        minWidth: 130,
+        width: 130,
       },
-      characteristicsMaterial: {
+      numInOrder: {
         maxWidth: -1,
-        minWidth: 50,
-        width: 250,
-      },
-      comment: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 190,
+        minWidth: 90,
+        width: 90,
       },
       name: {
         maxWidth: -1,
@@ -41,47 +36,49 @@ export const columnsInitialState: GridInitialState = {
         // width: undefined,
         flex: 1,
       },
-      namePublic: {
+      fieldType: {
         maxWidth: -1,
         minWidth: 170,
+      },
+      comment: {
+        maxWidth: -1,
+        minWidth: 190,
+        width: 190,
+      },
+      isRequired: {
+        maxWidth: -1,
+        minWidth: 140,
+        width: 190,
+      },
+      defaultValue: {
+        maxWidth: -1,
+        minWidth: 100,
+        width: 190,
+      },
+      unitOfMeasurement: {
+        maxWidth: -1,
+        minWidth: 100,
         width: 100,
       },
-      price: {
+      categoriesMaterial: {
         maxWidth: -1,
-        minWidth: 50,
-        width: 100,
-        // flex: 0,
+        minWidth: 190,
+        width: 190,
       },
-      priceChanges: {
+      categoriesMaterialsTemplatesIncludesThisField: {
         maxWidth: -1,
-        minWidth: 50,
-        width: 130,
-      },
-      responsiblePartner: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 110,
-        // flex: 0,
-      },
-      sourceInfo: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 150,
-      },
-      numInOrder: {
-        maxWidth: -1,
-        minWidth: 90,
-        width: 100,
-      },
-      unitMeasurement: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 100,
+        minWidth: 190,
+        width: 190,
       },
       updatedAt: {
         maxWidth: -1,
-        minWidth: 50,
+        minWidth: 150,
         width: 170,
+      },
+      characteristicsMaterial: {
+        maxWidth: -1,
+        minWidth: 10,
+        width: 10,
       },
     },
     columnVisibilityModel: columnsInitialVisibilityModel,
