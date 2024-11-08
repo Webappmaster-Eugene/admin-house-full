@@ -86,6 +86,7 @@ import {
 } from 'src/shared/no-rows-overlay/NoRowsOverlay';
 
 import { columnsInitialState } from './table-initial-state';
+import moment from 'moment';
 
 export default function FieldsOfCategoryMaterials({
   fieldsOfCategoryMaterialsInfo,
@@ -241,6 +242,8 @@ export default function FieldsOfCategoryMaterials({
           [FieldOfCategoryMaterialColumnSchema.unitOfMeasurement]:
             unitMeasurements?.find((unit) => unit.isDefault) || unitMeasurements[0],
           [FieldOfCategoryMaterialColumnSchema.categoriesMaterial]: [],
+          [FieldOfCategoryMaterialColumnSchema.updatedAt]: new Date(),
+          [FieldOfCategoryMaterialColumnSchema.characteristicsMaterial]: [],
           isNew: true,
         };
         return [newRow, ...oldRows];
@@ -535,7 +538,7 @@ export default function FieldsOfCategoryMaterials({
     {
       field: FieldOfCategoryMaterialColumnSchema.uuid,
       headerName: 'id',
-      width: 130,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.uuid?.width,
       sortable: false,
       filterable: false,
       resizable: false,
@@ -548,6 +551,7 @@ export default function FieldsOfCategoryMaterials({
       field: FieldOfCategoryMaterialColumnSchema.numInOrder,
       headerName: 'Номер п/п',
       minWidth: 90,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.numInOrder?.width,
       align: 'left',
       headerAlign: 'left',
     },
@@ -721,6 +725,40 @@ export default function FieldsOfCategoryMaterials({
         );
         return categoriesNames ? categoriesNames?.join(', ') : '';
       },
+    },
+    {
+      field: FieldOfCategoryMaterialColumnSchema.updatedAt,
+      valueGetter: (value, row) => {
+        const formattedDate = moment(row.updatedAt).locale('ru').format('DD.MM.YYYY HH:mm:ss');
+        return formattedDate;
+      },
+      headerName: 'Дата изменения',
+      minWidth: 150,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      hideable: true,
+      hideSortIcons: true,
+      sortable: false,
+    },
+    {
+      field: FieldOfCategoryMaterialColumnSchema.characteristicsMaterial,
+      valueGetter: (value, row) => {
+        const characteristicsMaterialLength = row.characteristicsMaterial.length;
+        return characteristicsMaterialLength;
+      },
+      headerName: 'Характеристики материалов',
+      minWidth: 10,
+      width:
+        fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.characteristicsMaterial
+          ?.width,
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      hideable: true,
+      hideSortIcons: true,
+      sortable: false,
     },
   ];
 

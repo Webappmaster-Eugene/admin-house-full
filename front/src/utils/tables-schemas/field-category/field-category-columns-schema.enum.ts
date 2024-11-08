@@ -11,6 +11,8 @@ export enum FieldOfCategoryMaterialColumnSchema {
   fieldTypeUuid = 'fieldTypeUuid',
   fieldVariantsForSelectorFieldType = 'fieldVariantsForSelectorFieldType',
   categoriesMaterialsTemplatesIncludesThisField = 'categoriesMaterialsTemplatesIncludesThisField',
+  updatedAt = 'updatedAt',
+  characteristicsMaterial = 'characteristicsMaterial',
 }
 
 export enum FieldOfCategoryMaterialColumnEditableFullSchema {
