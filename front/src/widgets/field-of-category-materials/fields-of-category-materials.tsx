@@ -88,6 +88,7 @@ import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-varia
 import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
 
 import { columnsInitialState } from './table-initial-state';
+import moment from 'moment';
 
 export default function FieldsOfCategoryMaterials({
   fieldsOfCategoryMaterialsInfo,
@@ -251,6 +252,8 @@ export default function FieldsOfCategoryMaterials({
             allUnitMeasurementsOfHandbook?.find((unit) => unit.isDefault)?.uuid ||
             allUnitMeasurementsOfHandbook[0]?.uuid,
           [FieldOfCategoryMaterialColumnSchema.categoriesMaterial]: [],
+          [FieldOfCategoryMaterialColumnSchema.updatedAt]: new Date(),
+          [FieldOfCategoryMaterialColumnSchema.characteristicsMaterial]: [],
           isNew: true,
         };
         return [newRow, ...oldRows];
@@ -545,7 +548,7 @@ export default function FieldsOfCategoryMaterials({
     {
       field: FieldOfCategoryMaterialColumnSchema.uuid,
       headerName: 'id',
-      width: 130,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.uuid?.width,
       sortable: false,
       filterable: false,
       resizable: false,
@@ -558,6 +561,7 @@ export default function FieldsOfCategoryMaterials({
       field: FieldOfCategoryMaterialColumnSchema.numInOrder,
       headerName: 'Номер п/п',
       minWidth: 90,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.numInOrder?.width,
       align: 'left',
       headerAlign: 'left',
     },
@@ -695,6 +699,40 @@ export default function FieldsOfCategoryMaterials({
         );
         return categoriesNames ? categoriesNames?.join(', ') : '';
       },
+    },
+    {
+      field: FieldOfCategoryMaterialColumnSchema.updatedAt,
+      valueGetter: (value, row) => {
+        const formattedDate = moment(row.updatedAt).locale('ru').format('DD.MM.YYYY HH:mm:ss');
+        return formattedDate;
+      },
+      headerName: 'Дата изменения',
+      minWidth: 150,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      hideable: true,
+      hideSortIcons: true,
+      sortable: false,
+    },
+    {
+      field: FieldOfCategoryMaterialColumnSchema.characteristicsMaterial,
+      valueGetter: (value, row) => {
+        const characteristicsMaterialLength = row.characteristicsMaterial.length;
+        return characteristicsMaterialLength;
+      },
+      headerName: 'Характеристики материалов',
+      minWidth: 10,
+      width:
+        fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.characteristicsMaterial
+          ?.width,
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      hideable: true,
+      hideSortIcons: true,
+      sortable: false,
     },
   ];
 

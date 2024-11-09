@@ -17,6 +17,8 @@ export const FieldsOfCategoryMaterialTableEntity =
     fieldTypeUuid: true,
     fieldVariantsForSelectorFieldType: true,
     categoriesMaterialsTemplatesIncludesThisField: true,
+    updatedAt: true,
+    characteristicsMaterial: true,
   }).merge(
     z.object({
       isNew: z.boolean(),
