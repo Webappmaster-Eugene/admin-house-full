@@ -87,7 +87,6 @@ export class CharacteristicsMaterialService implements ICharacteristicsMaterialS
     );
     // DOC если вновь созданная характеристика участвует при формировании имени материала, то
     // нужно сразу же поменять наименование материала
-
     const allFieldsOfCategoryMaterial = dataInternalExtractor(
       await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(categoryMaterialId),
     );

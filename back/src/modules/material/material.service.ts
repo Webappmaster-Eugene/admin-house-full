@@ -175,7 +175,6 @@ export class MaterialService implements IMaterialService {
     //console.log('updatedMaterial0' + materialId + JSON.stringify(dto));
     // инфо о категории на начальный момент
     const oldMaterialData = dataInternalExtractor(await this.getById(materialId));
-    console.log('updatedMaterial11 ' + JSON.stringify(oldMaterialData));
     // взять только обязательные поля из старой категории материала
     // const requiredFieldsOfMaterial = dataInternalExtractor(
     //   await this.fieldOfCategoryMaterialService.getAllInCategoryMaterial(oldMaterialData.categoryMaterialUuid),

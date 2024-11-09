@@ -193,7 +193,7 @@ export default function CreateCategoryForm({
         createCategoryDto
       );
 
-      if (!isErrorFieldTypeGuard(createdCategoryMaterial)) {
+      if (!isErrorFieldTypeGuard(createdCategoryMaterial) && setTableData) {
         setTableData((prevData: CategoryMaterialGetAllCommand.ResponseEntity) => [
           ...prevData,
           createdCategoryMaterial,
@@ -204,7 +204,7 @@ export default function CreateCategoryForm({
       onCloseCreateCategoryPopup();
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Новая категория не создана, произошда ошибка', error);
+      enqueueSnackbar('Новая категория не создана, произошла ошибка', error);
       throw new Error('isNewRow = false, problem with creating a new row');
     }
   });

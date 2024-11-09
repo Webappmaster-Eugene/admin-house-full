@@ -1,7 +1,4 @@
-import {
-  CategoryMaterialCreateCommand,
-  CategoryMaterialGetAllCommand,
-} from '@numart/house-admin-contracts';
+import { CategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
 import { GridRowId } from '@mui/x-data-grid';
 
@@ -11,5 +8,5 @@ export interface DataGridCellCategoryProps {
   optionsForSelect: CategoryMaterialGetAllCommand.ResponseEntity;
   id: GridRowId;
   field: string;
-  handleClickAddNewCategory: (createNewCategoryDto: CategoryMaterialCreateCommand.Request) => void;
+  handleClickAddNewCategory: () => void;
 }

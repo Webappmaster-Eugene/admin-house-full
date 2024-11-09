@@ -84,6 +84,7 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
     dto: FieldOfCategoryMaterialUpdateRequestDto,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>> {
     const oldFieldOfCategoryMaterial = dataInternalExtractor(await this.getById(fieldOfCategoryMaterialId));
+    console.log('dtodto' + JSON.stringify(dto));
     //DOC categoriesMaterialsTemplatesIncludesThisField может изменяться только со стороны категории
     //DOC так как составить шаблон можно только при изменении категории с помощью специального инпута и никак иначе
     if (dto.fieldTypeUuid && oldFieldOfCategoryMaterial.fieldType.jsType === 'array') {

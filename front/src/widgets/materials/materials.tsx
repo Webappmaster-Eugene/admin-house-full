@@ -18,10 +18,10 @@ import {
   CategoryMaterialGetCommand,
   CategoryMaterialGetAllCommand,
   MaterialUpdateCategoryCommand,
-  CategoryMaterialCreateCommand,
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementGetAllCommand,
   CharacteristicsMaterialGetCommand,
+  GlobalCategoryMaterialGetAllCommand,
   CharacteristicsMaterialGetAllCommand,
   ResponsiblePartnerProducerGetCommand,
   FieldOfCategoryMaterialGetAllCommand,
@@ -87,6 +87,7 @@ import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { columnsInitialState } from 'src/widgets/materials/table-initial-state';
 import { updateMaterial } from 'src/api/actions/material/update-material.action';
+import CreateCategoryForm from 'src/shared/popups/create-category-form/create-category-form';
 import { updateMaterialCategory } from 'src/api/actions/material/update-material-category.action';
 import {
   CustomNoRowsOverlay,
@@ -109,6 +110,7 @@ export default function Materials({
 }: MaterialsProps) {
   const settings = useSettingsContext();
   const isDialogOpen = useBoolean();
+  const isDialogCreateNewCategoryOpen = useBoolean();
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
@@ -176,6 +178,8 @@ export default function Materials({
     workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
   const allFieldVariantsOfHandbook = (workspaceInfo?.allFieldsVariantsOfHandbook ||
     []) as FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
+  const allGlobalCategories = (workspaceInfo?.allGlobalCategories ||
+    []) as GlobalCategoryMaterialGetAllCommand.ResponseEntity;
   const workspaceId = handbookInfo?.workspaceUuid;
   const handbookId = handbookInfo?.uuid;
 
@@ -207,16 +211,12 @@ export default function Materials({
     }
   };
 
-  const handleClickAddNewCategory = async (
-    createNewCategoryDto: CategoryMaterialCreateCommand.Request
-  ) => {
-    // const newField = await createFieldVariantOfFieldOfCategory(
-    //   workspaceId as string,
-    //   handbookId,
-    //   fieldOfCategoryMaterialId,
-    //   createNewCategoryDto
-    // );
-    console.log(`newField: ${newField}`);
+  const handleClickAddNewCategory = () => {
+    isDialogCreateNewCategoryOpen.onTrue();
+  };
+
+  const handleCreateCategoryPopupClose = () => {
+    isDialogCreateNewCategoryOpen.onFalse();
   };
 
   let fieldsOfCurrentCategoryToTable: GridColDef[] = [];
@@ -879,7 +879,9 @@ export default function Materials({
       headerAlign: 'left',
       minWidth: 50,
       width: materialsDataGridInitialState?.columns?.dimensions?.categoryMaterial?.width,
-      editable: true,
+      editable: !currentCategory,
+      sortable: !currentCategory,
+      filterable: !currentCategory,
       type: 'singleSelect',
       valueOptions: (params) => {
         const categoryNames =
@@ -888,7 +890,6 @@ export default function Materials({
         return categoryNames;
       },
       renderEditCell: (params) => {
-        console.log(params);
         const optionsForSelect =
           allCategoryMaterialsInHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
         const isSelect = true;
@@ -1031,7 +1032,12 @@ export default function Materials({
       <Container maxWidth="xl">
         {materialsDataGridInitialState ? (
           <>
-            <Typography variant="h4"> Справочник материалов</Typography>
+            <Typography variant="h4">
+              {!currentCategory
+                ? 'Справочник материалов'
+                : `Справочник материалов из категории ${currentCategory?.name}`}
+            </Typography>
+
             <CustomBreadcrumbs
               // heading="Carousel"
               sx={{
@@ -1214,6 +1220,14 @@ export default function Materials({
             DeleteMaterialDialogTexts.textDialog,
             rowSelectionModel[0] as string
           )}
+        />
+      )}
+      {workspaceInfo && (
+        <CreateCategoryForm
+          isOpenCreateCategoryPopup={isDialogCreateNewCategoryOpen.value}
+          allGlobalCategories={allGlobalCategories}
+          onCloseCreateCategoryPopup={handleCreateCategoryPopupClose}
+          allFields={allFieldsOfCategoryMaterialInHandbook}
         />
       )}
     </>

@@ -1180,7 +1180,7 @@ async function main() {
       categoriesMaterial: {
         connect: [{ uuid: CATEGORY_MATERIAL_3.uuid }],
       },
-      fieldTypeUuid: FIELD_TYPE_1.uuid,
+      fieldTypeUuid: FIELD_TYPE_2.uuid,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
     },
   });
@@ -1873,33 +1873,36 @@ async function main() {
     },
   });
 
-  const MATERIAL_UNIT_3 = await prisma?.material?.create({
+  // DOC материалы метизы для просмотра - как быть, если не заполнены характеристики для материалов
+  const MATERIAL_UNIT_METIZ2 = await prisma?.material?.create({
     data: {
-      name: 'Простой материал 1',
-      comment: 'Только что добавленный 1',
-      price: 99999999999999,
-      namePublic: 'Тест1',
+      name: 'Метиз2 частично',
+      comment: 'Метиз2 заполненный',
+      price: 24342,
+      namePublic: 'Метиз2',
       numInOrder: 4,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
-      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
-      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_2.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_1.uuid,
     },
   });
 
-  const MATERIAL_UNIT_4 = await prisma?.material?.create({
+  const MATERIAL_UNIT_METIZ3 = await prisma?.material?.create({
     data: {
-      name: 'Простой материал 2',
-      comment: 'Только что добавленный 2',
-      price: 1,
-      namePublic: 'Тест2',
+      name: 'Метиз3 не заполнен',
+      comment: 'Метиз3 не заполненный вообще',
+      price: 123,
+      namePublic: 'Метиз3',
       numInOrder: 5,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
-      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_1.uuid,
     },
   });
 
+  // DOC материалы пустышки из общей категории - для проверки функции удаления
   const MATERIAL_UNIT_101 = await prisma?.material?.create({
     data: {
       name: 'Простой материал 101',
@@ -1908,7 +1911,7 @@ async function main() {
       namePublic: 'Тест101',
       numInOrder: 6,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
       unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
     },
   });
@@ -1921,7 +1924,7 @@ async function main() {
       namePublic: 'Тест102',
       numInOrder: 7,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
       unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
     },
   });
@@ -1947,7 +1950,7 @@ async function main() {
       namePublic: 'Тест104',
       numInOrder: 9,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      categoryMaterialUuid: CATEGORY_MATERIAL_3.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
       unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
     },
   });
@@ -1965,6 +1968,7 @@ async function main() {
     },
   });
 
+  // DOC материалы окна из категории ОКНА - с различными характеристиками и заполненными свойствами. Нужны для проверки ихменений, смены категории, изменения полей категории
   const MATERIAL_UNIT_106 = await prisma?.material?.create({
     data: {
       name: 'Окно1',
@@ -2014,6 +2018,63 @@ async function main() {
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       categoryMaterialUuid: CATEGORY_MATERIAL_011.uuid,
       unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+    },
+  });
+
+  //DOC еще материалы из общей категории для массовости
+  const MATERIAL_UNIT_110 = await prisma?.material?.create({
+    data: {
+      name: 'Простой материал 1',
+      comment: 'Только что добавленный 1',
+      price: 99999999999999,
+      namePublic: 'Тест1',
+      numInOrder: 15,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_2.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_111 = await prisma?.material?.create({
+    data: {
+      name: 'Простой материал 2',
+      comment: 'Только что добавленный 2',
+      price: 1,
+      namePublic: 'Тест2',
+      numInOrder: 16,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_6.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_16.uuid,
+    },
+  });
+
+  // DOC материалы листовые для теста шаблонного наименования
+  const MATERIAL_UNIT_LISTOVOI1 = await prisma?.material?.create({
+    data: {
+      name: 'Листовой1 частично',
+      comment: 'Листовой1 частично заполненный',
+      price: 24342345,
+      namePublic: 'Листовой1',
+      numInOrder: 17,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
+    },
+  });
+
+  const MATERIAL_UNIT_LISTOVOI2 = await prisma?.material?.create({
+    data: {
+      name: 'Листовой2 частично',
+      comment: 'Листовой2 частично заполненный',
+      price: 11111,
+      namePublic: 'Листовой2',
+      numInOrder: 17,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      categoryMaterialUuid: CATEGORY_MATERIAL_0.uuid,
+      unitMeasurementUuid: FIELD_UNIT_MEASUREMENT_10.uuid,
+      responsiblePartnerUuid: RESPONSIBLE_PARTNER_PRODUCER_3.uuid,
     },
   });
   //endregion
@@ -2083,10 +2144,20 @@ async function main() {
     },
   });
 
+  const CHARACTERISTICS_MATERIAL_OF_METIZ2 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      materialUuid: MATERIAL_UNIT_METIZ2.uuid,
+      numInOrder: 7,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_2.value,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_2.uuid,
+    },
+  });
+
   const CHARACTERISTICS_MATERIAL_OF_FANERA_0 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
-      numInOrder: 7,
+      numInOrder: 8,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_4.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_3.uuid,
@@ -2096,7 +2167,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_1 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
-      numInOrder: 8,
+      numInOrder: 9,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_4.uuid,
@@ -2106,7 +2177,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_2 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
-      numInOrder: 9,
+      numInOrder: 10,
       value: '18',
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
@@ -2117,7 +2188,7 @@ async function main() {
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
       value: '1220',
-      numInOrder: 10,
+      numInOrder: 11,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
     },
@@ -2127,7 +2198,7 @@ async function main() {
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
       value: '2440',
-      numInOrder: 11,
+      numInOrder: 12,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_1.uuid,
     },
@@ -2136,7 +2207,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_5 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
-      numInOrder: 12,
+      numInOrder: 13,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_8.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_8.uuid,
@@ -2146,7 +2217,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_FANERA_6 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_1.uuid,
-      numInOrder: 13,
+      numInOrder: 14,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_13.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_9.uuid,
@@ -2156,7 +2227,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_WINDOW1_1 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_106.uuid,
-      numInOrder: 14,
+      numInOrder: 15,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_19.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
@@ -2166,7 +2237,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_WINDOW1_2 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_107.uuid,
-      numInOrder: 15,
+      numInOrder: 16,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_20.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
@@ -2176,7 +2247,7 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_WINDOW1_3 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_108.uuid,
-      numInOrder: 16,
+      numInOrder: 17,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_21.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
@@ -2186,10 +2257,50 @@ async function main() {
   const CHARACTERISTICS_MATERIAL_OF_WINDOW1_4 = await prisma?.characteristicsMaterial?.create({
     data: {
       materialUuid: MATERIAL_UNIT_109.uuid,
-      numInOrder: 17,
+      numInOrder: 18,
       value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_22.value,
       handbookUuid: MANAGER_HANDBOOK_1.uuid,
       fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_11.uuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_LISTOVOI1_1 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      materialUuid: MATERIAL_UNIT_LISTOVOI1.uuid,
+      numInOrder: 19,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7.value,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_4.uuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_LISTOVOI2_1 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      materialUuid: MATERIAL_UNIT_LISTOVOI2.uuid,
+      numInOrder: 20,
+      value: FIELD_VARIANTS_FOR_SELECTOR_FIELD_TYPE_7.value,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_4.uuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_LISTOVOI2_2 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      materialUuid: MATERIAL_UNIT_LISTOVOI2.uuid,
+      numInOrder: 21,
+      value: '231',
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_5.uuid,
+    },
+  });
+
+  const CHARACTERISTICS_MATERIAL_OF_LISTOVOI2_3 = await prisma?.characteristicsMaterial?.create({
+    data: {
+      materialUuid: MATERIAL_UNIT_LISTOVOI2.uuid,
+      value: '2323',
+      numInOrder: 22,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      fieldOfCategoryMaterialUuid: FIELD_OF_CATEGORY_MATERIAL_6.uuid,
     },
   });
   //endregion
@@ -2411,6 +2522,9 @@ async function main() {
   // region UPDATED_MATERIAL
   const newNameGluhar = await templateNameMapper(prisma, MATERIAL_UNIT_0);
   const newNameFanera = await templateNameMapper(prisma, MATERIAL_UNIT_1);
+  const newNameMetiz2 = await templateNameMapper(prisma, MATERIAL_UNIT_METIZ2);
+  const newNameListovoi1 = await templateNameMapper(prisma, MATERIAL_UNIT_LISTOVOI1);
+  const newNameListovoi2 = await templateNameMapper(prisma, MATERIAL_UNIT_LISTOVOI2);
 
   const newNameWindow1 = await templateNameMapper(prisma, MATERIAL_UNIT_106);
   const newNameWindow2 = await templateNameMapper(prisma, MATERIAL_UNIT_107);
@@ -2432,6 +2546,15 @@ async function main() {
     },
     data: {
       name: newNameFanera,
+    },
+  });
+
+  const UPDATED_MATERIAL_METIZ2 = await prisma?.material?.update({
+    where: {
+      uuid: MATERIAL_UNIT_METIZ2.uuid,
+    },
+    data: {
+      name: newNameMetiz2,
     },
   });
 
@@ -2468,6 +2591,24 @@ async function main() {
     },
     data: {
       name: newNameWindow4,
+    },
+  });
+
+  const UPDATED_MATERIAL_LISTOVOI1 = await prisma?.material?.update({
+    where: {
+      uuid: MATERIAL_UNIT_LISTOVOI1.uuid,
+    },
+    data: {
+      name: newNameListovoi1,
+    },
+  });
+
+  const UPDATED_MATERIAL_LISTOVOI2 = await prisma?.material?.update({
+    where: {
+      uuid: MATERIAL_UNIT_LISTOVOI2.uuid,
+    },
+    data: {
+      name: newNameListovoi2,
     },
   });
   //endregion

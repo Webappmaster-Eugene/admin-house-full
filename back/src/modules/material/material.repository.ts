@@ -25,7 +25,6 @@ export class MaterialRepository implements IMaterialRepository {
 
   async getById(materialId: EntityUrlParamCommand.RequestUuidParam): Promise<MaterialEntity> {
     try {
-      //console.log('updatedMaterial6' + materialId);
       const findedMaterial = await this.databaseService.material.findUnique({
         where: {
           uuid: materialId,

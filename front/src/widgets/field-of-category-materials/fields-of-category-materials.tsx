@@ -1,5 +1,6 @@
 'use client';
 
+import moment from 'moment';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
 import { deepEqualAndIn } from '@/utils/helpers/deep-equal-and-in';
@@ -29,7 +30,6 @@ import {
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementGetAllCommand,
-  FieldOfCategoryMaterialGetCommand,
   FieldOfCategoryMaterialUpdateCommand,
   FieldOfCategoryMaterialCreateCommand,
   FieldVariantsForSelectorFieldTypeGetCommand,
@@ -88,7 +88,6 @@ import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-varia
 import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
 
 import { columnsInitialState } from './table-initial-state';
-import moment from 'moment';
 
 export default function FieldsOfCategoryMaterials({
   fieldsOfCategoryMaterialsInfo,
@@ -146,9 +145,6 @@ export default function FieldsOfCategoryMaterials({
     setFieldsOfCategoryMaterialsMaterialsDataGridInitialState,
   ] = useState<GridInitialState>();
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-
-  const [fieldOfCategoryToChangeFieldVariants, setFieldOfCategoryToChangeFieldVariants] =
-    useState<FieldOfCategoryMaterialGetCommand.ResponseEntity>();
 
   const saveFieldsOfCategoryMaterialsDataGridState = useCallback(() => {
     if (apiRef?.current?.exportState && localStorage) {
@@ -701,14 +697,16 @@ export default function FieldsOfCategoryMaterials({
       },
     },
     {
-      field: FieldOfCategoryMaterialColumnSchema.updatedAt,
+      field: FieldOfCategoryMaterialColumnSchema.characteristicsMaterial,
       valueGetter: (value, row) => {
-        const formattedDate = moment(row.updatedAt).locale('ru').format('DD.MM.YYYY HH:mm:ss');
-        return formattedDate;
+        const characteristicsMaterialLength = row.characteristicsMaterial.length;
+        return characteristicsMaterialLength;
       },
-      headerName: 'Дата изменения',
-      minWidth: 150,
-      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
+      headerName: 'Количество привязанных характеристик',
+      minWidth: 210,
+      width:
+        fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.characteristicsMaterial
+          ?.width,
       align: 'left',
       headerAlign: 'left',
       editable: false,
@@ -717,16 +715,14 @@ export default function FieldsOfCategoryMaterials({
       sortable: false,
     },
     {
-      field: FieldOfCategoryMaterialColumnSchema.characteristicsMaterial,
+      field: FieldOfCategoryMaterialColumnSchema.updatedAt,
       valueGetter: (value, row) => {
-        const characteristicsMaterialLength = row.characteristicsMaterial.length;
-        return characteristicsMaterialLength;
+        const formattedDate = moment(row.updatedAt).locale('ru').format('DD.MM.YYYY HH:mm:ss');
+        return formattedDate;
       },
-      headerName: 'Характеристики материалов',
-      minWidth: 10,
-      width:
-        fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.characteristicsMaterial
-          ?.width,
+      headerName: 'Дата изменения',
+      minWidth: 150,
+      width: fieldsOfCategoryMaterialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
       align: 'left',
       headerAlign: 'left',
       editable: false,

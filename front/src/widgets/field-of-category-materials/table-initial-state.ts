@@ -13,6 +13,8 @@ export const columnsInitialVisibilityModel = {
   fieldType: true,
   fieldVariantsForSelectorFieldType: false,
   categoriesMaterialsTemplatesIncludesThisField: false,
+  characteristicsMaterial: false,
+  updatedAt: false,
 };
 
 export const columnsInitialState: GridInitialState = {
@@ -77,8 +79,8 @@ export const columnsInitialState: GridInitialState = {
       },
       characteristicsMaterial: {
         maxWidth: -1,
-        minWidth: 10,
-        width: 10,
+        minWidth: 210,
+        width: 230,
       },
     },
     columnVisibilityModel: columnsInitialVisibilityModel,

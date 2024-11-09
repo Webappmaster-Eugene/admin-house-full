@@ -9,5 +9,5 @@ export type CreateCategoryProps = {
   onCloseCreateCategoryPopup: VoidFunction;
   allFields: FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
   allGlobalCategories: GlobalCategoryMaterialGetAllCommand.ResponseEntity;
-  setTableData: (data: (prevData: CategoryMaterialGetAllCommand.ResponseEntity) => any[]) => void;
+  setTableData?: (data: (prevData: CategoryMaterialGetAllCommand.ResponseEntity) => any[]) => void;
 };

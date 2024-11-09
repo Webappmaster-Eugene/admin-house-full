@@ -95,8 +95,6 @@ export class MaterialController implements IMaterialController {
   async getAllEP(@UrlParams() urlParams: IUrlParams, @QueryParams() queryParams?: IQueryParams): Promise<MaterialGetAllResponseDto> {
     try {
       const { ok, data } = await this.materialService.getAll(queryParams);
-
-      console.log(data);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.MATERIAL, urlParams);

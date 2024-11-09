@@ -249,7 +249,7 @@ export class FieldOfCategoryMaterialRepository implements IFieldOfCategoryMateri
           unitOfMeasurementUuid,
           fieldOfCategoryMaterialStatus,
           fieldTypeUuid,
-          categoriesMaterial: {
+          categoriesMaterial: categoriesMaterial && {
             disconnect: oldCategoriesOfFieldOfCategoryMaterial.categoriesMaterial?.map(categoryMaterial => ({
               uuid: categoryMaterial.uuid,
             })),
