@@ -54,15 +54,22 @@ export default function EditCategoryForm({
 
   const tagsAll = allFields?.map((field) => field.name);
 
-  const allRequiredFieldsOfCategoryInWorkspace =
-    currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
-      (field) => field.isRequired
-    ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+  const allRequiredFieldsOfCurrentCategory = currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
+    (field) => field.isRequired
+  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
 
-  const allNotRequiredFieldsOfCategoryInWorkspace =
+  const allRequiredFieldsOfHandbook = currentHandbookInfo?.fieldsOfCategoryMaterials?.filter(
+    (fieldOfCategory) => fieldOfCategory.isRequired
+  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+
+  const allNotRequiredFieldsOfCurrentCategory =
     currentCategoryInfo?.fieldsOfCategoryMaterials?.filter(
       (field) => !field.isRequired
     ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+
+  const allNotRequiredFieldsOfHandbook = currentHandbookInfo?.fieldsOfCategoryMaterials?.filter(
+    (fieldOfCategory) => !fieldOfCategory.isRequired
+  ) as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
 
   const tagsForInput = categoryTemplateNameToTagsParser(
     currentCategoryInfo?.templateName,
@@ -91,8 +98,8 @@ export default function EditCategoryForm({
       categoryMaterialStatus: currentCategoryInfo?.categoryMaterialStatus || 'ACTIVE',
       numInOrder: currentCategoryInfo?.numInOrder as number,
       tagsTemplate: tagsForInput,
-      requiredFieldsInCategory: allRequiredFieldsOfCategoryInWorkspace,
-      notRequiredFieldsInCategory: allNotRequiredFieldsOfCategoryInWorkspace,
+      requiredFieldsInCategory: allRequiredFieldsOfCurrentCategory,
+      notRequiredFieldsInCategory: allNotRequiredFieldsOfCurrentCategory,
       globalCategoryMaterialName: currentCategoryInfo?.globalCategoryMaterial?.name || '',
     }),
     [tagsForInput, currentCategoryInfo]
@@ -338,7 +345,7 @@ export default function EditCategoryForm({
                   type="required"
                   disabled={currentCategoryInfo.isDefault}
                   name="requiredFieldsInCategory"
-                  options={allRequiredFieldsOfCategoryInWorkspace}
+                  options={allRequiredFieldsOfHandbook}
                   tagsInTemplate={values.tagsTemplate as string[]}
                   defValue={
                     currentCategoryInfo?.fieldsOfCategoryMaterials
@@ -353,7 +360,7 @@ export default function EditCategoryForm({
                   type="not-required"
                   disabled={currentCategoryInfo.isDefault}
                   name="notRequiredFieldsInCategory"
-                  options={allNotRequiredFieldsOfCategoryInWorkspace}
+                  options={allNotRequiredFieldsOfHandbook}
                   tagsInTemplate={values.tagsTemplate as string[]}
                   defValue={
                     currentCategoryInfo?.fieldsOfCategoryMaterials

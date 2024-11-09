@@ -15,18 +15,18 @@ import { NavListProps, NavSubListProps } from '../types';
 
 export default function NavList({ data, depth, slotProps }: NavListProps) {
   const navRef = useRef<HTMLDivElement | null>(null);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [hasChildren, setHasChildren] = useState(!!data.children);
 
   const pathname = usePathname();
 
-  const active = useActiveLink(data.path, !!data.children);
+  const active = useActiveLink(data.path, hasChildren);
 
-  const [openMenu, setOpenMenu] = useState(false);
-
-  const handleOpenMenu = useCallback(() => {
+  const handleOpenMenu = () => {
     if (data.children) {
       setOpenMenu(true);
     }
-  }, [data.children]);
+  };
 
   const handleCloseMenu = useCallback(() => {
     setOpenMenu(false);
@@ -35,6 +35,10 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
   useEffect(() => {
     handleCloseMenu();
   }, [handleCloseMenu, pathname]);
+
+  useEffect(() => {
+    setHasChildren(!!data.children);
+  }, [data.children]);
 
   return (
     <>
@@ -54,7 +58,7 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         disabled={data.disabled}
         //
         depth={depth}
-        hasChild={!!data.children}
+        hasChild={hasChildren}
         externalLink={data?.path?.includes('http')}
         currentRole={slotProps?.currentRole}
         //
@@ -63,7 +67,7 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         sx={depth === 1 ? slotProps?.rootItem : slotProps?.subItem}
       />
 
-      {!!data.children && (
+      {hasChildren && (
         <Popover
           disableScrollLock
           open={openMenu}
@@ -87,7 +91,7 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
             pointerEvents: 'none',
           }}
         >
-          <NavSubList data={data.children} depth={depth} slotProps={slotProps} />
+          {hasChildren && <NavSubList data={data.children} depth={depth} slotProps={slotProps} />}
         </Popover>
       )}
     </>

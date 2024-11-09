@@ -96,6 +96,8 @@ export const axiosEndpoints = {
       'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId',
     update:
       'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
+    change_category:
+      'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/change-category',
     delete:
       'material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId',
   },
@@ -108,7 +110,7 @@ export const axiosEndpoints = {
     get_all_in_material:
       'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/get-all-in-material',
     create:
-      'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/related-field-category-material/:fieldCategoryMaterialId',
+      'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/related-to-field-category-material/:fieldCategoryMaterialId',
     update:
       'characteristics-material/workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/material/:materialId/characteristic-material/:characteristicsMaterialId',
     delete:

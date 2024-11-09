@@ -66,8 +66,6 @@ export default function CategoryMaterials({
   const table = useTable({ defaultRowsPerPage: 10 });
 
   const isDeletingManyCategoriesPopupOpened = useBoolean();
-  const isDeletingOneCategoryPopupOpenedTable = useBoolean();
-  const isDeletingOneCategoryPopupOpenedGrid = useBoolean();
 
   const isCreatingNewCategoryPopupOpened = useBoolean();
 
@@ -103,6 +101,16 @@ export default function CategoryMaterials({
     if (newView !== null) {
       setView(newView);
     }
+  };
+
+  const handleChangingCategoryPopupClose = () => {
+    setCategoryToChange(undefined);
+    isChangingCategoryPopupOpened.onFalse();
+  };
+
+  const handleCreateCategoryPopupClose = () => {
+    setCategoryToChange(undefined);
+    isCreatingNewCategoryPopupOpened.onFalse();
   };
 
   const handleChangeCategory = (
@@ -311,7 +319,7 @@ export default function CategoryMaterials({
           allGlobalCategories={allGlobalCategories}
           currentCategoryInfo={categoryToChange as CategoryMaterialGetCommand.ResponseEntity}
           isOpenEditCategoryForm={isChangingCategoryPopupOpened.value}
-          onCloseEditCategoryForm={isChangingCategoryPopupOpened.onFalse}
+          onCloseEditCategoryForm={handleChangingCategoryPopupClose}
           setTableData={setTableData}
         />
       )}
@@ -320,7 +328,7 @@ export default function CategoryMaterials({
         <CreateCategoryForm
           isOpenCreateCategoryPopup={isCreatingNewCategoryPopupOpened.value}
           allGlobalCategories={allGlobalCategories}
-          onCloseCreateCategoryPopup={isCreatingNewCategoryPopupOpened.onFalse}
+          onCloseCreateCategoryPopup={handleCreateCategoryPopupClose}
           allFields={allFields}
           setTableData={setTableData}
         />

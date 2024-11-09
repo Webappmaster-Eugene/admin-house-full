@@ -1,11 +1,13 @@
-import { ResponsiblePartnerProducerGetAllCommand } from '@numart/house-admin-contracts';
 import { isEntityMaterialTypeGuard } from '@/utils/type-guards/is-entity-material.type-guard';
+import {
+  MaterialUpdateCommand,
+  ResponsiblePartnerProducerGetAllCommand,
+} from '@numart/house-admin-contracts';
 
-import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { updateMaterial } from 'src/api/actions/material/update-material.action';
 
 export async function materialUpdateHandler(
-  updatedMaterialInfo: TMaterialTableEntity,
+  updatedMaterialInfo: MaterialUpdateCommand.Request,
   workspaceId: string,
   handbookId: string,
   categoryMaterialId: string,

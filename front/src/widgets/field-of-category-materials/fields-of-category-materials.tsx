@@ -14,7 +14,6 @@ import { FieldTypeToChange } from '@/widgets/field-of-category-materials/field-t
 import { CellValueBeforeEdit } from '@/widgets/field-of-category-materials/cell-value-before-edit.type';
 import { FieldOfCategoryMaterialEditableColumns } from '@/widgets/field-of-category-materials/editable-columns';
 import { FieldOfCategoryMaterialRequiredCreateColumns } from '@/widgets/field-of-category-materials/required-columns';
-import FormVariantsChangingDialog from '@/shared/dialogs/form-variants-changing-dialog/form-variants-changing-dialog';
 import { FieldsOfCategoryMaterialsProps } from '@/widgets/field-of-category-materials/field-of-category-material.props';
 import { NewFieldOfCategoryMaterialId } from '@/widgets/field-of-category-materials/new-field-of-category-material-id.const';
 import { TFieldsOfCategoryMaterialTableEntity } from '@/widgets/field-of-category-materials/field-of-category-material.entity';
@@ -30,20 +29,20 @@ import {
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementGetAllCommand,
+  FieldOfCategoryMaterialGetCommand,
   FieldOfCategoryMaterialUpdateCommand,
   FieldOfCategoryMaterialCreateCommand,
   FieldVariantsForSelectorFieldTypeGetCommand,
   FieldVariantsForSelectorFieldTypeGetAllCommand,
+  FieldVariantsForSelectorFieldTypeCreateCommand,
 } from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 // import BlockIcon from '@mui/icons-material/Block';
-import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import { ruRU } from '@mui/x-data-grid/locales';
-import TextField from '@mui/material/TextField';
 import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import BlockIcon from '@mui/icons-material/Block';
@@ -84,6 +83,9 @@ import {
   CustomNoRowsOverlay,
   CustomNoResultsOverlay,
 } from 'src/shared/no-rows-overlay/NoRowsOverlay';
+import { createFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/create-field-variant-in-field-of-category-material.action';
+import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/delete-field-variant-in-field-of-category-material.action';
+import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
 
 import { columnsInitialState } from './table-initial-state';
 
@@ -102,8 +104,6 @@ export default function FieldsOfCategoryMaterials({
   const [fieldVariantsOfCurrentFieldOfCategory, setFieldVariantsOfCurrentFieldOfCategory] =
     useState<FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity>([]);
 
-  console.log(fieldsOfCategoryMaterialsInfo);
-
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
     page: 0,
@@ -120,8 +120,19 @@ export default function FieldsOfCategoryMaterials({
   const [isCreateRowMode, setIsCreateRowMode] = useState<boolean>(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const { workspaceInfo } = useWorkspaceInfoStore();
-  const allFieldVariantsInHandbook = (workspaceInfo?.allFieldsVariantsOfHandbook ||
+  const fullWorkspaceInfo =
+    workspaceInfo?.currentWorkspaceInfo as WorkspaceGetCommand.ResponseEntity;
+  const fullHandbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+  const allCategoryMaterialsOfHandbook =
+    workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
+  const allUnitMeasurementsOfHandbook =
+    workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
+  const allTypesOfFieldOfHandbook =
+    workspaceInfo?.allFieldTypes as FieldTypeGetAllCommand.ResponseEntity;
+  const allFieldVariantsOfHandbook = (workspaceInfo?.allFieldsVariantsOfHandbook ||
     []) as FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
+  const workspaceId = fullWorkspaceInfo?.uuid;
+  const handbookId = fullHandbookInfo?.uuid;
 
   const apiRef = useGridApiRef();
   const [gridStateBeforeCreate, setGridStateBeforeCreate] = useState<GridState>(
@@ -133,8 +144,10 @@ export default function FieldsOfCategoryMaterials({
     fieldsOfCategoryMaterialsDataGridInitialState,
     setFieldsOfCategoryMaterialsMaterialsDataGridInitialState,
   ] = useState<GridInitialState>();
-
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
+
+  const [fieldOfCategoryToChangeFieldVariants, setFieldOfCategoryToChangeFieldVariants] =
+    useState<FieldOfCategoryMaterialGetCommand.ResponseEntity>();
 
   const saveFieldsOfCategoryMaterialsDataGridState = useCallback(() => {
     if (apiRef?.current?.exportState && localStorage) {
@@ -214,13 +227,6 @@ export default function FieldsOfCategoryMaterials({
 
   const editToolbar = () => {
     const handleClickAddFieldOfCategoryMaterial = () => {
-      const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-      const categoryMaterials =
-        workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-      const unitMeasurements =
-        workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
-      const allTypesOfField = workspaceInfo?.allFieldTypes as FieldTypeGetAllCommand.ResponseEntity;
-
       addRequiredColumnsToTable(FieldOfCategoryMaterialRequiredCreateColumns);
 
       setRows((oldRows) => {
@@ -230,16 +236,20 @@ export default function FieldsOfCategoryMaterials({
           [FieldOfCategoryMaterialColumnSchema.name]: 'Наименование поля',
           [FieldOfCategoryMaterialColumnSchema.comment]: 'Описание поля',
           [FieldOfCategoryMaterialColumnSchema.fieldType]:
-            allTypesOfField.find((typeOfField) => typeOfField.jsType === 'string') ||
-            allTypesOfField[0],
+            allTypesOfFieldOfHandbook.find((typeOfField) => typeOfField.jsType === 'string') ||
+            allTypesOfFieldOfHandbook[0],
           [FieldOfCategoryMaterialColumnSchema.fieldVariantsForSelectorFieldType]: [],
           [FieldOfCategoryMaterialColumnSchema.fieldTypeUuid]:
-            allTypesOfField.find((typeOfField) => typeOfField.jsType === 'string')?.uuid ||
-            allTypesOfField[0]?.uuid,
+            allTypesOfFieldOfHandbook.find((typeOfField) => typeOfField.jsType === 'string')
+              ?.uuid || allTypesOfFieldOfHandbook[0]?.uuid,
           [FieldOfCategoryMaterialColumnSchema.defaultValue]: '',
           [FieldOfCategoryMaterialColumnSchema.isRequired]: true,
           [FieldOfCategoryMaterialColumnSchema.unitOfMeasurement]:
-            unitMeasurements?.find((unit) => unit.isDefault) || unitMeasurements[0],
+            allUnitMeasurementsOfHandbook?.find((unit) => unit.isDefault) ||
+            allUnitMeasurementsOfHandbook[0],
+          [FieldOfCategoryMaterialColumnSchema.unitOfMeasurementUuid]:
+            allUnitMeasurementsOfHandbook?.find((unit) => unit.isDefault)?.uuid ||
+            allUnitMeasurementsOfHandbook[0]?.uuid,
           [FieldOfCategoryMaterialColumnSchema.categoriesMaterial]: [],
           isNew: true,
         };
@@ -392,13 +402,12 @@ export default function FieldsOfCategoryMaterials({
     if (editedRow?.isNew) {
       setRows(rows.filter((row) => row.uuid !== id));
     }
-
     setIsCreateRowMode((prevValue) => !prevValue);
   };
 
-  const handleClickAddNewVariantForDefaultValueForVariantsOfFieldOfCategoryMaterials = () => {
-    isChangingFieldVariantsForFieldOfCategoryDialogOpen.onTrue();
-  };
+  // const handleClickAddNewVariantForDefaultValueForVariantsOfFieldOfCategoryMaterials = () => {
+  //   isChangingFieldVariantsForFieldOfCategoryDialogOpen.onTrue();
+  // };
 
   // const handleCellEdit = async (
   //   rowCurrentState: GridValidRowModel,
@@ -435,14 +444,10 @@ export default function FieldsOfCategoryMaterials({
 
   const handleCellEditStop = async (params: GridCellEditStopParams, event: MuiEvent) => {
     const rowCurrentState = apiRef.current.getRowWithUpdatedValues(params.id, params.field);
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    const currentWorkspaceInfo =
-      workspaceInfo?.currentWorkspaceInfo as WorkspaceGetCommand.ResponseEntity;
-    const workspaceId = currentWorkspaceInfo.uuid;
-    const handbookId = handbookInfo.uuid;
-    const allFieldTypes = workspaceInfo?.allFieldTypes as FieldTypeGetAllCommand.ResponseEntity;
 
-    if (params.field === 'fieldType') {
+    let updateFieldOfCategoryDto: FieldOfCategoryMaterialUpdateCommand.Request;
+
+    if (params.field === FieldOfCategoryMaterialColumnSchema.fieldType) {
       const oldFieldOfCategory = fieldsOfCategoryMaterialsInfo.find(
         (row) => row.uuid === params.id
       );
@@ -457,27 +462,37 @@ export default function FieldsOfCategoryMaterials({
           oldFieldTypeName,
           newFieldTypeName,
           workspaceFullInfo: {
-            allFieldTypes,
+            allFieldTypes: allTypesOfFieldOfHandbook,
             workspaceId,
             handbookId,
           },
         });
         isChangeTypeFieldOfCategoryDialogOpen.onTrue();
       }
-    } else if (params.field === 'defaultValue' && params.value === '') {
+    } else if (
+      params.field === FieldOfCategoryMaterialColumnSchema.defaultValue &&
+      params.value === ''
+    ) {
       isChangingFieldVariantsForFieldOfCategoryDialogOpen.onTrue();
+      // setFieldOfCategoryToChangeFieldVariants();
+    } else if (params.field === FieldOfCategoryMaterialColumnSchema.unitOfMeasurement) {
+      const newUnitMeasurementId = allUnitMeasurementsOfHandbook?.find(
+        (unitMeasurement) => unitMeasurement.name === rowCurrentState[params.field]
+      )?.uuid as string;
+      updateFieldOfCategoryDto = { unitOfMeasurementUuid: newUnitMeasurementId };
     } else {
-      const updateFieldOfCategoryDto: Partial<TFieldsOfCategoryMaterialTableEntity> = {
+      updateFieldOfCategoryDto = {
         [params.field]: rowCurrentState[params.field],
       };
 
       const updatedRow = (await fieldsOfCategoryMaterialsUpdateHandler(
-        updateFieldOfCategoryDto as TFieldsOfCategoryMaterialTableEntity,
+        updateFieldOfCategoryDto as FieldOfCategoryMaterialUpdateCommand.Request,
         workspaceId as string,
         handbookId,
-        params.row.uuid,
-        allFieldTypes
+        params.row?.uuid,
+        allTypesOfFieldOfHandbook
       )) as FieldOfCategoryMaterialUpdateCommand.ResponseEntity;
+      console.log(updatedRow);
 
       setValueOfDefaultValueForSelect('');
 
@@ -496,18 +511,13 @@ export default function FieldsOfCategoryMaterials({
     const isNewRow = apiRef.current.getRow(id)?.isNew;
     let finalRow: FieldOfCategoryMaterialCreateCommand.ResponseEntity;
 
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    const unitMeasurements =
-      workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
-    const workspaceId = handbookInfo.workspaceUuid;
-    const handbookId = handbookInfo.uuid;
     if (isNewRow) {
       const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
       finalRow = (await fieldOfCategoryMaterialCreateHandler(
         newRowLocally as TFieldsOfCategoryMaterialTableEntity,
         workspaceId as string,
         handbookId,
-        unitMeasurements
+        allUnitMeasurementsOfHandbook
       )) as FieldOfCategoryMaterialCreateCommand.ResponseEntity;
     } else {
       throw new Error('isNewRow = false, problem with creating a new row');
@@ -574,8 +584,8 @@ export default function FieldsOfCategoryMaterials({
       editable: true,
       type: 'singleSelect',
       valueOptions: (params) => {
-        const fieldTypes = workspaceInfo?.allFieldTypes as FieldTypeGetAllCommand.ResponseEntity;
-        const fieldTypeNames = fieldTypes && fieldTypes.map((elem) => elem.name);
+        const fieldTypeNames =
+          allTypesOfFieldOfHandbook && allTypesOfFieldOfHandbook.map((elem) => elem.name);
         return fieldTypeNames;
       },
       valueGetter: (value: FieldTypeGetCommand.ResponseEntity, row) =>
@@ -613,54 +623,20 @@ export default function FieldsOfCategoryMaterials({
         const isSelect = params.row?.fieldType?.jsType === 'array';
         const isOnlyDigits = params.row?.fieldType?.jsType === 'number';
         const optionsForSelect = params.row?.fieldVariantsForSelectorFieldType?.map(
-          (fieldVariant: FieldVariantsForSelectorFieldTypeGetCommand.ResponseEntity) =>
-            fieldVariant.value
+          (fieldVariant: FieldVariantsForSelectorFieldTypeGetCommand.ResponseEntity) => fieldVariant
         );
 
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-          const newValue = event.target.value;
-          setValueOfDefaultValueForSelect(newValue);
-
-          if (isSelect && optionsForSelect.includes(newValue)) {
-            params.api.setEditCellValue({ id: params.id, field: params.field, value: newValue });
-          } else {
-            params.api.setEditCellValue({ id: params.id, field: params.field, value: newValue });
-          }
-        };
-
-        return isSelect ? (
-          <TextField
-            onChange={handleChange}
-            select
-            sx={{ width: '100%' }}
-            value={params.value || valueOfDefaultValueForSelect}
-            // defaultValue={params.value}
-          >
-            {optionsForSelect
-              .map((option: string) => (
-                <MenuItem sx={{ width: '100%' }} key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))
-              .concat(
-                <MenuItem
-                  sx={{ width: '100%', fontSize: '12px' }}
-                  key="addNewVariantForDefaultValueForVariantsOfFieldOfCategoryMaterials"
-                  value=""
-                  onClick={
-                    handleClickAddNewVariantForDefaultValueForVariantsOfFieldOfCategoryMaterials
-                  }
-                >
-                  <AddIcon sx={{ maxWidth: '13px' }} /> Добавить
-                </MenuItem>
-              )}
-          </TextField>
-        ) : (
-          <TextField
-            onChange={handleChange}
-            value={params.value || valueOfDefaultValueForSelect}
-            // defaultValue={params.value}
-            type={isOnlyDigits ? 'number' : 'text'}
+        return (
+          <DataGridCellCharacteristic
+            id={params.id}
+            field={params.field}
+            isSelect={isSelect}
+            optionsForSelect={optionsForSelect}
+            defaultValue={params?.value}
+            isOnlyDigits={isOnlyDigits}
+            allFieldVariantsOfHandbook={allFieldVariantsOfHandbook}
+            fieldCategoryId={params.row.uuid}
+            handleClickAddNewFieldVariants={handleClickAddNewFieldVariants}
           />
         );
       },
@@ -677,10 +653,8 @@ export default function FieldsOfCategoryMaterials({
       editable: true,
       type: 'singleSelect',
       valueOptions: (params) => {
-        const fieldUnitMeasurements =
-          workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
         const fieldUnitMeasurementNames =
-          fieldUnitMeasurements && fieldUnitMeasurements.map((elem) => elem.name);
+          allUnitMeasurementsOfHandbook && allUnitMeasurementsOfHandbook.map((elem) => elem.name);
 
         return fieldUnitMeasurementNames;
       },
@@ -727,11 +701,38 @@ export default function FieldsOfCategoryMaterials({
   const handleClickYesDeleteFieldCategoryDialog = async () => {
     const rowIdToDelete = rowSelectionModel[0];
     const rowInfo = apiRef.current.getRow(rowIdToDelete);
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    const workspaceId = handbookInfo.workspaceUuid;
-    const handbookId = handbookInfo.uuid;
     await fieldsOfCategoryMaterialsDeleteHandler(workspaceId as string, handbookId, rowInfo.uuid);
     setRows(rows.filter((row) => row.uuid !== rowIdToDelete));
+  };
+
+  const handleClickAddNewFieldVariants = async (
+    fieldOfCategoryMaterialId: string,
+    fieldVariantForSelectorFieldTypeId?: string,
+    createFieldVariantOfCategoryDto?: FieldVariantsForSelectorFieldTypeCreateCommand.Request,
+    typeAction: 'add' | 'delete' = 'add'
+  ) => {
+    if (typeAction === 'add' && createFieldVariantOfCategoryDto) {
+      const newField = await createFieldVariantOfFieldOfCategory(
+        workspaceId as string,
+        handbookId,
+        fieldOfCategoryMaterialId,
+        createFieldVariantOfCategoryDto
+      );
+      console.log(`newField: ${newField}`);
+    } else if (typeAction === 'delete' && fieldVariantForSelectorFieldTypeId) {
+      const deletedField = await deleteFieldVariantOfFieldOfCategory(
+        workspaceId as string,
+        handbookId,
+        fieldOfCategoryMaterialId,
+        fieldVariantForSelectorFieldTypeId
+      );
+      console.log(`deletedField: ${deletedField}`);
+    } else {
+      console.log(`Произошла ошибка при запросе: ${fieldOfCategoryMaterialId}
+       ${fieldVariantForSelectorFieldTypeId}
+        ${createFieldVariantOfCategoryDto}
+        ${typeAction}`);
+    }
   };
 
   const handleClickYesChangeTypeFieldOfCategory = async (
@@ -740,7 +741,7 @@ export default function FieldsOfCategoryMaterials({
     const newFieldType = fieldTypeToChange?.workspaceFullInfo.allFieldTypes.find(
       (elem) => elem.name === fieldTypeToChange?.newFieldTypeName
     );
-    const updateFieldOfCategoryDto: Partial<TFieldsOfCategoryMaterialTableEntity> = {
+    const updateFieldOfCategoryDto: FieldOfCategoryMaterialUpdateCommand.Request = {
       fieldTypeUuid: newFieldType?.uuid || fieldTypeToChange?.updatedFieldOfCategory?.fieldTypeUuid,
       defaultValue: null,
     };
@@ -935,13 +936,6 @@ export default function FieldsOfCategoryMaterials({
         ])}
         onClickNo={onClickNoChangeTypeFieldOfCategoryDialog}
       />
-
-      {allFieldVariantsInHandbook && (
-        <FormVariantsChangingDialog
-          options={allFieldVariantsInHandbook}
-          dialog={isChangingFieldVariantsForFieldOfCategoryDialogOpen}
-        />
-      )}
     </>
   );
 }

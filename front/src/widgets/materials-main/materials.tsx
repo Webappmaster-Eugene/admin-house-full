@@ -210,6 +210,9 @@ export default function Materials({ materialsInfo }: MaterialsProps) {
           [MaterialColumnSchema.unitMeasurement]: unitMeasurements.filter(
             (unitMeasurement) => unitMeasurement.name === 'отсутствует'
           )[0],
+          [MaterialColumnSchema.unitMeasurementUuid]: unitMeasurements.filter(
+            (unitMeasurement) => unitMeasurement.name === 'отсутствует'
+          )[0]?.uuid,
           [MaterialColumnSchema.priceChanges]: [],
           [MaterialColumnSchema.characteristicsMaterial]: [],
           [MaterialColumnSchema.updatedAt]: new Date(),

@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { MaterialCreateCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -29,6 +30,8 @@ export async function createMaterial(
     );
 
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath(`/dashboard/category-materials/${categoryMaterialId}/`);
+      revalidatePath('/dashboard/materials/');
       return response.data as MaterialCreateCommand.ResponseEntity;
     }
 

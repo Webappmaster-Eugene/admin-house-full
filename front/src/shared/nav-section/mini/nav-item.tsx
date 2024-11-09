@@ -53,7 +53,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
           </Box>
         )}
 
-        {titleShort && (
+        {(titleShort || title) && (
           <Box component="span" className="label">
             {titleShort || title}
           </Box>

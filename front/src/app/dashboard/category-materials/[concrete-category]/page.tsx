@@ -95,6 +95,7 @@ export default async function ConcreteCategoryPage({ params, searchParams }: Pag
       additionalFields={
         currentCategory?.fieldsOfCategoryMaterials as FieldOfCategoryMaterialGetAllCommand.ResponseEntity
       }
+      currentCategory={currentCategory}
     />
   );
 }

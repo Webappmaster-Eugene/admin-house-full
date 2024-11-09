@@ -1,6 +1,7 @@
 'use server';
 
 import { AxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { MaterialUpdateCommand } from '@numart/house-admin-contracts';
 
 import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
@@ -31,6 +32,8 @@ export async function updateMaterial(
     );
 
     if (isGoodHttpCode(response?.statusCode)) {
+      revalidatePath(`/dashboard/category-materials/${categoryMaterialId}/`);
+      revalidatePath('/dashboard/materials/');
       return response.data as MaterialUpdateCommand.ResponseEntity;
     }
 

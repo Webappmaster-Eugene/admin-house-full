@@ -19,20 +19,15 @@ export const columnsInitialVisibilityModel = {
 export const columnsInitialState: GridInitialState = {
   columns: {
     dimensions: {
-      categoryMaterial: {
+      uuid: {
         maxWidth: -1,
         minWidth: 50,
+        width: 130,
+      },
+      numInOrder: {
+        maxWidth: -1,
+        minWidth: 90,
         width: 100,
-      },
-      characteristicsMaterial: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 250,
-      },
-      comment: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 190,
       },
       name: {
         maxWidth: -1,
@@ -47,21 +42,15 @@ export const columnsInitialState: GridInitialState = {
         minWidth: 170,
         width: 100,
       },
+      comment: {
+        maxWidth: -1,
+        minWidth: 50,
+        width: 190,
+      },
       price: {
         maxWidth: -1,
         minWidth: 50,
         width: 100,
-        // flex: 0,
-      },
-      priceChanges: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 130,
-      },
-      responsiblePartner: {
-        maxWidth: -1,
-        minWidth: 50,
-        width: 110,
         // flex: 0,
       },
       sourceInfo: {
@@ -69,15 +58,31 @@ export const columnsInitialState: GridInitialState = {
         minWidth: 50,
         width: 150,
       },
-      numInOrder: {
+      responsiblePartner: {
         maxWidth: -1,
-        minWidth: 90,
+        minWidth: 50,
+        width: 110,
+        // flex: 0,
+      },
+      categoryMaterial: {
+        maxWidth: -1,
+        minWidth: 50,
         width: 100,
       },
       unitMeasurement: {
         maxWidth: -1,
         minWidth: 50,
         width: 100,
+      },
+      priceChanges: {
+        maxWidth: -1,
+        minWidth: 50,
+        width: 130,
+      },
+      characteristicsMaterial: {
+        maxWidth: -1,
+        minWidth: 50,
+        width: 250,
       },
       updatedAt: {
         maxWidth: -1,

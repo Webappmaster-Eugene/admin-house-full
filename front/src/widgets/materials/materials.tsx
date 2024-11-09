@@ -3,8 +3,8 @@
 import moment from 'moment';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
-import { useState, useCallback, useLayoutEffect } from 'react';
 import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
+import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
 import { NewMaterialId } from '@/widgets/materials/new-material-id.const';
 import { MaterialEditableColumns } from '@/widgets/materials/editable-columns';
@@ -13,14 +13,22 @@ import {
   HandbookGetCommand,
   MaterialCreateCommand,
   MaterialUpdateCommand,
+  FieldTypeGetAllCommand,
   PriceChangingGetAllCommand,
+  CategoryMaterialGetCommand,
   CategoryMaterialGetAllCommand,
+  MaterialUpdateCategoryCommand,
+  CategoryMaterialCreateCommand,
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementGetAllCommand,
+  CharacteristicsMaterialGetCommand,
   CharacteristicsMaterialGetAllCommand,
   ResponsiblePartnerProducerGetCommand,
   FieldOfCategoryMaterialGetAllCommand,
+  CharacteristicsMaterialCreateCommand,
   ResponsiblePartnerProducerGetAllCommand,
+  FieldVariantsForSelectorFieldTypeGetAllCommand,
+  FieldVariantsForSelectorFieldTypeCreateCommand,
 } from '@numart/house-admin-contracts';
 
 import Box from '@mui/material/Box';
@@ -60,13 +68,14 @@ import {
 } from '@mui/x-data-grid';
 
 import { toRubles } from 'src/utils/helpers/intl';
+import { UuidRegexForTest } from 'src/utils/regex/uuid.regex';
 import { deepEqualAndIn } from 'src/utils/helpers/deep-equal-and-in';
 import { DeleteMaterialDialogTexts } from 'src/utils/const/dialog-texts';
+import { EntityActivityStatus } from 'src/utils/const/entity-activity-status.enum';
 import { deepEqualAndInTableKeys } from 'src/utils/helpers/deep-equal-in-tablekeys';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
 import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
-import { materialUpdateHandler } from 'src/utils/table-handlers/materials/material-update.handler';
 import { MaterialColumnSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 import { isEntityCategoryMaterialTG } from 'src/utils/type-guards/is-entity-category-material.type-guard';
 import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-responsible-partner.type-guard';
@@ -77,12 +86,27 @@ import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
 import { columnsInitialState } from 'src/widgets/materials/table-initial-state';
+import { updateMaterial } from 'src/api/actions/material/update-material.action';
+import { updateMaterialCategory } from 'src/api/actions/material/update-material-category.action';
 import {
   CustomNoRowsOverlay,
   CustomNoResultsOverlay,
 } from 'src/shared/no-rows-overlay/NoRowsOverlay';
+import { getConcreteMaterialInHandbook } from 'src/api/actions/material/get-concrete-material-in-handbook.action';
+import { deleteCharacteristicOfMaterial } from 'src/api/actions/characteristics/delete-characteristic-of-material.action';
+import { createCharacteristicOfMaterial } from 'src/api/actions/characteristics/create-characteristic-of-material.action';
+import { DataGridCellCategory } from 'src/shared/mui-data-grid/datagrid-materials-cell-category/datagrid-materials-cell-category';
+import { createFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/create-field-variant-in-field-of-category-material.action';
+import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/delete-field-variant-in-field-of-category-material.action';
+import { getAllFieldUnitMeasurementsOfHandbook } from 'src/api/actions/field-unit-measurement/get-all-field-unit-measurements-of-handbook.action';
+import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
+import { renderCellExpandWithIcon } from 'src/shared/mui-data-grid/datagrid-materials-cell-name/components/datagrid-materials-cell-name/datagrid-materials-cell-name-with-icon.export';
 
-export default function Materials({ materialsInfo, additionalFields }: MaterialsProps) {
+export default function Materials({
+  materialsInfo,
+  additionalFields,
+  currentCategory,
+}: MaterialsProps) {
   const settings = useSettingsContext();
   const isDialogOpen = useBoolean();
 
@@ -90,22 +114,169 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
     pageSize: 10,
     page: 0,
   });
-  const materialsEntity = materialsInfo.map((elem) => ({ ...elem, isNew: false }));
-  const [rows, setRows] = useState<TMaterialTableEntity[]>(materialsEntity);
+
+  const allMaterialsEntity = materialsInfo.map((elem) => {
+    let materialToRow = { ...elem, isNew: false };
+    if (elem && elem?.characteristicsMaterial) {
+      // @ts-ignore
+      const characteristicsOfCurrentMaterial = elem?.characteristicsMaterial?.reduce(
+        (acc: CharacteristicsMaterialGetAllCommand.ResponseEntity, curValue) => {
+          // @ts-ignore
+          acc[curValue?.fieldOfCategoryMaterialUuid] = curValue;
+          return acc;
+        },
+        {}
+      );
+
+      if (characteristicsOfCurrentMaterial) {
+        materialToRow = { ...materialToRow, ...characteristicsOfCurrentMaterial };
+      }
+    }
+    return materialToRow;
+  });
+
+  const [rows, setRows] = useState<TMaterialTableEntity[]>(allMaterialsEntity);
   const [isCreateRowMode, setIsCreateRowMode] = useState<boolean>(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const { workspaceInfo } = useWorkspaceInfoStore();
 
-  const additionalFieldsNames = additionalFields?.map((field) => field.name);
+  useEffect(() => {
+    const allMaterialsInfoUpdatedEntity = materialsInfo.map((elem) => {
+      let materialToRow = { ...elem, isNew: false };
+      if (elem && elem?.characteristicsMaterial) {
+        // @ts-ignore
+        const characteristicsOfCurrentMaterial = elem?.characteristicsMaterial?.reduce(
+          (acc: CharacteristicsMaterialGetAllCommand.ResponseEntity, curValue) => {
+            // @ts-ignore
+            acc[curValue?.fieldOfCategoryMaterialUuid] = curValue;
+            return acc;
+          },
+          {}
+        );
 
-  // const fieldsInTable = additionalFields?.map((field) => ({
-  //   field: field.uuid,
-  //   headerName: field.name,
-  //   minWidth: 90,
-  //   align: 'left',
-  //   headerAlign: 'left',
-  // }));
-  // console.log(fieldsInTable);
+        if (characteristicsOfCurrentMaterial) {
+          materialToRow = { ...materialToRow, ...characteristicsOfCurrentMaterial };
+        }
+      }
+      return materialToRow;
+    });
+    setRows(allMaterialsInfoUpdatedEntity);
+  }, [materialsInfo, additionalFields]);
+
+  const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
+  const responsiblePartners =
+    handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
+  const allFieldsOfCategoryMaterialInHandbook =
+    workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
+  const allFieldTypesInWorkspace =
+    workspaceInfo?.allFieldTypes as FieldTypeGetAllCommand.ResponseEntity;
+  const allCategoryMaterialsInHandbook =
+    workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
+  const allUnitMeasurementsInHandbook =
+    workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
+  const allFieldVariantsOfHandbook = (workspaceInfo?.allFieldsVariantsOfHandbook ||
+    []) as FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
+  const workspaceId = handbookInfo?.workspaceUuid;
+  const handbookId = handbookInfo?.uuid;
+
+  const handleClickAddNewFieldVariants = async (
+    fieldOfCategoryMaterialId: string,
+    fieldVariantForSelectorFieldTypeId?: string,
+    createFieldVariantOfCategoryDto?: FieldVariantsForSelectorFieldTypeCreateCommand.Request,
+    typeAction: 'add' | 'delete' = 'add'
+  ) => {
+    if (typeAction === 'add' && createFieldVariantOfCategoryDto) {
+      const newField = await createFieldVariantOfFieldOfCategory(
+        workspaceId as string,
+        handbookId,
+        fieldOfCategoryMaterialId,
+        createFieldVariantOfCategoryDto
+      );
+    } else if (typeAction === 'delete' && fieldVariantForSelectorFieldTypeId) {
+      const deletedField = await deleteFieldVariantOfFieldOfCategory(
+        workspaceId as string,
+        handbookId,
+        fieldOfCategoryMaterialId,
+        fieldVariantForSelectorFieldTypeId
+      );
+    } else {
+      console.log(`Произошла ошибка при запросе: ${fieldOfCategoryMaterialId}
+       ${fieldVariantForSelectorFieldTypeId}
+        ${createFieldVariantOfCategoryDto}
+        ${typeAction}`);
+    }
+  };
+
+  const handleClickAddNewCategory = async (
+    createNewCategoryDto: CategoryMaterialCreateCommand.Request
+  ) => {
+    // const newField = await createFieldVariantOfFieldOfCategory(
+    //   workspaceId as string,
+    //   handbookId,
+    //   fieldOfCategoryMaterialId,
+    //   createNewCategoryDto
+    // );
+    console.log(`newField: ${newField}`);
+  };
+
+  let fieldsOfCurrentCategoryToTable: GridColDef[] = [];
+  if (additionalFields) {
+    fieldsOfCurrentCategoryToTable = additionalFields.map((fieldOfCurrentCategory) => {
+      const fieldTypeOfCellInColumnInTable = allFieldTypesInWorkspace?.find(
+        (field) => field.uuid === fieldOfCurrentCategory?.fieldTypeUuid
+      );
+      return {
+        field: fieldOfCurrentCategory.uuid,
+        headerName: fieldOfCurrentCategory.name,
+        minWidth: 90,
+        align: 'left',
+        filterable: false,
+        hideable: false,
+        sortable: false,
+        disableColumnMenu: true,
+        disableReorder: true,
+        headerAlign: 'left',
+        type: fieldTypeOfCellInColumnInTable?.jsType === 'array' ? 'singleSelect' : 'string',
+        editable: true,
+        valueGetter: (value: CharacteristicsMaterialGetCommand.ResponseEntity, row) => value?.value,
+        valueOptions: (params) => {
+          const fieldVariantsForSelectorFieldTypeOfField =
+            allFieldsOfCategoryMaterialInHandbook?.find(
+              (field) => field.uuid === params.field
+            )?.fieldVariantsForSelectorFieldType;
+          return fieldVariantsForSelectorFieldTypeOfField?.map((field) => field.value);
+        },
+        renderEditCell: (params) => {
+          const currentFieldOfCategoryMaterialInRow = allFieldsOfCategoryMaterialInHandbook?.find(
+            (field) => field.uuid === params.field
+          );
+
+          const isSelect = currentFieldOfCategoryMaterialInRow?.fieldType?.jsType === 'array';
+          const isOnlyDigits = currentFieldOfCategoryMaterialInRow?.fieldType?.jsType === 'number';
+          const fieldVariantsForSelectorFieldType =
+            currentFieldOfCategoryMaterialInRow?.fieldVariantsForSelectorFieldType;
+
+          const optionsForSelect = fieldVariantsForSelectorFieldType?.map(
+            (fieldVariant) => fieldVariant
+          ) as FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
+
+          return (
+            <DataGridCellCharacteristic
+              id={params.id}
+              field={params.field}
+              isSelect={isSelect}
+              optionsForSelect={optionsForSelect}
+              defaultValue={params?.value}
+              isOnlyDigits={isOnlyDigits}
+              allFieldVariantsOfHandbook={allFieldVariantsOfHandbook}
+              fieldCategoryId={params.field}
+              handleClickAddNewFieldVariants={handleClickAddNewFieldVariants}
+            />
+          );
+        },
+      };
+    });
+  }
 
   const apiRef = useGridApiRef();
   const [gridStateBeforeCreate, setGridStateBeforeCreate] = useState<GridState>(
@@ -140,12 +311,6 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       saveMaterialsDataGridState();
     };
   }, [saveMaterialsDataGridState]);
-
-  // const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-  //   if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-  //     event.defaultMuiPrevented = true;
-  //   }
-  // };
 
   const addRequiredColumnsToTable = (requiredCreateColumns: string[]): void => {
     const tableStateAtStart = apiRef.current.state;
@@ -193,15 +358,12 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
 
   const editToolbar = () => {
     const handleClickAddMaterial = () => {
-      const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-      const responsiblePartners =
-        handbookInfo.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
-      const categoryMaterials =
-        workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-      const unitMeasurements =
-        workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
-
       addRequiredColumnsToTable(MaterialRequiredCreateColumns);
+      const currentCategoryToDefaultChange =
+        currentCategory ||
+        allCategoryMaterialsInHandbook.filter(
+          (categoryMaterial) => categoryMaterial.name === 'Общая'
+        )[0];
 
       setRows((oldRows) => {
         const newRow: TMaterialTableEntity = {
@@ -213,17 +375,26 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
           [MaterialColumnSchema.price]: 0,
           [MaterialColumnSchema.sourceInfo]: 'Укажите источник',
           [MaterialColumnSchema.responsiblePartner]: responsiblePartners[0],
-          [MaterialColumnSchema.categoryMaterial]: categoryMaterials.filter(
-            (categoryMaterial) => categoryMaterial.name === 'Общая'
-          )[0],
-          [MaterialColumnSchema.unitMeasurement]: unitMeasurements.filter(
+          [MaterialColumnSchema.categoryMaterial]: currentCategoryToDefaultChange,
+          [MaterialColumnSchema.unitMeasurement]: allUnitMeasurementsInHandbook.filter(
             (unitMeasurement) => unitMeasurement.name === 'отсутствует'
           )[0],
+          [MaterialColumnSchema.unitMeasurementUuid]: allUnitMeasurementsInHandbook.filter(
+            (unitMeasurement) => unitMeasurement.name === 'отсутствует'
+          )[0]?.uuid,
           [MaterialColumnSchema.priceChanges]: [],
           [MaterialColumnSchema.characteristicsMaterial]: [],
           [MaterialColumnSchema.updatedAt]: new Date(),
           isNew: true,
         };
+        if (additionalFields && additionalFields?.length !== 0) {
+          additionalFields.forEach((field, index) => {
+            const fieldId = field.uuid;
+            if (field?.defaultValue) {
+              newRow[fieldId] = { uuid: index, value: field?.defaultValue };
+            }
+          });
+        }
         return [newRow, ...oldRows];
       });
 
@@ -378,17 +549,105 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
 
   const handleCellEditStop = async (params: GridCellEditStopParams, event: MuiEvent) => {
     const rowCurrentState = apiRef.current.getRowWithUpdatedValues(params.id, params.field);
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    const workspaceId = handbookInfo.workspaceUuid;
-    const handbookId = handbookInfo.uuid;
 
-    const updatedRow = (await materialUpdateHandler(
-      { [params.field]: rowCurrentState[params.field] } as TMaterialTableEntity,
-      workspaceId as string,
-      handbookId,
-      params.row.categoryMaterialUuid,
-      params.row.uuid
-    )) as MaterialUpdateCommand.ResponseEntity;
+    let updateValueDto: MaterialUpdateCommand.Request = {};
+
+    if (params.field === MaterialColumnSchema.unitMeasurement) {
+      const newUnitMeasurementId = allUnitMeasurementsInHandbook?.find(
+        (unitMeasurement) => unitMeasurement.name === rowCurrentState[params.field]
+      )?.uuid as string;
+      updateValueDto = { unitMeasurementUuid: newUnitMeasurementId };
+    } else if (UuidRegexForTest.test(params.field)) {
+      const categoryMaterialId = params.row?.categoryMaterialUuid;
+      const materialId = params.row?.uuid;
+      const characteristicId = params.row[params.field]?.uuid;
+      const fieldCategoryMaterialId = params?.field;
+      const createCharacteristicMaterialDto: CharacteristicsMaterialCreateCommand.Request = {
+        value: rowCurrentState[params.field] as string,
+        characteristicsMaterialStatus: EntityActivityStatus.ACTIVE,
+      };
+
+      // apiRef.current.setEditCellValue({
+      //   id: params.id,
+      //   field: params.field,
+      //   value: rowCurrentState[params.field],
+      //   debounceMs: 200,
+      // });
+
+      setRows((prevValue) =>
+        prevValue.map((elem) => {
+          if (elem.uuid === params.id) {
+            const characteristic = elem.characteristicsMaterial?.find(
+              (element) => element.fieldOfCategoryMaterialUuid === params.field
+            );
+            if (characteristic) {
+              characteristic.value = rowCurrentState[params.field];
+            }
+          }
+          return elem;
+        })
+      );
+
+      if (characteristicId) {
+        await deleteCharacteristicOfMaterial(
+          workspaceId as string,
+          handbookId,
+          categoryMaterialId,
+          materialId,
+          characteristicId
+        );
+      }
+
+      const newCharacteristic = await createCharacteristicOfMaterial(
+        workspaceId as string,
+        handbookId,
+        categoryMaterialId,
+        materialId,
+        fieldCategoryMaterialId,
+        createCharacteristicMaterialDto
+      );
+    } else if (
+      params.field === MaterialColumnSchema.categoryMaterial &&
+      allCategoryMaterialsInHandbook
+    ) {
+      const newCategoryId = allCategoryMaterialsInHandbook?.find(
+        (categoryMaterial) => categoryMaterial.name === rowCurrentState[params.field]
+      )?.uuid;
+      if (newCategoryId) {
+        const updateCategoryOfMaterialDto: MaterialUpdateCategoryCommand.Request = {
+          categoryMaterialUuid: newCategoryId,
+        };
+        const materialWithUpdatedCategoryRow = (await updateMaterialCategory(
+          workspaceId as string,
+          handbookId,
+          params.row.categoryMaterialUuid,
+          params.row.uuid,
+          updateCategoryOfMaterialDto
+        )) as MaterialUpdateCategoryCommand.ResponseEntity;
+        console.log(materialWithUpdatedCategoryRow);
+      }
+    } else {
+      updateValueDto = {
+        [params.field]: rowCurrentState[params.field],
+      };
+    }
+
+    if (Object.keys(updateValueDto).length) {
+      const updatedRow = (await updateMaterial(
+        workspaceId as string,
+        handbookId,
+        params.row.categoryMaterialUuid,
+        params.row.uuid,
+        updateValueDto
+      )) as MaterialUpdateCommand.ResponseEntity;
+      // const updatedRow = (await materialUpdateHandler(
+      //   updateValueDto,
+      //   workspaceId as string,
+      //   handbookId,
+      //   params.row.categoryMaterialUuid,
+      //   params.row.uuid
+      // ))
+    }
 
     if (params.reason !== GridCellEditStopReasons.shiftTabKeyDown) {
       event.defaultMuiPrevented = true;
@@ -400,28 +659,48 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
     const isNewRow = apiRef.current.getRow(id)?.isNew;
     let finalRow: MaterialCreateCommand.ResponseEntity;
 
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    const responsiblePartners =
-      handbookInfo?.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
-    const categoryMaterials =
-      workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-    const unitMeasurements =
-      workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
-    const workspaceId = handbookInfo.workspaceUuid;
-    const handbookId = handbookInfo.uuid;
     if (isNewRow) {
       const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
+
       finalRow = (await materialCreateHandler(
         newRowLocally as TMaterialTableEntity,
         workspaceId as string,
         handbookId,
         responsiblePartners,
-        categoryMaterials,
-        unitMeasurements
+        allCategoryMaterialsInHandbook,
+        allUnitMeasurementsInHandbook
       )) as MaterialCreateCommand.ResponseEntity;
+
+      const allCharacteristicsForMaterial = Object.entries(newRowLocally).map(
+        async ([key, value]) => {
+          if (UuidRegexForTest.test(key) && value) {
+            const createCharacteristicMaterialDto: CharacteristicsMaterialCreateCommand.Request = {
+              value,
+              characteristicsMaterialStatus: EntityActivityStatus.ACTIVE,
+            };
+
+            const newMaterialCharacteristic = (await createCharacteristicOfMaterial(
+              workspaceId as string,
+              handbookId,
+              finalRow.categoryMaterialUuid,
+              finalRow.uuid,
+              key,
+              createCharacteristicMaterialDto
+            )) as CharacteristicsMaterialCreateCommand.ResponseEntity;
+            return newMaterialCharacteristic;
+          }
+        }
+      );
     } else {
       throw new Error('isNewRow = false, problem with creating a new row');
     }
+
+    const finalRowWithChangesAndCharacteristics = (await getConcreteMaterialInHandbook(
+      workspaceId as string,
+      handbookId,
+      finalRow.categoryMaterialUuid,
+      finalRow.uuid
+    )) as MaterialCreateCommand.ResponseEntity;
 
     setRowModesModel({
       ...rowModesModel,
@@ -430,7 +709,7 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
     setIsCreateRowMode((prevValue) => !prevValue);
     setRows((oldRows) => {
       const updatedRow = {
-        ...finalRow,
+        ...finalRowWithChangesAndCharacteristics,
         isNew: false,
       } as TMaterialTableEntity;
       return oldRows.map((row) => (row.uuid === id ? updatedRow : row));
@@ -498,6 +777,11 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       hideSortIcons: true,
       // resizable: true,
       sortable: false,
+      renderCell: (params) =>
+        renderCellExpandWithIcon(
+          params,
+          allCategoryMaterialsInHandbook as CategoryMaterialGetAllCommand.ResponseEntity
+        ),
     },
     {
       field: MaterialColumnSchema.namePublic,
@@ -569,11 +853,6 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       field: MaterialColumnSchema.responsiblePartner,
       type: 'singleSelect',
       valueOptions: (params) => {
-        const handbookInfo =
-          workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-        const responsiblePartners =
-          handbookInfo.responsiblePartnerProducers as ResponsiblePartnerProducerGetAllCommand.ResponseEntity;
-
         const responsiblePartnerNames =
           responsiblePartners && responsiblePartners.map((elem) => elem.name);
 
@@ -603,11 +882,27 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       editable: true,
       type: 'singleSelect',
       valueOptions: (params) => {
-        const categories =
-          workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-        const categoryNames = categories && categories.map((elem) => elem.name);
+        const categoryNames =
+          allCategoryMaterialsInHandbook && allCategoryMaterialsInHandbook.map((elem) => elem.name);
 
         return categoryNames;
+      },
+      renderEditCell: (params) => {
+        console.log(params);
+        const optionsForSelect =
+          allCategoryMaterialsInHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
+        const isSelect = true;
+
+        return (
+          <DataGridCellCategory
+            id={params.id}
+            field={params.field}
+            isSelect={isSelect}
+            optionsForSelect={optionsForSelect}
+            defaultValue={params?.value}
+            handleClickAddNewCategory={handleClickAddNewCategory}
+          />
+        );
       },
       valueGetter: (value: TMaterialTableEntity, row) =>
         isEntityCategoryMaterialTG(value) ? value.name : value,
@@ -622,10 +917,9 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       editable: true,
       type: 'singleSelect',
       valueOptions: (params) => {
-        const fieldUnitMeasurements =
-          workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
         const fieldUnitMeasurementNames =
-          fieldUnitMeasurements && fieldUnitMeasurements.map((elem) => elem.name);
+          allUnitMeasurementsInHandbook &&
+          allUnitMeasurementsInHandbook?.map((elem: any) => elem.name);
 
         return fieldUnitMeasurementNames;
       },
@@ -665,18 +959,17 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
         if (characteristicsMaterial && characteristicsMaterial.length > 0) {
           finishValue = '';
           let counter = 1;
-          const allFieldUnitMeasurements =
-            workspaceInfo?.allFieldsUnitMeasurementsOfHandbook as FieldUnitMeasurementGetAllCommand.ResponseEntity;
-          const allFieldsOfCategoryMaterial =
-            workspaceInfo?.allFieldsOfCategoryMaterialsOfHandbook as FieldOfCategoryMaterialGetAllCommand.ResponseEntity;
-
           finishValue = characteristicsMaterial.reduce((acc, curValue) => {
-            const thisCharateristicFieldOfCategoryMaterial = allFieldsOfCategoryMaterial.find(
-              (elem) => elem.uuid === curValue.fieldOfCategoryMaterialUuid
-            );
+            const thisCharateristicFieldOfCategoryMaterial =
+              allFieldsOfCategoryMaterialInHandbook.find(
+                (elem) => elem.uuid === curValue.fieldOfCategoryMaterialUuid
+              );
 
             let thisCharateristicUnitMeasurementName: string;
-            if (allFieldUnitMeasurements && !isErrorFieldTypeGuard(allFieldUnitMeasurements)) {
+            if (
+              getAllFieldUnitMeasurementsOfHandbook &&
+              !isErrorFieldTypeGuard(getAllFieldUnitMeasurementsOfHandbook)
+            ) {
               thisCharateristicUnitMeasurementName = thisCharateristicFieldOfCategoryMaterial
                 ?.unitOfMeasurement?.name as string;
               acc += `${counter}) ${thisCharateristicFieldOfCategoryMaterial?.name} = ${curValue.value}${thisCharateristicUnitMeasurementName && thisCharateristicUnitMeasurementName !== '-' ? ` (${thisCharateristicUnitMeasurementName}); ` : '; '}`;
@@ -707,16 +1000,24 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
       width: materialsDataGridInitialState?.columns?.dimensions?.updatedAt?.width,
     },
   ];
+  if (
+    additionalFields &&
+    fieldsOfCurrentCategoryToTable &&
+    Array.isArray(fieldsOfCurrentCategoryToTable)
+  ) {
+    // const fieldsOfCurrentCategoryToTable
+    allMaterialsTableColumns.push(...fieldsOfCurrentCategoryToTable);
+  }
 
   const handleClickDialogYesDeleteRow = async () => {
     const rowIdToDelete = rowSelectionModel[0];
     const rowInfo = apiRef.current.getRow(rowIdToDelete);
-    const handbookInfo = workspaceInfo?.currentHandbookInfo as HandbookGetCommand.ResponseEntity;
-    const categoryMaterials =
-      workspaceInfo?.allCategoryMaterialsOfHandbook as CategoryMaterialGetAllCommand.ResponseEntity;
-    const workspaceId = handbookInfo.workspaceUuid;
-    const handbookId = handbookInfo.uuid;
-    await materialDeleteHandler(rowInfo, workspaceId as string, handbookId, categoryMaterials);
+    await materialDeleteHandler(
+      rowInfo,
+      workspaceId as string,
+      handbookId,
+      allCategoryMaterialsInHandbook
+    );
     setRows(rows.filter((row) => row.uuid !== rowIdToDelete));
   };
 
@@ -779,10 +1080,37 @@ export default function Materials({ materialsInfo, additionalFields }: Materials
                 // processRowUpdate={processRowUpdate}
                 // onProcessRowUpdateError={handleProcessRowUpdateError}
                 isCellEditable={(params) => {
-                  const isCellInEditableColumn = MaterialEditableColumns.includes(params.field);
-                  // const isCellWithoutCharacteristicsMaterial =
-                  //   params.field === MaterialColumnSchema.name &&
-                  //   params.row?.characteristicsMaterial?.length === 0;
+                  let isCellInEditableColumn =
+                    MaterialEditableColumns.includes(params.field) ||
+                    UuidRegexForTest.test(params.field);
+
+                  if (params.field === 'name' && params.row?.categoryMaterial.templateName) {
+                    const allNeedFieldsUuidsInCategoryMaterialTemplateName =
+                      allCategoryMaterialsInHandbook
+                        .find(
+                          (item: CategoryMaterialGetCommand.ResponseEntity) =>
+                            item.uuid === params.row.categoryMaterialUuid
+                        )
+                        ?.fieldsOfCategoryMaterialsInTemplate?.map((item: any) => item.uuid);
+                    const allFieldUuidsInCharacteristicsOfMaterial =
+                      params.row.characteristicsMaterial.map(
+                        (item: CharacteristicsMaterialGetCommand.ResponseEntity) =>
+                          item.fieldOfCategoryMaterialUuid
+                      );
+
+                    const havingSomeTemplateCharacteristic =
+                      allNeedFieldsUuidsInCategoryMaterialTemplateName?.some((elem: string) =>
+                        allFieldUuidsInCharacteristicsOfMaterial?.includes(elem)
+                      );
+                    const havingAllTemplateCharacteristics =
+                      allNeedFieldsUuidsInCategoryMaterialTemplateName?.every((elem: string) =>
+                        allFieldUuidsInCharacteristicsOfMaterial?.includes(elem)
+                      );
+
+                    if (havingAllTemplateCharacteristics || havingSomeTemplateCharacteristic) {
+                      isCellInEditableColumn = false;
+                    }
+                  }
                   const isNewRow = params.row?.isNew;
                   return isNewRow || isCellInEditableColumn;
                 }}

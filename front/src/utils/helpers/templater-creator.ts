@@ -1,4 +1,4 @@
-import { templaterCreatorRegex } from '@/utils/regex/temlater-creator.regex';
+import { templaterCreatorRegex } from 'src/utils/regex/templater-creator.regex';
 
 export const templaterCreatorTexts = (
   fullString: string,

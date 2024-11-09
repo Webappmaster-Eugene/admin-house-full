@@ -2,4 +2,5 @@ import { FieldVariantsForSelectorFieldTypeGetAllCommand } from '@numart/house-ad
 
 export type CheckboxFreeAutocompleteProps = {
   options: FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
+  defaultCheckedOptions: FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity;
 };

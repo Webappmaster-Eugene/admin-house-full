@@ -5,6 +5,7 @@ export enum FieldOfCategoryMaterialColumnSchema {
   comment = 'comment',
   isRequired = 'isRequired',
   unitOfMeasurement = 'unitOfMeasurement',
+  unitOfMeasurementUuid = 'unitOfMeasurementUuid',
   defaultValue = 'defaultValue',
   categoriesMaterial = 'categoriesMaterial',
   fieldType = 'fieldType',

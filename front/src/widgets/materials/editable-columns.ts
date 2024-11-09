@@ -1,9 +1,12 @@
 import { MaterialColumnEditableFullSchema } from 'src/utils/tables-schemas/material/material-columns-schema.enum';
 
 export const MaterialEditableColumns: string[] = [
+  MaterialColumnEditableFullSchema.name,
   MaterialColumnEditableFullSchema.namePublic,
   MaterialColumnEditableFullSchema.comment,
   MaterialColumnEditableFullSchema.price,
+  MaterialColumnEditableFullSchema.unitMeasurement,
+  MaterialColumnEditableFullSchema.categoryMaterial,
   MaterialColumnEditableFullSchema.sourceInfo,
   MaterialColumnEditableFullSchema.responsiblePartner,
 ];

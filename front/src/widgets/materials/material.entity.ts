@@ -12,13 +12,18 @@ export const MaterialTableEntity = MaterialGetCommand.ResponseEntitySchema.pick(
   responsiblePartner: true,
   categoryMaterial: true,
   unitMeasurement: true,
+  unitMeasurementUuid: true,
   priceChanges: true,
   characteristicsMaterial: true,
   updatedAt: true,
-}).merge(
-  z.object({
-    isNew: z.boolean(),
-  })
-);
+})
+  .merge(
+    z.object({
+      isNew: z.boolean(),
+    })
+  )
+  .catchall(z.any());
+// .extend(z.record(z.string()));
+// .catchall(z.string());
 
 export type TMaterialTableEntity = z.infer<typeof MaterialTableEntity>;

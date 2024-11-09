@@ -9,6 +9,7 @@ export enum MaterialColumnSchema {
   responsiblePartner = 'responsiblePartner',
   categoryMaterial = 'categoryMaterial',
   unitMeasurement = 'unitMeasurement',
+  unitMeasurementUuid = 'unitMeasurementUuid',
   priceChanges = 'priceChanges',
   characteristicsMaterial = 'characteristicsMaterial',
   updatedAt = 'updatedAt',
