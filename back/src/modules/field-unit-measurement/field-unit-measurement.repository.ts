@@ -147,6 +147,31 @@ export class FieldUnitMeasurementRepository implements IFieldUnitMeasurementRepo
 
   async deleteById(fieldUnitMeasurementId: EntityUrlParamCommand.RequestUuidParam): Promise<FieldUnitMeasurementEntity> {
     try {
+      const currentUnitMeasurement = await this.getById(fieldUnitMeasurementId);
+
+      const commonFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.findFirst({
+        where: {
+          isDefault: true,
+          handbookUuid: currentUnitMeasurement.handbookUuid,
+        },
+      });
+
+      const materialsWithCommonFieldUnitMeasurement = await this.databaseService.material.updateMany({
+        where: {
+          unitMeasurementUuid: fieldUnitMeasurementId,
+          handbookUuid: currentUnitMeasurement.handbookUuid,
+        },
+        data: { unitMeasurementUuid: commonFieldUnitMeasurement.uuid },
+      });
+
+      const fieldsWithCommonFieldUnitMeasurement = await this.databaseService.fieldOfCategoryMaterial.updateMany({
+        where: {
+          unitOfMeasurementUuid: fieldUnitMeasurementId,
+          handbookUuid: currentUnitMeasurement.handbookUuid,
+        },
+        data: { unitOfMeasurementUuid: commonFieldUnitMeasurement.uuid },
+      });
+
       const deletedFieldUnitMeasurement = await this.databaseService.fieldUnitMeasurement.delete({
         where: {
           uuid: fieldUnitMeasurementId,

@@ -8,7 +8,6 @@ import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
 import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
 import { deepEqualAndInTableKeys } from '@/utils/helpers/deep-equal-in-tablekeys';
-import { isErrorFieldTypeGuard } from '@/utils/type-guards/is-error-field.type-guard';
 import { DeleteFieldDialogTexts, ChangeTypeFieldDialogTexts } from '@/utils/const/dialog-texts';
 import { isEntityFieldTypeTypeGuard } from '@/utils/type-guards/is-entity-field-type.type-guard';
 import { FieldTypeToChange } from '@/widgets/field-of-category-materials/field-type-to-change.type';
@@ -30,6 +29,8 @@ import {
   CategoryMaterialGetAllCommand,
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementGetAllCommand,
+  FieldUnitMeasurementCreateCommand,
+  FieldUnitMeasurementDeleteCommand,
   FieldOfCategoryMaterialUpdateCommand,
   FieldOfCategoryMaterialCreateCommand,
   FieldVariantsForSelectorFieldTypeGetCommand,
@@ -40,7 +41,6 @@ import {
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-// import BlockIcon from '@mui/icons-material/Block';
 import Container from '@mui/material/Container';
 import { ruRU } from '@mui/x-data-grid/locales';
 import { CircularProgress } from '@mui/material';
@@ -63,12 +63,13 @@ import {
   GridInitialState,
   GridRowModesModel,
   GridToolbarExport,
+  GridEventListener,
   GridPaginationModel,
   GridToolbarContainer,
   GridRowSelectionModel,
   GridCellEditStopParams,
+  GridRowEditStopReasons,
   GridToolbarFilterButton,
-  GridCellEditStopReasons,
   GridCellEditStartParams,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
@@ -83,9 +84,12 @@ import {
   CustomNoRowsOverlay,
   CustomNoResultsOverlay,
 } from 'src/shared/no-rows-overlay/NoRowsOverlay';
+import { createFieldUnitMeasurement } from 'src/api/actions/field-unit-measurement/create-field-unit-measurement.action';
+import { deleteFieldUnitMeasurement } from 'src/api/actions/field-unit-measurement/delete-field-unit-measurement.action';
 import { createFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/create-field-variant-in-field-of-category-material.action';
 import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/delete-field-variant-in-field-of-category-material.action';
 import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
+import { DataGridCellUnitMeasurement } from 'src/shared/mui-data-grid/datagrid-materials-cell-unit-measurement/datagrid-materials-cell-unit-measurement';
 
 import { columnsInitialState } from './table-initial-state';
 
@@ -99,10 +103,6 @@ export default function FieldsOfCategoryMaterials({
 
   const [fieldTypeToChange, setFieldTypeToChange] = useState<FieldTypeToChange | null>(null);
   const [cellValueBeforeEdit, setCellValueBeforeEdit] = useState<CellValueBeforeEdit | null>(null);
-
-  const [valueOfDefaultValueForSelect, setValueOfDefaultValueForSelect] = useState<string>('');
-  const [fieldVariantsOfCurrentFieldOfCategory, setFieldVariantsOfCurrentFieldOfCategory] =
-    useState<FieldVariantsForSelectorFieldTypeGetAllCommand.ResponseEntity>([]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
@@ -225,6 +225,12 @@ export default function FieldsOfCategoryMaterials({
   const editToolbar = () => {
     const handleClickAddFieldOfCategoryMaterial = () => {
       addRequiredColumnsToTable(FieldOfCategoryMaterialRequiredCreateColumns);
+
+      const currentState = apiRef.current.exportState();
+      const filterState = currentState.filter?.filterModel;
+      filterState?.items.forEach((elem) => {
+        apiRef.current.deleteFilterItem(elem);
+      });
 
       setRows((oldRows) => {
         const newRow: TFieldsOfCategoryMaterialTableEntity = {
@@ -441,6 +447,12 @@ export default function FieldsOfCategoryMaterials({
   //   }
   // };
 
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = async (params, event: MuiEvent) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+
   const handleCellEditStop = async (params: GridCellEditStopParams, event: MuiEvent) => {
     const rowCurrentState = apiRef.current.getRowWithUpdatedValues(params.id, params.field);
 
@@ -491,13 +503,12 @@ export default function FieldsOfCategoryMaterials({
         params.row?.uuid,
         allTypesOfFieldOfHandbook
       )) as FieldOfCategoryMaterialUpdateCommand.ResponseEntity;
-      console.log(updatedRow);
 
-      setValueOfDefaultValueForSelect('');
-
-      if (params.reason !== GridCellEditStopReasons.shiftTabKeyDown) {
-        event.defaultMuiPrevented = true;
-      }
+      // setValueOfDefaultValueForSelect('');
+      //
+      // if (params.reason !== GridCellEditStopReasons.shiftTabKeyDown) {
+      //   event.defaultMuiPrevented = true;
+      // }
     }
   };
 
@@ -515,9 +526,8 @@ export default function FieldsOfCategoryMaterials({
       finalRow = (await fieldOfCategoryMaterialCreateHandler(
         newRowLocally as TFieldsOfCategoryMaterialTableEntity,
         workspaceId as string,
-        handbookId,
-        allUnitMeasurementsOfHandbook
-      )) as FieldOfCategoryMaterialCreateCommand.ResponseEntity;
+        handbookId
+      )) as unknown as FieldOfCategoryMaterialCreateCommand.ResponseEntity;
     } else {
       throw new Error('isNewRow = false, problem with creating a new row');
     }
@@ -538,6 +548,26 @@ export default function FieldsOfCategoryMaterials({
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
+  };
+
+  const handleClickAddNewUnitMeasurement = async (
+    createNewUnitMeasurementDto: FieldUnitMeasurementCreateCommand.Request
+  ) => {
+    const newFieldUnitMeasurement = (await createFieldUnitMeasurement(
+      workspaceId as string,
+      handbookId,
+      createNewUnitMeasurementDto
+    )) as FieldUnitMeasurementCreateCommand.ResponseEntity;
+    return newFieldUnitMeasurement;
+  };
+
+  const handleClickDeleteUnitMeasurement = async (unitMeasurementId: string) => {
+    const oldFieldUnitMeasurement = (await deleteFieldUnitMeasurement(
+      workspaceId as string,
+      handbookId,
+      unitMeasurementId
+    )) as FieldUnitMeasurementDeleteCommand.ResponseEntity;
+    return oldFieldUnitMeasurement;
   };
 
   const allFieldsOfCategoryMaterialsTableColumns: GridColDef[] = [
@@ -658,6 +688,20 @@ export default function FieldsOfCategoryMaterials({
 
         return fieldUnitMeasurementNames;
       },
+      renderEditCell: (params) => {
+        const optionsForSelect = allUnitMeasurementsOfHandbook;
+
+        return (
+          <DataGridCellUnitMeasurement
+            id={params.id}
+            field={params.field}
+            optionsForSelect={optionsForSelect}
+            defaultValue={params?.value}
+            handleClickAddNewUnitMeasurement={handleClickAddNewUnitMeasurement}
+            handleClickDeleteUnitMeasurement={handleClickDeleteUnitMeasurement}
+          />
+        );
+      },
       valueGetter: (value: FieldUnitMeasurementGetCommand.ResponseEntity, row) =>
         isEntityFieldUnitMeasurementTG(value) ? value.name : value,
     },
@@ -673,7 +717,7 @@ export default function FieldsOfCategoryMaterials({
       editable: false,
       valueGetter: (categories: CategoryMaterialGetAllCommand.ResponseEntity, row) => {
         const categoriesNames = categories?.map((category) => category?.name);
-        return categoriesNames?.join(', ');
+        return categoriesNames?.join(', ') || 'не представлено';
       },
     },
     {
@@ -693,15 +737,11 @@ export default function FieldsOfCategoryMaterials({
         const categoriesNames = categoriesMaterialsTemplatesIncludesThisField?.map(
           (category) => category.name
         );
-        return categoriesNames ? categoriesNames?.join(', ') : '';
+        return categoriesNames?.join(', ') || 'не представлено';
       },
     },
     {
       field: FieldOfCategoryMaterialColumnSchema.characteristicsMaterial,
-      valueGetter: (value, row) => {
-        const characteristicsMaterialLength = row.characteristicsMaterial.length;
-        return characteristicsMaterialLength;
-      },
       headerName: 'Количество привязанных характеристик',
       minWidth: 210,
       width:
@@ -713,6 +753,10 @@ export default function FieldsOfCategoryMaterials({
       hideable: true,
       hideSortIcons: true,
       sortable: false,
+      valueGetter: (value, row) => {
+        const characteristicsMaterialLength = row.characteristicsMaterial.length;
+        return characteristicsMaterialLength || 'не создано';
+      },
     },
     {
       field: FieldOfCategoryMaterialColumnSchema.updatedAt,
@@ -752,7 +796,6 @@ export default function FieldsOfCategoryMaterials({
         fieldOfCategoryMaterialId,
         createFieldVariantOfCategoryDto
       );
-      console.log(`newField: ${newField}`);
     } else if (typeAction === 'delete' && fieldVariantForSelectorFieldTypeId) {
       const deletedField = await deleteFieldVariantOfFieldOfCategory(
         workspaceId as string,
@@ -760,7 +803,6 @@ export default function FieldsOfCategoryMaterials({
         fieldOfCategoryMaterialId,
         fieldVariantForSelectorFieldTypeId
       );
-      console.log(`deletedField: ${deletedField}`);
     } else {
       console.log(`Произошла ошибка при запросе: ${fieldOfCategoryMaterialId}
        ${fieldVariantForSelectorFieldTypeId}
@@ -787,30 +829,6 @@ export default function FieldsOfCategoryMaterials({
       fieldTypeToChange?.idOfFieldOfCategoryRow as string,
       fieldTypeToChange?.workspaceFullInfo?.allFieldTypes as FieldTypeGetAllCommand.ResponseEntity
     )) as FieldOfCategoryMaterialUpdateCommand.ResponseEntity;
-
-    if (!isErrorFieldTypeGuard(updatedRow)) {
-      const fieldOfCategoryMaterialsUpdatedDataEntity = fieldsOfCategoryMaterialsInfo.map(
-        (elem) => ({
-          ...elem,
-          isNew: false,
-        })
-      );
-
-      // setRows(
-      // (oldRows) =>
-      // oldRows.map((row) => {
-      //   console.log(row.uuid === fieldTypeToChange?.idOfFieldOfCategoryRow);
-      //   if (row.uuid === fieldTypeToChange?.idOfFieldOfCategoryRow) {
-      //     row.defaultValue = '';
-      //     return row;
-      //   }
-      //   return row;
-      // })
-      // fieldOfCategoryMaterialsUpdatedDataEntity;
-      // );
-    }
-
-    setValueOfDefaultValueForSelect('');
   };
 
   const onClickYesDeleteFieldCategoryDialog = async (
@@ -894,6 +912,14 @@ export default function FieldsOfCategoryMaterials({
                 rowModesModel={rowModesModel}
                 onRowModesModelChange={handleRowModesModelChange}
                 isCellEditable={(params) => {
+                  if (isCreateRowMode) {
+                    return params?.row?.isNew;
+                  }
+
+                  if (params.field === 'isRequired') {
+                    return params.row.categoriesMaterialsTemplatesIncludesThisField.length === 0;
+                  }
+
                   const isCellInEditableColumn = FieldOfCategoryMaterialEditableColumns.includes(
                     params.field
                   );
@@ -938,6 +964,7 @@ export default function FieldsOfCategoryMaterials({
                   setColumnVisibilityModel(newModel);
                 }}
                 onCellEditStop={handleCellEditStop}
+                onRowEditStop={handleRowEditStop}
                 onCellEditStart={handleCellEditStart}
               />
             </Box>

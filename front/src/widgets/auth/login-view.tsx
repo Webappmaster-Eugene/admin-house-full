@@ -35,12 +35,6 @@ export default function LoginView() {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
 
-  // const appInfo = useAppInfoStore((state) => state.appInfo);
-  // console.log(appInfo);
-
-  // const userInfo = useCurrentUserStore((state) => state.user);
-  // console.log('dsfsfsdfsdfsdfsd', userInfo);
-
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),

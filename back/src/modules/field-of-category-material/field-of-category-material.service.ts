@@ -72,10 +72,9 @@ export class FieldOfCategoryMaterialService implements IFieldOfCategoryMaterialS
   async create(
     dto: FieldOfCategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<UniversalInternalResponse<FieldOfCategoryMaterialEntity>> {
-    const createdFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.create(dto, handbookId, categoryMaterialId, userId);
+    const createdFieldOfCategoryMaterial = await this.fieldOfCategoryMaterialRepository.create(dto, handbookId, userId);
     return new InternalResponse(createdFieldOfCategoryMaterial);
   }
 

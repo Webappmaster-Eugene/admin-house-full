@@ -12,8 +12,10 @@ export const FieldOfCategoryMaterialEditableColumns: string[] = [
 export const FieldOfCategoryMaterialEditableCreateColumns: string[] = [
   FieldOfCategoryMaterialColumnEditableFullSchema.comment,
   FieldOfCategoryMaterialColumnEditableFullSchema.fieldType,
+  FieldOfCategoryMaterialColumnEditableFullSchema.fieldTypeUuid,
   FieldOfCategoryMaterialColumnEditableFullSchema.defaultValue,
   FieldOfCategoryMaterialColumnEditableFullSchema.isRequired,
   FieldOfCategoryMaterialColumnEditableFullSchema.unitOfMeasurement,
+  FieldOfCategoryMaterialColumnEditableFullSchema.unitOfMeasurementUuid,
   FieldOfCategoryMaterialColumnEditableFullSchema.name,
 ];

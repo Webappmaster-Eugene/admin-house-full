@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 import { usePathname } from 'src/utils/hooks/router-hooks';
+import { UuidRegexForTest } from 'src/utils/regex/uuid.regex';
 import { PathsTransformerBreadcrumbMap } from 'src/utils/paths-transformer.breadcrumb';
 
 import LinkItem from './link-item';
@@ -22,6 +23,7 @@ export default function CustomBreadcrumbs({
   activeLast,
   sx,
   concreteCrumbName,
+  allEntitiesForBreadcrumbs,
   ...other
 }: CustomBreadcrumbsProps) {
   const pathname = usePathname();
@@ -39,8 +41,20 @@ export default function CustomBreadcrumbs({
     return acc;
   }, allLinks);
 
-  // console.log(linksMap);
-  links = links || linksMap;
+  links = linksMap || links;
+  if (
+    links.length >= 1 &&
+    allEntitiesForBreadcrumbs &&
+    links[links.length - 1]?.name &&
+    UuidRegexForTest.test(links[links.length - 1]?.name || '')
+  ) {
+    const entity = allEntitiesForBreadcrumbs.find(
+      (elem) => elem?.uuid === links[links.length - 1].name
+    );
+    if (entity) {
+      links[links.length - 1].name = entity.name;
+    }
+  }
 
   const lastLink = links && links[links.length - 1].name;
 

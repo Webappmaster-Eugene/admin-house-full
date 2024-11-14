@@ -44,7 +44,6 @@ export interface IFieldOfCategoryMaterialController
     dto: FieldOfCategoryMaterialCreateRequestDto,
     urlParams: IUrlParams,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     userInfoFromJWT: IJWTPayload,
   ) => Promise<FieldOfCategoryMaterialCreateResponseDto>;
   updateByIdEP: (

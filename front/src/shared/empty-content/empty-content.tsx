@@ -28,6 +28,7 @@ export default function EmptyContent({
       alignItems="center"
       justifyContent="center"
       sx={{
+        maxHeight: '80px',
         px: 3,
         height: 1,
         ...(filled && {
@@ -43,24 +44,26 @@ export default function EmptyContent({
         component="img"
         alt="empty content"
         src={imgUrl || '/assets/icons/empty/ic_content.svg'}
-        sx={{ width: 1, maxWidth: 160 }}
+        sx={{ maxWidth: 40 }}
       />
 
       {title && (
         <Typography
-          variant="h6"
           component="span"
-          sx={{ mt: 1, color: 'text.disabled', textAlign: 'center' }}
+          sx={{ fontSize: '15px', color: 'text.disabled', textAlign: 'center' }}
         >
           {title}
         </Typography>
       )}
 
-      {description && (
-        <Typography variant="caption" sx={{ mt: 1, color: 'text.disabled', textAlign: 'center' }}>
-          {description}
-        </Typography>
-      )}
+      {/* {description && ( */}
+      {/*  <Typography */}
+      {/*    variant="caption" */}
+      {/*    sx={{ fontSize: '12px', color: 'text.disabled', textAlign: 'center' }} */}
+      {/*  > */}
+      {/*    {description} */}
+      {/*  </Typography> */}
+      {/* )} */}
 
       {action && action}
     </Stack>

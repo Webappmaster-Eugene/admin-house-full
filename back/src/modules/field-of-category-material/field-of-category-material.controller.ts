@@ -147,7 +147,7 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
   @Get('workspace/:workspaceId/handbook/:handbookId/category-material/:categoryMaterialId/get-all-in-category-material')
   async getAllInCategoryMaterialEP(
     @UrlParams() urlParams: IUrlParams,
-    @Param('сategoryMaterialId', ParseUUIDPipe)
+    @Param('categoryMaterialId', ParseUUIDPipe)
     categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     @QueryParams() queryParams?: IQueryParams,
   ): Promise<FieldOfCategoryMaterialGetAllResponseDto> {
@@ -178,12 +178,10 @@ export class FieldOfCategoryMaterialController implements IFieldOfCategoryMateri
     @UrlParams() urlParams: IUrlParams,
     @Param('handbookId', ParseUUIDPipe)
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    @Param('categoryMaterialId', ParseUUIDPipe)
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     @User() userInfoFromJWT: IJWTPayload,
   ): Promise<FieldOfCategoryMaterialCreateResponseDto> {
     try {
-      const { ok, data } = await this.fieldOfCategoryMaterialService.create(dto, handbookId, categoryMaterialId, userInfoFromJWT.uuid);
+      const { ok, data } = await this.fieldOfCategoryMaterialService.create(dto, handbookId, userInfoFromJWT.uuid);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.FIELD_OF_CATEGORY_MATERIAL, urlParams);

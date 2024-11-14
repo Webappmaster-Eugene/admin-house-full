@@ -1,3 +1,5 @@
+import { CategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
+
 import { BreadcrumbsProps } from '@mui/material/Breadcrumbs';
 
 // ----------------------------------------------------------------------
@@ -15,4 +17,5 @@ export interface CustomBreadcrumbsProps extends BreadcrumbsProps {
   action?: React.ReactNode;
   links?: BreadcrumbsLinkProps[];
   concreteCrumbName?: string;
+  allEntitiesForBreadcrumbs?: CategoryMaterialGetAllCommand.ResponseEntity;
 }

@@ -1,10 +1,12 @@
+import EmptyContent from '@/shared/empty-content';
+
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import EmptyContent from "@/shared/empty-content";
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  margin: 0,
   alignItems: 'center',
   justifyContent: 'center',
   height: '100%',
@@ -18,7 +20,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 
 export function CustomNoRowsOverlay() {
   return (
-    <StyledGridOverlay sx={{ mt: 5 }}>
+    <StyledGridOverlay sx={{ mt: 2, pb: 1, maxHeight: '70px' }}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -50,7 +52,5 @@ export function CustomNoRowsOverlay() {
 }
 
 export function CustomNoResultsOverlay() {
-  return (
-    <EmptyContent title="Результат поиска отсутствует" />
-  );
+  return <EmptyContent title="Результат поиска отсутствует" />;
 }

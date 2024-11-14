@@ -43,6 +43,10 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
 
     const hasButton = hasChild && path && needButtonLink;
 
+    const handleClick = (event: any) => {
+      event.preventDefault(); // предотвращает клик
+    };
+
     const handleClickHeader = (event: any) => {
       if (path) {
         event.stopPropagation();
@@ -58,6 +62,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         depth={depth}
         active={active}
         disabled={disabled}
+        onClick={hasChild ? handleClick : () => {}}
         {...other}
       >
         {!subItem && icon && (
@@ -106,6 +111,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
             onClick={(event) => handleClickHeader(event)}
             color="success"
             sx={{
+              zIndex: 1000,
               fontSize: '9px',
               padding: '4px 2px 6px 2px',
               minWidth: '50px',

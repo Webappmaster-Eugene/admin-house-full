@@ -25,7 +25,6 @@ export interface IFieldOfCategoryMaterialRepository
   create: (
     dto: FieldOfCategoryMaterialCreateRequestDto,
     handbookId: EntityUrlParamCommand.RequestUuidParam,
-    categoryMaterialId: EntityUrlParamCommand.RequestUuidParam,
     userId: EntityUrlParamCommand.RequestUuidParam,
   ) => Promise<FieldOfCategoryMaterialEntity>;
   updateById: (

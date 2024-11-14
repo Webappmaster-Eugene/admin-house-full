@@ -23,4 +23,6 @@ export enum FieldOfCategoryMaterialColumnEditableFullSchema {
   unitOfMeasurement = 'unitOfMeasurement',
   defaultValue = 'defaultValue',
   fieldType = 'fieldType',
+  fieldTypeUuid = 'fieldTypeUuid',
+  unitOfMeasurementUuid = 'unitOfMeasurementUuid',
 }

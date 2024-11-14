@@ -12,14 +12,12 @@ import { primaryFont } from 'src/utils/theme/typography';
 import { isCurrentUserTypeGuard } from 'src/utils/type-guards/is-current-user.type-guard';
 import { isUserWithRelatedWorkspaceTG } from 'src/utils/type-guards/is-user-with-related-workspace.type-guard';
 
-import AppProvider from 'src/providers/app-provider';
 import { SnackbarProvider } from 'src/shared/snackbar';
 import { StyledProgressBar } from 'src/shared/progress-bar';
 import GeneralProvider from 'src/providers/general-provider';
 import CurrentUserProvider from 'src/providers/current-user-provider';
 import { AppState } from 'src/api/realisation-requests/app-state.type';
 import WorkspaceInfoProvider from 'src/providers/workspace-info-provider';
-import { getAppInfo } from 'src/api/actions/app-info/get-app-info.action';
 import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 import { getFullWorkspaceInfo } from 'src/api/realisation-requests/workspace.global-getter.realisation';
 
@@ -46,13 +44,13 @@ export const metadata = {
 export default async function RootLayout({ children }: PropsReactNode) {
   let currentUserInfo = null;
   let workspaceInfo: AppState | null = null;
-  let appInfo = null;
+  const appInfo = null;
 
   const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
   if (refreshToken) {
     currentUserInfo = await getCurrentUser();
     if (isCurrentUserTypeGuard(currentUserInfo) && isUserWithRelatedWorkspaceTG(currentUserInfo)) {
-      appInfo = await getAppInfo();
+      // appInfo = await getAppInfo();
       workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
     }
   }
@@ -60,20 +58,20 @@ export default async function RootLayout({ children }: PropsReactNode) {
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>
-        <AppProvider appInfo={appInfo}>
-          <CurrentUserProvider
-            currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
-          >
-            <WorkspaceInfoProvider workspaceInfo={workspaceInfo}>
-              <GeneralProvider>
-                <SettingsDrawer />
-                <SnackbarProvider>
-                  <Suspense fallback={<StyledProgressBar />}>{children}</Suspense>
-                </SnackbarProvider>
-              </GeneralProvider>
-            </WorkspaceInfoProvider>
-          </CurrentUserProvider>
-        </AppProvider>
+        {/* <AppProvider appInfo={appInfo}> */}
+        <CurrentUserProvider
+          currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
+        >
+          <WorkspaceInfoProvider workspaceInfo={workspaceInfo}>
+            <GeneralProvider>
+              <SettingsDrawer />
+              <SnackbarProvider>
+                <Suspense fallback={<StyledProgressBar />}>{children}</Suspense>
+              </SnackbarProvider>
+            </GeneralProvider>
+          </WorkspaceInfoProvider>
+        </CurrentUserProvider>
+        {/* </AppProvider> */}
       </body>
     </html>
   );

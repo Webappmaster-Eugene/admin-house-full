@@ -21,6 +21,8 @@ import {
   FieldUnitMeasurementGetCommand,
   FieldUnitMeasurementGetAllCommand,
   CharacteristicsMaterialGetCommand,
+  FieldUnitMeasurementCreateCommand,
+  FieldUnitMeasurementDeleteCommand,
   GlobalCategoryMaterialGetAllCommand,
   CharacteristicsMaterialGetAllCommand,
   ResponsiblePartnerProducerGetCommand,
@@ -56,10 +58,12 @@ import {
   GridInitialState,
   GridRowModesModel,
   GridToolbarExport,
+  GridEventListener,
   GridPaginationModel,
   GridToolbarContainer,
   GridRowSelectionModel,
   GridCellEditStopParams,
+  GridRowEditStopReasons,
   GridToolbarFilterButton,
   GridCellEditStopReasons,
   GridToolbarColumnsButton,
@@ -96,11 +100,14 @@ import {
 import { getConcreteMaterialInHandbook } from 'src/api/actions/material/get-concrete-material-in-handbook.action';
 import { deleteCharacteristicOfMaterial } from 'src/api/actions/characteristics/delete-characteristic-of-material.action';
 import { createCharacteristicOfMaterial } from 'src/api/actions/characteristics/create-characteristic-of-material.action';
+import { createFieldUnitMeasurement } from 'src/api/actions/field-unit-measurement/create-field-unit-measurement.action';
+import { deleteFieldUnitMeasurement } from 'src/api/actions/field-unit-measurement/delete-field-unit-measurement.action';
 import { DataGridCellCategory } from 'src/shared/mui-data-grid/datagrid-materials-cell-category/datagrid-materials-cell-category';
 import { createFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/create-field-variant-in-field-of-category-material.action';
 import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/delete-field-variant-in-field-of-category-material.action';
 import { getAllFieldUnitMeasurementsOfHandbook } from 'src/api/actions/field-unit-measurement/get-all-field-unit-measurements-of-handbook.action';
 import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
+import { DataGridCellUnitMeasurement } from 'src/shared/mui-data-grid/datagrid-materials-cell-unit-measurement/datagrid-materials-cell-unit-measurement';
 import { renderCellExpandWithIcon } from 'src/shared/mui-data-grid/datagrid-materials-cell-name/components/datagrid-materials-cell-name/datagrid-materials-cell-name-with-icon.export';
 
 export default function Materials({
@@ -359,6 +366,12 @@ export default function Materials({
   const editToolbar = () => {
     const handleClickAddMaterial = () => {
       addRequiredColumnsToTable(MaterialRequiredCreateColumns);
+      const currentState = apiRef.current.exportState();
+      const filterState = currentState.filter?.filterModel;
+      filterState?.items.forEach((elem) => {
+        apiRef.current.deleteFilterItem(elem);
+      });
+
       const currentCategoryToDefaultChange =
         currentCategory ||
         allCategoryMaterialsInHandbook.filter(
@@ -408,6 +421,13 @@ export default function Materials({
       currentRowsIds.forEach((rowId) => {
         apiRef.current.selectRow(rowId, false, true);
       });
+
+      const currentRowsState = apiRef.current.state;
+      console.log(currentRowsState);
+      // currentRowsModels.forEach((rowModel) => {
+      //   console.log(rowModel);
+      //   // apiRef.current.selectRow(rowId, false, true);
+      // });
     };
 
     const isCreateRowButtonVisible = () => {
@@ -546,6 +566,12 @@ export default function Materials({
   // const handleEditClick = (id: GridRowId) => () => {
   //   setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   // };
+
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = async (params, event: MuiEvent) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
 
   const handleCellEditStop = async (params: GridCellEditStopParams, event: MuiEvent) => {
     const rowCurrentState = apiRef.current.getRowWithUpdatedValues(params.id, params.field);
@@ -742,6 +768,26 @@ export default function Materials({
     setRowModesModel(newRowModesModel);
   };
 
+  const handleClickAddNewUnitMeasurement = async (
+    createNewUnitMeasurementDto: FieldUnitMeasurementCreateCommand.Request
+  ) => {
+    const newFieldUnitMeasurement = (await createFieldUnitMeasurement(
+      workspaceId as string,
+      handbookId,
+      createNewUnitMeasurementDto
+    )) as FieldUnitMeasurementCreateCommand.ResponseEntity;
+    return newFieldUnitMeasurement;
+  };
+
+  const handleClickDeleteUnitMeasurement = async (unitMeasurementId: string) => {
+    const oldFieldUnitMeasurement = (await deleteFieldUnitMeasurement(
+      workspaceId as string,
+      handbookId,
+      unitMeasurementId
+    )) as FieldUnitMeasurementDeleteCommand.ResponseEntity;
+    return oldFieldUnitMeasurement;
+  };
+
   const allMaterialsTableColumns: GridColDef[] = [
     {
       field: MaterialColumnSchema.uuid,
@@ -924,6 +970,20 @@ export default function Materials({
 
         return fieldUnitMeasurementNames;
       },
+      renderEditCell: (params) => {
+        const optionsForSelect = allUnitMeasurementsInHandbook;
+
+        return (
+          <DataGridCellUnitMeasurement
+            id={params.id}
+            field={params.field}
+            optionsForSelect={optionsForSelect}
+            defaultValue={params?.value}
+            handleClickAddNewUnitMeasurement={handleClickAddNewUnitMeasurement}
+            handleClickDeleteUnitMeasurement={handleClickDeleteUnitMeasurement}
+          />
+        );
+      },
       valueGetter: (value: FieldUnitMeasurementGetCommand.ResponseEntity, row) =>
         isEntityFieldUnitMeasurementTG(value) ? value.name : value,
     },
@@ -1047,8 +1107,10 @@ export default function Materials({
                 width: '100%',
                 maxWidth: 'xl',
               }}
+              allEntitiesForBreadcrumbs={allCategoryMaterialsInHandbook}
               // concreteCrumbName="Листовые"
             />
+
             <Box sx={{ width: '100%' }}>
               <DataGrid
                 apiRef={apiRef}
@@ -1086,6 +1148,9 @@ export default function Materials({
                 // processRowUpdate={processRowUpdate}
                 // onProcessRowUpdateError={handleProcessRowUpdateError}
                 isCellEditable={(params) => {
+                  if (isCreateRowMode) {
+                    return params?.row?.isNew;
+                  }
                   let isCellInEditableColumn =
                     MaterialEditableColumns.includes(params.field) ||
                     UuidRegexForTest.test(params.field);
@@ -1136,10 +1201,6 @@ export default function Materials({
                 //   bottom: params.isLastVisible ? 0 : 5,
                 // })}
                 isRowSelectable={(params: GridRowParams) => {
-                  //   if (params.row.characteristicsMaterial.length === 0 && !isCreateRowMode) {
-                  //     return true;
-                  //   }
-
                   if (!isCreateRowMode) {
                     return true;
                   }
@@ -1149,6 +1210,7 @@ export default function Materials({
                 onRowSelectionModelChange={(newRowSelectionModel) => {
                   setRowSelectionModel(newRowSelectionModel);
                 }}
+                // onCellClick={handleCellClick}
                 rowSelectionModel={rowSelectionModel}
                 // autosizeOptions={{
                 //   columns: [MaterialColumnSchema.name],
@@ -1203,6 +1265,7 @@ export default function Materials({
                   setColumnVisibilityModel(newModel);
                 }}
                 onCellEditStop={handleCellEditStop}
+                onRowEditStop={handleRowEditStop}
               />
             </Box>
           </>
