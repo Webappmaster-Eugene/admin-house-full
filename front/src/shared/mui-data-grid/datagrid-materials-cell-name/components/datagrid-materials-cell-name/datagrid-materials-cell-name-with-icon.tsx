@@ -151,6 +151,8 @@ export const GridCellExpandWithIcon = memo((props: GridCellWithIconExpandProps) 
             sx={
               isCellNameNeedToMark
                 ? {
+                    fontSize: '14px',
+                    lineHeight: 'inherit',
                     position: 'relative',
                     display: 'inline-block',
                     color: 'black', // Цвет текста
@@ -162,6 +164,8 @@ export const GridCellExpandWithIcon = memo((props: GridCellWithIconExpandProps) 
                     textDecorationThickness: '1px',
                   }
                 : {
+                    fontSize: '14px',
+                    lineHeight: 'inherit',
                     position: 'relative',
                     display: 'inline-block',
                     color: 'black', // Цвет текста

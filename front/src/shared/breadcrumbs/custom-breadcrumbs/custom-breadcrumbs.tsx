@@ -42,6 +42,7 @@ export default function CustomBreadcrumbs({
   }, allLinks);
 
   links = linksMap || links;
+  console.log(links);
   if (
     links.length >= 1 &&
     allEntitiesForBreadcrumbs &&

@@ -149,7 +149,10 @@ export default function FieldsOfCategoryMaterials({
   const saveFieldsOfCategoryMaterialsDataGridState = useCallback(() => {
     if (apiRef?.current?.exportState && localStorage) {
       const currentState = apiRef.current.exportState();
-      localStorage.setItem('fieldsOfCategoryMaterialsDataGridState', JSON.stringify(currentState));
+      localStorage.setItem(
+        `fieldsOfCategoryMaterialsIn${handbookId}HandbookDataGridState`,
+        JSON.stringify(currentState)
+      );
     }
   }, [apiRef]);
 
@@ -866,7 +869,7 @@ export default function FieldsOfCategoryMaterials({
       <Container maxWidth="xl">
         {fieldsOfCategoryMaterialsDataGridInitialState ? (
           <>
-            <Typography variant="h4"> Справочник полей категорий материалов</Typography>
+            <Typography variant="h4"> Справочник полей для категорий</Typography>
             <CustomBreadcrumbs
               // heading="Carousel"
               sx={{
@@ -917,7 +920,7 @@ export default function FieldsOfCategoryMaterials({
                   }
 
                   if (params.field === 'isRequired') {
-                    return params.row.categoriesMaterialsTemplatesIncludesThisField.length === 0;
+                    return params.row?.categoriesMaterialsTemplatesIncludesThisField?.length === 0;
                   }
 
                   const isCellInEditableColumn = FieldOfCategoryMaterialEditableColumns.includes(
@@ -953,7 +956,7 @@ export default function FieldsOfCategoryMaterials({
                   },
                   '& .MuiDataGrid-cell--editable': {
                     bgcolor: (theme) =>
-                      theme.palette.mode === 'light' ? `#DBDBDE24` : `rgba(9, 9, 9, 0.11)`,
+                      theme.palette.mode === 'light' ? `#DBDBDE35` : `rgba(9, 9, 9, 0.11)`,
                   },
                 }}
                 disableRowSelectionOnClick

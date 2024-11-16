@@ -98,10 +98,10 @@ import {
   CustomNoResultsOverlay,
 } from 'src/shared/no-rows-overlay/NoRowsOverlay';
 import { getConcreteMaterialInHandbook } from 'src/api/actions/material/get-concrete-material-in-handbook.action';
-import { deleteCharacteristicOfMaterial } from 'src/api/actions/characteristics/delete-characteristic-of-material.action';
-import { createCharacteristicOfMaterial } from 'src/api/actions/characteristics/create-characteristic-of-material.action';
 import { createFieldUnitMeasurement } from 'src/api/actions/field-unit-measurement/create-field-unit-measurement.action';
 import { deleteFieldUnitMeasurement } from 'src/api/actions/field-unit-measurement/delete-field-unit-measurement.action';
+import { deleteCharacteristicOfMaterial } from 'src/api/actions/characteristics/delete-characteristic-of-material.action';
+import { createCharacteristicOfMaterial } from 'src/api/actions/characteristics/create-characteristic-of-material.action';
 import { DataGridCellCategory } from 'src/shared/mui-data-grid/datagrid-materials-cell-category/datagrid-materials-cell-category';
 import { createFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/create-field-variant-in-field-of-category-material.action';
 import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/delete-field-variant-in-field-of-category-material.action';
@@ -297,9 +297,19 @@ export default function Materials({
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
 
   const saveMaterialsDataGridState = useCallback(() => {
-    if (apiRef?.current?.exportState && localStorage) {
+    if (apiRef?.current?.exportState) {
       const currentState = apiRef.current.exportState();
-      localStorage.setItem('materialsDataGridState', JSON.stringify(currentState));
+      if (currentCategory) {
+        localStorage.setItem(
+          `allMaterialsIn${currentCategory.uuid}CategoryIn${handbookId}HandbookDataGridState`,
+          JSON.stringify(currentState)
+        );
+      } else {
+        localStorage.setItem(
+          `allMaterialsIn${handbookId}HandbookDataGridState`,
+          JSON.stringify(currentState)
+        );
+      }
     }
   }, [apiRef]);
 
@@ -1098,18 +1108,20 @@ export default function Materials({
                 : `Справочник материалов из категории ${currentCategory?.name}`}
             </Typography>
 
-            <CustomBreadcrumbs
-              // heading="Carousel"
-              sx={{
-                paddingRight: 3,
-                marginBottom: 2,
-                marginTop: 1,
-                width: '100%',
-                maxWidth: 'xl',
-              }}
-              allEntitiesForBreadcrumbs={allCategoryMaterialsInHandbook}
-              // concreteCrumbName="Листовые"
-            />
+            {allCategoryMaterialsInHandbook && (
+              <CustomBreadcrumbs
+                // heading="Carousel"
+                sx={{
+                  paddingRight: 3,
+                  marginBottom: 2,
+                  marginTop: 1,
+                  width: '100%',
+                  maxWidth: 'xl',
+                }}
+                allEntitiesForBreadcrumbs={allCategoryMaterialsInHandbook}
+                // concreteCrumbName="Листовые"
+              />
+            )}
 
             <Box sx={{ width: '100%' }}>
               <DataGrid
