@@ -46,6 +46,7 @@ export default function CategoryMaterials({
   allCategoriesInWorkspace,
 }: CategoryMaterialProps) {
   const { enqueueSnackbar } = useSnackbar();
+  const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
 
   const [categoryToChange, setCategoryToChange] = useState<
     CategoryMaterialGetCommand.ResponseEntity | undefined
@@ -241,6 +242,13 @@ export default function CategoryMaterials({
             width: '100%',
             maxWidth: 'xl',
           }}
+          concreteCrumbs={[
+            {
+              name: 'Дашборд',
+              href: `${startLink}dashboard`,
+            },
+            { name: 'Категории материалов' },
+          ]}
         />
         <Stack
           spacing={2.5}

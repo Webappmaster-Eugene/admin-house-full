@@ -22,7 +22,7 @@ export default function CustomBreadcrumbs({
   moreLink,
   activeLast,
   sx,
-  concreteCrumbName,
+  concreteCrumbs,
   allEntitiesForBreadcrumbs,
   ...other
 }: CustomBreadcrumbsProps) {
@@ -32,7 +32,7 @@ export default function CustomBreadcrumbs({
   const linksMap = linksTexts.reduce((acc, curValue) => {
     const elem: BreadcrumbsLinkProps = {};
     if (/[a-zA-Zа-яА-ЯёЁ0-9]{1,}/g.test(curValue)) {
-      elem.name = PathsTransformerBreadcrumbMap[curValue]?.name || concreteCrumbName || curValue;
+      elem.name = PathsTransformerBreadcrumbMap[curValue]?.name || curValue;
       if (curValue !== linksTexts[linksTexts.length - 2]) {
         elem.href = PathsTransformerBreadcrumbMap[curValue]?.link;
       }
@@ -41,8 +41,7 @@ export default function CustomBreadcrumbs({
     return acc;
   }, allLinks);
 
-  links = linksMap || links;
-  console.log(links);
+  links = concreteCrumbs || linksMap;
   if (
     links.length >= 1 &&
     allEntitiesForBreadcrumbs &&

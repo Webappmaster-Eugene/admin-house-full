@@ -143,7 +143,7 @@ export default function Materials({
     }
     return materialToRow;
   });
-
+  const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
   const [rows, setRows] = useState<TMaterialTableEntity[]>(allMaterialsEntity);
   const [isCreateRowMode, setIsCreateRowMode] = useState<boolean>(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -1108,7 +1108,7 @@ export default function Materials({
                 : `Справочник материалов из категории ${currentCategory?.name}`}
             </Typography>
 
-            {allCategoryMaterialsInHandbook && (
+            {allCategoryMaterialsInHandbook && startLink && (
               <CustomBreadcrumbs
                 // heading="Carousel"
                 sx={{
@@ -1119,7 +1119,27 @@ export default function Materials({
                   maxWidth: 'xl',
                 }}
                 allEntitiesForBreadcrumbs={allCategoryMaterialsInHandbook}
-                // concreteCrumbName="Листовые"
+                concreteCrumbs={
+                  currentCategory
+                    ? [
+                        {
+                          name: 'Дашборд',
+                          href: `${startLink}dashboard`,
+                        },
+                        { name: 'Материалы', href: `${startLink}dashboard/materials` },
+                        {
+                          name: currentCategory.name,
+                          href: `${startLink}dashboard/materials/${currentCategory.uuid}`,
+                        },
+                      ]
+                    : [
+                        {
+                          name: 'Дашборд',
+                          href: `${startLink}dashboard`,
+                        },
+                        { name: 'Материалы' },
+                      ]
+                }
               />
             )}
 

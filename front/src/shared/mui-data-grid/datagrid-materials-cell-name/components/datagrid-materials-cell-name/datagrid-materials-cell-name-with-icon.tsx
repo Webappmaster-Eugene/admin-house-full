@@ -80,6 +80,15 @@ export const GridCellExpandWithIcon = memo((props: GridCellWithIconExpandProps) 
     // setShowFullCell(false);
     // setShowPopperIconProblem(false);
   };
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showPopperIconProblem) {
+      timer = setTimeout(() => {
+        setShowPopperIconProblem(false);
+      }, 4000);
+    }
+    return () => clearTimeout(timer);
+  }, [showPopperIconProblem]);
 
   useEffect(() => {
     if (!showFullCell) {
@@ -126,7 +135,6 @@ export const GridCellExpandWithIcon = memo((props: GridCellWithIconExpandProps) 
           height: '100%',
           position: 'relative',
           display: 'flex',
-          // backgroundColor: value === 'Материал2 из Тест1' ? 'red' : 'background.default',
         }}
       >
         <Box
@@ -184,6 +192,7 @@ export const GridCellExpandWithIcon = memo((props: GridCellWithIconExpandProps) 
             onMouseLeave={handleMouseIconLeave}
             style={{
               width: '280px',
+              zIndex: '9999',
             }}
           >
             <Paper elevation={1} style={{ minHeight: wrapper.current!.offsetHeight - 3 }}>

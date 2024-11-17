@@ -100,6 +100,7 @@ export default function FieldsOfCategoryMaterials({
   const isDeleteFieldCategoryDialogOpen = useBoolean();
   const isChangeTypeFieldOfCategoryDialogOpen = useBoolean();
   const isChangingFieldVariantsForFieldOfCategoryDialogOpen = useBoolean();
+  const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
 
   const [fieldTypeToChange, setFieldTypeToChange] = useState<FieldTypeToChange | null>(null);
   const [cellValueBeforeEdit, setCellValueBeforeEdit] = useState<CellValueBeforeEdit | null>(null);
@@ -870,16 +871,25 @@ export default function FieldsOfCategoryMaterials({
         {fieldsOfCategoryMaterialsDataGridInitialState ? (
           <>
             <Typography variant="h4"> Справочник полей для категорий</Typography>
-            <CustomBreadcrumbs
-              // heading="Carousel"
-              sx={{
-                paddingRight: 3,
-                marginBottom: 2,
-                marginTop: 1,
-                width: '100%',
-                maxWidth: 'xl',
-              }}
-            />
+            {startLink && (
+              <CustomBreadcrumbs
+                // heading="Carousel"
+                sx={{
+                  paddingRight: 3,
+                  marginBottom: 2,
+                  marginTop: 1,
+                  width: '100%',
+                  maxWidth: 'xl',
+                }}
+                concreteCrumbs={[
+                  {
+                    name: 'Дашборд',
+                    href: `${startLink}dashboard`,
+                  },
+                  { name: 'Поля категорий' },
+                ]}
+              />
+            )}
 
             <Box sx={{ width: '100%' }}>
               <DataGrid

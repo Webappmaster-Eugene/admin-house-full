@@ -16,6 +16,6 @@ export interface CustomBreadcrumbsProps extends BreadcrumbsProps {
   activeLast?: boolean;
   action?: React.ReactNode;
   links?: BreadcrumbsLinkProps[];
-  concreteCrumbName?: string;
+  concreteCrumbs?: BreadcrumbsLinkProps[];
   allEntitiesForBreadcrumbs?: CategoryMaterialGetAllCommand.ResponseEntity;
 }
