@@ -1108,7 +1108,7 @@ export default function Materials({
                 : `Справочник материалов из категории ${currentCategory?.name}`}
             </Typography>
 
-            {allCategoryMaterialsInHandbook && startLink && (
+            {allCategoryMaterialsInHandbook && (
               <CustomBreadcrumbs
                 // heading="Carousel"
                 sx={{
@@ -1124,12 +1124,12 @@ export default function Materials({
                     ? [
                         {
                           name: 'Дашборд',
-                          href: `${startLink}dashboard`,
+                          href: `https://alibaba.hhos.ru/dashboard`,
                         },
-                        { name: 'Материалы', href: `${startLink}dashboard/materials` },
+                        { name: 'Материалы', href: `https://alibaba.hhos.ru/dashboard/materials` },
                         {
                           name: currentCategory.name,
-                          href: `${startLink}dashboard/materials/${currentCategory.uuid}`,
+                          href: `https://alibaba.hhos.ru/dashboard/materials/${currentCategory.uuid}`,
                         },
                       ]
                     : [

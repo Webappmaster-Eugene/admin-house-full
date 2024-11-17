@@ -245,7 +245,7 @@ export default function CategoryMaterials({
           concreteCrumbs={[
             {
               name: 'Дашборд',
-              href: `${startLink}dashboard`,
+              href: `https://alibaba.hhos.ru/dashboard`,
             },
             { name: 'Категории материалов' },
           ]}

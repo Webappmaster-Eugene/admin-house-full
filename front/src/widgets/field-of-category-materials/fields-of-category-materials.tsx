@@ -871,25 +871,23 @@ export default function FieldsOfCategoryMaterials({
         {fieldsOfCategoryMaterialsDataGridInitialState ? (
           <>
             <Typography variant="h4"> Справочник полей для категорий</Typography>
-            {startLink && (
-              <CustomBreadcrumbs
-                // heading="Carousel"
-                sx={{
-                  paddingRight: 3,
-                  marginBottom: 2,
-                  marginTop: 1,
-                  width: '100%',
-                  maxWidth: 'xl',
-                }}
-                concreteCrumbs={[
-                  {
-                    name: 'Дашборд',
-                    href: `${startLink}dashboard`,
-                  },
-                  { name: 'Поля категорий' },
-                ]}
-              />
-            )}
+            <CustomBreadcrumbs
+              // heading="Carousel"
+              sx={{
+                paddingRight: 3,
+                marginBottom: 2,
+                marginTop: 1,
+                width: '100%',
+                maxWidth: 'xl',
+              }}
+              concreteCrumbs={[
+                {
+                  name: 'Дашборд',
+                  href: `https://alibaba.hhos.ru/dashboard`,
+                },
+                { name: 'Поля категорий' },
+              ]}
+            />
 
             <Box sx={{ width: '100%' }}>
               <DataGrid
