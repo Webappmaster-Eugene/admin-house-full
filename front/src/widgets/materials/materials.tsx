@@ -1135,7 +1135,7 @@ export default function Materials({
                     : [
                         {
                           name: 'Дашборд',
-                          href: `${startLink}dashboard`,
+                          href: `https://alibaba.hhos.ru/dashboard`,
                         },
                         { name: 'Материалы' },
                       ]
