@@ -10,39 +10,48 @@ const prisma = new PrismaClient();
 async function main() {
   //DOC ROLES - создаем все роли
   //region ROLES
-  const ADMIN_ROLE = await prisma?.role?.create({
-    data: {
+  const ADMIN_ROLE = await prisma?.role?.upsert({
+    where: { name: 'ADMIN' },
+    create: {
       name: 'ADMIN',
       description: 'Админ всего ПО (приложения)',
     },
+    update: undefined,
   });
 
-  const MANAGER_ROLE = await prisma?.role?.create({
-    data: {
+  const MANAGER_ROLE = await prisma?.role?.upsert({
+    where: { name: 'MANAGER' },
+    create: {
       name: 'MANAGER',
       description: 'Менеджер проекта, руководитель организации',
     },
+    update: undefined,
   });
 
-  const WORKER_ROLE = await prisma?.role?.create({
-    data: {
+  const WORKER_ROLE = await prisma?.role?.upsert({
+    where: { name: 'WORKER' },
+    create: {
       name: 'WORKER',
       description: 'Сотрудник организации',
     },
+    update: undefined,
   });
 
-  const CUSTOMER_ROLE = await prisma?.role?.create({
-    data: {
+  const CUSTOMER_ROLE = await prisma?.role?.upsert({
+    where: { name: 'WORKER' },
+    create: {
       name: 'CUSTOMER',
       description: 'Заказчик, покупатель',
     },
+    update: undefined,
   });
   //endregion
 
   //DOC USERS - создаем всех пользователей кроме менеджера
   //region USERS
-  const ADMIN_USER = await prisma?.user?.create({
-    data: {
+  const ADMIN_USER = await prisma?.user?.upsert({
+    where: { email: 'admin1@mail.ru' },
+    create: {
       email: 'admin1@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -53,10 +62,12 @@ async function main() {
       phone: '+79999999911',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const WORKER_USER_1 = await prisma?.user?.create({
-    data: {
+  const WORKER_USER_1 = await prisma?.user?.upsert({
+    where: { email: 'worker1@mail.ru' },
+    create: {
       email: 'worker1@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -67,10 +78,12 @@ async function main() {
       phone: '+79999999931',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const WORKER_USER_2 = await prisma?.user?.create({
-    data: {
+  const WORKER_USER_2 = await prisma?.user?.upsert({
+    where: { email: 'worker2@mail.ru' },
+    create: {
       email: 'worker2@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -81,10 +94,12 @@ async function main() {
       phone: '+79999999932',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const WORKER_USER_3 = await prisma?.user?.create({
-    data: {
+  const WORKER_USER_3 = await prisma?.user?.upsert({
+    where: { email: 'worker3@mail.ru' },
+    create: {
       email: 'worker3@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -95,10 +110,12 @@ async function main() {
       phone: '+79999999933',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const WORKER_USER_4 = await prisma?.user?.create({
-    data: {
+  const WORKER_USER_4 = await prisma?.user?.upsert({
+    where: { email: 'worker4@mail.ru' },
+    create: {
       email: 'worker4@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -109,10 +126,12 @@ async function main() {
       phone: '+79999999934',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const CUSTOMER_USER_1 = await prisma?.user?.create({
-    data: {
+  const CUSTOMER_USER_1 = await prisma?.user?.upsert({
+    where: { email: 'customer1@mail.ru' },
+    create: {
       email: 'customer1@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -123,10 +142,12 @@ async function main() {
       phone: '+79999999941',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const CUSTOMER_USER_2 = await prisma?.user?.create({
-    data: {
+  const CUSTOMER_USER_2 = await prisma?.user?.upsert({
+    where: { email: 'customer2@mail.ru' },
+    create: {
       email: 'customer2@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -137,10 +158,12 @@ async function main() {
       phone: '+79999999942',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const CUSTOMER_USER_3 = await prisma?.user?.create({
-    data: {
+  const CUSTOMER_USER_3 = await prisma?.user?.upsert({
+    where: { email: 'customer3@mail.ru' },
+    create: {
       email: 'customer3@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -151,10 +174,12 @@ async function main() {
       phone: '+79999999943',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const CUSTOMER_USER_4 = await prisma?.user?.create({
-    data: {
+  const CUSTOMER_USER_4 = await prisma?.user?.upsert({
+    where: { email: 'customer4@mail.ru' },
+    create: {
       email: 'customer4@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -165,10 +190,12 @@ async function main() {
       phone: '+79999999944',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
-  const CUSTOMER_USER_5 = await prisma?.user?.create({
-    data: {
+  const CUSTOMER_USER_5 = await prisma?.user?.upsert({
+    where: { email: 'customer5@mail.ru' },
+    create: {
       email: 'customer5@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -179,13 +206,15 @@ async function main() {
       phone: '+79999999945',
       info: 'Standard information',
     },
+    update: undefined,
   });
   //endregion
 
   //DOC MANAGER_USER_1 AND HIS INFRASTRUCTURE - создаем менеджера и для него - воркспейс, организацию и проект
   //region MANAGER_1 AND HIS INFRASTRUCTURE
-  const MANAGER_USER_1 = await prisma?.user?.create({
-    data: {
+  const MANAGER_USER_1 = await prisma?.user?.upsert({
+    where: { email: 'manager1@mail.ru' },
+    create: {
       email: 'manager1@mail.ru',
       password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
       roles: {
@@ -196,6 +225,7 @@ async function main() {
       phone: '+79999999921',
       info: 'Standard information',
     },
+    update: undefined,
   });
 
   const MANAGER_WORKSPACE_1 = await prisma?.workspace?.create({
