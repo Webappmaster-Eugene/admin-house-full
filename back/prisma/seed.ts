@@ -16,7 +16,7 @@ async function main() {
       name: 'ADMIN',
       description: 'Админ всего ПО (приложения)',
     },
-    update: undefined,
+    update: {},
   });
 
   const MANAGER_ROLE = await prisma?.role?.upsert({
@@ -25,7 +25,7 @@ async function main() {
       name: 'MANAGER',
       description: 'Менеджер проекта, руководитель организации',
     },
-    update: undefined,
+    update: {},
   });
 
   const WORKER_ROLE = await prisma?.role?.upsert({
@@ -34,7 +34,7 @@ async function main() {
       name: 'WORKER',
       description: 'Сотрудник организации',
     },
-    update: undefined,
+    update: {},
   });
 
   const CUSTOMER_ROLE = await prisma?.role?.upsert({
@@ -43,7 +43,7 @@ async function main() {
       name: 'CUSTOMER',
       description: 'Заказчик, покупатель',
     },
-    update: undefined,
+    update: {},
   });
   //endregion
 
@@ -62,7 +62,7 @@ async function main() {
       phone: '+79999999911',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const WORKER_USER_1 = await prisma?.user?.upsert({
@@ -78,7 +78,7 @@ async function main() {
       phone: '+79999999931',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const WORKER_USER_2 = await prisma?.user?.upsert({
@@ -94,7 +94,7 @@ async function main() {
       phone: '+79999999932',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const WORKER_USER_3 = await prisma?.user?.upsert({
@@ -110,7 +110,7 @@ async function main() {
       phone: '+79999999933',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const WORKER_USER_4 = await prisma?.user?.upsert({
@@ -126,7 +126,7 @@ async function main() {
       phone: '+79999999934',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const CUSTOMER_USER_1 = await prisma?.user?.upsert({
@@ -142,7 +142,7 @@ async function main() {
       phone: '+79999999941',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const CUSTOMER_USER_2 = await prisma?.user?.upsert({
@@ -158,7 +158,7 @@ async function main() {
       phone: '+79999999942',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const CUSTOMER_USER_3 = await prisma?.user?.upsert({
@@ -174,7 +174,7 @@ async function main() {
       phone: '+79999999943',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const CUSTOMER_USER_4 = await prisma?.user?.upsert({
@@ -190,7 +190,7 @@ async function main() {
       phone: '+79999999944',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const CUSTOMER_USER_5 = await prisma?.user?.upsert({
@@ -206,7 +206,7 @@ async function main() {
       phone: '+79999999945',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
   //endregion
 
@@ -225,7 +225,7 @@ async function main() {
       phone: '+79999999921',
       info: 'Standard information',
     },
-    update: undefined,
+    update: {},
   });
 
   const MANAGER_WORKSPACE_1 = await prisma?.workspace?.create({
