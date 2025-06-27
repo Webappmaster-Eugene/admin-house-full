@@ -1230,10 +1230,6 @@ export default function Materials({
                 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                // getRowSpacing={(params) => ({
-                //   top: params.isFirstVisible ? 0 : 5,
-                //   bottom: params.isLastVisible ? 0 : 5,
-                // })}
                 isRowSelectable={(params: GridRowParams) => {
                   if (!isCreateRowMode) {
                     return true;
