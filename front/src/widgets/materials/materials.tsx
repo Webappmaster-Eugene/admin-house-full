@@ -4,7 +4,7 @@ import moment from 'moment';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
 import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
-import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useState, useEffect, useCallback, useLayoutEffect, Dispatch, SetStateAction } from 'react';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
 import { NewMaterialId } from '@/widgets/materials/new-material-id.const';
 import { MaterialEditableColumns } from '@/widgets/materials/editable-columns';
@@ -69,6 +69,8 @@ import {
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
   GRID_CHECKBOX_SELECTION_COL_DEF,
+  GridToolbarProps,
+  ToolbarPropsOverrides,
 } from '@mui/x-data-grid';
 
 import { toRubles } from 'src/utils/helpers/intl';
@@ -1224,7 +1226,7 @@ export default function Materials({
                   toolbar: editToolbar as GridSlots['toolbar'],
                 }}
                 slotProps={{
-                  toolbar: { setRows, setRowModesModel },
+                  toolbar: { setRows, setRowModesModel } as unknown as {setRows: Partial<GridToolbarProps & ToolbarPropsOverrides>, setRowModesModel: Dispatch<SetStateAction<GridRowModesModel>>},
                 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
