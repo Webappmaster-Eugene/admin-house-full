@@ -11,4 +11,5 @@ export interface EditorProps extends Object
   simple?: boolean;
   helperText?: React.ReactNode;
   sx?: SxProps<Theme>;
+  onChange: any;
 }

@@ -36,11 +36,6 @@ export default function RHFEditor({ name, helperText, ...other }: Props) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <Editor
-          // eslint-disable-next-line
-          id={name}
-          // eslint-disable-next-line
-          value={field.value}
-          onChange={field.onChange}
           error={!!error}
           helperText={
             (!!error || helperText) && (
@@ -50,6 +45,7 @@ export default function RHFEditor({ name, helperText, ...other }: Props) {
             )
           }
           {...other}
+          onChange={field.onChange}
         />
       )}
     />
