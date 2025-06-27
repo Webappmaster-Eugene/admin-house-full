@@ -5,7 +5,7 @@ import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
 import { deepEqualAndIn } from '@/utils/helpers/deep-equal-and-in';
 import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
-import { useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useState, useEffect, useCallback, useLayoutEffect, SetStateAction, Dispatch } from 'react';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
 import { deepEqualAndInTableKeys } from '@/utils/helpers/deep-equal-in-tablekeys';
 import { DeleteFieldDialogTexts, ChangeTypeFieldDialogTexts } from '@/utils/const/dialog-texts';
@@ -74,6 +74,8 @@ import {
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
   GRID_CHECKBOX_SELECTION_COL_DEF,
+  GridToolbarProps,
+  ToolbarPropsOverrides,
 } from '@mui/x-data-grid';
 
 import { isEntityFieldUnitMeasurementTG } from 'src/utils/type-guards/is-entity-field-unit-measurement.type-guard';
@@ -944,7 +946,7 @@ export default function FieldsOfCategoryMaterials({
                   toolbar: editToolbar as GridSlots['toolbar'],
                 }}
                 slotProps={{
-                  toolbar: { setRows, setRowModesModel },
+                  toolbar: { setRows, setRowModesModel } as unknown as {setRows: Partial<GridToolbarProps & ToolbarPropsOverrides>, setRowModesModel: Dispatch<SetStateAction<GridRowModesModel>>},
                 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
