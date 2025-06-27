@@ -1219,7 +1219,6 @@ export default function Materials({
                   const isNewRow = params.row?.isNew;
                   return isNewRow || isCellInEditableColumn;
                 }}
-                // slots={{ toolbar: GridToolbar }}
                 slots={{
                   noRowsOverlay: CustomNoRowsOverlay,
                   noResultsOverlay: CustomNoResultsOverlay,
