@@ -124,6 +124,7 @@ const logger: LoggerConfig = new LoggerConfig();
       useClass: UserInterceptor,
     },
     { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
+    // если хотим общий гвард на все роуты в приложении
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
