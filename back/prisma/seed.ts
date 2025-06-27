@@ -2644,6 +2644,7 @@ async function main() {
   //endregion
 }
 
+// execute the seed upload
 main()
   .then(async () => {
     await prisma.$disconnect();
