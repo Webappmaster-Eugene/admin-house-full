@@ -10,7 +10,7 @@
     "noEmit": true,
     "allowJs": true,
     "jsx": "preserve",
-    "module": "es2022",
+    "module": "esnext",
     "incremental": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
@@ -30,7 +30,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": [
+        "./src/*"
+      ]
     },
     "baseUrl": "."
   },
@@ -38,7 +40,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

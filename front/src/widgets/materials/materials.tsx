@@ -665,8 +665,6 @@ export default function Materials({
   const handleSaveClick = async () => {
     const id = NewMaterialId;
     const isNewRow = apiRef.current.getRow(id)?.isNew;
-    let finalRow: MaterialCreateCommand.ResponseEntity;
-
     if (!isNewRow) {
       enqueueSnackbar('Ошибка создания материала: строка не помечена как новая', {
         variant: 'error',
@@ -690,7 +688,7 @@ export default function Materials({
       return;
     }
 
-    finalRow = createResult as MaterialCreateCommand.ResponseEntity;
+    const finalRow = createResult as MaterialCreateCommand.ResponseEntity;
 
     const allCharacteristicsForMaterial = Object.entries(newRowLocally).map(
       async ([key, value]) => {

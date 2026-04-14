@@ -28,9 +28,7 @@ export async function callAction<TResponseEntity>(
     const response = await call();
 
     if (isGoodHttpCode(response?.statusCode)) {
-      for (const path of revalidatePaths) {
-        revalidatePath(path);
-      }
+      revalidatePaths.forEach((path) => revalidatePath(path));
       return response.data as TResponseEntity;
     }
 
