@@ -70,7 +70,6 @@ export default function RegisterView() {
 
   const onSubmit = handleSubmit(async (data, event) => {
     if (event) {
-      console.log('preventDefault');
       event?.preventDefault();
     }
 

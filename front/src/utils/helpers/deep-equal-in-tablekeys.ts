@@ -1,7 +1,6 @@
 const needTableKeys = ['width'];
 
 export function deepEqualAndInTableKeys(x: unknown, y: unknown): boolean {
-  // console.log(x, y);
   // Проверяем, что оба значения не равны null и являются объектами
   if (x === null || y === null || typeof x !== 'object' || typeof y !== 'object') {
     return x === y;
@@ -31,6 +30,5 @@ export function deepEqualAndInTableKeys(x: unknown, y: unknown): boolean {
     }
     return acc;
   }, initialArr);
-  // console.log(finalArr);
   return finalArr.length !== 0;
 }

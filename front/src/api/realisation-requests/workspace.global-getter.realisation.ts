@@ -19,6 +19,11 @@ export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoComma
   const currentWorkspace = (currentUserInfo?.creatorOfWorkspace ||
     (currentUserInfo?.memberOfWorkspaces &&
       currentUserInfo?.memberOfWorkspaces[0])) as unknown as WorkspaceGetCommand.ResponseEntity;
+
+  if (!currentWorkspace) {
+    return null;
+  }
+
   const workspaceId = currentWorkspace.uuid;
   const handbookId = currentWorkspace.handbookOfWorkspaceUuid as string;
 

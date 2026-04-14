@@ -4,6 +4,7 @@ import 'src/global.css';
 
 import { Suspense } from 'react';
 import { cookies } from 'next/headers';
+import { jwtDecode } from 'jwt-decode';
 import { SettingsDrawer } from '@/shared/settings';
 
 import { cookieKeys } from 'src/utils/const';
@@ -21,13 +22,6 @@ import WorkspaceInfoProvider from 'src/providers/workspace-info-provider';
 import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 import { getFullWorkspaceInfo } from 'src/api/realisation-requests/workspace.global-getter.realisation';
 
-// export const viewport = {
-//   themeColor: '#000000',
-//   width: 'device-width',
-//   initialScale: 1,
-//   maximumScale: 1,
-// };
-
 export const metadata = {
   title: 'Лучи',
   description: 'The starting point for project',
@@ -44,21 +38,27 @@ export const metadata = {
 export default async function RootLayout({ children }: PropsReactNode) {
   let currentUserInfo = null;
   let workspaceInfo: AppState | null = null;
-  const appInfo = null;
 
   const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
+  let isRefreshTokenValid = false;
   if (refreshToken) {
+    try {
+      const { exp } = jwtDecode<{ exp: number }>(refreshToken);
+      isRefreshTokenValid = exp * 1000 > Date.now();
+    } catch {
+      // malformed token — treat as expired
+    }
+  }
+  if (isRefreshTokenValid) {
     currentUserInfo = await getCurrentUser();
     if (isCurrentUserTypeGuard(currentUserInfo) && isUserWithRelatedWorkspaceTG(currentUserInfo)) {
-      // appInfo = await getAppInfo();
-      workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
+        workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
     }
   }
 
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>
-        {/* <AppProvider appInfo={appInfo}> */}
         <CurrentUserProvider
           currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
         >
@@ -71,7 +71,6 @@ export default async function RootLayout({ children }: PropsReactNode) {
             </GeneralProvider>
           </WorkspaceInfoProvider>
         </CurrentUserProvider>
-        {/* </AppProvider> */}
       </body>
     </html>
   );

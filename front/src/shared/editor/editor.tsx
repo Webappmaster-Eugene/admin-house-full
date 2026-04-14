@@ -1,30 +1,8 @@
 /* eslint-disable perfectionist/sort-imports */
-import 'src/utils/highlight';
-
-import dynamic from 'next/dynamic';
-
 import { alpha } from '@mui/material/styles';
-import Skeleton from '@mui/material/Skeleton';
 import { EditorProps } from './types';
 import { StyledEditor } from './styles';
-import Toolbar, { formats } from './toolbar';
-
-// const ReactQuill = dynamic(() => import('react-quill'), {
-//   ssr: false,
-//   loading: () => (
-//     <Skeleton
-//       sx={{
-//         top: 0,
-//         left: 0,
-//         right: 0,
-//         bottom: 0,
-//         height: 1,
-//         borderRadius: 1,
-//         position: 'absolute',
-//       }}
-//     />
-//   ),
-// });
+import Toolbar from './toolbar';
 
 // ----------------------------------------------------------------------
 
@@ -36,21 +14,6 @@ export default function Editor({
   sx,
   ...other
 }: EditorProps) {
-  const modules = {
-    toolbar: {
-      container: `#${id}`,
-    },
-    history: {
-      delay: 500,
-      maxStack: 100,
-      userOnly: true,
-    },
-    syntax: true,
-    clipboard: {
-      matchVisual: false,
-    },
-  };
-
   return (
     <>
       <StyledEditor
@@ -66,12 +29,6 @@ export default function Editor({
       >
         <Toolbar id={id} simple={simple} />
 
-        {/* <ReactQuill
-          modules={modules}
-          formats={formats}
-          placeholder="Write something awesome..."
-          {...other}
-        /> */}
       </StyledEditor>
 
       {helperText && helperText}

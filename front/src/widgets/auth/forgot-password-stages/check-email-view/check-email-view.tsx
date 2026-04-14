@@ -57,8 +57,6 @@ export default function CheckEmailView({ setForgotState, forgotState }: CheckEma
     if (event) {
       event?.preventDefault();
     }
-    console.log('click');
-
     // const user = await login({ email: data.email, password: data.password });
     //
     // if (!isErrorFieldTypeGuard(user)) {

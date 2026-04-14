@@ -42,16 +42,13 @@ export async function register(data: {
       return response?.data as AuthRegisterCommand.ResponseEntity;
     }
 
-    console.error('Standard backend error while register', response);
     if (response?.errors) {
       errorObject.error = response?.errors[0];
       return errorObject;
     }
-    console.error('Not standard backend error while register', response);
     errorObject.error = response?.message;
     return errorObject;
   } catch (error: unknown) {
-    console.error('Catched frontend error while register', error);
     if (error instanceof AxiosError) {
       errorObject.error = error.message;
       return errorObject;

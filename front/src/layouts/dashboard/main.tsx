@@ -14,8 +14,6 @@ export default function Main({ children, sx, ...other }: BoxProps) {
   const settings = useSettingsContext();
 
   const lgUp = useResponsive('up', 'lg');
-  // const { isScreenXxxl } = useResize();
-  // const isNavHorizontal = settings.themeLayout === 'horizontal';
 
   const isNavVertical = settings.themeLayout === 'vertical';
 
@@ -39,17 +37,6 @@ export default function Main({ children, sx, ...other }: BoxProps) {
       }}
       {...other}
     >
-      {/* <CustomBreadcrumbs */}
-      {/*  // heading="Carousel" */}
-      {/*  sx={{ */}
-      {/*    paddingLeft: 3, */}
-      {/*    paddingRight: 3, */}
-      {/*    mx: isScreenXxxl ? 'auto' : 0, */}
-      {/*    marginBottom: 2, */}
-      {/*    width: '100%', */}
-      {/*    maxWidth: 'xl', */}
-      {/*  }} */}
-      {/* /> */}
       {children}
     </Box>
   );

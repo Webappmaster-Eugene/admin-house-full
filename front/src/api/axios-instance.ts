@@ -17,13 +17,18 @@ type ResponseClientType = {
   data: unknown;
 };
 
+// Mutex для предотвращения параллельных вызовов refresh при одновременных 403
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: unknown) => void }> = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach(({ resolve, reject }) => (error ? reject(error) : resolve(token!)));
+  failedQueue = [];
+};
+
 const axiosOptions: CreateAxiosDefaults = {
   baseURL: process.env.NEXT_PUBLIC_HOST_API,
-  // baseURL: 'https://api.alibaba.hhos.ru/api/v1.0/',
   withCredentials: true,
-  // headers: {
-  //   'Content-Type': 'application/json',
-  // },
   maxRedirects: 5,
 };
 
@@ -33,12 +38,8 @@ axiosAuthedInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig & { _retry?: boolean }) => {
     const clientCookieAccessToken = await getAccessToken();
 
-    if (!config?._retry) {
-      if (config.headers && clientCookieAccessToken) {
-        config.headers.Authorization = clientCookieAccessToken;
-      } else {
-        config.headers.Authorization = `Bearer bad_access_token`;
-      }
+    if (!config?._retry && config.headers && clientCookieAccessToken) {
+      config.headers.Authorization = clientCookieAccessToken;
     }
     const refreshToken = await getRefreshToken();
     if (refreshToken) {
@@ -49,11 +50,7 @@ axiosAuthedInstance.interceptors.request.use(
 );
 
 axiosAuthedInstance.interceptors.response.use(
-  async (res) => {
-    console.log(
-      `FulfilledResponse: [${res?.config?.method}] ${res?.config?.baseURL}${res?.config?.url} statusCode: ${res?.status}`,
-      res?.data
-    );
+  (res) => {
     const responseData = res?.data;
     return responseData;
   },
@@ -61,39 +58,51 @@ axiosAuthedInstance.interceptors.response.use(
     const originalRequest: AxiosRequestConfig & { _retry?: boolean } = error.config;
     const errorPath = error.request?.path;
     const responseData: ResponseClientType = error.response?.data;
-    console.error(
-      `RejectedResponse: [${error?.config?.method}] ${error?.config?.baseURL}${error?.config?.url} }`,
-      responseData
-    );
+    const isAuthPath =
+      errorPath === AUTH_PATHS.login ||
+      errorPath === AUTH_PATHS.register ||
+      errorPath === AUTH_PATHS.refresh_keys;
+
     if (
       responseData?.statusCode === 403 &&
-      errorPath !== AUTH_PATHS.login &&
-      errorPath !== AUTH_PATHS.register &&
-      errorPath !== AUTH_PATHS.refresh_keys &&
+      !isAuthPath &&
       originalRequest &&
       !originalRequest._retry &&
       originalRequest.headers?.Authorization
     ) {
+      if (isRefreshing) {
+        // Ставим запрос в очередь — он будет повторён когда refresh завершится
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers!.Authorization = token;
+          return axiosAuthedInstance(originalRequest);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
         const { data } = await axiosAuthedInstance.post(axiosEndpoints.auth.refresh_keys);
-
-        originalRequest.headers.Authorization = `Bearer ${data?.accessToken}`;
-        const responseRetry = await axiosAuthedInstance(originalRequest);
-        return responseRetry;
+        const newToken = `Bearer ${data?.accessToken}`;
+        processQueue(null, newToken);
+        originalRequest.headers.Authorization = newToken;
+        return await axiosAuthedInstance(originalRequest);
       } catch (errorRefresh: unknown) {
-        if (responseData?.errors && responseData?.errors[0]?.description) {
-          throw new AxiosError(responseData?.errors[0]?.description);
-        } else {
-          throw new AxiosError(responseData?.message);
+        processQueue(errorRefresh);
+        if (responseData?.errors?.[0]?.description) {
+          throw new AxiosError(responseData.errors[0].description);
         }
+        throw new AxiosError(responseData?.message);
+      } finally {
+        isRefreshing = false;
       }
     }
 
     if (
       (responseData?.statusCode === 401 || responseData?.statusCode === 403) &&
-      errorPath !== AUTH_PATHS.login &&
-      errorPath !== AUTH_PATHS.register
+      !isAuthPath
     ) {
       await logoutUser();
     }

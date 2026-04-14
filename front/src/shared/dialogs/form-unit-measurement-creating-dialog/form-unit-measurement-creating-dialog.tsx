@@ -57,7 +57,6 @@ export default function FormUnitMeasurementCreatingDialog({
       comment: data.comment,
       fieldUnitMeasurementStatus: EntityActivityStatus.ACTIVE,
     });
-    console.log(newUnitMeasurement);
     handleChangeAfterCreating(newUnitMeasurement.name);
 
     if (!isErrorFieldTypeGuard(newUnitMeasurement)) {

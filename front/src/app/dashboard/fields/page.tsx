@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------
 
 import FieldsOfCategoryMaterials from '@/widgets/field-of-category-materials/fields-of-category-materials';
-import { getAllFieldOfCategoryOfHandbook } from '@/api/actions/project/get-all-projects-of-workspace.action';
+import { getAllFieldOfCategoryOfHandbook } from '@/api/actions/field-category-material/get-all-field-category-material-of-handbook.action';
 import {
   UserGetFullInfoCommand,
   FieldOfCategoryMaterialGetAllCommand,

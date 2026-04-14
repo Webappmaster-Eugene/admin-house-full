@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ConfirmDialog } from '@/shared/custom-dialog';
 import { FieldOfCategoryMaterialGetAllCommand } from '@numart/house-admin-contracts';
 
@@ -58,7 +58,7 @@ export default function CategoryViewDetails({
 
   const confirm = useBoolean();
 
-  const onMoreClick = (event: any) => {
+  const onMoreClick = (_event: React.MouseEvent) => {
     router.push(uuid);
   };
 

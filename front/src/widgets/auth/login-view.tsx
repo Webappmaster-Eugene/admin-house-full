@@ -41,8 +41,8 @@ export default function LoginView() {
   });
 
   const defaultValues = {
-    email: 'manager1@mail.ru',
-    password: '!qwertY32',
+    email: process.env.NEXT_PUBLIC_DEFAULT_EMAIL ?? '',
+    password: process.env.NEXT_PUBLIC_DEFAULT_PASSWORD ?? '',
   };
 
   const methods = useForm({
@@ -92,10 +92,6 @@ export default function LoginView() {
           </Link>
         </Stack>
       </Stack>
-
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Почта : <strong>manager1@mail.ru</strong> / пароль :<strong> !qwertY32</strong>
-      </Alert>
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>

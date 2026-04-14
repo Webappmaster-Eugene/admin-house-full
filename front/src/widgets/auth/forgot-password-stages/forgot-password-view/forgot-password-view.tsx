@@ -49,7 +49,6 @@ export default function ForgotPasswordView({
     if (event) {
       event?.preventDefault();
     }
-    console.log('click');
     setForgotState({ state: ForgotState.CodeEntering, email: data.email });
     // const user = await login({ email: data.email, password: data.password });
     //

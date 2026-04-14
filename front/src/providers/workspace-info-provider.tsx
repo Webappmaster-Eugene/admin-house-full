@@ -12,13 +12,15 @@ export default function WorkspaceInfoProvider({
   workspaceInfo: AppState | null;
   children: React.ReactNode;
 }) {
-  const { setWorkspaceInfo } = useWorkspaceInfoStore((state) => state);
+  const { setWorkspaceInfo, reset } = useWorkspaceInfoStore((state) => state);
 
   useEffect(() => {
     if (workspaceInfo) {
       setWorkspaceInfo(workspaceInfo);
+    } else {
+      reset();
     }
-  }, [setWorkspaceInfo, workspaceInfo]);
+  }, [setWorkspaceInfo, reset, workspaceInfo]);
 
   return <>{children}</>;
 }

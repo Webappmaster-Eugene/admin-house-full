@@ -74,7 +74,6 @@ export default function RegisterWithRoleKeyView() {
 
   const onSubmit = handleSubmit(async (data, event) => {
     if (event) {
-      console.log('preventDefault');
       event?.preventDefault();
     }
 
@@ -91,10 +90,7 @@ export default function RegisterWithRoleKeyView() {
     // все операции должны располагаться ниже здесь
     // });
 
-    console.log('user', user);
-
     if (!isErrorFieldTypeGuard(user)) {
-      console.log(user);
       router.push(returnTo || paths.dashboard.root);
     } else {
       const { error } = user;

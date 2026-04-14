@@ -1,6 +1,7 @@
 'use client';
 
-import moment from 'moment';
+import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
 import { deepEqualAndIn } from '@/utils/helpers/deep-equal-and-in';
@@ -38,6 +39,7 @@ import {
   FieldVariantsForSelectorFieldTypeCreateCommand,
 } from '@numart/house-admin-contracts';
 
+import type { Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -68,6 +70,7 @@ import {
   GridToolbarContainer,
   GridRowSelectionModel,
   GridCellEditStopParams,
+  GridCellEditStopReasons,
   GridRowEditStopReasons,
   GridToolbarFilterButton,
   GridCellEditStartParams,
@@ -79,6 +82,7 @@ import {
 } from '@mui/x-data-grid';
 
 import { isEntityFieldUnitMeasurementTG } from 'src/utils/type-guards/is-entity-field-unit-measurement.type-guard';
+import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
 import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
@@ -99,6 +103,7 @@ export default function FieldsOfCategoryMaterials({
   fieldsOfCategoryMaterialsInfo,
 }: FieldsOfCategoryMaterialsProps) {
   const settings = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
   const isDeleteFieldCategoryDialogOpen = useBoolean();
   const isChangeTypeFieldOfCategoryDialogOpen = useBoolean();
   const isChangingFieldVariantsForFieldOfCategoryDialogOpen = useBoolean();
@@ -157,7 +162,7 @@ export default function FieldsOfCategoryMaterials({
         JSON.stringify(currentState)
       );
     }
-  }, [apiRef]);
+  }, [apiRef, handbookId]);
 
   useEffect(() => {
     const fieldOfCategoryMaterialsStartDataEntityUpdated = fieldsOfCategoryMaterialsInfo.map(
@@ -170,20 +175,19 @@ export default function FieldsOfCategoryMaterials({
   }, [fieldsOfCategoryMaterialsInfo]);
 
   useLayoutEffect(() => {
-    const stateFromLocalStorage = localStorage?.getItem('fieldsOfCategoryMaterialsDataGridState');
+    const storageKey = `fieldsOfCategoryMaterialsIn${handbookId}HandbookDataGridState`;
+    const stateFromLocalStorage = localStorage?.getItem(storageKey);
     setFieldsOfCategoryMaterialsMaterialsDataGridInitialState(
       stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {}
     );
 
-    // handle refresh and navigating away/refreshing
     window.addEventListener('beforeunload', saveFieldsOfCategoryMaterialsDataGridState);
 
     return () => {
-      // in case of an SPA remove the event-listener
       window.removeEventListener('beforeunload', saveFieldsOfCategoryMaterialsDataGridState);
       saveFieldsOfCategoryMaterialsDataGridState();
     };
-  }, [saveFieldsOfCategoryMaterialsDataGridState]);
+  }, [saveFieldsOfCategoryMaterialsDataGridState, handbookId]);
 
   const addRequiredColumnsToTable = (requiredCreateColumns: string[]): void => {
     const tableStateAtStart = apiRef.current.state;
@@ -460,6 +464,10 @@ export default function FieldsOfCategoryMaterials({
   };
 
   const handleCellEditStop = async (params: GridCellEditStopParams, event: MuiEvent) => {
+    if (params.reason !== GridCellEditStopReasons.shiftTabKeyDown) {
+      event.defaultMuiPrevented = true;
+    }
+
     const rowCurrentState = apiRef.current.getRowWithUpdatedValues(params.id, params.field);
 
     let updateFieldOfCategoryDto: FieldOfCategoryMaterialUpdateCommand.Request;
@@ -502,19 +510,16 @@ export default function FieldsOfCategoryMaterials({
         [params.field]: rowCurrentState[params.field],
       };
 
-      const updatedRow = (await fieldsOfCategoryMaterialsUpdateHandler(
+      const updatedRow = await fieldsOfCategoryMaterialsUpdateHandler(
         updateFieldOfCategoryDto as FieldOfCategoryMaterialUpdateCommand.Request,
         workspaceId as string,
         handbookId,
         params.row?.uuid,
         allTypesOfFieldOfHandbook
-      )) as FieldOfCategoryMaterialUpdateCommand.ResponseEntity;
-
-      // setValueOfDefaultValueForSelect('');
-      //
-      // if (params.reason !== GridCellEditStopReasons.shiftTabKeyDown) {
-      //   event.defaultMuiPrevented = true;
-      // }
+      );
+      if (isErrorFieldTypeGuard(updatedRow)) {
+        enqueueSnackbar('Ошибка при сохранении поля категории', { variant: 'error' });
+      }
     }
   };
 
@@ -525,31 +530,37 @@ export default function FieldsOfCategoryMaterials({
   const handleSaveClick = async () => {
     const id = NewFieldOfCategoryMaterialId;
     const isNewRow = apiRef.current.getRow(id)?.isNew;
-    let finalRow: FieldOfCategoryMaterialCreateCommand.ResponseEntity;
 
-    if (isNewRow) {
-      const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
-      finalRow = (await fieldOfCategoryMaterialCreateHandler(
-        newRowLocally as TFieldsOfCategoryMaterialTableEntity,
-        workspaceId as string,
-        handbookId
-      )) as unknown as FieldOfCategoryMaterialCreateCommand.ResponseEntity;
-    } else {
-      throw new Error('isNewRow = false, problem with creating a new row');
+    if (!isNewRow) {
+      enqueueSnackbar('Ошибка создания поля: строка не помечена как новая', { variant: 'error' });
+      return;
     }
+
+    const newRowLocally = apiRef.current.getRowWithUpdatedValues(id, 'ignore');
+    const createResult = await fieldOfCategoryMaterialCreateHandler(
+      newRowLocally as TFieldsOfCategoryMaterialTableEntity,
+      workspaceId as string,
+      handbookId
+    );
+
+    if (isErrorFieldTypeGuard(createResult)) {
+      enqueueSnackbar('Ошибка при создании поля категории', { variant: 'error' });
+      return;
+    }
+
+    const finalRow = createResult as FieldOfCategoryMaterialCreateCommand.ResponseEntity;
 
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
     setIsCreateRowMode((prevValue) => !prevValue);
-    setRows((oldRows) => {
-      const updatedRow = {
-        ...finalRow,
-        isNew: false,
-      } as TFieldsOfCategoryMaterialTableEntity;
-      return oldRows.map((row) => (row.uuid === id ? updatedRow : row));
-    });
+    setRows((oldRows) =>
+      oldRows.map((row) =>
+        row.uuid === id ? ({ ...finalRow, isNew: false } as TFieldsOfCategoryMaterialTableEntity) : row
+      )
+    );
+    enqueueSnackbar('Поле категории успешно создано', { variant: 'success' });
   };
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -558,22 +569,32 @@ export default function FieldsOfCategoryMaterials({
 
   const handleClickAddNewUnitMeasurement = async (
     createNewUnitMeasurementDto: FieldUnitMeasurementCreateCommand.Request
-  ) => {
-    const newFieldUnitMeasurement = (await createFieldUnitMeasurement(
+  ): Promise<FieldUnitMeasurementCreateCommand.ResponseEntity> => {
+    const result = await createFieldUnitMeasurement(
       workspaceId as string,
       handbookId,
       createNewUnitMeasurementDto
-    )) as FieldUnitMeasurementCreateCommand.ResponseEntity;
-    return newFieldUnitMeasurement;
+    );
+    if (isErrorFieldTypeGuard(result)) {
+      enqueueSnackbar('Ошибка при создании единицы измерения', { variant: 'error' });
+      return result as unknown as FieldUnitMeasurementCreateCommand.ResponseEntity;
+    }
+    return result;
   };
 
-  const handleClickDeleteUnitMeasurement = async (unitMeasurementId: string) => {
-    const oldFieldUnitMeasurement = (await deleteFieldUnitMeasurement(
+  const handleClickDeleteUnitMeasurement = async (
+    unitMeasurementId: string
+  ): Promise<FieldUnitMeasurementDeleteCommand.ResponseEntity> => {
+    const result = await deleteFieldUnitMeasurement(
       workspaceId as string,
       handbookId,
       unitMeasurementId
-    )) as FieldUnitMeasurementDeleteCommand.ResponseEntity;
-    return oldFieldUnitMeasurement;
+    );
+    if (isErrorFieldTypeGuard(result)) {
+      enqueueSnackbar('Ошибка при удалении единицы измерения', { variant: 'error' });
+      return result as unknown as FieldUnitMeasurementDeleteCommand.ResponseEntity;
+    }
+    return result;
   };
 
   const allFieldsOfCategoryMaterialsTableColumns: GridColDef[] = [
@@ -767,7 +788,7 @@ export default function FieldsOfCategoryMaterials({
     {
       field: FieldOfCategoryMaterialColumnSchema.updatedAt,
       valueGetter: (value, row) => {
-        const formattedDate = moment(row.updatedAt).locale('ru').format('DD.MM.YYYY HH:mm:ss');
+        const formattedDate = dayjs(row.updatedAt).format('DD.MM.YYYY HH:mm:ss');
         return formattedDate;
       },
       headerName: 'Дата изменения',
@@ -809,11 +830,6 @@ export default function FieldsOfCategoryMaterials({
         fieldOfCategoryMaterialId,
         fieldVariantForSelectorFieldTypeId
       );
-    } else {
-      console.log(`Произошла ошибка при запросе: ${fieldOfCategoryMaterialId}
-       ${fieldVariantForSelectorFieldTypeId}
-        ${createFieldVariantOfCategoryDto}
-        ${typeAction}`);
     }
   };
 
@@ -965,7 +981,7 @@ export default function FieldsOfCategoryMaterials({
                     justifyContent: 'flex-start',
                   },
                   '& .MuiDataGrid-cell--editable': {
-                    bgcolor: (theme) =>
+                    bgcolor: (theme: Theme) =>
                       theme.palette.mode === 'light' ? `#DBDBDE35` : `rgba(9, 9, 9, 0.11)`,
                   },
                 }}

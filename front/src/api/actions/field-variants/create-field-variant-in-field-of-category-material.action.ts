@@ -1,13 +1,9 @@
 'use server';
 
-import { AxiosError } from 'axios';
-import { revalidatePath } from 'next/cache';
 import { FieldVariantsForSelectorFieldTypeCreateCommand } from '@numart/house-admin-contracts';
 
-import { ErrorFromBackend } from 'src/utils/types/error-from-backend.type';
-import { isGoodHttpCode } from 'src/utils/helpers/is-good-http-code.helper';
-
 import axiosInstance from 'src/api/axios-instance';
+import { callAction } from 'src/api/call-action';
 import { axiosEndpoints } from 'src/entities/auth/lib';
 
 export async function createFieldVariantOfFieldOfCategory(
@@ -16,45 +12,15 @@ export async function createFieldVariantOfFieldOfCategory(
   fieldOfCategoryMaterialId: string,
   createFieldVariantOfCategoryDto: FieldVariantsForSelectorFieldTypeCreateCommand.Request
 ) {
-  const errorObject: ErrorFromBackend = {
-    error: null,
-  };
-
-  try {
-    const response: FieldVariantsForSelectorFieldTypeCreateCommand.Response =
-      await axiosInstance.post(
+  return callAction<FieldVariantsForSelectorFieldTypeCreateCommand.ResponseEntity>(
+    () =>
+      axiosInstance.post(
         axiosEndpoints.field_variants.create
           .replace(':workspaceId', workspaceId)
           .replace(':handbookId', handbookId)
           .replace(':fieldOfCategoryMaterialId', fieldOfCategoryMaterialId),
         createFieldVariantOfCategoryDto
-      );
-    if (isGoodHttpCode(response?.statusCode)) {
-      revalidatePath('/dashboard/category-materials/');
-      revalidatePath('/dashboard/fields/');
-      return response.data as FieldVariantsForSelectorFieldTypeCreateCommand.ResponseEntity;
-    }
-
-    console.error(
-      'Standard backend error while create one field-variant in field of category material of handbook',
-      response
-    );
-    if (response?.errors) {
-      errorObject.error = response.errors[0];
-      return errorObject;
-    }
-    errorObject.error = response?.message;
-    return errorObject;
-  } catch (error: unknown) {
-    console.error(
-      'Catched frontend error while create one field-variant in field of category material of handbook',
-      error
-    );
-    if (error instanceof AxiosError) {
-      errorObject.error = error.message;
-      return errorObject;
-    }
-    errorObject.error = JSON.stringify(error);
-    return errorObject;
-  }
+      ),
+    ['/dashboard/category-materials/', '/dashboard/fields/']
+  );
 }

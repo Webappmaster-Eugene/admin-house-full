@@ -55,7 +55,6 @@ export default function CheckboxFreeAutocomplete<
   fieldCategoryId,
   ...other
 }: Omit<CheckboxFreeAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, 'renderInput'>) {
-  console.log(defaultCheckedOptionsFieldVariants);
   return (
     options && (
       <Autocomplete

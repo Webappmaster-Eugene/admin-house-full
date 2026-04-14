@@ -1,15 +1,12 @@
-// import { ReactQuillProps } from 'react-quill';
-
 import { Theme, SxProps } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
-export interface EditorProps extends Object
-{
+export interface EditorProps {
   id: string;
   error?: boolean;
   simple?: boolean;
   helperText?: React.ReactNode;
   sx?: SxProps<Theme>;
-  onChange: any;
+  onChange: (value: string) => void;
 }

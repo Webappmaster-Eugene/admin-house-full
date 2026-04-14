@@ -61,11 +61,8 @@ const RHFAutocompleteTemplateName: React.FC<RHFAutocompleteTemplateNameProps> = 
           onChange={(event, newValue) => {
             setValue(name, value);
             onChange(newValue);
-            const valuesOfForm = getValues();
-            console.log('valuesOfForm', valuesOfForm);
           }}
           onInputChange={(event, newInputValue) => {
-            console.log(newInputValue);
           }}
           renderOption={(props, option) => (
             <li {...props} key={option}>

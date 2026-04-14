@@ -16,7 +16,6 @@ export async function getCurrentTokens(): Promise<IAccessTokenInfo | null | unkn
     const accessTokenInfo: IJWTPayload = jwtDecode(accessToken);
     return { accessToken, accessTokenInfo };
   } catch (error: unknown) {
-    console.log(error);
     return error;
   }
 }

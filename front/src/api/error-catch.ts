@@ -1,7 +1,4 @@
-export const errorCatch = (error: any): string => {
-  const message = error?.response?.data?.message;
-  // if (typeof message === 'object') {
-  //   return message[0];
-  // }
-  return message;
+export const errorCatch = (error: unknown): string => {
+  const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+  return message ?? '';
 };
