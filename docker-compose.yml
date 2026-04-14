@@ -1,5 +1,9 @@
 version: "3.9"
 
+networks:
+  dokploy-network:
+    external: true
+
 services:
   front:
     container_name: admin-house-front
@@ -10,34 +14,35 @@ services:
       NEXT_FRONT_MODE: ${NEXT_FRONT_MODE}
       NEXT_PUBLIC_HOST_API: https://api.alibaba.hhos.ru/api/v1.0/
       NEXT_PUBLIC_ASSETS_API: ${NEXT_PUBLIC_ASSETS_API}
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
     expose:
       - 8080
-    command: "npm run start"
+    networks:
+      - default
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin-house-front.rule=Host(`alibaba.hhos.ru`)"
+      - "traefik.http.routers.admin-house-front.entrypoints=websecure"
+      - "traefik.http.routers.admin-house-front.tls.certresolver=letsencrypt"
+      - "traefik.http.services.admin-house-front.loadbalancer.server.port=8080"
 
   postgres:
     container_name: admin-house-postgres
     image: postgres:16-alpine
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 10s
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
-      - data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     expose:
-      - "5432:5432"
+      - 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d ${POSTGRES_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   back:
     container_name: admin-house-back
@@ -54,34 +59,41 @@ services:
       KEY_SECRET_FOR_STRICT_ADMIN_KEY: ${KEY_SECRET_FOR_STRICT_ADMIN_KEY}
       REDIS_HOST: redis
       REDIS_PORT: 6379
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+      MINIO_ENDPOINT: s3-minio
+      MINIO_PORT: ${MINIO_PORT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_USE_SSL: "false"
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      FRONTEND_DOMAIN: ${FRONTEND_DOMAIN}
+      FRONTEND_URL: ${FRONTEND_URL}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     expose:
       - 3000
-    command: "npm run start"
+    networks:
+      - default
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin-house-back.rule=Host(`api.alibaba.hhos.ru`)"
+      - "traefik.http.routers.admin-house-back.entrypoints=websecure"
+      - "traefik.http.routers.admin-house-back.tls.certresolver=letsencrypt"
+      - "traefik.http.services.admin-house-back.loadbalancer.server.port=3000"
 
   pgadmin:
     image: dpage/pgadmin4:8
     container_name: admin-house-pgadmin
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 10s
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
       PGADMIN_LISTEN_PORT: ${PGADMIN_PORT}
-    ports:
-      - 5050:5050
+    expose:
+      - 5050
     depends_on:
       - postgres
 
@@ -89,65 +101,51 @@ services:
     container_name: admin-house-redis
     image: redis:7.2.4-alpine
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 10s
-    ports:
-      - 6379:6379
+    expose:
+      - 6379
 
   redis-commander:
     container_name: admin-house-redis-commander
     hostname: redis-commander
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 10s
     image: rediscommander/redis-commander:latest
     environment:
       - REDIS_HOSTS=local:redis:6379
-    ports:
-      - "8081:8081"
+    expose:
+      - 8081
 
-  nginx:
-    container_name: admin-house-nginx
-    image: nginx:latest
+  s3-minio:
+    container_name: admin-house-minio
+    image: minio/minio
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 10s
-    ports:
-      - 80:80
-      - 443:443
+    expose:
+      - 9000
+      - 9001
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/nginx/ssl
-      - ./certbot/data:/var/www/html
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server --console-address ":9001" /data
 
-  certbot:
-    container_name: admin-house-certbot
-    image: certbot/certbot:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 3s
-        max_attempts: 5
-        window: 10s
+  minio-init:
+    image: minio/mc
     depends_on:
-      - nginx
-    command: certonly --webroot --webroot-path=/var/www/html --email jamesnumart@gmail.com --agree-tos --no-eff-email -d alibaba.hhos.ru -d www.alibaba.hhos.ru -d api.alibaba.hhos.ru -d www.api.alibaba.hhos.ru
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/logs:/var/log/letsencrypt
-      - ./certbot/data:/var/www/html
+      - s3-minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc alias set myminio http://s3-minio:9000 $${MINIO_ACCESS_KEY} $${MINIO_SECRET_KEY};
+      /usr/bin/mc mb --ignore-existing myminio/$${MINIO_BUCKET_NAME};
+      /usr/bin/mc anonymous set public myminio/$${MINIO_BUCKET_NAME};
+      exit 0;
+      "
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+    restart: "no"
 
 volumes:
-  data:
+  postgres-data:
+  minio-data:

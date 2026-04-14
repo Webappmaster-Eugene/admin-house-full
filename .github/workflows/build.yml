@@ -1,7 +1,6 @@
-#2 шаг
-#Билдим образы фронта и бэка, пушим готовые образы на докерхаб. Делаем это на мощностях гитхаба
-#(front и back) и пушим на dockerhub
-#build front and back
+# 2nd step: Build Docker images for front and back, push to Docker Hub.
+# Images are tagged with both :latest and :<git-sha> for rollback capability.
+# Docker layer cache is stored in a separate :buildcache tag on Docker Hub.
 
 name: Build
 on:
@@ -10,8 +9,10 @@ on:
     branches: [main]
     types:
       - completed
+
 jobs:
   build-backend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,9 +30,14 @@ jobs:
           context: ./back
           file: ./back/Dockerfile.back
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/admin-house-back:buildcache,mode=max
 
   build-frontend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,4 +55,8 @@ jobs:
           context: ./front
           file: ./front/Dockerfile.front
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:buildcache,mode=max
