@@ -32,10 +32,7 @@ export class WorkspaceCreatorGuard implements CanActivate {
         name: 'Invalid workspace UUID',
         message: `workspaceId должен быть валидным UUID, получено: "${inputWorkspaceUuid}"`,
       };
-      this.logger.error(
-        BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.BAD_REQUEST].error.description,
-        errorBadRequest,
-      );
+      this.logger.error(BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.BAD_REQUEST].error.description, errorBadRequest);
       const response = new ExternalResponse(
         null,
         BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.BAD_REQUEST].httpCode,

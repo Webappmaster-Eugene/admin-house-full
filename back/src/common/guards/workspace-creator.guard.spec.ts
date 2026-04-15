@@ -27,10 +27,12 @@ function buildAuthHeader(payload: Record<string, unknown>, options: jwt.SignOpti
   return `Bearer ${token}`;
 }
 
-function buildGuard(overrides: {
-  user?: MinimalUser | null;
-  workspace?: { uuid: string } | null;
-} = {}): WorkspaceCreatorGuard {
+function buildGuard(
+  overrides: {
+    user?: MinimalUser | null;
+    workspace?: { uuid: string } | null;
+  } = {},
+): WorkspaceCreatorGuard {
   const defaultUser: MinimalUser = {
     uuid: USER_UUID,
     roles: [{ uuid: 'role-1', idRole: ROLE_IDS.MANAGER_ROLE_ID, name: 'MANAGER' }],
@@ -48,10 +50,7 @@ function buildGuard(overrides: {
   const workspaceService: Pick<IWorkspaceService, 'getById'> = {
     getById: jest.fn().mockResolvedValue({
       ok: true,
-      data:
-        overrides.workspace === null
-          ? null
-          : overrides.workspace ?? { uuid: VALID_WORKSPACE_UUID },
+      data: overrides.workspace === null ? null : overrides.workspace ?? { uuid: VALID_WORKSPACE_UUID },
     }),
   };
 
@@ -61,12 +60,7 @@ function buildGuard(overrides: {
 
   const logger: Pick<ILogger, 'error'> = { error: jest.fn() };
 
-  return new WorkspaceCreatorGuard(
-    configService,
-    userService as IUserService,
-    workspaceService as IWorkspaceService,
-    logger as ILogger,
-  );
+  return new WorkspaceCreatorGuard(configService, userService as IUserService, workspaceService as IWorkspaceService, logger as ILogger);
 }
 
 describe('WorkspaceCreatorGuard', () => {
