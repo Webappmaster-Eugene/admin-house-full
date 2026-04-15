@@ -20,7 +20,11 @@
     "re:build-npm": "npm run rm:all && npm install && npm run build",
     "dev:ts": "yarn dev & yarn ts:watch",
     "ts": "tsc --noEmit --incremental",
-    "ts:watch": "yarn ts --watch"
+    "ts:watch": "yarn ts --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",
@@ -70,8 +74,13 @@
   "devDependencies": {
     "@import-meta-env/unplugin": "^0.5.1",
     "@next/eslint-plugin-next": "^14.2.3",
+    "@playwright/test": "^1.59.1",
     "@svgr/webpack": "^8.1.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/autosuggest-highlight": "^3.2.3",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.10.4",
     "@types/nprogress": "^0.2.3",
@@ -94,10 +103,13 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "lefthook": "^1.10.0",
     "postcss": "^8.4.38",
     "prettier": "^3.1.0",
     "tailwindcss": "^3.4.3",
-    "lefthook": "^1.10.0",
+    "ts-jest": "^29.4.9",
     "typescript": "^5.3.3"
   }
 }

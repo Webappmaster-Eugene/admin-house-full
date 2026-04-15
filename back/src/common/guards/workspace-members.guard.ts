@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, HttpException, Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { isUUID } from 'class-validator';
 import { IJWTPayload } from '../types/jwt.payload.interface';
 import { jwtExtractor } from '../helpers/extractors/jwt.extractor';
 import { KFI } from '../utils/di';
@@ -24,6 +25,26 @@ export class WorkspaceMembersGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
+    // DOC валидация workspaceId до проверки роли — bad request не должен доходить до сервиса
+    const inputWorkspaceUuid = context.switchToHttp().getRequest().params['workspaceId'];
+    if (!isUUID(inputWorkspaceUuid, '4')) {
+      const errorBadRequest = {
+        name: 'Invalid workspace UUID',
+        message: `workspaceId должен быть валидным UUID, получено: "${inputWorkspaceUuid}"`,
+      };
+      this.logger.error(
+        BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.BAD_REQUEST].error.description,
+        errorBadRequest,
+      );
+      const response = new ExternalResponse(
+        null,
+        BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.BAD_REQUEST].httpCode,
+        BACKEND_ERRORS.STANDARD_ERRORS[BackendErrorNames.BAD_REQUEST].error.description,
+        [errorBadRequest],
+      );
+      throw new HttpException(response, response?.statusCode);
+    }
+
     const { token, jwtSecret } = jwtExtractor(context, this.configService);
 
     try {
@@ -45,9 +66,7 @@ export class WorkspaceMembersGuard implements CanActivate {
         return true;
       }
 
-      // DOC какой id у рассматриваемого workspace
-      const inputWorkspaceUuid = context.switchToHttp().getRequest().params['workspaceId'];
-
+      // DOC какой id у рассматриваемого workspace (валидирован выше)
       const selectedWorkspace = dataInternalExtractor(await this.workspaceService.getById(inputWorkspaceUuid));
 
       // DOC или действие совершает менеджер самого Workspace

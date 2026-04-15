@@ -41,8 +41,8 @@ export default function LoginView() {
   });
 
   const defaultValues = {
-    email: process.env.NEXT_PUBLIC_DEFAULT_EMAIL ?? '',
-    password: process.env.NEXT_PUBLIC_DEFAULT_PASSWORD ?? '',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({

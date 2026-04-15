@@ -21,6 +21,7 @@ COPY --from=deps /back/prisma ./prisma
 COPY --from=builder /back/dist ./dist
 COPY --from=builder /back/src ./src
 COPY --from=builder /back/libs ./libs
+COPY --from=builder /back/scripts ./scripts
 COPY --from=builder /back/tsconfig.json ./tsconfig.json
 COPY --from=builder /back/nest-cli.json ./nest-cli.json
 COPY package.json package-lock.json ./

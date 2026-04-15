@@ -18,6 +18,11 @@ function isRefreshTokenValid(token: string): boolean {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname === '/') {
+    return NextResponse.next();
+  }
+
   const refreshToken = request.cookies.get(REFRESH_COOKIE_KEY)?.value;
   const isAuthenticated = refreshToken ? isRefreshTokenValid(refreshToken) : false;
   const isAuthRoute = pathname.startsWith(AUTH_ROUTES_PREFIX);
@@ -34,5 +39,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)'],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|opengraph-image|twitter-image|robots\\.txt|sitemap\\.xml|manifest\\.json|.*\\..*).*)',
+  ],
 };

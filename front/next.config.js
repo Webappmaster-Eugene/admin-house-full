@@ -14,11 +14,6 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/dashboard',
-        permanent: true,
-      },
-      {
         source: '/auth',
         destination: '/auth/login',
         permanent: true,

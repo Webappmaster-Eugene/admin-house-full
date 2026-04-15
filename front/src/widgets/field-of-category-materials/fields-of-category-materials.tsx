@@ -1,14 +1,13 @@
 'use client';
 
 import dayjs from 'dayjs';
+import isEqual from 'lodash/isEqual';
 import { useSnackbar } from 'notistack';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
-import { deepEqualAndIn } from '@/utils/helpers/deep-equal-and-in';
 import AlertDialog from '@/shared/dialogs/alert-dialog/alert-dialog';
 import { useState, useEffect, useCallback, useLayoutEffect, SetStateAction, Dispatch } from 'react';
 import { templaterCreatorTexts } from '@/utils/helpers/templater-creator';
-import { deepEqualAndInTableKeys } from '@/utils/helpers/deep-equal-in-tablekeys';
 import { DeleteFieldDialogTexts, ChangeTypeFieldDialogTexts } from '@/utils/const/dialog-texts';
 import { isEntityFieldTypeTypeGuard } from '@/utils/type-guards/is-entity-field-type.type-guard';
 import { FieldTypeToChange } from '@/widgets/field-of-category-materials/field-type-to-change.type';
@@ -298,23 +297,15 @@ export default function FieldsOfCategoryMaterials({
     };
 
     const isResetSettingsVisible = (): boolean => {
-      const curTableState = apiRef.current.state;
-      const initialState = columnsInitialState;
-
-      const isEqColumns = !deepEqualAndIn(curTableState, initialState);
-
-      const columnsCurrent = apiRef.current.state.columns.lookup;
-      const columnsInitial = columnsInitialState.columns?.dimensions;
-      const isEqWidths = deepEqualAndInTableKeys(columnsCurrent, columnsInitial);
-      return isEqColumns || isEqWidths;
+      if (!apiRef.current?.exportState) return false;
+      const currentExportedState = apiRef.current.exportState();
+      return !isEqual(currentExportedState, columnsInitialState);
     };
 
     const handleClickResetSettingsTable = () => {
+      const storageKey = `fieldsOfCategoryMaterialsIn${handbookId}HandbookDataGridState`;
+      localStorage.setItem(storageKey, JSON.stringify(columnsInitialState));
       apiRef.current.restoreState(columnsInitialState);
-      localStorage.setItem(
-        'fieldsOfCategoryMaterialsDataGridState',
-        JSON.stringify(columnsInitialState)
-      );
     };
 
     const isDeleteRowVisible = (): boolean => {

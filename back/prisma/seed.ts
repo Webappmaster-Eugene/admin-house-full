@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import * as crypto from 'crypto';
+import * as argon2 from 'argon2';
 import { PrismaClient } from '.prisma/client';
 import { templateNameMapper } from '../src/common/helpers/handlers/template-name-mapper.handler';
 import { EApproveStatuses } from '@prisma/client';
@@ -8,6 +10,21 @@ import { fieldOfCategoryMaterialTemplateGenerator } from '../src/common/helpers/
 const prisma = new PrismaClient();
 
 async function main() {
+  // Пароль для сидовых пользователей: берём из env или генерируем случайный (никому не известный).
+  // Не падаем без env-переменной, чтобы не блокировать старт контейнера при идемпотентном повторном запуске seed.
+  const envSeedPassword = process.env.SEED_DEFAULT_PASSWORD;
+  const seedPassword =
+    envSeedPassword && envSeedPassword.length >= 8
+      ? envSeedPassword
+      : crypto.randomBytes(24).toString('base64url');
+
+  if (!envSeedPassword) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[seed] SEED_DEFAULT_PASSWORD не задан — сгенерирован случайный одноразовый пароль. Сидовые пользователи, если будут созданы, не получат известного пароля.',
+    );
+  }
+  const SEED_PASSWORD_HASH = await argon2.hash(seedPassword);
   //DOC ROLES - создаем все роли
   //region ROLES
   const ADMIN_ROLE = await prisma?.role?.upsert({
@@ -53,7 +70,7 @@ async function main() {
     where: { email: 'admin1@mail.ru' },
     create: {
       email: 'admin1@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: ADMIN_ROLE.uuid }],
       },
@@ -69,7 +86,7 @@ async function main() {
     where: { email: 'worker1@mail.ru' },
     create: {
       email: 'worker1@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: WORKER_ROLE.uuid }],
       },
@@ -85,7 +102,7 @@ async function main() {
     where: { email: 'worker2@mail.ru' },
     create: {
       email: 'worker2@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: WORKER_ROLE.uuid }],
       },
@@ -101,7 +118,7 @@ async function main() {
     where: { email: 'worker3@mail.ru' },
     create: {
       email: 'worker3@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: WORKER_ROLE.uuid }],
       },
@@ -117,7 +134,7 @@ async function main() {
     where: { email: 'worker4@mail.ru' },
     create: {
       email: 'worker4@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: WORKER_ROLE.uuid }],
       },
@@ -133,7 +150,7 @@ async function main() {
     where: { email: 'customer1@mail.ru' },
     create: {
       email: 'customer1@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: CUSTOMER_ROLE.uuid }],
       },
@@ -149,7 +166,7 @@ async function main() {
     where: { email: 'customer2@mail.ru' },
     create: {
       email: 'customer2@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: CUSTOMER_ROLE.uuid }],
       },
@@ -165,7 +182,7 @@ async function main() {
     where: { email: 'customer3@mail.ru' },
     create: {
       email: 'customer3@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: CUSTOMER_ROLE.uuid }],
       },
@@ -181,7 +198,7 @@ async function main() {
     where: { email: 'customer4@mail.ru' },
     create: {
       email: 'customer4@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: CUSTOMER_ROLE.uuid }],
       },
@@ -197,7 +214,7 @@ async function main() {
     where: { email: 'customer5@mail.ru' },
     create: {
       email: 'customer5@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: CUSTOMER_ROLE.uuid }],
       },
@@ -216,7 +233,7 @@ async function main() {
     where: { email: 'manager1@mail.ru' },
     create: {
       email: 'manager1@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: MANAGER_ROLE.uuid }],
       },
@@ -311,7 +328,7 @@ async function main() {
   const MANAGER_USER_2 = await prisma?.user?.create({
     data: {
       email: 'manager2@mail.ru',
-      password: '$argon2id$v=19$m=65536,t=3,p=4$3bpIaorqAZ434ppom9guDA$AZn9O+A25nMhB0r+D1FoTZX/RS/vhFiGVlpZCer9+ps',
+      password: SEED_PASSWORD_HASH,
       roles: {
         connect: [{ uuid: MANAGER_ROLE.uuid }],
       },

@@ -2,8 +2,8 @@
 
 import { UserGetAllCommand } from '@numart/house-admin-contracts';
 
-import axiosInstance from 'src/api/axios-instance';
 import { callAction } from 'src/api/call-action';
+import axiosInstance from 'src/api/axios-instance';
 import { axiosEndpoints } from 'src/entities/auth/lib';
 
 export async function getAllUsers() {

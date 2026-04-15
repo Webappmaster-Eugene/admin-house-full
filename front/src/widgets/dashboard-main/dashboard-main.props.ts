@@ -1,5 +1,10 @@
-import { MaterialGetAllCommand } from '@numart/house-admin-contracts';
+import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 
 export type DashboardMainProps = {
-  materialsInfo: MaterialGetAllCommand.ResponseEntity;
+  currentUser: UserGetFullInfoCommand.ResponseEntity;
+  stats: {
+    materials: number | null;
+    categories: number | null;
+    fields: number | null;
+  };
 };

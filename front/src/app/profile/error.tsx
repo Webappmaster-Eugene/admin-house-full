@@ -7,9 +7,9 @@ import React, { useEffect } from 'react';
 import { varBounce, MotionContainer } from '@/shared/animate';
 import { SeverErrorIllustration } from '@/utils/assets/illustrations';
 
+import Button from "@mui/material/Button";
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Button from "@mui/material/Button";
 
 export default function Error({
   error,

@@ -5,6 +5,9 @@ export const axiosEndpoints = {
     register: 'auth/register',
     register_with_role_key: 'auth/register/with-role/:roleId/:secretKey',
     refresh_keys: 'auth/refresh-keys',
+    change_password: 'auth/change-password',
+    strict_admin_key_generate: 'auth/strict-admin-key/generate',
+    strict_admin_key_get: 'auth/strict-admin-key/get',
   },
   // DOC user/me
   users: {

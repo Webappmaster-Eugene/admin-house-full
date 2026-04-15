@@ -1,6 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
+import isEqual from 'lodash/isEqual';
 import { useSnackbar } from 'notistack';
 import { useBoolean } from '@/utils/hooks/use-boolean';
 import { useSettingsContext } from '@/shared/settings';
@@ -77,10 +78,8 @@ import {
 
 import { toRubles } from 'src/utils/helpers/intl';
 import { UuidRegexForTest } from 'src/utils/regex/uuid.regex';
-import { deepEqualAndIn } from 'src/utils/helpers/deep-equal-and-in';
 import { DeleteMaterialDialogTexts } from 'src/utils/const/dialog-texts';
 import { EntityActivityStatus } from 'src/utils/const/entity-activity-status.enum';
-import { deepEqualAndInTableKeys } from 'src/utils/helpers/deep-equal-in-tablekeys';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { materialDeleteHandler } from 'src/utils/table-handlers/materials/material-delete.handler';
 import { materialCreateHandler } from 'src/utils/table-handlers/materials/material-create.handler';
@@ -428,18 +427,9 @@ export default function Materials({
     };
 
     const isResetSettingsVisible = (): boolean => {
-      const curTableState = apiRef.current.state;
-      const initialState = columnsInitialState;
-
-      const isNotEqWithDefaultColumns = !deepEqualAndIn(curTableState, initialState);
-
-      const columnsCurrent = apiRef.current.state.columns.lookup;
-      const columnsInitial = columnsInitialState.columns?.dimensions;
-      const isNotEqWithDefaultWidthsOfColumns = deepEqualAndInTableKeys(
-        columnsCurrent,
-        columnsInitial
-      );
-      return isNotEqWithDefaultColumns || isNotEqWithDefaultWidthsOfColumns;
+      if (!apiRef.current?.exportState) return false;
+      const currentExportedState = apiRef.current.exportState();
+      return !isEqual(currentExportedState, columnsInitialState);
     };
 
     const handleClickResetSettingsTable = () => {
