@@ -1,5 +1,7 @@
 'use client';
 
+import NextLink from 'next/link';
+
 import {
   Box,
   Link,
@@ -15,11 +17,18 @@ import Iconify from 'src/shared/iconify';
 
 import { landingAuthor, landingFooter } from '../landing-content';
 
-const SOCIAL_TYPES = ['github', 'habr', 'youtube', 'telegram', 'website'] as const;
+const FOOTER_CONTACT_TYPES = ['telegram', 'email', 'phone', 'website'] as const;
+
+const LEGAL_LINKS = [
+  { label: 'Пользовательское соглашение', href: '/terms' },
+  { label: 'Политика конфиденциальности', href: '/privacy' },
+  { label: 'Публичная оферта', href: '/offer' },
+  { label: 'Cookies', href: '/cookies' },
+] as const;
 
 export default function LandingFooter() {
-  const socials = landingAuthor.contacts.filter((c) =>
-    (SOCIAL_TYPES as readonly string[]).includes(c.type)
+  const contacts = landingAuthor.contacts.filter((c) =>
+    (FOOTER_CONTACT_TYPES as readonly string[]).includes(c.type)
   );
 
   return (
@@ -40,16 +49,13 @@ export default function LandingFooter() {
             justifyContent="space-between"
           >
             <Stack direction="row" spacing={2} alignItems="center">
-              <Logo />
+              <Logo showText />
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {landingFooter.copyright}
               </Typography>
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 3 }}>
-              <Link href="#author" underline="hover" sx={{ color: 'text.secondary', typography: 'body2' }}>
-                О разработчике
-              </Link>
               <Link
                 href="mailto:support@hhos.ru"
                 underline="hover"
@@ -58,11 +64,11 @@ export default function LandingFooter() {
                 {landingFooter.supportLabel}
               </Link>
               <Link
-                href="mailto:johnn.hotmail@mail.ru"
+                href={`mailto:${landingAuthor.contacts.find((c) => c.type === 'email')?.value}`}
                 underline="hover"
                 sx={{ color: 'text.secondary', typography: 'body2' }}
               >
-                Связаться с автором
+                Контакты
               </Link>
             </Stack>
           </Stack>
@@ -71,21 +77,39 @@ export default function LandingFooter() {
 
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 1, sm: 2 }}
+            flexWrap="wrap"
+          >
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                component={NextLink}
+                href={link.href}
+                underline="hover"
+                sx={{ color: 'text.disabled', typography: 'caption' }}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </Stack>
+
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
             spacing={2}
             alignItems={{ xs: 'flex-start', sm: 'center' }}
             justifyContent="space-between"
           >
             <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-              Продукт разрабатывается {landingAuthor.name}. Открыт к сотрудничеству.
+              Основатель проекта — {landingAuthor.name}
             </Typography>
 
             <Stack direction="row" spacing={0.5}>
-              {socials.map((contact) => (
+              {contacts.map((contact) => (
                 <IconButton
                   key={contact.type}
                   href={contact.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={contact.href.startsWith('http') ? '_blank' : undefined}
+                  rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   aria-label={contact.label}
                   size="small"
                   sx={{ color: 'text.secondary' }}

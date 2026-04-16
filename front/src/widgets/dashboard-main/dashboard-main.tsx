@@ -66,7 +66,7 @@ export default function DashboardMain({ currentUser, stats }: DashboardMainProps
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4">Здравствуйте, {fullName}!</Typography>
         <Typography variant="body2" color="text.secondary">
-          Это ваша главная панель Admin House.
+          Это ваша главная панель SMETAS.
         </Typography>
       </Box>
 

@@ -31,7 +31,7 @@ export default function LandingHeader() {
           justifyContent="space-between"
           sx={{ minHeight: 64, py: 1 }}
         >
-          <Logo />
+          <Logo showText />
 
           <Button
             component={NextLink}

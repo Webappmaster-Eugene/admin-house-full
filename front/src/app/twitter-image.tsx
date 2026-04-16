@@ -1,10 +1,10 @@
 import { ImageResponse } from 'next/og';
 
-import { AUTHOR, SITE_NAME, SITE_DESCRIPTION, SITE_TITLE_DEFAULT } from 'src/utils/const/seo';
+import { AUTHOR, SITE_BRAND, SITE_DESCRIPTION, SITE_TITLE_DEFAULT } from 'src/utils/const/seo';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
-export const alt = SITE_NAME;
+export const alt = SITE_BRAND;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -44,10 +44,10 @@ export default async function TwitterImage() {
               fontWeight: 700,
             }}
           >
-            С
+            S
           </div>
           <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, letterSpacing: 0.5 }}>
-            {SITE_NAME}
+            {SITE_BRAND}
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export default async function TwitterImage() {
             fontWeight: 400,
           }}
         >
-          <div style={{ display: 'flex' }}>{`Разработка: ${AUTHOR.name}`}</div>
+          <div style={{ display: 'flex' }}>{`Основатель: ${AUTHOR.name}`}</div>
           <div style={{ display: 'flex' }}>alibaba.hhos.ru</div>
         </div>
       </div>

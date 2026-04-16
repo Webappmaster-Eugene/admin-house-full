@@ -6,6 +6,7 @@ const AUTH_ROUTES_PREFIX = '/auth';
 const DASHBOARD_REDIRECT = '/dashboard';
 const LOGIN_REDIRECT = '/auth/login';
 const REFRESH_COOKIE_KEY = 'REFRESH_KEY';
+const PUBLIC_ROUTES = ['/terms', '/privacy', '/offer', '/cookies'];
 
 function isRefreshTokenValid(token: string): boolean {
   try {
@@ -19,7 +20,7 @@ function isRefreshTokenValid(token: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/') {
+  if (pathname === '/' || PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 

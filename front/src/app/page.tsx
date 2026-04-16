@@ -23,7 +23,7 @@ const softwareApplicationLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: SITE_NAME,
-  alternateName: 'Admin House — Сметы',
+  alternateName: 'SMETAS',
   description: SITE_DESCRIPTION,
   url: SITE_URL,
   applicationCategory: 'BusinessApplication',
@@ -40,7 +40,7 @@ const softwareApplicationLd = {
     name: AUTHOR.name,
     email: AUTHOR.email,
     url: AUTHOR.url,
-    sameAs: [AUTHOR.url, AUTHOR.github, AUTHOR.telegram],
+    sameAs: [AUTHOR.url, AUTHOR.telegram],
   },
   publisher: {
     '@type': 'Person',
@@ -67,16 +67,12 @@ const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: AUTHOR.name,
-  jobTitle: 'Fullstack-разработчик',
+  jobTitle: 'Основатель SMETAS',
   email: `mailto:${AUTHOR.email}`,
   url: AUTHOR.url,
   sameAs: [
     AUTHOR.url,
-    AUTHOR.github,
     AUTHOR.telegram,
-    'https://career.habr.com/webappmaster',
-    'https://www.youtube.com/@webappmaster',
-    'https://webappmaster.ru',
   ],
 };
 
@@ -100,7 +96,7 @@ const organizationLd = {
     },
     {
       '@type': 'ContactPoint',
-      contactType: 'developer',
+      contactType: 'founder',
       email: AUTHOR.email,
       availableLanguage: ['Russian'],
     },

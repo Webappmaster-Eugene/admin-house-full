@@ -1,3 +1,5 @@
+// --------------- Interfaces ---------------
+
 export interface LandingAdvantage {
   icon: string;
   title: string;
@@ -10,12 +12,74 @@ export interface LandingFeature {
   description: string;
 }
 
+export interface LandingEconomyItem {
+  icon: string;
+  metric: string;
+  description: string;
+}
+
+export interface LandingTargetAudience {
+  icon: string;
+  title: string;
+  description: string;
+  useCases: string[];
+}
+
+export interface LandingCompetitorRow {
+  feature: string;
+  smetas: boolean | string;
+  excel: boolean | string;
+  grandSmeta: boolean | string;
+  s1cSmeta: boolean | string;
+}
+
+export interface LandingPricing {
+  title: string;
+  subtitle: string;
+  price: string;
+  features: string[];
+  ctaLabel: string;
+}
+
+// --------------- Hero ---------------
+
 export const landingHero = {
-  title: 'Сметы для строительных проектов — быстро, точно, в одном месте',
+  title: 'SMETAS — сметы для строительных проектов быстро, точно, в одном месте',
   subtitle:
     'SaaS-платформа, которая превращает составление смет из рутины в управляемый процесс. Единая база материалов, гибкие справочники, командная работа.',
-  ctaLabel: 'Войти в систему',
+  ctaLabel: 'Начать бесплатно',
 };
+
+// --------------- Economy ---------------
+
+export const landingEconomy: LandingEconomyItem[] = [
+  {
+    icon: 'solar:clock-circle-bold-duotone',
+    metric: 'В 5 раз быстрее',
+    description:
+      'Составление смет по сравнению с Excel и ручным подсчётом. Готовые справочники, поиск, фильтры — без копирования строк между файлами.',
+  },
+  {
+    icon: 'solar:wallet-bold-duotone',
+    metric: 'До 30% экономия',
+    description:
+      'Единая база материалов исключает дублирующие закупки и ошибки в ценах. Актуальные данные — меньше перерасхода бюджета.',
+  },
+  {
+    icon: 'solar:document-bold-duotone',
+    metric: '0 ошибок в расчётах',
+    description:
+      'Автоматический подсчёт вместо ручных формул. Забудьте о поломанных ссылках в Excel и неправильных итогах.',
+  },
+  {
+    icon: 'solar:chart-bold-duotone',
+    metric: 'ROI с первого проекта',
+    description:
+      'Система окупается уже на первой смете за счёт экономии времени и снижения ошибок.',
+  },
+];
+
+// --------------- Advantages ---------------
 
 export const landingAdvantages: LandingAdvantage[] = [
   {
@@ -56,6 +120,8 @@ export const landingAdvantages: LandingAdvantage[] = [
   },
 ];
 
+// --------------- Features ---------------
+
 export const landingFeatures: LandingFeature[] = [
   {
     icon: 'solar:folder-with-files-bold-duotone',
@@ -95,28 +161,162 @@ export const landingFeatures: LandingFeature[] = [
   },
 ];
 
+// --------------- Target Audience ---------------
+
+export const landingTargetAudiences: LandingTargetAudience[] = [
+  {
+    icon: 'solar:calculator-bold-duotone',
+    title: 'Сметчики',
+    description:
+      'Профессионалы, для которых точность расчётов и скорость работы — ежедневная необходимость.',
+    useCases: [
+      'Быстрое составление смет из готовой базы материалов',
+      'Произвольные характеристики и единицы измерения',
+      'Экспорт готовых смет в нужном формате',
+    ],
+  },
+  {
+    icon: 'solar:buildings-bold-duotone',
+    title: 'Прорабы',
+    description:
+      'Руководители на объекте, которым нужен быстрый доступ к ценам и расчётам прямо на площадке.',
+    useCases: [
+      'Мгновенный поиск материала и его стоимости',
+      'Работа с телефона или планшета',
+      'Актуальные цены без звонков в офис',
+    ],
+  },
+  {
+    icon: 'solar:city-bold-duotone',
+    title: 'Строительные компании',
+    description:
+      'Организации, которым нужна единая система для всей команды с контролем доступа и ролями.',
+    useCases: [
+      'Рабочие пространства для каждого проекта',
+      'Разграничение ролей: менеджер, сметчик, наблюдатель',
+      'Единая база материалов для всей компании',
+    ],
+  },
+  {
+    icon: 'solar:hand-shake-bold-duotone',
+    title: 'Субподрядчики',
+    description:
+      'Подрядчики, которым нужно быстро подготовить коммерческое предложение с точными расценками.',
+    useCases: [
+      'Готовые шаблоны и справочники',
+      'Быстрая калькуляция стоимости работ',
+      'Профессиональные сметы за минуты, а не дни',
+    ],
+  },
+];
+
+// --------------- Competitor Comparison ---------------
+
+export const landingCompetitorTable = {
+  columns: ['SMETAS', 'Excel', 'Гранд-Смета', '1С:Смета'],
+  rows: [
+    {
+      feature: 'Онлайн-доступ из браузера',
+      smetas: true,
+      excel: 'Частично',
+      grandSmeta: false,
+      s1cSmeta: false,
+    },
+    {
+      feature: 'Командная работа в реальном времени',
+      smetas: true,
+      excel: false,
+      grandSmeta: false,
+      s1cSmeta: false,
+    },
+    {
+      feature: 'Единая база материалов',
+      smetas: true,
+      excel: false,
+      grandSmeta: true,
+      s1cSmeta: true,
+    },
+    {
+      feature: 'Произвольные поля и характеристики',
+      smetas: true,
+      excel: 'Вручную',
+      grandSmeta: false,
+      s1cSmeta: false,
+    },
+    {
+      feature: 'REST API для интеграций',
+      smetas: true,
+      excel: false,
+      grandSmeta: false,
+      s1cSmeta: 'Частично',
+    },
+    {
+      feature: 'Бесплатный тариф',
+      smetas: true,
+      excel: false,
+      grandSmeta: false,
+      s1cSmeta: false,
+    },
+    {
+      feature: 'Работа с мобильных устройств',
+      smetas: true,
+      excel: 'Неудобно',
+      grandSmeta: false,
+      s1cSmeta: false,
+    },
+    {
+      feature: 'Облачное хранилище файлов',
+      smetas: true,
+      excel: false,
+      grandSmeta: false,
+      s1cSmeta: false,
+    },
+  ] as LandingCompetitorRow[],
+};
+
+// --------------- Pricing ---------------
+
+export const landingPricing: LandingPricing = {
+  title: 'Начните бесплатно',
+  subtitle:
+    'Полный доступ ко всем возможностям платформы без ограничений по времени. Никаких скрытых платежей.',
+  price: 'Бесплатно',
+  features: [
+    'Неограниченное количество материалов',
+    'Произвольные категории и поля',
+    'Рабочие пространства и роли',
+    'Облачное хранилище файлов',
+    'REST API для интеграций',
+    'Техническая поддержка',
+  ],
+  ctaLabel: 'Начать бесплатно',
+};
+
+// --------------- Final CTA ---------------
+
 export const landingFinalCta = {
   title: 'Начните составлять сметы уже сегодня',
   subtitle:
-    'Войдите в систему и оцените удобство работы с современной платформой для строительных смет.',
-  ctaLabel: 'Войти в систему',
+    'Зарегистрируйтесь бесплатно и оцените удобство работы с современной платформой для строительных смет.',
+  ctaLabel: 'Начать бесплатно',
 };
 
+// --------------- Footer ---------------
+
 export const landingFooter = {
-  copyright: '© 2026 Сметы. Все права защищены.',
+  copyright: '© 2026 SMETAS. Все права защищены.',
   supportLabel: 'Служба поддержки',
 };
 
+// --------------- Author (footer contacts) ---------------
+
 export const landingAuthor = {
   name: 'Евгений Надточеев',
-  role: 'Fullstack-разработчик · Backend · DevOps · AI',
-  bio: 'Разрабатываю и сопровождаю SaaS «Сметы». 5+ лет коммерческого опыта: микросервисные архитектуры, финтех и платёжные системы, высоконагруженные сервисы, интеграция AI в рабочие процессы. Веду менторство и преподаю разработку.',
-  website: 'https://nadtocheev.ru',
-  portfolio: 'https://webappmaster.ru',
+  role: 'Основатель SMETAS',
   contacts: [
     {
       type: 'telegram',
-      label: 'Telegram (предпочтительно)',
+      label: 'Telegram',
       value: '@eugene_nadtocheev',
       href: 'https://t.me/eugene_nadtocheev',
       icon: 'solar:chat-round-dots-bold-duotone',
@@ -136,31 +336,10 @@ export const landingAuthor = {
       icon: 'solar:phone-bold-duotone',
     },
     {
-      type: 'github',
-      label: 'GitHub',
-      value: 'Webappmaster-Eugene',
-      href: 'https://github.com/Webappmaster-Eugene',
-      icon: 'mdi:github',
-    },
-    {
-      type: 'habr',
-      label: 'Habr Career',
-      value: 'webappmaster',
-      href: 'https://career.habr.com/webappmaster',
-      icon: 'solar:code-square-bold-duotone',
-    },
-    {
-      type: 'youtube',
-      label: 'YouTube',
-      value: '@webappmaster',
-      href: 'https://www.youtube.com/@webappmaster',
-      icon: 'mdi:youtube',
-    },
-    {
       type: 'website',
-      label: 'Портфолио',
-      value: 'webappmaster.ru',
-      href: 'https://webappmaster.ru',
+      label: 'Сайт',
+      value: 'nadtocheev.ru',
+      href: 'https://nadtocheev.ru',
       icon: 'solar:global-bold-duotone',
     },
   ],
