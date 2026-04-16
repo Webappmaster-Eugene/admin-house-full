@@ -36,8 +36,8 @@ export default function LoginView() {
   const returnTo = searchParams.get('returnTo');
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string().required('Email обязателен для заполнения').email('Email должен быть корректным адресом электронной почты'),
+    password: Yup.string().required('Пароль обязателен для заполнения'),
   });
 
   const defaultValues = {

@@ -27,25 +27,27 @@ export async function getFullWorkspaceInfo(currentUserInfo: UserGetFullInfoComma
   const workspaceId = currentWorkspace.uuid;
   const handbookId = currentWorkspace.handbookOfWorkspaceUuid as string;
 
-  const appInfo = await getAppInfo();
-
-  const currentWorkspaceInfo = await getCurrentWorkspace(workspaceId);
-  const currentHandbookInfo = await getCurrentHandbook(workspaceId, handbookId);
-  const allCategoryMaterialsOfHandbook = await getAllCategoryMaterialOfHandbook(
-    workspaceId,
-    handbookId
-  );
-  const allFieldsOfCategoryMaterialsOfHandbook = await getAllFieldOfCategoryOfHandbook(
-    workspaceId,
-    handbookId
-  );
-  const allFieldsUnitMeasurementsOfHandbook = await getAllFieldUnitMeasurementsOfHandbook(
-    workspaceId,
-    handbookId
-  );
-  const allGlobalCategories = await getAllGlobalCategories();
-  const allFieldTypes = await getAllFieldTypes();
-  const allFieldsVariantsOfHandbook = await getAllFieldVariantsInHandbook(workspaceId, handbookId);
+  const [
+    appInfo,
+    currentWorkspaceInfo,
+    currentHandbookInfo,
+    allCategoryMaterialsOfHandbook,
+    allFieldsOfCategoryMaterialsOfHandbook,
+    allFieldsUnitMeasurementsOfHandbook,
+    allGlobalCategories,
+    allFieldTypes,
+    allFieldsVariantsOfHandbook,
+  ] = await Promise.all([
+    getAppInfo(),
+    getCurrentWorkspace(workspaceId),
+    getCurrentHandbook(workspaceId, handbookId),
+    getAllCategoryMaterialOfHandbook(workspaceId, handbookId),
+    getAllFieldOfCategoryOfHandbook(workspaceId, handbookId),
+    getAllFieldUnitMeasurementsOfHandbook(workspaceId, handbookId),
+    getAllGlobalCategories(),
+    getAllFieldTypes(),
+    getAllFieldVariantsInHandbook(workspaceId, handbookId),
+  ]);
 
   if (
     !isErrorInArrayFieldTypeGuard([

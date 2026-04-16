@@ -141,7 +141,6 @@ export default function AdminView() {
     const result = await deleteUser(deleteUserRow.uuid);
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Ошибка при удалении', { variant: 'error' });
-      setDeleteUserRow(null);
       return;
     }
     enqueueSnackbar('Пользователь удалён', { variant: 'success' });

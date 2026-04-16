@@ -5,6 +5,9 @@ import { AuthEntity } from '../entities/auth.entity';
 import { AuthGenerateKeyRequestDto } from '../dto/controller/auth.generate-key.dto';
 import { AuthRegisterWithRoleRequestDto, AuthRegisterWithRoleRequestParamDto } from '../dto/controller/auth.register-with-role.dto';
 import { AuthLoginRequestDto } from '../dto/controller/auth.login.dto';
+import { ForgotPasswordRequestDto } from '../dto/controller/auth.forgot-password.dto';
+import { VerifyResetCodeRequestDto } from '../dto/controller/auth.verify-reset-code.dto';
+import { ResetPasswordRequestDto } from '../dto/controller/auth.reset-password.dto';
 import { AuthRefreshKeysEntity } from '../../../modules/auth/entities/auth-refresh-keys.entity';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { TokenType } from '../../../common/types/token-type.enum';
@@ -28,4 +31,7 @@ export interface IAuthService {
   ) => Promise<UniversalInternalResponse<string>>;
   generateStrictAdminKey: (dto: AuthGenerateKeyRequestDto) => Promise<UniversalInternalResponse<{ key: string }>>;
   getStrictAdminKey: () => Promise<UniversalInternalResponse<{ key: string }>>;
+  forgotPassword: (dto: ForgotPasswordRequestDto) => Promise<UniversalInternalResponse<{ message: string }>>;
+  verifyResetCode: (dto: VerifyResetCodeRequestDto) => Promise<UniversalInternalResponse<{ message: string }>>;
+  resetPassword: (dto: ResetPasswordRequestDto) => Promise<UniversalInternalResponse<{ message: string }>>;
 }

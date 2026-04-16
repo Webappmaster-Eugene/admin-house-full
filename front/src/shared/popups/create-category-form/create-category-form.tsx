@@ -193,19 +193,22 @@ export default function CreateCategoryForm({
         createCategoryDto
       );
 
-      if (!isErrorFieldTypeGuard(createdCategoryMaterial) && setTableData) {
-        setTableData((prevData: CategoryMaterialGetAllCommand.ResponseEntity) => [
-          ...prevData,
-          createdCategoryMaterial,
-        ]);
+      if (!isErrorFieldTypeGuard(createdCategoryMaterial)) {
+        if (setTableData) {
+          setTableData((prevData: CategoryMaterialGetAllCommand.ResponseEntity) => [
+            ...prevData,
+            createdCategoryMaterial,
+          ]);
+        }
+        reset();
+        onCloseCreateCategoryPopup();
+        enqueueSnackbar('Новая категория успешно создана!');
+      } else {
+        enqueueSnackbar('Новая категория не создана, произошла ошибка', { variant: 'error' });
       }
-
-      reset();
-      onCloseCreateCategoryPopup();
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Новая категория не создана, произошла ошибка', error);
-      throw new Error('isNewRow = false, problem with creating a new row');
+      enqueueSnackbar('Новая категория не создана, произошла ошибка', { variant: 'error' });
     }
   });
 

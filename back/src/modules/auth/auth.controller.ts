@@ -5,6 +5,9 @@ import { IAuthController } from './types/auth.controller.interface';
 import { AuthLoginRequestDto, AuthLoginResponseDto } from './dto/controller/auth.login.dto';
 import { ExternalResponse } from '../../common/types/responses/universal-external-response.interface';
 import { AuthRegisterRequestDto, AuthRegisterResponseDto } from './dto/controller/auth.register.dto';
+import { ForgotPasswordRequestDto, ForgotPasswordResponseDto } from './dto/controller/auth.forgot-password.dto';
+import { VerifyResetCodeRequestDto, VerifyResetCodeResponseDto } from './dto/controller/auth.verify-reset-code.dto';
+import { ResetPasswordRequestDto, ResetPasswordResponseDto } from './dto/controller/auth.reset-password.dto';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import { IAuthService } from './types/auth.service.interface';
 import { KFI } from '../../common/utils/di';
@@ -205,6 +208,60 @@ export class AuthController implements IAuthController {
       if (ok) {
         return new ExternalResponse<{ key: string }>(data as { key: string });
       }
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiOperation({ summary: 'Запросить код для сброса пароля' })
+  @ApiResponse({ status: 200, type: ForgotPasswordResponseDto })
+  //endregion
+  @HttpCode(200)
+  @Post('forgot-password')
+  async forgotPasswordEP(
+    @Body() dto: ForgotPasswordRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<ForgotPasswordResponseDto> {
+    try {
+      const { ok, data } = await this.authService.forgotPassword(dto);
+      return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiOperation({ summary: 'Подтвердить код сброса пароля' })
+  @ApiResponse({ status: 200, type: VerifyResetCodeResponseDto })
+  //endregion
+  @HttpCode(200)
+  @Post('verify-reset-code')
+  async verifyResetCodeEP(
+    @Body() dto: VerifyResetCodeRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<VerifyResetCodeResponseDto> {
+    try {
+      const { ok, data } = await this.authService.verifyResetCode(dto);
+      return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
+    }
+  }
+
+  //region SWAGGER
+  @ApiOperation({ summary: 'Сбросить пароль с помощью кода' })
+  @ApiResponse({ status: 200, type: ResetPasswordResponseDto })
+  //endregion
+  @HttpCode(200)
+  @Post('reset-password')
+  async resetPasswordEP(
+    @Body() dto: ResetPasswordRequestDto,
+    @UrlParams() urlParams: IUrlParams,
+  ): Promise<ResetPasswordResponseDto> {
+    try {
+      const { ok, data } = await this.authService.resetPassword(dto);
+      return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.AUTH, urlParams);
     }

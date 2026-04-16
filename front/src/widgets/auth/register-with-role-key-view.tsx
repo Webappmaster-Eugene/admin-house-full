@@ -36,18 +36,18 @@ export default function RegisterWithRoleKeyView() {
   const returnTo = searchParams.get('returnTo');
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
-    lastName: Yup.string().required('Last name required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    firstName: Yup.string().required('Имя обязательно для заполнения'),
+    lastName: Yup.string().required('Фамилия обязательна для заполнения'),
+    email: Yup.string().required('Email обязателен для заполнения').email('Email должен быть корректным адресом электронной почты'),
+    password: Yup.string().required('Пароль обязателен для заполнения'),
     confirmPassword: Yup.string()
-      .required('Confirm password is required')
-      .oneOf([Yup.ref('password')], 'Passwords must match'),
+      .required('Подтверждение пароля обязательно')
+      .oneOf([Yup.ref('password')], 'Пароли должны совпадать'),
     roleId: Yup.number()
       .positive()
-      .lessThan(5, 'Role code must be less than 4')
-      .required('Role code (1-4) is required'),
-    secretKey: Yup.string().required('Secret code is required'),
+      .lessThan(5, 'Код роли должен быть меньше 5')
+      .required('Код роли (1-4) обязателен'),
+    secretKey: Yup.string().required('Секретный ключ обязателен для заполнения'),
   });
 
   const defaultValues = {
@@ -201,12 +201,12 @@ export default function RegisterWithRoleKeyView() {
         }}
       >
         {'Регистрируясь, вы соглашаетесь с '}
-        <Link underline="always" color="text.primary">
-          Соглашение об использовании
+        <Link href="/terms" underline="always" color="text.primary">
+          Соглашением об использовании
         </Link>
-        {' and '}
-        <Link underline="always" color="text.primary">
-          Политика конфиденциальности
+        {' и '}
+        <Link href="/privacy" underline="always" color="text.primary">
+          Политикой конфиденциальности
         </Link>
         .
       </Typography>

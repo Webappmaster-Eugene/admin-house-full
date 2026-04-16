@@ -12,6 +12,9 @@ import { BackendErrorNames, InternalError } from '../../common/errors/errors-des
 import { AuthGenerateKeyRequestDto } from './dto/controller/auth.generate-key.dto';
 import { IAuthRepository } from './types/auth.repository.interface';
 import { AuthLoginRequestDto } from './dto/controller/auth.login.dto';
+import { ForgotPasswordRequestDto } from './dto/controller/auth.forgot-password.dto';
+import { VerifyResetCodeRequestDto } from './dto/controller/auth.verify-reset-code.dto';
+import { ResetPasswordRequestDto } from './dto/controller/auth.reset-password.dto';
 import { AuthRegisterWithRoleRequestParamDto } from './dto/controller/auth.register-with-role.dto';
 import { IRoleService } from '../roles/types/role.service.interface';
 import { ROLE_IDS } from '../../common/consts/role-ids';
@@ -23,6 +26,7 @@ import { KFI } from '../../common/utils/di';
 import { COOKIE_KEYS } from '../../common/consts/cookie-keys';
 import { IJWTPayload, IJWTRefreshPayload } from '../../common/types/jwt.payload.interface';
 import { AuthRefreshKeysEntity } from '../../modules/auth/entities/auth-refresh-keys.entity';
+import { IMailService } from '../mail/mail.service.interface';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { EActiveStatuses } from '.prisma/client';
 
@@ -34,8 +38,8 @@ export class AuthService implements IAuthService {
     private readonly configService?: ConfigService<IConfigService>,
     @Inject(KFI.USER_SERVICE)
     private readonly userService?: IUserService,
-    // @Inject(KFI.ROLE_SERVICE)
-    // private readonly roleService: IRoleService,
+    @Inject(KFI.MAIL_SERVICE)
+    private readonly mailService?: IMailService,
   ) {}
 
   async register(dto: AuthRegisterRequestDto, response: Response): Promise<UniversalInternalResponse<AuthEntity>> {
@@ -230,5 +234,68 @@ export class AuthService implements IAuthService {
   async getStrictAdminKey(): Promise<UniversalInternalResponse<{ key: string }>> {
     const strictKey = await this.authRepository.getStrictAdminKey();
     return new InternalResponse(strictKey);
+  }
+
+  async forgotPassword(dto: ForgotPasswordRequestDto): Promise<UniversalInternalResponse<{ message: string }>> {
+    const { email } = dto;
+
+    // Проверяем, существует ли пользователь с таким email
+    const user = dataInternalExtractor(await this.userService.getByEmail(email));
+    if (!user) {
+      // Не раскрываем, существует ли email — возвращаем успех в любом случае
+      return new InternalResponse({ message: 'Если аккаунт с таким email существует, код отправлен на почту' });
+    }
+
+    // Удаляем старые/использованные коды для этого email
+    await this.authRepository.deleteExpiredResetCodes(email);
+
+    // Генерируем 6-значный код
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
+
+    await this.authRepository.createPasswordResetCode(email, code, expiresAt);
+
+    // Отправляем email
+    await this.mailService.sendResetCode(email, code);
+
+    return new InternalResponse({ message: 'Если аккаунт с таким email существует, код отправлен на почту' });
+  }
+
+  async verifyResetCode(dto: VerifyResetCodeRequestDto): Promise<UniversalInternalResponse<{ message: string }>> {
+    const { email, code } = dto;
+
+    const resetCode = await this.authRepository.findValidResetCode(email, code);
+    if (!resetCode) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
+    }
+
+    return new InternalResponse({ message: 'Код подтверждён' });
+  }
+
+  async resetPassword(dto: ResetPasswordRequestDto): Promise<UniversalInternalResponse<{ message: string }>> {
+    const { email, code, password } = dto;
+
+    // Проверяем код ещё раз
+    const resetCode = await this.authRepository.findValidResetCode(email, code);
+    if (!resetCode) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
+    }
+
+    // Проверяем, существует ли пользователь
+    const user = dataInternalExtractor(await this.userService.getByEmail(email));
+    if (!user) {
+      throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
+    }
+
+    // Хэшируем новый пароль
+    const hashedPassword = await argon2.hash(password);
+
+    // Обновляем пароль пользователя
+    await this.authRepository.updateUserPassword(user.uuid, hashedPassword);
+
+    // Помечаем код как использованный
+    await this.authRepository.markResetCodeAsUsed(resetCode.uuid);
+
+    return new InternalResponse({ message: 'Пароль успешно изменён' });
   }
 }

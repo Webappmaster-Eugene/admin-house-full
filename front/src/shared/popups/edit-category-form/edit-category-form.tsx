@@ -222,25 +222,17 @@ export default function EditCategoryForm({
           });
           return newDataToReturn;
         });
+        reset();
+        onCloseEditCategoryForm();
+        enqueueSnackbar('Обновление категории прошло успешно!');
+      } else {
+        enqueueSnackbar('Ошибка при обновлении категории', { variant: 'error' });
       }
-
-      reset();
-      onCloseEditCategoryForm();
-      enqueueSnackbar('Обновление категории прошло успешно!');
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Ошибка при обновлении категории', { variant: 'error' });
     }
   });
-
-  interface Movie {
-    title: string;
-    year: number;
-  }
-
-  const options: Movie[] = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-  ];
 
   return (
     currentCategoryInfo && (

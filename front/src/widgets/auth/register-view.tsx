@@ -1,7 +1,6 @@
 'use client';
 
 import * as Yup from 'yup';
-import { useTransition } from 'react';
 import Iconify from '@/shared/iconify';
 import { useForm } from 'react-hook-form';
 import { RouterLink } from '@/shared/router-link';
@@ -29,8 +28,6 @@ import { register } from 'src/api/actions/auth/register.action';
 // ----------------------------------------------------------------------
 
 export default function RegisterView() {
-  const [isPending, startTransition] = useTransition();
-
   const router = useRouter();
   const isPasswordOpen = useBoolean();
   const isConfirmPasswordOpen = useBoolean();
@@ -39,13 +36,13 @@ export default function RegisterView() {
   const returnTo = searchParams.get('returnTo');
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
-    lastName: Yup.string().required('Last name required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    firstName: Yup.string().required('Имя обязательно для заполнения'),
+    lastName: Yup.string().required('Фамилия обязательна для заполнения'),
+    email: Yup.string().required('Email обязателен для заполнения').email('Email должен быть корректным адресом электронной почты'),
+    password: Yup.string().required('Пароль обязателен для заполнения'),
     confirmPassword: Yup.string()
-      .required('Confirm password is required')
-      .oneOf([Yup.ref('password')], 'Passwords must match'),
+      .required('Подтверждение пароля обязательно')
+      .oneOf([Yup.ref('password')], 'Пароли должны совпадать'),
   });
 
   const defaultValues = {
@@ -191,12 +188,12 @@ export default function RegisterView() {
         }}
       >
         {'Регистрируясь, вы соглашаетесь с '}
-        <Link underline="always" color="text.primary">
-          Соглашение об использовании
+        <Link href={paths.terms} underline="always" color="text.primary">
+          Соглашением об использовании
         </Link>
-        {' and '}
-        <Link underline="always" color="text.primary">
-          Политика конфиденциальности
+        {' и '}
+        <Link href={paths.privacy} underline="always" color="text.primary">
+          Политикой конфиденциальности
         </Link>
         .
       </Typography>

@@ -9,6 +9,11 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
+  // LEGAL
+  terms: '/terms',
+  privacy: '/privacy',
+  offer: '/offer',
+  cookies: '/cookies',
   // AUTH
   auth: {
     login: `${ROOTS.AUTH}/login`,

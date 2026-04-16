@@ -17,29 +17,26 @@ import { ForgotState } from 'src/utils/const/forgot-password.enum';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
 import FormProvider, { RHFTextField } from 'src/shared/hook-form';
-import { forgotPassword } from 'src/api/actions/auth/forgot-password.action';
-import { ForgotPasswordViewProps } from 'src/widgets/auth/forgot-password-stages/forgot-password-view/forgot-password-view.props';
+import { verifyResetCode } from 'src/api/actions/auth/verify-reset-code.action';
+import { CodeEnteringViewProps } from 'src/widgets/auth/forgot-password-stages/code-entering-view/code-entering-view.props';
 
 // ----------------------------------------------------------------------
 
-export default function ForgotPasswordView({
-  setForgotState,
-  forgotState,
-}: ForgotPasswordViewProps) {
+export default function CodeEnteringView({ setForgotState, forgotState }: CodeEnteringViewProps) {
   const [errorMsg, setErrorMsg] = useState('');
 
-  const ForgotPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .required('Email обязателен для заполнения')
-      .email('Email должен быть корректным адресом электронной почты'),
+  const CodeEnteringSchema = Yup.object().shape({
+    code: Yup.string()
+      .required('Код обязателен для заполнения')
+      .length(6, 'Код должен содержать 6 цифр'),
   });
 
   const defaultValues = {
-    email: '',
+    code: '',
   };
 
   const methods = useForm({
-    resolver: yupResolver(ForgotPasswordSchema),
+    resolver: yupResolver(CodeEnteringSchema),
     defaultValues,
   });
 
@@ -51,14 +48,21 @@ export default function ForgotPasswordView({
   const onSubmit = handleSubmit(async (data) => {
     setErrorMsg('');
 
-    const result = await forgotPassword({ email: data.email });
+    const result = await verifyResetCode({
+      email: forgotState.email,
+      code: data.code,
+    });
 
     if (isErrorFieldTypeGuard(result)) {
-      setErrorMsg('Произошла ошибка при отправке кода. Попробуйте позже.');
+      setErrorMsg('Неверный код или срок действия кода истёк. Попробуйте снова.');
       return;
     }
 
-    setForgotState({ state: ForgotState.CodeEntering, email: data.email });
+    setForgotState({
+      state: ForgotState.PasswordReset,
+      email: forgotState.email,
+      code: data.code,
+    });
   });
 
   return (
@@ -73,14 +77,14 @@ export default function ForgotPasswordView({
           alignItems: 'center',
         }}
       >
-        <Image src="/images/ic-password.svg" alt="" width={100} height={100} />
+        <Image src="/images/ic-email-inbox.svg" alt="" width={100} height={100} />
         <Typography
           variant="h3"
           sx={{
             textAlign: 'center',
           }}
         >
-          Забыли пароль?
+          Проверьте почту
         </Typography>
 
         <Typography
@@ -89,7 +93,7 @@ export default function ForgotPasswordView({
             textAlign: 'center',
           }}
         >
-          Пожалуйста, напишите Ваш email и мы отправим Вам код для сброса пароля.
+          Мы отправили 6-значный код на <strong>{forgotState.email}</strong>. Введите его ниже.
         </Typography>
       </Stack>
 
@@ -101,7 +105,11 @@ export default function ForgotPasswordView({
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack spacing={2.5}>
-          <RHFTextField name="email" label="Email" />
+          <RHFTextField
+            name="code"
+            label="Код подтверждения"
+            inputProps={{ maxLength: 6 }}
+          />
 
           <LoadingButton
             fullWidth
@@ -111,7 +119,7 @@ export default function ForgotPasswordView({
             variant="contained"
             loading={isSubmitting}
           >
-            Отправить код
+            Подтвердить
           </LoadingButton>
 
           <Link

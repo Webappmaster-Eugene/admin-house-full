@@ -34,6 +34,7 @@ import { S3MinioModule } from './modules/s3-minio/s3-minio.module';
 // import { AutomapperModule } from '@numart/automapper/nestjs';
 // import { classes } from '@numart/automapper/classes';
 import { StatusApproveModule } from './modules/status-approve/status-approve.module';
+import { MailModule } from './modules/mail/mail.module';
 const logger: LoggerConfig = new LoggerConfig();
 
 @Module({
@@ -79,6 +80,7 @@ const logger: LoggerConfig = new LoggerConfig();
     // ServeStaticModule.forRoot({
     //   rootPath: path.resolve(__dirname, './static'),
     // }),
+    MailModule,
     S3MinioModule,
     AuthModule,
     AppInfoModule,

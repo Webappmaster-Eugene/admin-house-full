@@ -16,28 +16,33 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/utils/routes/paths';
 import { useBoolean } from 'src/utils/hooks/use-boolean';
+import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
+import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
 import Iconify from 'src/shared/iconify';
 import FormProvider, { RHFTextField } from 'src/shared/hook-form';
+import { resetPassword } from 'src/api/actions/auth/reset-password.action';
 import { CheckEmailViewProps } from 'src/widgets/auth/forgot-password-stages/check-email-view/check-email-view.props';
 
 // ----------------------------------------------------------------------
 
 export default function CheckEmailView({ setForgotState, forgotState }: CheckEmailViewProps) {
+  const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const isConfirmPasswordOpen = useBoolean();
   const isPasswordOpen = useBoolean();
 
   const CheckEmailSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string()
+      .required('Пароль обязателен для заполнения')
+      .min(6, 'Пароль должен содержать минимум 6 символов'),
     confirmPassword: Yup.string()
-      .required('Confirm password is required')
-      .oneOf([Yup.ref('password')], 'Passwords must match'),
+      .required('Подтверждение пароля обязательно')
+      .oneOf([Yup.ref('password')], 'Пароли должны совпадать'),
   });
 
   const defaultValues = {
-    email: forgotState.email,
     password: '',
     confirmPassword: '',
   };
@@ -48,30 +53,30 @@ export default function CheckEmailView({ setForgotState, forgotState }: CheckEma
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit(async (data, event) => {
-    if (event) {
-      event?.preventDefault();
+  const onSubmit = handleSubmit(async (data) => {
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    const result = await resetPassword({
+      email: forgotState.email,
+      code: forgotState.code || '',
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    });
+
+    if (isErrorFieldTypeGuard(result)) {
+      setErrorMsg('Не удалось сменить пароль. Попробуйте заново.');
+      return;
     }
-    // const user = await login({ email: data.email, password: data.password });
-    //
-    // if (!isErrorFieldTypeGuard(user)) {
-    //   router.push(returnTo || paths.dashboard.root);
-    // } else {
-    //   const { error } = user;
-    //   reset();
-    //   if (isNameInErrorTypeGuard(error)) {
-    //     setErrorMsg(frontendFromBackendErrors[error.name] || error.name);
-    //   } else {
-    //     setErrorMsg(
-    //       typeof error === 'string' ? error : 'Неизвестная ошибка при входе пользователя'
-    //     );
-    //   }
-    // }
+
+    setSuccessMsg('Пароль успешно изменён! Перенаправляем на страницу входа...');
+    setTimeout(() => {
+      router.push(paths.auth.login);
+    }, 2000);
   });
 
   return (
@@ -93,7 +98,7 @@ export default function CheckEmailView({ setForgotState, forgotState }: CheckEma
             textAlign: 'center',
           }}
         >
-          Письмо успешно отправлено!
+          Новый пароль
         </Typography>
 
         <Typography
@@ -102,7 +107,7 @@ export default function CheckEmailView({ setForgotState, forgotState }: CheckEma
             textAlign: 'center',
           }}
         >
-          Мы отправили Вам 6-значный код для подтверждения Email. Пожалуйста, введите код ниже.
+          Придумайте новый пароль для аккаунта <strong>{forgotState.email}</strong>
         </Typography>
       </Stack>
 
@@ -112,13 +117,17 @@ export default function CheckEmailView({ setForgotState, forgotState }: CheckEma
         </Alert>
       )}
 
+      {!!successMsg && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          {successMsg}
+        </Alert>
+      )}
+
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack spacing={2.5}>
-          <RHFTextField name="email" label="Email address" disabled />
-
           <RHFTextField
             name="password"
-            label="Придумайте пароль"
+            label="Новый пароль"
             type={isPasswordOpen.value ? 'text' : 'password'}
             InputProps={{
               endAdornment: (
@@ -159,8 +168,9 @@ export default function CheckEmailView({ setForgotState, forgotState }: CheckEma
             type="submit"
             variant="contained"
             loading={isSubmitting}
+            disabled={!!successMsg}
           >
-            Отправить
+            Сменить пароль
           </LoadingButton>
 
           <Link

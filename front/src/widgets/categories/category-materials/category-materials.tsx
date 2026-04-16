@@ -6,6 +6,7 @@ import AllCategoriesTable from '@/widgets/categories/category-materials/category
 import CategoryFilters from '@/widgets/categories/category-materials/category-filters/category-filters';
 import AllCategoriesGridView from '@/widgets/categories/category-materials/category-grid/category-grid-view';
 import { deleteOneCategoryMaterial } from '@/api/actions/category-material/delete-one-category-material.action';
+import { isErrorFieldTypeGuard } from '@/utils/type-guards/is-error-field.type-guard';
 import {
   HandbookGetCommand,
   WorkspaceGetCommand,
@@ -23,6 +24,7 @@ import IconButton from '@mui/material/IconButton';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
+import { paths } from 'src/utils/routes/paths';
 import { useBoolean } from 'src/utils/hooks/use-boolean';
 
 import Iconify from 'src/shared/iconify';
@@ -138,25 +140,31 @@ export default function CategoryMaterials({
   }, []);
 
   const handleDeleteOneCategory = async (id: string) => {
-    // const allRowsWithoutDeleted = tableData.filter((row) => row.uuid !== id);
-    await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
+    const result = await deleteOneCategoryMaterial(currentWorkspaceInfo?.uuid, currentHandbookInfo?.uuid, id);
+
+    if (isErrorFieldTypeGuard(result)) {
+      enqueueSnackbar('Ошибка при удалении категории', { variant: 'error' });
+      return;
+    }
 
     table.onUpdatePageDeleteRow(dataInPage?.length);
     setTableData((prevCategories) => prevCategories.filter((category) => category.uuid !== id));
-    // setTableData(allCategoriesInWorkspace);
     enqueueSnackbar('Удаление одной категории успешно произведено!');
   };
 
   const handleDeleteManyCategories = useCallback(async () => {
     const selectedCategoriesToDelete = table.selected;
-    // const allRowsWithoutDeleted = tableData.filter(
-    //   (categoryMaterialInTable) => !table.selected.includes(categoryMaterialInTable?.uuid as string)
-    // );
-    await deleteManyCategoryMaterial(
+
+    const result = await deleteManyCategoryMaterial(
       currentWorkspaceInfo?.uuid,
       currentHandbookInfo?.uuid,
       selectedCategoriesToDelete
     );
+
+    if (isErrorFieldTypeGuard(result)) {
+      enqueueSnackbar('Ошибка при удалении категорий', { variant: 'error' });
+      return;
+    }
 
     table.onUpdatePageDeleteRows({
       totalRowsInPage: dataInPage?.length,
@@ -166,8 +174,6 @@ export default function CategoryMaterials({
     setTableData((prevCategories) =>
       prevCategories.filter((category) => !selectedCategoriesToDelete.includes(category.uuid))
     );
-
-    isDeletingManyCategoriesPopupOpened.onFalse();
 
     enqueueSnackbar('Удаление категорий успешно произведено!');
   }, [dataInPage?.length, enqueueSnackbar, table, tableData, allCategoriesInWorkspace]);
@@ -245,7 +251,7 @@ export default function CategoryMaterials({
           concreteCrumbs={[
             {
               name: 'Дашборд',
-              href: `https://alibaba.hhos.ru/dashboard`,
+              href: paths.dashboard.root,
             },
             { name: 'Категории материалов' },
           ]}

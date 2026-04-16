@@ -8,6 +8,11 @@ export interface IConfigService {
   API_PREFIX: string;
   API_VERSION: string;
   APP_PORT: number;
+  SMTP_HOST: string;
+  SMTP_PORT: string;
+  SMTP_USER: string;
+  SMTP_PASSWORD: string;
+  SMTP_FROM: string;
   MINIO_ENDPOINT: string;
   MINIO_PORT: number;
   MINIO_ACCESS_KEY: string;

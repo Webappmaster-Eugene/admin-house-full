@@ -31,6 +31,19 @@ model RegisterWithRoleKey {
   @@map("register_with_role_key")
 }
 
+// DOC Код для сброса пароля (PasswordResetCode) - определяется на уровне приложения (создаётся при запросе восстановления пароля):
+// DOC password-reset-code
+model PasswordResetCode {
+  uuid      String   @id @default(uuid()) @db.Uuid
+  email     String
+  code      String
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("password_reset_code")
+}
+
 // DOC Информация о приложении (App-Info) - определяются на уровне приложения (создаются автоматически сидами, изменяются админом):
 // DOC app-info
 model AppInfo {

@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { PasswordResetCode } from '.prisma/client';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { IAuthRepository } from './types/auth.repository.interface';
 import { KFI } from '../../common/utils/di';
@@ -37,5 +38,46 @@ export class AuthRepository implements IAuthRepository {
     } catch (error: unknown) {
       errorRepositoryHandler(error);
     }
+  }
+
+  async createPasswordResetCode(email: string, code: string, expiresAt: Date): Promise<PasswordResetCode> {
+    return this.databaseService.passwordResetCode.create({
+      data: { email, code, expiresAt },
+    });
+  }
+
+  async findValidResetCode(email: string, code: string): Promise<PasswordResetCode | null> {
+    return this.databaseService.passwordResetCode.findFirst({
+      where: {
+        email,
+        code,
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async markResetCodeAsUsed(uuid: string): Promise<void> {
+    await this.databaseService.passwordResetCode.update({
+      where: { uuid },
+      data: { used: true },
+    });
+  }
+
+  async deleteExpiredResetCodes(email: string): Promise<void> {
+    await this.databaseService.passwordResetCode.deleteMany({
+      where: {
+        email,
+        OR: [{ used: true }, { expiresAt: { lt: new Date() } }],
+      },
+    });
+  }
+
+  async updateUserPassword(userUuid: string, hashedPassword: string): Promise<void> {
+    await this.databaseService.user.update({
+      where: { uuid: userUuid },
+      data: { password: hashedPassword },
+    });
   }
 }

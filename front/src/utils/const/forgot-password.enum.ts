@@ -1,4 +1,5 @@
 export enum ForgotState {
-  CodeSenting = 'CodeSenting',
+  CodeSending = 'CodeSending',
   CodeEntering = 'CodeEntering',
+  PasswordReset = 'PasswordReset',
 }
