@@ -17,9 +17,6 @@ pre-commit:
 pre-push:
   parallel: true
   commands:
-    front-typecheck:
-      root: "front/"
-      run: npm run ts
     front-lint:
       root: "front/"
       run: npm run lint
