@@ -15,7 +15,7 @@ pre-commit:
       run: npx eslint --fix {staged_files} && git add {staged_files}
 
 pre-push:
-  parallel: false
+  parallel: true
   commands:
     front-typecheck:
       root: "front/"
