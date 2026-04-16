@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesModule } from './modules/roles/roles.module';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { UserInterceptor } from './common/interceptors/user.interceptor';
@@ -50,46 +50,31 @@ const logger: LoggerConfig = new LoggerConfig();
     // }),
     CacheModule.registerAsync({
       isGlobal: true,
-      useFactory: async () => {
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const host = configService.get<string>('REDIS_HOST', 'redis');
+        const port = configService.get<number>('REDIS_PORT', 6379);
+
         try {
           const store = await redisStore({
-            ttl: 10, // seconds
+            ttl: 10,
             socket: {
-              // DOC данные подключения redis для прода
-              host: 'redis',
-              port: 6379,
-              // DOC данные подключения redis для dev
-              //host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-              //port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+              host,
+              port,
+              connectTimeout: 5000,
             },
           });
-          // Проверяем подключение к Redis
-          await new Promise((resolve, reject) => {
-            reject('Redis отключен или недоступен');
-          });
 
-          return { store: store };
+          await store.client.ping();
+          console.log(`Redis подключён (${host}:${port})`);
+
+          return { store };
         } catch (error) {
-          console.warn('Redis not available, falling back to in-memory cache', error);
-          return {
-            store: undefined, // Указываем, что store не доступен
-          };
+          console.warn(`Redis недоступен (${host}:${port}), используется in-memory кэш`, error);
+          return { store: undefined };
         }
       },
-      // useFactory: async () => ({
-      //   store: await redisStore({
-      //     ttl: 10, // seconds
-      //     socket: {
-      //       // DOC данные подключения redis для прода
-      //       // host: 'redis',
-      //       // port: 6379,
-      //
-      //       // DOC данные подключения redis для dev
-      //       host: process.env.REDIS_HOST ? process.env.HOST : 'redis',
-      //       port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
-      //     },
-      //   }),
-      // }),
     }),
     // ServeStaticModule.forRoot({
     //   rootPath: path.resolve(__dirname, './static'),

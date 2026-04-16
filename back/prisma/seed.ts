@@ -10,6 +10,13 @@ import { fieldOfCategoryMaterialTemplateGenerator } from '../src/common/helpers/
 const prisma = new PrismaClient();
 
 async function main() {
+  // Проверяем, были ли данные уже засеяны
+  const existingWorkspace = await prisma.workspace.findFirst();
+  if (existingWorkspace) {
+    console.log('[seed] Данные уже засеяны, пропускаем повторный запуск.');
+    return;
+  }
+
   // Пароль для сидовых пользователей: берём из env или генерируем случайный (никому не известный).
   // Не падаем без env-переменной, чтобы не блокировать старт контейнера при идемпотентном повторном запуске seed.
   const envSeedPassword = process.env.SEED_DEFAULT_PASSWORD;
@@ -55,7 +62,7 @@ async function main() {
   });
 
   const CUSTOMER_ROLE = await prisma?.role?.upsert({
-    where: { name: 'WORKER' },
+    where: { name: 'CUSTOMER' },
     create: {
       name: 'CUSTOMER',
       description: 'Заказчик, покупатель',
