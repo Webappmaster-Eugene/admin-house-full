@@ -8,6 +8,7 @@ export const axiosEndpoints = {
     forgot_password: 'auth/forgot-password',
     verify_reset_code: 'auth/verify-reset-code',
     reset_password: 'auth/reset-password',
+    change_password: 'auth/change-password',
     strict_admin_key_generate: 'auth/strict-admin-key/generate',
     strict_admin_key_get: 'auth/strict-admin-key/get',
   },

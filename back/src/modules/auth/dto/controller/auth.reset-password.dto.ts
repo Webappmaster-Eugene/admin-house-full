@@ -8,7 +8,7 @@ const ResetPasswordRequestSchema = z
     password: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
     confirmPassword: z.string().min(6, 'Подтверждение пароля обязательно'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: 'Пароли должны совпадать',
     path: ['confirmPassword'],
   });

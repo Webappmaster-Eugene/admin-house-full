@@ -67,6 +67,11 @@ services:
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
       FRONTEND_DOMAIN: ${FRONTEND_DOMAIN}
       FRONTEND_URL: ${FRONTEND_URL}
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: jamesnumart@gmail.com
+      SMTP_PASSWORD: jjewccxpilxenjmk
+      SMTP_FROM: "SMETAS <jamesnumart@gmail.com>"
     depends_on:
       postgres:
         condition: service_healthy

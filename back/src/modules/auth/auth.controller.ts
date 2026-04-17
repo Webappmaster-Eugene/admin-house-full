@@ -219,10 +219,7 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @Post('forgot-password')
-  async forgotPasswordEP(
-    @Body() dto: ForgotPasswordRequestDto,
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<ForgotPasswordResponseDto> {
+  async forgotPasswordEP(@Body() dto: ForgotPasswordRequestDto, @UrlParams() urlParams: IUrlParams): Promise<ForgotPasswordResponseDto> {
     try {
       const { ok, data } = await this.authService.forgotPassword(dto);
       return okResponseHandler(ok, data, this.logger);
@@ -237,10 +234,7 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @Post('verify-reset-code')
-  async verifyResetCodeEP(
-    @Body() dto: VerifyResetCodeRequestDto,
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<VerifyResetCodeResponseDto> {
+  async verifyResetCodeEP(@Body() dto: VerifyResetCodeRequestDto, @UrlParams() urlParams: IUrlParams): Promise<VerifyResetCodeResponseDto> {
     try {
       const { ok, data } = await this.authService.verifyResetCode(dto);
       return okResponseHandler(ok, data, this.logger);
@@ -255,10 +249,7 @@ export class AuthController implements IAuthController {
   //endregion
   @HttpCode(200)
   @Post('reset-password')
-  async resetPasswordEP(
-    @Body() dto: ResetPasswordRequestDto,
-    @UrlParams() urlParams: IUrlParams,
-  ): Promise<ResetPasswordResponseDto> {
+  async resetPasswordEP(@Body() dto: ResetPasswordRequestDto, @UrlParams() urlParams: IUrlParams): Promise<ResetPasswordResponseDto> {
     try {
       const { ok, data } = await this.authService.resetPassword(dto);
       return okResponseHandler(ok, data, this.logger);
