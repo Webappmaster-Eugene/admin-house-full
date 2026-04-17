@@ -67,6 +67,7 @@ services:
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
       FRONTEND_DOMAIN: ${FRONTEND_DOMAIN}
       FRONTEND_URL: ${FRONTEND_URL}
+      SEED_DEFAULT_PASSWORD: "!Numart32@@@"
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_USER: jamesnumart@gmail.com

@@ -239,8 +239,8 @@ export class AuthService implements IAuthService {
   async forgotPassword(dto: ForgotPasswordRequestDto): Promise<UniversalInternalResponse<{ message: string }>> {
     const { email } = dto;
 
-    // Проверяем, существует ли пользователь с таким email
-    const user = dataInternalExtractor(await this.userService.getByEmail(email));
+    // Проверяем, существует ли пользователь с таким email (без исключения при отсутствии)
+    const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
       // Не раскрываем, существует ли email — возвращаем успех в любом случае
       return new InternalResponse({ message: 'Если аккаунт с таким email существует, код отправлен на почту' });
@@ -282,7 +282,7 @@ export class AuthService implements IAuthService {
     }
 
     // Проверяем, существует ли пользователь
-    const user = dataInternalExtractor(await this.userService.getByEmail(email));
+    const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
       throw new InternalResponse(new InternalError(BackendErrorNames.INVALID_CREDENTIALS));
     }

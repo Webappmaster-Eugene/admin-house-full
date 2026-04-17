@@ -80,4 +80,11 @@ export class AuthRepository implements IAuthRepository {
       data: { password: hashedPassword },
     });
   }
+
+  async findUserByEmail(email: string): Promise<{ uuid: string; email: string; password: string } | null> {
+    return this.databaseService.user.findUnique({
+      where: { email },
+      select: { uuid: true, email: true, password: true },
+    });
+  }
 }

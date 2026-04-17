@@ -35,6 +35,7 @@ import { S3MinioModule } from './modules/s3-minio/s3-minio.module';
 // import { classes } from '@numart/automapper/classes';
 import { StatusApproveModule } from './modules/status-approve/status-approve.module';
 import { MailModule } from './modules/mail/mail.module';
+import { EstimateModule } from './modules/estimate/estimate.module';
 const logger: LoggerConfig = new LoggerConfig();
 
 @Module({
@@ -90,6 +91,7 @@ const logger: LoggerConfig = new LoggerConfig();
     HandbookModule,
     OrganizationModule,
     ProjectModule,
+    EstimateModule,
     GlobalCategoryMaterialModule,
     CategoryMaterialModule,
     PriceChangingModule,

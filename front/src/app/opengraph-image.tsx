@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-import { AUTHOR, SITE_BRAND, SITE_DESCRIPTION, SITE_TITLE_DEFAULT } from 'src/utils/const/seo';
+import { SITE_URL, SITE_BRAND, SITE_DESCRIPTION, SITE_TITLE_DEFAULT } from 'src/utils/const/seo';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -24,7 +24,7 @@ export default async function OgImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '64px 80px',
-          background: 'linear-gradient(135deg, #1877F2 0%, #0C44AE 100%)',
+          background: 'linear-gradient(135deg, #00A76F 0%, #004B50 100%)',
           color: '#ffffff',
           fontFamily: 'Roboto',
         }}
@@ -36,7 +36,7 @@ export default async function OgImage() {
               height: 64,
               borderRadius: 16,
               background: '#ffffff',
-              color: '#1877F2',
+              color: '#00A76F',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -80,15 +80,14 @@ export default async function OgImage() {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             alignItems: 'center',
             fontSize: 22,
             opacity: 0.85,
             fontWeight: 400,
           }}
         >
-          <div style={{ display: 'flex' }}>{`Основатель: ${AUTHOR.name}`}</div>
-          <div style={{ display: 'flex' }}>alibaba.hhos.ru</div>
+          <div style={{ display: 'flex' }}>{SITE_URL.replace(/^https?:\/\//, '')}</div>
         </div>
       </div>
     ),

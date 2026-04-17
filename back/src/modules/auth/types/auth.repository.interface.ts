@@ -8,4 +8,5 @@ export interface IAuthRepository {
   markResetCodeAsUsed: (uuid: string) => Promise<void>;
   deleteExpiredResetCodes: (email: string) => Promise<void>;
   updateUserPassword: (userUuid: string, hashedPassword: string) => Promise<void>;
+  findUserByEmail: (email: string) => Promise<{ uuid: string; email: string; password: string } | null>;
 }

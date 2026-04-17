@@ -93,31 +93,20 @@ export default function LandingFooter() {
             ))}
           </Stack>
 
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={2}
-            alignItems={{ xs: 'flex-start', sm: 'center' }}
-            justifyContent="space-between"
-          >
-            <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-              Основатель проекта — {landingAuthor.name}
-            </Typography>
-
-            <Stack direction="row" spacing={0.5}>
-              {contacts.map((contact) => (
-                <IconButton
-                  key={contact.type}
-                  href={contact.href}
-                  target={contact.href.startsWith('http') ? '_blank' : undefined}
-                  rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  aria-label={contact.label}
-                  size="small"
-                  sx={{ color: 'text.secondary' }}
-                >
-                  <Iconify icon={contact.icon} width={20} />
-                </IconButton>
-              ))}
-            </Stack>
+          <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+            {contacts.map((contact) => (
+              <IconButton
+                key={contact.type}
+                href={contact.href}
+                target={contact.href.startsWith('http') ? '_blank' : undefined}
+                rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                aria-label={contact.label}
+                size="small"
+                sx={{ color: 'text.secondary' }}
+              >
+                <Iconify icon={contact.icon} width={20} />
+              </IconButton>
+            ))}
           </Stack>
         </Stack>
       </Container>

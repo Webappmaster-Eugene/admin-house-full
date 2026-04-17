@@ -160,6 +160,27 @@ export const axiosEndpoints = {
     delete:
       'responsible-partner-producer/workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId',
   },
+  // DOC estimate/workspace/:workspaceId/project/:projectId/...
+  estimate: {
+    get: 'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId',
+    get_all_in_project: 'estimate/workspace/:workspaceId/project/:projectId/get-all',
+    create: 'estimate/workspace/:workspaceId/project/:projectId/create',
+    update: 'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/update',
+    delete: 'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/delete',
+    export: 'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/export',
+    section_create:
+      'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/section/create',
+    section_update:
+      'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/section/:sectionId/update',
+    section_delete:
+      'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/section/:sectionId/delete',
+    item_create:
+      'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/section/:sectionId/item/create',
+    item_update:
+      'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/section/:sectionId/item/:itemId/update',
+    item_delete:
+      'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId/section/:sectionId/item/:itemId/delete',
+  },
   // DOC field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId
   field_variants: {
     get: 'field-variants/workspace/:workspaceId/handbook/:handbookId/field-of-category-material/:fieldOfCategoryMaterialId/field-variants/:fieldVariantsForSelectorFieldTypeId',

@@ -56,6 +56,15 @@ export const NavData: NavItems = [
         icon: ICONS.file,
         roles: [UserRoles.MANAGER],
       },
+      {
+        title: 'Сметы',
+        titleShort: 'Сметы',
+        caption: 'Сметы по проектам workspace',
+        captionFull: 'Классические сметы с иерархией разделов и экспортом в Excel',
+        path: paths.dashboard.estimates,
+        icon: ICONS.invoice,
+        roles: [UserRoles.MANAGER],
+      },
       // {
       //   title: 'Характеристики',
       //   titleShort: 'Харак-ки',
