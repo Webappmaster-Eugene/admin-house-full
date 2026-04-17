@@ -22,3 +22,4 @@ export * from './field-of-category-material';
 export * from './characteristics-material';
 export * from './tech-log-changes';
 export * from './estimate';
+export * from './unit-template';

@@ -3,8 +3,11 @@ import { ResponseClientSchema } from '../../models';
 import { EstimateBusinessValueSchema } from '../../models/estimate/estimate-business-value.schema';
 import { EstimateSectionBusinessValueSchema } from '../../models/estimate/estimate-section.schema';
 import { EstimateItemBusinessValueSchema } from '../../models/estimate/estimate-item.schema';
+import { EstimateItemComponentBusinessValueSchema } from '../../models/estimate/estimate-item-component.schema';
 
-const EstimateItemInSectionSchema = EstimateItemBusinessValueSchema;
+const EstimateItemInSectionSchema = EstimateItemBusinessValueSchema.extend({
+  components: z.array(EstimateItemComponentBusinessValueSchema),
+});
 
 const EstimateSectionInTreeSchema: z.ZodType<unknown> = z.lazy(() =>
   EstimateSectionBusinessValueSchema.extend({

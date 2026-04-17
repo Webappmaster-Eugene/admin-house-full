@@ -303,6 +303,7 @@ export const EstimateItemScalarFieldEnumSchema = z.enum([
   'itemType',
   'sectionUuid',
   'materialUuid',
+  'unitTemplateUuid',
   'name',
   'unitMeasurement',
   'quantity',
@@ -311,6 +312,51 @@ export const EstimateItemScalarFieldEnumSchema = z.enum([
   'unitClientPrice',
   'totalCost',
   'totalClientPrice',
+  'comment',
+  'createdAt',
+  'updatedAt',
+]);
+
+export const UnitTemplateScalarFieldEnumSchema = z.enum([
+  'uuid',
+  'name',
+  'description',
+  'unitMeasurement',
+  'unitCost',
+  'defaultMarkupPercent',
+  'unitClientPrice',
+  'handbookUuid',
+  'lastChangeByUserUuid',
+  'createdAt',
+  'updatedAt',
+]);
+
+export const UnitTemplateComponentScalarFieldEnumSchema = z.enum([
+  'uuid',
+  'orderIndex',
+  'itemType',
+  'unitTemplateUuid',
+  'materialUuid',
+  'name',
+  'unitMeasurement',
+  'quantityPerUnit',
+  'unitCost',
+  'comment',
+  'createdAt',
+  'updatedAt',
+]);
+
+export const EstimateItemComponentScalarFieldEnumSchema = z.enum([
+  'uuid',
+  'orderIndex',
+  'estimateItemUuid',
+  'itemType',
+  'materialUuid',
+  'name',
+  'unitMeasurement',
+  'quantityPerUnit',
+  'unitCost',
+  'totalCost',
   'comment',
   'createdAt',
   'updatedAt',
@@ -368,7 +414,7 @@ export const EActiveStatusesSchema = z.enum(['ACTIVE', 'INACTIVE', 'DELETED']);
 
 export type EActiveStatusesType = `${z.infer<typeof EActiveStatusesSchema>}`;
 
-export const EEstimateItemTypeSchema = z.enum(['MATERIAL', 'MECHANISM', 'WORK', 'OVERHEAD']);
+export const EEstimateItemTypeSchema = z.enum(['MATERIAL', 'MECHANISM', 'WORK', 'OVERHEAD', 'UNIT']);
 
 export type EEstimateItemTypeType = `${z.infer<typeof EEstimateItemTypeSchema>}`;
 
@@ -1171,6 +1217,7 @@ export const EstimateItemSchema = z.object({
   orderIndex: z.number(),
   sectionUuid: z.string(),
   materialUuid: z.string().nullish(),
+  unitTemplateUuid: z.string().nullish(),
   name: z.string(),
   unitMeasurement: z.string(),
   quantity: z.number(),
@@ -1199,6 +1246,111 @@ export const EstimateItemOptionalDefaultsSchema = EstimateItemSchema.merge(
 );
 
 export type EstimateItemOptionalDefaults = z.infer<typeof EstimateItemOptionalDefaultsSchema>;
+
+/////////////////////////////////////////
+// UNIT TEMPLATE SCHEMA
+/////////////////////////////////////////
+
+export const UnitTemplateSchema = z.object({
+  uuid: z.string(),
+  name: z.string(),
+  description: z.string().nullish(),
+  unitMeasurement: z.string(),
+  unitCost: z.number(),
+  defaultMarkupPercent: z.number(),
+  unitClientPrice: z.number(),
+  handbookUuid: z.string(),
+  lastChangeByUserUuid: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type UnitTemplate = z.infer<typeof UnitTemplateSchema>;
+
+// UNIT TEMPLATE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const UnitTemplateOptionalDefaultsSchema = UnitTemplateSchema.merge(
+  z.object({
+    uuid: z.string().optional(),
+    unitCost: z.number().optional(),
+    defaultMarkupPercent: z.number().optional(),
+    unitClientPrice: z.number().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+  }),
+);
+
+export type UnitTemplateOptionalDefaults = z.infer<typeof UnitTemplateOptionalDefaultsSchema>;
+
+/////////////////////////////////////////
+// UNIT TEMPLATE COMPONENT SCHEMA
+/////////////////////////////////////////
+
+export const UnitTemplateComponentSchema = z.object({
+  itemType: EEstimateItemTypeSchema,
+  uuid: z.string(),
+  orderIndex: z.number(),
+  unitTemplateUuid: z.string(),
+  materialUuid: z.string().nullish(),
+  name: z.string(),
+  unitMeasurement: z.string(),
+  quantityPerUnit: z.number(),
+  unitCost: z.number(),
+  comment: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type UnitTemplateComponent = z.infer<typeof UnitTemplateComponentSchema>;
+
+// UNIT TEMPLATE COMPONENT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const UnitTemplateComponentOptionalDefaultsSchema = UnitTemplateComponentSchema.merge(
+  z.object({
+    uuid: z.string().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+  }),
+);
+
+export type UnitTemplateComponentOptionalDefaults = z.infer<typeof UnitTemplateComponentOptionalDefaultsSchema>;
+
+/////////////////////////////////////////
+// ESTIMATE ITEM COMPONENT SCHEMA
+/////////////////////////////////////////
+
+export const EstimateItemComponentSchema = z.object({
+  itemType: EEstimateItemTypeSchema,
+  uuid: z.string(),
+  orderIndex: z.number(),
+  estimateItemUuid: z.string(),
+  materialUuid: z.string().nullish(),
+  name: z.string(),
+  unitMeasurement: z.string(),
+  quantityPerUnit: z.number(),
+  unitCost: z.number(),
+  totalCost: z.number(),
+  comment: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type EstimateItemComponent = z.infer<typeof EstimateItemComponentSchema>;
+
+// ESTIMATE ITEM COMPONENT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const EstimateItemComponentOptionalDefaultsSchema = EstimateItemComponentSchema.merge(
+  z.object({
+    uuid: z.string().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+  }),
+);
+
+export type EstimateItemComponentOptionalDefaults = z.infer<typeof EstimateItemComponentOptionalDefaultsSchema>;
 
 /////////////////////////////////////////
 // FILE STORAGE SCHEMA

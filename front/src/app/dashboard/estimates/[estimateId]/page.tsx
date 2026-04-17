@@ -4,12 +4,14 @@ import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 import { getAllProjectsOfWorkspace } from 'src/api/actions/project/get-all-projects-of-workspace.action';
 import { getEstimate } from 'src/api/actions/estimate/get-estimate.action';
 import { getAllMaterialsInHandbook } from 'src/api/actions/material/get-all-materials-in-handbook.action';
+import { getAllUnitTemplates } from 'src/api/actions/unit-template/get-all-unit-templates.action';
 
 import { Error } from 'src/shared/error/error';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
 import { EstimateEditor } from 'src/widgets/estimates/estimate-editor';
 import { EstimateFull } from 'src/shared/contracts/estimate';
+import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
 
 export const metadata = {
   title: 'Dashboard: Редактор сметы',
@@ -42,17 +44,27 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
   const projectId = hit.projectUuid;
   const estimateTree = hit.res;
 
-  const materialsResult = handbookId
-    ? await getAllMaterialsInHandbook(workspaceId, handbookId)
-    : null;
-  const materials = materialsResult && !isErrorFieldTypeGuard(materialsResult)
-    ? (materialsResult as unknown as Array<{
-        uuid: string;
-        name: string;
-        price?: number | null;
-        unitMeasurement?: { name: string } | null;
-      }>)
-    : [];
+  const [materialsResult, templatesResult] = handbookId
+    ? await Promise.all([
+        getAllMaterialsInHandbook(workspaceId, handbookId),
+        getAllUnitTemplates(workspaceId, handbookId),
+      ])
+    : [null, null];
+
+  const materials =
+    materialsResult && !isErrorFieldTypeGuard(materialsResult)
+      ? (materialsResult as unknown as Array<{
+          uuid: string;
+          name: string;
+          price?: number | null;
+          unitMeasurement?: { name: string } | null;
+        }>)
+      : [];
+
+  const unitTemplates =
+    templatesResult && !isErrorFieldTypeGuard(templatesResult)
+      ? (templatesResult as UnitTemplateWithComponents[])
+      : [];
 
   return (
     <EstimateEditor
@@ -60,6 +72,7 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
       projectId={projectId}
       estimate={estimateTree as EstimateFull}
       materials={materials}
+      unitTemplates={unitTemplates}
     />
   );
 }

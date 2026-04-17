@@ -136,6 +136,7 @@ model User {
   StatusApprove                     StatusApprove[]                     @relation("StatusApprove_changed_by")
   FileStorage                       FileStorage[]                       @relation("FileStorage_changed_by")
   Estimate                          Estimate[]                          @relation("Estimate_changed_by")
+  UnitTemplate                      UnitTemplate[]                      @relation("UnitTemplate_changed_by")
   createdAt                         DateTime                            @default(now()) @map("created_at")
   updatedAt                         DateTime                            @updatedAt @map("updated_at")
 
@@ -182,6 +183,7 @@ model Handbook {
   fieldUnitMeasurements        FieldUnitMeasurement[]
   fieldVariantsForSelectorType FieldVariantsForSelectorFieldType[]
   characteristicsMaterials     CharacteristicsMaterial[]
+  unitTemplates                UnitTemplate[]
   lastChangeByUserUuid         String?                             @map("last_change_by_user_uuid") @db.Uuid
   lastChangeByUser             User?                               @relation("Handbook_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt                    DateTime                            @default(now()) @map("created_at")
@@ -422,6 +424,8 @@ model Material {
   priceChanges            PriceChanging[]
   characteristicsMaterial CharacteristicsMaterial[]
   estimateItems           EstimateItem[]
+  unitTemplateComponents  UnitTemplateComponent[]
+  estimateItemComponents  EstimateItemComponent[]
   lastChangeByUserUuid    String?                     @map("last_change_by_user_uuid") @db.Uuid
   lastChangeByUser        User?                       @relation("Material_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt               DateTime                    @default(now()) @map("created_at")
@@ -565,33 +569,108 @@ model EstimateSection {
   @@map("estimate_section")
 }
 
-// DOC Строка сметы - материал/работа/механизм/накладные:
+// DOC Строка сметы - материал/работа/механизм/накладные/единичка:
 // DOC estimate-item
 model EstimateItem {
+  uuid             String                  @id @default(uuid()) @db.Uuid
+  orderIndex       Int                     @map("order_index")
+  itemType         EEstimateItemType       @map("item_type")
+  sectionUuid      String                  @map("section_uuid") @db.Uuid
+  section          EstimateSection         @relation(fields: [sectionUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  // Ссылка на материал в справочнике. null - когда строка с кастомным названием (например, работы) или единичка
+  materialUuid     String?                 @map("material_uuid") @db.Uuid
+  material         Material?               @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  // Ссылка на шаблон единички. Не null для строк типа UNIT. Компоненты шаблона денормализуются в components при создании.
+  unitTemplateUuid String?                 @map("unit_template_uuid") @db.Uuid
+  unitTemplate     UnitTemplate?           @relation(fields: [unitTemplateUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  components       EstimateItemComponent[]
+  // Денормализация - имя/ед.изм. хранятся в строке (материал может быть переименован/удалён, смета должна остаться стабильной)
+  name             String
+  unitMeasurement  String                  @map("unit_measurement")
+  quantity         Float
+  unitCost         Float                   @map("unit_cost")
+  markupPercent    Float                   @default(0) @map("markup_percent")
+  unitClientPrice  Float                   @map("unit_client_price")
+  totalCost        Float                   @map("total_cost")
+  totalClientPrice Float                   @map("total_client_price")
+  comment          String?
+  createdAt        DateTime                @default(now()) @map("created_at")
+  updatedAt        DateTime                @updatedAt @map("updated_at")
+
+  @@index([sectionUuid])
+  @@index([materialUuid])
+  @@index([unitTemplateUuid])
+  @@map("estimate_item")
+}
+
+// DOC Шаблон единички (UnitTemplate) - переиспользуемый комплексный юнит работ/материалов в справочнике workspace:
+// DOC unit-template
+model UnitTemplate {
+  uuid                 String                  @id @default(uuid()) @db.Uuid
+  name                 String
+  description          String?
+  unitMeasurement      String                  @map("unit_measurement")
+  unitCost             Float                   @default(0) @map("unit_cost")
+  defaultMarkupPercent Float                   @default(0) @map("default_markup_percent")
+  unitClientPrice      Float                   @default(0) @map("unit_client_price")
+  handbookUuid         String                  @map("handbook_uuid") @db.Uuid
+  handbook             Handbook                @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  components           UnitTemplateComponent[]
+  estimateItems        EstimateItem[]
+  lastChangeByUserUuid String?                 @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?                   @relation("UnitTemplate_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  createdAt            DateTime                @default(now()) @map("created_at")
+  updatedAt            DateTime                @updatedAt @map("updated_at")
+
+  @@index([handbookUuid])
+  @@map("unit_template")
+}
+
+// DOC Компонент шаблона единички (UnitTemplateComponent) - материал/работа с расходом на 1 единицу шаблона:
+// DOC unit-template-component
+model UnitTemplateComponent {
   uuid             String            @id @default(uuid()) @db.Uuid
   orderIndex       Int               @map("order_index")
   itemType         EEstimateItemType @map("item_type")
-  sectionUuid      String            @map("section_uuid") @db.Uuid
-  section          EstimateSection   @relation(fields: [sectionUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  // Ссылка на материал в справочнике. null - когда строка с кастомным названием (например, работы)
+  unitTemplateUuid String            @map("unit_template_uuid") @db.Uuid
+  unitTemplate     UnitTemplate      @relation(fields: [unitTemplateUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   materialUuid     String?           @map("material_uuid") @db.Uuid
   material         Material?         @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
-  // Денормализация - имя/ед.изм. хранятся в строке (материал может быть переименован/удалён, смета должна остаться стабильной)
   name             String
   unitMeasurement  String            @map("unit_measurement")
-  quantity         Float
+  quantityPerUnit  Float             @map("quantity_per_unit")
   unitCost         Float             @map("unit_cost")
-  markupPercent    Float             @default(0) @map("markup_percent")
-  unitClientPrice  Float             @map("unit_client_price")
-  totalCost        Float             @map("total_cost")
-  totalClientPrice Float             @map("total_client_price")
   comment          String?
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")
 
-  @@index([sectionUuid])
+  @@index([unitTemplateUuid])
   @@index([materialUuid])
-  @@map("estimate_item")
+  @@map("unit_template_component")
+}
+
+// DOC Снэпшот компонента единички внутри строки сметы (EstimateItemComponent) - хранит мгновенные значения на момент добавления единички в смету:
+// DOC estimate-item-component
+model EstimateItemComponent {
+  uuid             String            @id @default(uuid()) @db.Uuid
+  orderIndex       Int               @map("order_index")
+  estimateItemUuid String            @map("estimate_item_uuid") @db.Uuid
+  estimateItem     EstimateItem      @relation(fields: [estimateItemUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  itemType         EEstimateItemType @map("item_type")
+  materialUuid     String?           @map("material_uuid") @db.Uuid
+  material         Material?         @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  name             String
+  unitMeasurement  String            @map("unit_measurement")
+  quantityPerUnit  Float             @map("quantity_per_unit")
+  unitCost         Float             @map("unit_cost")
+  totalCost        Float             @map("total_cost")
+  comment          String?
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  @@index([estimateItemUuid])
+  @@index([materialUuid])
+  @@map("estimate_item_component")
 }
 
 // DOC Техническая таблица для хранения информации о хранимых файлах (CREATE, UPDATE, DELETE) (S3Minio) - определяются на уровне приложения (непосредственно к контроллеру доступ только у админа, сервис доступен любым пользователям в нужных сущностях):
@@ -679,4 +758,5 @@ enum EEstimateItemType {
   MECHANISM
   WORK
   OVERHEAD
+  UNIT
 }

@@ -65,6 +65,15 @@ export const NavData: NavItems = [
         icon: ICONS.invoice,
         roles: [UserRoles.MANAGER],
       },
+      {
+        title: 'Единички',
+        titleShort: 'Единички',
+        caption: 'Справочник комплексных единиц (шаблонов)',
+        captionFull: 'Справочник единичек (шаблонов комплексных работ с материалами) для смет',
+        path: paths.dashboard.unitTemplates,
+        icon: ICONS.kanban,
+        roles: [UserRoles.MANAGER],
+      },
       // {
       //   title: 'Характеристики',
       //   titleShort: 'Харак-ки',

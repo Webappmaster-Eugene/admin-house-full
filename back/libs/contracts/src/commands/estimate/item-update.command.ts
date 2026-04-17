@@ -8,6 +8,7 @@ const EstimateItemUpdateRequestSchema = EstimateItemSchema.pick({
   orderIndex: true,
   itemType: true,
   materialUuid: true,
+  unitTemplateUuid: true,
   name: true,
   unitMeasurement: true,
   quantity: true,

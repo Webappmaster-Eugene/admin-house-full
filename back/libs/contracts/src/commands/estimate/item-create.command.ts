@@ -8,13 +8,22 @@ const EstimateItemCreateRequestSchema = EstimateItemSchema.pick({
   orderIndex: true,
   itemType: true,
   materialUuid: true,
+  unitTemplateUuid: true,
   name: true,
   unitMeasurement: true,
   quantity: true,
   unitCost: true,
   markupPercent: true,
   comment: true,
-}).partial({ materialUuid: true, markupPercent: true, comment: true });
+}).partial({
+  materialUuid: true,
+  unitTemplateUuid: true,
+  name: true,
+  unitMeasurement: true,
+  unitCost: true,
+  markupPercent: true,
+  comment: true,
+});
 
 const EstimateItemCreateResponseSchema = z
   .object({

@@ -160,6 +160,22 @@ export const axiosEndpoints = {
     delete:
       'responsible-partner-producer/workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId',
   },
+  // DOC unit-template/workspace/:workspaceId/handbook/:handbookId/...
+  unit_template: {
+    get: 'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId',
+    get_all_in_handbook: 'unit-template/workspace/:workspaceId/handbook/:handbookId/get-all',
+    create: 'unit-template/workspace/:workspaceId/handbook/:handbookId/create',
+    update:
+      'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/update',
+    delete:
+      'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/delete',
+    component_create:
+      'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/component/create',
+    component_update:
+      'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/component/:componentId/update',
+    component_delete:
+      'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/component/:componentId/delete',
+  },
   // DOC estimate/workspace/:workspaceId/project/:projectId/...
   estimate: {
     get: 'estimate/workspace/:workspaceId/project/:projectId/estimate/:estimateId',

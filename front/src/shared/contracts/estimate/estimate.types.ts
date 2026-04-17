@@ -1,7 +1,7 @@
 // Локальные типы контрактов сметы (синхронизированы с first/back/libs/contracts/src/commands/estimate/).
 // Пакет @numart/house-admin-contracts не обновляем — всё локально.
 
-export type EEstimateItemType = 'MATERIAL' | 'MECHANISM' | 'WORK' | 'OVERHEAD';
+export type EEstimateItemType = 'MATERIAL' | 'MECHANISM' | 'WORK' | 'OVERHEAD' | 'UNIT';
 
 export type EstimateActiveStatus = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 
@@ -19,12 +19,29 @@ export interface EstimateBusinessValue {
   updatedAt: string;
 }
 
+export interface EstimateItemComponentBusinessValue {
+  uuid: string;
+  orderIndex: number;
+  estimateItemUuid: string;
+  itemType: EEstimateItemType;
+  materialUuid: string | null;
+  name: string;
+  unitMeasurement: string;
+  quantityPerUnit: number;
+  unitCost: number;
+  totalCost: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface EstimateItemBusinessValue {
   uuid: string;
   orderIndex: number;
   itemType: EEstimateItemType;
   sectionUuid: string;
   materialUuid: string | null;
+  unitTemplateUuid: string | null;
   name: string;
   unitMeasurement: string;
   quantity: number;
@@ -34,6 +51,7 @@ export interface EstimateItemBusinessValue {
   totalCost: number;
   totalClientPrice: number;
   comment: string | null;
+  components: EstimateItemComponentBusinessValue[];
   createdAt: string;
   updatedAt: string;
 }
@@ -119,10 +137,11 @@ export namespace EstimateItemCreateCommand {
     orderIndex: number;
     itemType: EEstimateItemType;
     materialUuid?: string | null;
-    name: string;
-    unitMeasurement: string;
+    unitTemplateUuid?: string | null;
+    name?: string;
+    unitMeasurement?: string;
     quantity: number;
-    unitCost: number;
+    unitCost?: number;
     markupPercent?: number;
     comment?: string | null;
   }
@@ -134,6 +153,7 @@ export namespace EstimateItemUpdateCommand {
     orderIndex?: number;
     itemType?: EEstimateItemType;
     materialUuid?: string | null;
+    unitTemplateUuid?: string | null;
     name?: string;
     unitMeasurement?: string;
     quantity?: number;

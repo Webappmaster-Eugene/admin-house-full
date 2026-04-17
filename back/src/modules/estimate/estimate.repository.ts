@@ -1,5 +1,5 @@
 import { Inject, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { EEstimateItemType, Prisma } from '.prisma/client';
+import { EEstimateItemType, Prisma, UnitTemplateComponent } from '.prisma/client';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { KFI } from '../../common/utils/di';
@@ -13,8 +13,41 @@ import { EstimateItemCreateRequestDto } from './dto/controller/item-create.dto';
 import { EstimateItemUpdateRequestDto } from './dto/controller/item-update.dto';
 
 type SectionWithChildren = Prisma.EstimateSectionGetPayload<{
-  include: { items: true; childSections: { include: { items: true; childSections: { include: { items: true } } } } };
+  include: {
+    items: { include: { components: true } };
+    childSections: {
+      include: {
+        items: { include: { components: true } };
+        childSections: { include: { items: { include: { components: true } } } };
+      };
+    };
+  };
 }>;
+
+const SECTION_TREE_INCLUDE = {
+  items: {
+    orderBy: { orderIndex: 'asc' as const },
+    include: { components: { orderBy: { orderIndex: 'asc' as const } } },
+  },
+  childSections: {
+    orderBy: { orderIndex: 'asc' as const },
+    include: {
+      items: {
+        orderBy: { orderIndex: 'asc' as const },
+        include: { components: { orderBy: { orderIndex: 'asc' as const } } },
+      },
+      childSections: {
+        orderBy: { orderIndex: 'asc' as const },
+        include: {
+          items: {
+            orderBy: { orderIndex: 'asc' as const },
+            include: { components: { orderBy: { orderIndex: 'asc' as const } } },
+          },
+        },
+      },
+    },
+  },
+};
 
 @Injectable()
 export class EstimateRepository {
@@ -44,19 +77,7 @@ export class EstimateRepository {
         include: {
           sections: {
             orderBy: { orderIndex: 'asc' },
-            include: {
-              items: { orderBy: { orderIndex: 'asc' } },
-              childSections: {
-                orderBy: { orderIndex: 'asc' },
-                include: {
-                  items: { orderBy: { orderIndex: 'asc' } },
-                  childSections: {
-                    orderBy: { orderIndex: 'asc' },
-                    include: { items: { orderBy: { orderIndex: 'asc' } } },
-                  },
-                },
-              },
-            },
+            include: SECTION_TREE_INCLUDE,
           },
         },
       });
@@ -221,27 +242,69 @@ export class EstimateRepository {
 
   async createItem(sectionId: EntityUrlParamCommand.RequestUuidParam, dto: EstimateItemCreateRequestDto): Promise<EstimateItemEntity> {
     try {
-      const markup = dto.markupPercent ?? 0;
-      const unitClientPrice = roundMoney(dto.unitCost * (1 + markup / 100));
-      const totalCost = roundMoney(dto.quantity * dto.unitCost);
+      // Если указан unitTemplateUuid — денормализуем из шаблона: имя, ед.изм., unitCost, компоненты.
+      let name = dto.name;
+      let unitMeasurement = dto.unitMeasurement;
+      let unitCost = dto.unitCost;
+      let markup = dto.markupPercent;
+      let itemType = dto.itemType as EEstimateItemType;
+      let templateComponents: UnitTemplateComponent[] = [];
+
+      if (dto.unitTemplateUuid) {
+        const template = await this.prisma.unitTemplate.findUnique({
+          where: { uuid: dto.unitTemplateUuid },
+          include: { components: { orderBy: { orderIndex: 'asc' } } },
+        });
+        if (!template) {
+          throw new NotFoundException(`UnitTemplate ${dto.unitTemplateUuid} not found`);
+        }
+        name = name ?? template.name;
+        unitMeasurement = unitMeasurement ?? template.unitMeasurement;
+        unitCost = unitCost ?? template.unitCost;
+        markup = markup ?? template.defaultMarkupPercent;
+        itemType = EEstimateItemType.UNIT;
+        templateComponents = template.components;
+      }
+
+      if (name === undefined || unitMeasurement === undefined || unitCost === undefined) {
+        throw new BadRequestException('Для обычной строки обязательны name, unitMeasurement, unitCost');
+      }
+      const markupValue = markup ?? 0;
+      const unitClientPrice = roundMoney(unitCost * (1 + markupValue / 100));
+      const totalCost = roundMoney(dto.quantity * unitCost);
       const totalClientPrice = roundMoney(dto.quantity * unitClientPrice);
 
       const created = await this.prisma.estimateItem.create({
         data: {
           sectionUuid: sectionId,
           orderIndex: dto.orderIndex,
-          itemType: dto.itemType as EEstimateItemType,
+          itemType,
           materialUuid: dto.materialUuid ?? null,
-          name: dto.name,
-          unitMeasurement: dto.unitMeasurement,
+          unitTemplateUuid: dto.unitTemplateUuid ?? null,
+          name,
+          unitMeasurement,
           quantity: dto.quantity,
-          unitCost: dto.unitCost,
-          markupPercent: markup,
+          unitCost,
+          markupPercent: markupValue,
           unitClientPrice,
           totalCost,
           totalClientPrice,
           comment: dto.comment ?? null,
+          components: {
+            create: templateComponents.map(component => ({
+              orderIndex: component.orderIndex,
+              itemType: component.itemType,
+              materialUuid: component.materialUuid,
+              name: component.name,
+              unitMeasurement: component.unitMeasurement,
+              quantityPerUnit: component.quantityPerUnit,
+              unitCost: component.unitCost,
+              totalCost: roundMoney(component.quantityPerUnit * dto.quantity * component.unitCost),
+              comment: component.comment,
+            })),
+          },
         },
+        include: { components: { orderBy: { orderIndex: 'asc' } } },
       });
       return new EstimateItemEntity(created);
     } catch (error) {
@@ -251,7 +314,10 @@ export class EstimateRepository {
 
   async updateItemById(itemId: EntityUrlParamCommand.RequestUuidParam, dto: EstimateItemUpdateRequestDto): Promise<EstimateItemEntity> {
     try {
-      const existing = await this.prisma.estimateItem.findUnique({ where: { uuid: itemId } });
+      const existing = await this.prisma.estimateItem.findUnique({
+        where: { uuid: itemId },
+        include: { components: true },
+      });
       if (!existing) throw new NotFoundException(`EstimateItem ${itemId} not found`);
 
       const quantity = dto.quantity ?? existing.quantity;
@@ -261,23 +327,47 @@ export class EstimateRepository {
       const totalCost = roundMoney(quantity * unitCost);
       const totalClientPrice = roundMoney(quantity * unitClientPrice);
 
-      const updated = await this.prisma.estimateItem.update({
-        where: { uuid: itemId },
-        data: {
-          orderIndex: dto.orderIndex ?? undefined,
-          itemType: (dto.itemType as EEstimateItemType) ?? undefined,
-          materialUuid: dto.materialUuid === undefined ? undefined : dto.materialUuid,
-          name: dto.name ?? undefined,
-          unitMeasurement: dto.unitMeasurement ?? undefined,
-          quantity,
-          unitCost,
-          markupPercent,
-          unitClientPrice,
-          totalCost,
-          totalClientPrice,
-          comment: dto.comment === undefined ? undefined : dto.comment,
-        },
+      // Если у строки есть компоненты-единички и изменилось quantity — пересчитать totalCost каждого компонента.
+      const quantityChanged = dto.quantity !== undefined && dto.quantity !== existing.quantity;
+
+      const updated = await this.prisma.$transaction(async tx => {
+        const itemUpdate = await tx.estimateItem.update({
+          where: { uuid: itemId },
+          data: {
+            orderIndex: dto.orderIndex ?? undefined,
+            itemType: (dto.itemType as EEstimateItemType) ?? undefined,
+            materialUuid: dto.materialUuid === undefined ? undefined : dto.materialUuid,
+            name: dto.name ?? undefined,
+            unitMeasurement: dto.unitMeasurement ?? undefined,
+            quantity,
+            unitCost,
+            markupPercent,
+            unitClientPrice,
+            totalCost,
+            totalClientPrice,
+            comment: dto.comment === undefined ? undefined : dto.comment,
+          },
+          include: { components: { orderBy: { orderIndex: 'asc' } } },
+        });
+
+        if (quantityChanged && existing.components.length > 0) {
+          await Promise.all(
+            existing.components.map(component =>
+              tx.estimateItemComponent.update({
+                where: { uuid: component.uuid },
+                data: { totalCost: roundMoney(component.quantityPerUnit * quantity * component.unitCost) },
+              }),
+            ),
+          );
+        }
+
+        const refreshed = await tx.estimateItem.findUnique({
+          where: { uuid: itemId },
+          include: { components: { orderBy: { orderIndex: 'asc' } } },
+        });
+        return refreshed ?? itemUpdate;
       });
+
       return new EstimateItemEntity(updated);
     } catch (error) {
       errorRepositoryHandler(error);

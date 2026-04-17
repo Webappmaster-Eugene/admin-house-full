@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,18 +20,22 @@ import {
   MenuItem,
   Paper,
   Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { createEstimateSection } from 'src/api/actions/estimate/create-section.action';
 import { deleteEstimateSection } from 'src/api/actions/estimate/delete-section.action';
@@ -43,8 +48,10 @@ import {
   EEstimateItemType,
   EstimateFull,
   EstimateItemBusinessValue,
+  EstimateItemComponentBusinessValue,
   EstimateSectionTree,
 } from 'src/shared/contracts/estimate';
+import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
 
 interface MaterialOption {
   uuid: string;
@@ -58,6 +65,7 @@ interface EstimateEditorProps {
   projectId: string;
   estimate: EstimateFull;
   materials: MaterialOption[];
+  unitTemplates: UnitTemplateWithComponents[];
 }
 
 const ITEM_TYPE_OPTIONS: { value: EEstimateItemType; label: string }[] = [
@@ -65,12 +73,21 @@ const ITEM_TYPE_OPTIONS: { value: EEstimateItemType; label: string }[] = [
   { value: 'MECHANISM', label: 'Механизмы' },
   { value: 'WORK', label: 'Работы' },
   { value: 'OVERHEAD', label: 'Накладные' },
+  { value: 'UNIT', label: 'Единичка' },
 ];
+
+type ItemSourceMode = 'manual' | 'template';
 
 const formatMoney = (value: number) =>
   new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value);
 
-export function EstimateEditor({ workspaceId, projectId, estimate, materials }: EstimateEditorProps) {
+export function EstimateEditor({
+  workspaceId,
+  projectId,
+  estimate,
+  materials,
+  unitTemplates,
+}: EstimateEditorProps) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -80,6 +97,9 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
 
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
   const [targetSectionId, setTargetSectionId] = useState<string>('');
+  const [itemSourceMode, setItemSourceMode] = useState<ItemSourceMode>('manual');
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+
   const [newItem, setNewItem] = useState<{
     itemType: EEstimateItemType;
     materialUuid: string | null;
@@ -101,6 +121,27 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
   });
 
   const leafSections = useMemo(() => flattenSections(estimate.sections), [estimate.sections]);
+
+  const selectedTemplate = useMemo(
+    () => unitTemplates.find((t) => t.uuid === selectedTemplateId) ?? null,
+    [selectedTemplateId, unitTemplates]
+  );
+
+  const closeItemDialog = () => {
+    setItemDialogOpen(false);
+    setSelectedTemplateId(null);
+    setItemSourceMode('manual');
+    setNewItem({
+      itemType: 'MATERIAL',
+      materialUuid: null,
+      name: '',
+      unitMeasurement: 'шт',
+      quantity: 1,
+      unitCost: 0,
+      markupPercent: estimate.defaultMarkupPercent ?? 0,
+      comment: '',
+    });
+  };
 
   const handleExport = async () => {
     const result = await exportEstimate(workspaceId, projectId, estimate.uuid);
@@ -160,11 +201,49 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
 
   const openAddItem = (sectionId: string) => {
     setTargetSectionId(sectionId);
+    setItemSourceMode('manual');
+    setSelectedTemplateId(null);
     setNewItem((prev) => ({ ...prev, markupPercent: estimate.defaultMarkupPercent ?? 0 }));
     setItemDialogOpen(true);
   };
 
   const handleAddItem = async () => {
+    const section = findSection(estimate.sections, targetSectionId);
+    const orderIndex = section?.items.length ?? 0;
+
+    if (itemSourceMode === 'template') {
+      if (!selectedTemplateId) {
+        enqueueSnackbar('Выберите единичку', { variant: 'warning' });
+        return;
+      }
+      if (newItem.quantity <= 0) {
+        enqueueSnackbar('Количество должно быть положительным', { variant: 'warning' });
+        return;
+      }
+      const result = await createEstimateItem(
+        workspaceId,
+        projectId,
+        estimate.uuid,
+        targetSectionId,
+        {
+          orderIndex,
+          itemType: 'UNIT',
+          unitTemplateUuid: selectedTemplateId,
+          quantity: newItem.quantity,
+          markupPercent: newItem.markupPercent,
+          comment: newItem.comment.trim() || null,
+        }
+      );
+      if (isErrorFieldTypeGuard(result)) {
+        enqueueSnackbar('Не удалось добавить единичку', { variant: 'error' });
+        return;
+      }
+      enqueueSnackbar('Единичка добавлена', { variant: 'success' });
+      closeItemDialog();
+      router.refresh();
+      return;
+    }
+
     if (!newItem.name.trim()) {
       enqueueSnackbar('Введите название строки', { variant: 'warning' });
       return;
@@ -173,8 +252,6 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
       enqueueSnackbar('Количество и цена должны быть положительными', { variant: 'warning' });
       return;
     }
-    const section = findSection(estimate.sections, targetSectionId);
-    const orderIndex = section?.items.length ?? 0;
 
     const result = await createEstimateItem(workspaceId, projectId, estimate.uuid, targetSectionId, {
       orderIndex,
@@ -192,17 +269,7 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
       return;
     }
     enqueueSnackbar('Строка добавлена', { variant: 'success' });
-    setItemDialogOpen(false);
-    setNewItem({
-      itemType: 'MATERIAL',
-      materialUuid: null,
-      name: '',
-      unitMeasurement: 'шт',
-      quantity: 1,
-      unitCost: 0,
-      markupPercent: estimate.defaultMarkupPercent ?? 0,
-      comment: '',
-    });
+    closeItemDialog();
     router.refresh();
   };
 
@@ -332,110 +399,213 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
       </Dialog>
 
       {/* Диалог добавления строки */}
-      <Dialog open={itemDialogOpen} onClose={() => setItemDialogOpen(false)} fullWidth maxWidth="md">
+      <Dialog open={itemDialogOpen} onClose={closeItemDialog} fullWidth maxWidth="md">
         <DialogTitle>Добавить строку</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} mt={1}>
-            <TextField
-              select
-              label="Тип"
-              value={newItem.itemType}
-              onChange={(event) =>
-                setNewItem({ ...newItem, itemType: event.target.value as EEstimateItemType })
-              }
-              fullWidth
-            >
-              {ITEM_TYPE_OPTIONS.map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
-              ))}
-            </TextField>
+          <Tabs
+            value={itemSourceMode}
+            onChange={(_event, value) => setItemSourceMode(value as ItemSourceMode)}
+            sx={{ mb: 2 }}
+          >
+            <Tab value="manual" label="Обычная строка" />
+            <Tab
+              value="template"
+              label={`Из единички (${unitTemplates.length})`}
+              disabled={unitTemplates.length === 0}
+            />
+          </Tabs>
 
-            {newItem.itemType === 'MATERIAL' && (
-              <Autocomplete<MaterialOption>
-                options={materials}
-                getOptionLabel={(option) => option.name}
-                value={materials.find((m) => m.uuid === newItem.materialUuid) ?? null}
-                onChange={(_event, value) => {
-                  setNewItem({
-                    ...newItem,
-                    materialUuid: value?.uuid ?? null,
-                    name: value?.name ?? newItem.name,
-                    unitMeasurement:
-                      value?.unitMeasurement?.name ?? newItem.unitMeasurement,
-                    unitCost: value?.price ?? newItem.unitCost,
-                  });
-                }}
+          {itemSourceMode === 'template' ? (
+            <Stack spacing={2} mt={1}>
+              <Autocomplete<UnitTemplateWithComponents>
+                options={unitTemplates}
+                getOptionLabel={(option) => `${option.name} (${option.unitMeasurement})`}
+                value={selectedTemplate}
+                onChange={(_event, value) => setSelectedTemplateId(value?.uuid ?? null)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Материал из справочника"
-                    helperText="Выберите материал — название, ед.изм. и цена подставятся автоматически"
+                    label="Единичка из справочника"
+                    helperText="Компоненты скопируются как snapshot — последующие изменения шаблона не коснутся сметы"
                   />
                 )}
                 isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
               />
-            )}
 
-            <TextField
-              label="Название"
-              value={newItem.name}
-              onChange={(event) => setNewItem({ ...newItem, name: event.target.value })}
-              fullWidth
-              required
-            />
-            <Stack direction="row" spacing={2}>
+              {selectedTemplate && (
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Состав «{selectedTemplate.name}» за 1 {selectedTemplate.unitMeasurement}:
+                    </Typography>
+                    <TableContainer>
+                      <Table size="small">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Компонент</TableCell>
+                            <TableCell align="right">Расход/ед.</TableCell>
+                            <TableCell>Ед.</TableCell>
+                            <TableCell align="right">Цена</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {selectedTemplate.components.map((component) => (
+                            <TableRow key={component.uuid}>
+                              <TableCell>{component.name}</TableCell>
+                              <TableCell align="right">{component.quantityPerUnit}</TableCell>
+                              <TableCell>{component.unitMeasurement}</TableCell>
+                              <TableCell align="right">{formatMoney(component.unitCost)}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <Typography variant="body2" mt={1}>
+                      Себестоимость: <strong>{formatMoney(selectedTemplate.unitCost)}</strong> за{' '}
+                      {selectedTemplate.unitMeasurement}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              )}
+
+              <Stack direction="row" spacing={2}>
+                <TextField
+                  type="number"
+                  label={`Количество (${selectedTemplate?.unitMeasurement ?? 'ед'})`}
+                  value={newItem.quantity}
+                  onChange={(event) =>
+                    setNewItem({ ...newItem, quantity: Number(event.target.value) || 0 })
+                  }
+                  inputProps={{ min: 0, step: 0.01 }}
+                  fullWidth
+                />
+                <TextField
+                  type="number"
+                  label="Наценка, %"
+                  value={newItem.markupPercent}
+                  onChange={(event) =>
+                    setNewItem({ ...newItem, markupPercent: Number(event.target.value) || 0 })
+                  }
+                  inputProps={{ min: 0, step: 0.01 }}
+                  fullWidth
+                  helperText="По умолчанию — наценка единички или сметы"
+                />
+              </Stack>
+
               <TextField
-                type="number"
-                label="Количество"
-                value={newItem.quantity}
-                onChange={(event) =>
-                  setNewItem({ ...newItem, quantity: Number(event.target.value) || 0 })
-                }
+                label="Комментарий"
+                value={newItem.comment}
+                onChange={(event) => setNewItem({ ...newItem, comment: event.target.value })}
                 fullWidth
-                inputProps={{ min: 0, step: 0.01 }}
-              />
-              <TextField
-                label="Ед. изм."
-                value={newItem.unitMeasurement}
-                onChange={(event) =>
-                  setNewItem({ ...newItem, unitMeasurement: event.target.value })
-                }
-                fullWidth
+                multiline
+                minRows={2}
               />
             </Stack>
-            <Stack direction="row" spacing={2}>
+          ) : (
+            <Stack spacing={2} mt={1}>
               <TextField
-                type="number"
-                label="Цена себестоимости"
-                value={newItem.unitCost}
+                select
+                label="Тип"
+                value={newItem.itemType}
                 onChange={(event) =>
-                  setNewItem({ ...newItem, unitCost: Number(event.target.value) || 0 })
+                  setNewItem({ ...newItem, itemType: event.target.value as EEstimateItemType })
                 }
                 fullWidth
-                inputProps={{ min: 0, step: 0.01 }}
+              >
+                {ITEM_TYPE_OPTIONS.filter((opt) => opt.value !== 'UNIT').map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              {newItem.itemType === 'MATERIAL' && (
+                <Autocomplete<MaterialOption>
+                  options={materials}
+                  getOptionLabel={(option) => option.name}
+                  value={materials.find((m) => m.uuid === newItem.materialUuid) ?? null}
+                  onChange={(_event, value) => {
+                    setNewItem({
+                      ...newItem,
+                      materialUuid: value?.uuid ?? null,
+                      name: value?.name ?? newItem.name,
+                      unitMeasurement: value?.unitMeasurement?.name ?? newItem.unitMeasurement,
+                      unitCost: value?.price ?? newItem.unitCost,
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Материал из справочника"
+                      helperText="Выберите материал — название, ед.изм. и цена подставятся автоматически"
+                    />
+                  )}
+                  isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                />
+              )}
+
+              <TextField
+                label="Название"
+                value={newItem.name}
+                onChange={(event) => setNewItem({ ...newItem, name: event.target.value })}
+                fullWidth
+                required
               />
+              <Stack direction="row" spacing={2}>
+                <TextField
+                  type="number"
+                  label="Количество"
+                  value={newItem.quantity}
+                  onChange={(event) =>
+                    setNewItem({ ...newItem, quantity: Number(event.target.value) || 0 })
+                  }
+                  fullWidth
+                  inputProps={{ min: 0, step: 0.01 }}
+                />
+                <TextField
+                  label="Ед. изм."
+                  value={newItem.unitMeasurement}
+                  onChange={(event) =>
+                    setNewItem({ ...newItem, unitMeasurement: event.target.value })
+                  }
+                  fullWidth
+                />
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <TextField
+                  type="number"
+                  label="Цена себестоимости"
+                  value={newItem.unitCost}
+                  onChange={(event) =>
+                    setNewItem({ ...newItem, unitCost: Number(event.target.value) || 0 })
+                  }
+                  fullWidth
+                  inputProps={{ min: 0, step: 0.01 }}
+                />
+                <TextField
+                  type="number"
+                  label="Наценка, %"
+                  value={newItem.markupPercent}
+                  onChange={(event) =>
+                    setNewItem({ ...newItem, markupPercent: Number(event.target.value) || 0 })
+                  }
+                  fullWidth
+                  inputProps={{ min: 0, step: 0.01 }}
+                />
+              </Stack>
               <TextField
-                type="number"
-                label="Наценка, %"
-                value={newItem.markupPercent}
-                onChange={(event) =>
-                  setNewItem({ ...newItem, markupPercent: Number(event.target.value) || 0 })
-                }
+                label="Комментарий"
+                value={newItem.comment}
+                onChange={(event) => setNewItem({ ...newItem, comment: event.target.value })}
                 fullWidth
-                inputProps={{ min: 0, step: 0.01 }}
+                multiline
+                minRows={2}
               />
             </Stack>
-            <TextField
-              label="Комментарий"
-              value={newItem.comment}
-              onChange={(event) => setNewItem({ ...newItem, comment: event.target.value })}
-              fullWidth
-              multiline
-              minRows={2}
-            />
-            {leafSections.length > 1 && (
+          )}
+
+          {leafSections.length > 1 && (
+            <Box mt={2}>
               <TextField
                 select
                 label="Раздел"
@@ -449,11 +619,11 @@ export function EstimateEditor({ workspaceId, projectId, estimate, materials }: 
                   </MenuItem>
                 ))}
               </TextField>
-            )}
-          </Stack>
+            </Box>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setItemDialogOpen(false)}>Отмена</Button>
+          <Button onClick={closeItemDialog}>Отмена</Button>
           <Button variant="contained" onClick={handleAddItem}>
             Добавить
           </Button>
@@ -529,6 +699,7 @@ function SectionBlock({
             <Table size="small">
               <TableHead>
                 <TableRow>
+                  <TableCell width={48} />
                   <TableCell>№</TableCell>
                   <TableCell>Тип</TableCell>
                   <TableCell>Ресурс/Работа</TableCell>
@@ -583,25 +754,77 @@ function ItemRow({
   num: string;
   onDelete: () => void;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const typeLabel = ITEM_TYPE_OPTIONS.find((o) => o.value === item.itemType)?.label ?? item.itemType;
+  const isUnit = item.itemType === 'UNIT';
+  const hasComponents = (item.components?.length ?? 0) > 0;
+
   return (
-    <TableRow hover>
-      <TableCell>{num}</TableCell>
-      <TableCell>{typeLabel}</TableCell>
-      <TableCell>{item.name}</TableCell>
-      <TableCell align="right">{item.quantity}</TableCell>
-      <TableCell>{item.unitMeasurement}</TableCell>
-      <TableCell align="right">{formatMoney(item.unitCost)}</TableCell>
-      <TableCell align="right">{formatMoney(item.totalCost)}</TableCell>
-      <TableCell align="right">{item.markupPercent}%</TableCell>
-      <TableCell align="right">
-        <strong>{formatMoney(item.totalClientPrice)}</strong>
+    <>
+      <TableRow hover>
+        <TableCell>
+          {hasComponents && (
+            <IconButton size="small" onClick={() => setExpanded(!expanded)}>
+              {expanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+            </IconButton>
+          )}
+        </TableCell>
+        <TableCell>{num}</TableCell>
+        <TableCell>
+          {isUnit ? <Chip label={typeLabel} size="small" color="warning" /> : typeLabel}
+        </TableCell>
+        <TableCell>{item.name}</TableCell>
+        <TableCell align="right">{item.quantity}</TableCell>
+        <TableCell>{item.unitMeasurement}</TableCell>
+        <TableCell align="right">{formatMoney(item.unitCost)}</TableCell>
+        <TableCell align="right">{formatMoney(item.totalCost)}</TableCell>
+        <TableCell align="right">{item.markupPercent}%</TableCell>
+        <TableCell align="right">
+          <strong>{formatMoney(item.totalClientPrice)}</strong>
+        </TableCell>
+        <TableCell>
+          <IconButton size="small" onClick={onDelete} title="Удалить строку">
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+
+      {expanded &&
+        (item.components ?? []).map((component, idx) => (
+          <ComponentRow
+            key={component.uuid}
+            component={component}
+            num={`${num}.${idx + 1}`}
+          />
+        ))}
+    </>
+  );
+}
+
+function ComponentRow({
+  component,
+  num,
+}: {
+  component: EstimateItemComponentBusinessValue;
+  num: string;
+}) {
+  const typeLabel =
+    ITEM_TYPE_OPTIONS.find((o) => o.value === component.itemType)?.label ?? component.itemType;
+  return (
+    <TableRow sx={{ bgcolor: 'action.hover' }}>
+      <TableCell />
+      <TableCell sx={{ fontStyle: 'italic', color: 'text.secondary' }}>{num}</TableCell>
+      <TableCell sx={{ fontStyle: 'italic', color: 'text.secondary' }}>{typeLabel}</TableCell>
+      <TableCell sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
+        ↳ {component.name}
       </TableCell>
-      <TableCell>
-        <IconButton size="small" onClick={onDelete} title="Удалить строку">
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-      </TableCell>
+      <TableCell align="right">{component.quantityPerUnit}</TableCell>
+      <TableCell>{component.unitMeasurement}</TableCell>
+      <TableCell align="right">{formatMoney(component.unitCost)}</TableCell>
+      <TableCell align="right">{formatMoney(component.totalCost)}</TableCell>
+      <TableCell />
+      <TableCell />
+      <TableCell />
     </TableRow>
   );
 }

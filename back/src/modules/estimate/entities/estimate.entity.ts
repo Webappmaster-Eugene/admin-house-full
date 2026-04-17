@@ -1,4 +1,4 @@
-import { EActiveStatuses, Estimate, EstimateSection, EstimateItem, EEstimateItemType } from '.prisma/client';
+import { EActiveStatuses, Estimate, EstimateSection, EstimateItem, EstimateItemComponent, EEstimateItemType } from '.prisma/client';
 
 export interface EstimateSectionTreeNode extends EstimateSectionEntity {
   items: EstimateItemEntity[];
@@ -40,12 +40,33 @@ export class EstimateSectionEntity implements EstimateSection {
   }
 }
 
+export class EstimateItemComponentEntity implements EstimateItemComponent {
+  uuid: string;
+  orderIndex: number;
+  estimateItemUuid: string;
+  itemType: EEstimateItemType;
+  materialUuid: string | null;
+  name: string;
+  unitMeasurement: string;
+  quantityPerUnit: number;
+  unitCost: number;
+  totalCost: number;
+  comment: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+
+  constructor(data: Partial<EstimateItemComponent>) {
+    Object.assign(this, data);
+  }
+}
+
 export class EstimateItemEntity implements EstimateItem {
   uuid: string;
   orderIndex: number;
   itemType: EEstimateItemType;
   sectionUuid: string;
   materialUuid: string | null;
+  unitTemplateUuid: string | null;
   name: string;
   unitMeasurement: string;
   quantity: number;
@@ -57,8 +78,10 @@ export class EstimateItemEntity implements EstimateItem {
   comment: string | null;
   createdAt: Date;
   updatedAt: Date;
+  components: EstimateItemComponentEntity[];
 
-  constructor(data: Partial<EstimateItem>) {
+  constructor(data: Partial<EstimateItem> & { components?: EstimateItemComponent[] }) {
     Object.assign(this, data);
+    this.components = (data.components ?? []).map(c => new EstimateItemComponentEntity(c));
   }
 }

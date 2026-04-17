@@ -4,13 +4,14 @@ import { EEstimateItemType } from '.prisma/client';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { EstimateRepository } from './estimate.repository';
-import { EstimateEntity, EstimateItemEntity, EstimateSectionTreeNode } from './entities/estimate.entity';
+import { EstimateEntity, EstimateItemComponentEntity, EstimateItemEntity, EstimateSectionTreeNode } from './entities/estimate.entity';
 
 const ITEM_TYPE_RU: Record<EEstimateItemType, string> = {
   MATERIAL: 'Материалы',
   MECHANISM: 'Механизмы',
   WORK: 'Работы',
   OVERHEAD: 'Накладные',
+  UNIT: 'Единичка',
 };
 
 const TYPE_FILL_ARGB: Record<EEstimateItemType, string> = {
@@ -18,6 +19,7 @@ const TYPE_FILL_ARGB: Record<EEstimateItemType, string> = {
   MECHANISM: 'FFE3F2FD',
   WORK: 'FFFFF3E0',
   OVERHEAD: 'FFF3E5F5',
+  UNIT: 'FFFFECB3',
 };
 
 @Injectable()
@@ -179,6 +181,48 @@ export class EstimateExportService {
       pattern: 'solid',
       fgColor: { argb: TYPE_FILL_ARGB[item.itemType] },
     };
+    if (item.itemType === 'UNIT') {
+      row.font = { italic: true, bold: true };
+    }
+    rowCounter.current++;
+
+    // Компоненты единички — подстроки с outlineLevel + 1 (свёрнуты по умолчанию)
+    (item.components ?? []).forEach((component, componentIdx) => {
+      this.writeComponentRow(sheet, component, `${num}.${componentIdx + 1}`, depth + 1, rowCounter);
+    });
+  }
+
+  private writeComponentRow(
+    sheet: ExcelJS.Worksheet,
+    component: EstimateItemComponentEntity,
+    num: string,
+    depth: number,
+    rowCounter: { current: number },
+  ): void {
+    const row = sheet.addRow({
+      num,
+      type: ITEM_TYPE_RU[component.itemType],
+      name: `   ↳ ${component.name}`,
+      quantity: component.quantityPerUnit,
+      unit: component.unitMeasurement,
+      unitCost: component.unitCost,
+      totalCost: component.totalCost,
+      markup: '',
+      unitClientPrice: '',
+      totalClientPrice: '',
+      comment: component.comment ?? '',
+    });
+    row.outlineLevel = depth;
+    row.getCell('quantity').numFmt = '#,##0.00###';
+    row.getCell('unitCost').numFmt = '#,##0.00';
+    row.getCell('totalCost').numFmt = '#,##0.00';
+    row.getCell('type').fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: TYPE_FILL_ARGB[component.itemType] },
+    };
+    row.font = { color: { argb: 'FF455A64' }, italic: true };
+    row.hidden = true;
     rowCounter.current++;
   }
 

@@ -36,6 +36,7 @@ import { S3MinioModule } from './modules/s3-minio/s3-minio.module';
 import { StatusApproveModule } from './modules/status-approve/status-approve.module';
 import { MailModule } from './modules/mail/mail.module';
 import { EstimateModule } from './modules/estimate/estimate.module';
+import { UnitTemplateModule } from './modules/unit-template/unit-template.module';
 const logger: LoggerConfig = new LoggerConfig();
 
 @Module({
@@ -92,6 +93,7 @@ const logger: LoggerConfig = new LoggerConfig();
     OrganizationModule,
     ProjectModule,
     EstimateModule,
+    UnitTemplateModule,
     GlobalCategoryMaterialModule,
     CategoryMaterialModule,
     PriceChangingModule,
