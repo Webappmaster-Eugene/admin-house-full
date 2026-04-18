@@ -137,6 +137,7 @@ model User {
   FileStorage                       FileStorage[]                       @relation("FileStorage_changed_by")
   Estimate                          Estimate[]                          @relation("Estimate_changed_by")
   UnitTemplate                      UnitTemplate[]                      @relation("UnitTemplate_changed_by")
+  ConstructionPie                   ConstructionPie[]                   @relation("ConstructionPie_changed_by")
   createdAt                         DateTime                            @default(now()) @map("created_at")
   updatedAt                         DateTime                            @updatedAt @map("updated_at")
 
@@ -184,6 +185,7 @@ model Handbook {
   fieldVariantsForSelectorType FieldVariantsForSelectorFieldType[]
   characteristicsMaterials     CharacteristicsMaterial[]
   unitTemplates                UnitTemplate[]
+  constructionPies             ConstructionPie[]
   lastChangeByUserUuid         String?                             @map("last_change_by_user_uuid") @db.Uuid
   lastChangeByUser             User?                               @relation("Handbook_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt                    DateTime                            @default(now()) @map("created_at")
@@ -426,6 +428,8 @@ model Material {
   estimateItems           EstimateItem[]
   unitTemplateComponents  UnitTemplateComponent[]
   estimateItemComponents  EstimateItemComponent[]
+  pieLayers               PieLayer[]
+  estimateItemPieLayers   EstimateItemPieLayer[]
   lastChangeByUserUuid    String?                     @map("last_change_by_user_uuid") @db.Uuid
   lastChangeByUser        User?                       @relation("Material_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   createdAt               DateTime                    @default(now()) @map("created_at")
@@ -569,37 +573,42 @@ model EstimateSection {
   @@map("estimate_section")
 }
 
-// DOC Строка сметы - материал/работа/механизм/накладные/единичка:
+// DOC Строка сметы - материал/работа/механизм/накладные/единичка/пирог:
 // DOC estimate-item
 model EstimateItem {
-  uuid             String                  @id @default(uuid()) @db.Uuid
-  orderIndex       Int                     @map("order_index")
-  itemType         EEstimateItemType       @map("item_type")
-  sectionUuid      String                  @map("section_uuid") @db.Uuid
-  section          EstimateSection         @relation(fields: [sectionUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  // Ссылка на материал в справочнике. null - когда строка с кастомным названием (например, работы) или единичка
-  materialUuid     String?                 @map("material_uuid") @db.Uuid
-  material         Material?               @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  uuid                String                  @id @default(uuid()) @db.Uuid
+  orderIndex          Int                     @map("order_index")
+  itemType            EEstimateItemType       @map("item_type")
+  sectionUuid         String                  @map("section_uuid") @db.Uuid
+  section             EstimateSection         @relation(fields: [sectionUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  // Ссылка на материал в справочнике. null - когда строка с кастомным названием, единичка или пирог
+  materialUuid        String?                 @map("material_uuid") @db.Uuid
+  material            Material?               @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
   // Ссылка на шаблон единички. Не null для строк типа UNIT. Компоненты шаблона денормализуются в components при создании.
-  unitTemplateUuid String?                 @map("unit_template_uuid") @db.Uuid
-  unitTemplate     UnitTemplate?           @relation(fields: [unitTemplateUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
-  components       EstimateItemComponent[]
+  unitTemplateUuid    String?                 @map("unit_template_uuid") @db.Uuid
+  unitTemplate        UnitTemplate?           @relation(fields: [unitTemplateUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  components          EstimateItemComponent[]
+  // Ссылка на пирог (многослойная конструкция). Не null для строк типа PIE. Слои денормализуются в pieLayers при создании.
+  constructionPieUuid String?                 @map("construction_pie_uuid") @db.Uuid
+  constructionPie     ConstructionPie?        @relation(fields: [constructionPieUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  pieLayers           EstimateItemPieLayer[]
   // Денормализация - имя/ед.изм. хранятся в строке (материал может быть переименован/удалён, смета должна остаться стабильной)
-  name             String
-  unitMeasurement  String                  @map("unit_measurement")
-  quantity         Float
-  unitCost         Float                   @map("unit_cost")
-  markupPercent    Float                   @default(0) @map("markup_percent")
-  unitClientPrice  Float                   @map("unit_client_price")
-  totalCost        Float                   @map("total_cost")
-  totalClientPrice Float                   @map("total_client_price")
-  comment          String?
-  createdAt        DateTime                @default(now()) @map("created_at")
-  updatedAt        DateTime                @updatedAt @map("updated_at")
+  name                String
+  unitMeasurement     String                  @map("unit_measurement")
+  quantity            Float
+  unitCost            Float                   @map("unit_cost")
+  markupPercent       Float                   @default(0) @map("markup_percent")
+  unitClientPrice     Float                   @map("unit_client_price")
+  totalCost           Float                   @map("total_cost")
+  totalClientPrice    Float                   @map("total_client_price")
+  comment             String?
+  createdAt           DateTime                @default(now()) @map("created_at")
+  updatedAt           DateTime                @updatedAt @map("updated_at")
 
   @@index([sectionUuid])
   @@index([materialUuid])
   @@index([unitTemplateUuid])
+  @@index([constructionPieUuid])
   @@map("estimate_item")
 }
 
@@ -647,6 +656,79 @@ model UnitTemplateComponent {
   @@index([unitTemplateUuid])
   @@index([materialUuid])
   @@map("unit_template_component")
+}
+
+// DOC Пирог (ConstructionPie) - многослойная строительная конструкция (стена/пол/перекрытие) в справочнике workspace:
+// DOC construction-pie
+model ConstructionPie {
+  uuid                 String         @id @default(uuid()) @db.Uuid
+  name                 String
+  description          String?
+  unitMeasurement      String         @default("м²") @map("unit_measurement")
+  totalThickness       Float          @default(0) @map("total_thickness")
+  unitCost             Float          @default(0) @map("unit_cost")
+  defaultMarkupPercent Float          @default(0) @map("default_markup_percent")
+  unitClientPrice      Float          @default(0) @map("unit_client_price")
+  handbookUuid         String         @map("handbook_uuid") @db.Uuid
+  handbook             Handbook       @relation(fields: [handbookUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  layers               PieLayer[]
+  estimateItems        EstimateItem[]
+  lastChangeByUserUuid String?        @map("last_change_by_user_uuid") @db.Uuid
+  lastChangeByUser     User?          @relation("ConstructionPie_changed_by", fields: [lastChangeByUserUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+
+  @@index([handbookUuid])
+  @@map("construction_pie")
+}
+
+// DOC Слой пирога (PieLayer) - один слой многослойной конструкции (материал + толщина/плотность/расход на м²):
+// DOC pie-layer
+model PieLayer {
+  uuid                String          @id @default(uuid()) @db.Uuid
+  orderIndex          Int             @map("order_index")
+  constructionPieUuid String          @map("construction_pie_uuid") @db.Uuid
+  constructionPie     ConstructionPie @relation(fields: [constructionPieUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  materialUuid        String?         @map("material_uuid") @db.Uuid
+  material            Material?       @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  name                String
+  thickness           Float
+  density             Float           @default(0)
+  consumptionPerM2    Float           @map("consumption_per_m2")
+  unitMeasurement     String          @map("unit_measurement")
+  unitCost            Float           @map("unit_cost")
+  comment             String?
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+
+  @@index([constructionPieUuid])
+  @@index([materialUuid])
+  @@map("pie_layer")
+}
+
+// DOC Снэпшот слоя пирога внутри строки сметы (EstimateItemPieLayer) - хранит мгновенные значения слоя на момент добавления пирога в смету:
+// DOC estimate-item-pie-layer
+model EstimateItemPieLayer {
+  uuid             String       @id @default(uuid()) @db.Uuid
+  orderIndex       Int          @map("order_index")
+  estimateItemUuid String       @map("estimate_item_uuid") @db.Uuid
+  estimateItem     EstimateItem @relation(fields: [estimateItemUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  materialUuid     String?      @map("material_uuid") @db.Uuid
+  material         Material?    @relation(fields: [materialUuid], references: [uuid], onDelete: SetNull, onUpdate: Cascade)
+  name             String
+  thickness        Float
+  density          Float        @default(0)
+  consumptionPerM2 Float        @map("consumption_per_m2")
+  unitMeasurement  String       @map("unit_measurement")
+  unitCost         Float        @map("unit_cost")
+  totalCost        Float        @map("total_cost")
+  comment          String?
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  @@index([estimateItemUuid])
+  @@index([materialUuid])
+  @@map("estimate_item_pie_layer")
 }
 
 // DOC Снэпшот компонента единички внутри строки сметы (EstimateItemComponent) - хранит мгновенные значения на момент добавления единички в смету:
@@ -759,4 +841,5 @@ enum EEstimateItemType {
   WORK
   OVERHEAD
   UNIT
+  PIE
 }

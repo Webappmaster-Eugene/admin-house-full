@@ -1,7 +1,8 @@
-import { Inject, Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors-description.backend';
 import { EstimateRepository } from './estimate.repository';
 import { EstimateEntity, EstimateItemEntity, EstimateSectionEntity } from './entities/estimate.entity';
 import { EstimateCreateRequestDto } from './dto/controller/estimate-create.dto';
@@ -164,7 +165,7 @@ export class EstimateService {
   ): Promise<void> {
     const ok = await this.repository.verifyProjectInWorkspace(projectId, workspaceId);
     if (!ok) {
-      throw new ForbiddenException(`Проект ${projectId} не принадлежит workspace ${workspaceId}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.UNAUTHORIZED_ACCESS));
     }
   }
 
@@ -176,7 +177,7 @@ export class EstimateService {
     await this.assertProjectInWorkspace(workspaceId, projectId);
     const ok = await this.repository.verifyEstimateInProject(estimateId, projectId);
     if (!ok) {
-      throw new ForbiddenException(`Смета ${estimateId} не принадлежит проекту ${projectId}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.UNAUTHORIZED_ACCESS));
     }
   }
 
@@ -186,7 +187,7 @@ export class EstimateService {
   ): Promise<void> {
     const section = await this.repository.getSectionById(sectionId);
     if (section.estimateUuid !== estimateId) {
-      throw new BadRequestException(`Раздел ${sectionId} не принадлежит смете ${estimateId}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.BAD_REQUEST));
     }
   }
 
@@ -196,7 +197,7 @@ export class EstimateService {
   ): Promise<void> {
     const item = await this.repository.getItemById(itemId);
     if (item.sectionUuid !== sectionId) {
-      throw new BadRequestException(`Строка ${itemId} не принадлежит разделу ${sectionId}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.BAD_REQUEST));
     }
   }
 }

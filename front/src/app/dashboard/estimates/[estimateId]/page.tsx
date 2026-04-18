@@ -5,6 +5,7 @@ import { getAllProjectsOfWorkspace } from 'src/api/actions/project/get-all-proje
 import { getEstimate } from 'src/api/actions/estimate/get-estimate.action';
 import { getAllMaterialsInHandbook } from 'src/api/actions/material/get-all-materials-in-handbook.action';
 import { getAllUnitTemplates } from 'src/api/actions/unit-template/get-all-unit-templates.action';
+import { getAllConstructionPies } from 'src/api/actions/construction-pie/get-all-pies.action';
 
 import { Error } from 'src/shared/error/error';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
@@ -12,6 +13,7 @@ import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type
 import { EstimateEditor } from 'src/widgets/estimates/estimate-editor';
 import { EstimateFull } from 'src/shared/contracts/estimate';
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
+import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
 
 export const metadata = {
   title: 'Dashboard: Редактор сметы',
@@ -44,12 +46,13 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
   const projectId = hit.projectUuid;
   const estimateTree = hit.res;
 
-  const [materialsResult, templatesResult] = handbookId
+  const [materialsResult, templatesResult, piesResult] = handbookId
     ? await Promise.all([
         getAllMaterialsInHandbook(workspaceId, handbookId),
         getAllUnitTemplates(workspaceId, handbookId),
+        getAllConstructionPies(workspaceId, handbookId),
       ])
-    : [null, null];
+    : [null, null, null];
 
   const materials =
     materialsResult && !isErrorFieldTypeGuard(materialsResult)
@@ -66,6 +69,11 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
       ? (templatesResult as UnitTemplateWithComponents[])
       : [];
 
+  const constructionPies =
+    piesResult && !isErrorFieldTypeGuard(piesResult)
+      ? (piesResult as ConstructionPieWithLayers[])
+      : [];
+
   return (
     <EstimateEditor
       workspaceId={workspaceId}
@@ -73,6 +81,7 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
       estimate={estimateTree as EstimateFull}
       materials={materials}
       unitTemplates={unitTemplates}
+      constructionPies={constructionPies}
     />
   );
 }

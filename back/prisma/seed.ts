@@ -2666,6 +2666,282 @@ async function main() {
     },
   });
   //endregion
+
+  //DOC ESTIMATES SHOWCASE - демо-сметы со всеми 3 типами строк (классическая + единичка + пирог)
+  //region ESTIMATES_DEMO
+  const round = (value: number) => Math.round(value * 100) / 100;
+
+  // Шаблон единички в Handbook менеджера 1 — «Монтаж окна ПВХ»
+  const DEMO_UNIT_TEMPLATE_1 = await prisma.unitTemplate.create({
+    data: {
+      name: 'Монтаж окна ПВХ 1 м²',
+      description: 'Демо-единичка: окно + работа монтажа на 1 м² проёма',
+      unitMeasurement: 'м²',
+      defaultMarkupPercent: 30,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      lastChangeByUserUuid: MANAGER_USER_1.uuid,
+      components: {
+        create: [
+          {
+            orderIndex: 0,
+            itemType: 'MATERIAL',
+            name: 'Окно ПВХ 60-серия',
+            unitMeasurement: 'шт',
+            quantityPerUnit: 1,
+            unitCost: 8500,
+            comment: null,
+          },
+          {
+            orderIndex: 1,
+            itemType: 'WORK',
+            name: 'Монтаж и регулировка окна',
+            unitMeasurement: 'ч',
+            quantityPerUnit: 0.5,
+            unitCost: 1500,
+            comment: null,
+          },
+        ],
+      },
+    },
+  });
+  const DEMO_UT1_UNIT_COST = round(1 * 8500 + 0.5 * 1500); // 9250
+  await prisma.unitTemplate.update({
+    where: { uuid: DEMO_UNIT_TEMPLATE_1.uuid },
+    data: {
+      unitCost: DEMO_UT1_UNIT_COST,
+      unitClientPrice: round(DEMO_UT1_UNIT_COST * 1.3),
+    },
+  });
+
+  // Пирог в Handbook менеджера 1 — «Тёплый пол со стяжкой 100 мм»
+  const DEMO_PIE_1 = await prisma.constructionPie.create({
+    data: {
+      name: 'Тёплый пол со стяжкой 100 мм',
+      description: 'Демо-пирог: XPS 50мм + цементная стяжка 50мм с тёплым полом',
+      unitMeasurement: 'м²',
+      defaultMarkupPercent: 25,
+      handbookUuid: MANAGER_HANDBOOK_1.uuid,
+      lastChangeByUserUuid: MANAGER_USER_1.uuid,
+      layers: {
+        create: [
+          {
+            orderIndex: 0,
+            name: 'Пенополистирол XPS',
+            thickness: 50,
+            density: 35,
+            consumptionPerM2: 0.05,
+            unitMeasurement: 'м³',
+            unitCost: 3500,
+            comment: null,
+          },
+          {
+            orderIndex: 1,
+            name: 'Цементно-песчаная стяжка',
+            thickness: 50,
+            density: 2000,
+            consumptionPerM2: 100,
+            unitMeasurement: 'кг',
+            unitCost: 8,
+            comment: null,
+          },
+        ],
+      },
+    },
+  });
+  const DEMO_PIE1_UNIT_COST = round(0.05 * 3500 + 100 * 8); // 975
+  await prisma.constructionPie.update({
+    where: { uuid: DEMO_PIE_1.uuid },
+    data: {
+      unitCost: DEMO_PIE1_UNIT_COST,
+      unitClientPrice: round(DEMO_PIE1_UNIT_COST * 1.25),
+      totalThickness: 100,
+    },
+  });
+
+  // Демо-смета в первом проекте manager1
+  const DEMO_ESTIMATE = await prisma.estimate.create({
+    data: {
+      name: 'Демо-смета — все типы строк',
+      description: 'Тестовая смета с примерами всех типов: материал, работа, единичка, пирог',
+      defaultMarkupPercent: 17,
+      projectUuid: MANAGER_PROJECT_1_2_1.uuid,
+      lastChangeByUserUuid: MANAGER_USER_1.uuid,
+    },
+  });
+
+  const DEMO_SECTION_1 = await prisma.estimateSection.create({
+    data: {
+      name: '1. Демонстрация всех типов строк',
+      orderIndex: 0,
+      estimateUuid: DEMO_ESTIMATE.uuid,
+    },
+  });
+
+  // Строка 1: материал из справочника (фанера)
+  const item1Quantity = 364.7;
+  const item1UnitCost = 348;
+  const item1Markup = 17;
+  const item1UnitClient = round(item1UnitCost * (1 + item1Markup / 100));
+  const item1TotalCost = round(item1Quantity * item1UnitCost);
+  const item1TotalClient = round(item1Quantity * item1UnitClient);
+  await prisma.estimateItem.create({
+    data: {
+      orderIndex: 0,
+      itemType: 'MATERIAL',
+      sectionUuid: DEMO_SECTION_1.uuid,
+      materialUuid: MATERIAL_UNIT_LISTOVOI1?.uuid ?? null,
+      name: 'Фанера ФСФ 18мм (демо-материал)',
+      unitMeasurement: 'м²',
+      quantity: item1Quantity,
+      unitCost: item1UnitCost,
+      markupPercent: item1Markup,
+      unitClientPrice: item1UnitClient,
+      totalCost: item1TotalCost,
+      totalClientPrice: item1TotalClient,
+    },
+  });
+
+  // Строка 2: единичка (snapshot из шаблона)
+  const item2Quantity = 5;
+  const item2Markup = 30;
+  const item2UnitClient = round(DEMO_UT1_UNIT_COST * (1 + item2Markup / 100));
+  const item2TotalCost = round(item2Quantity * DEMO_UT1_UNIT_COST);
+  const item2TotalClient = round(item2Quantity * item2UnitClient);
+  await prisma.estimateItem.create({
+    data: {
+      orderIndex: 1,
+      itemType: 'UNIT',
+      sectionUuid: DEMO_SECTION_1.uuid,
+      unitTemplateUuid: DEMO_UNIT_TEMPLATE_1.uuid,
+      name: DEMO_UNIT_TEMPLATE_1.name,
+      unitMeasurement: DEMO_UNIT_TEMPLATE_1.unitMeasurement,
+      quantity: item2Quantity,
+      unitCost: DEMO_UT1_UNIT_COST,
+      markupPercent: item2Markup,
+      unitClientPrice: item2UnitClient,
+      totalCost: item2TotalCost,
+      totalClientPrice: item2TotalClient,
+      components: {
+        create: [
+          {
+            orderIndex: 0,
+            itemType: 'MATERIAL',
+            name: 'Окно ПВХ 60-серия',
+            unitMeasurement: 'шт',
+            quantityPerUnit: 1,
+            unitCost: 8500,
+            totalCost: round(1 * item2Quantity * 8500),
+          },
+          {
+            orderIndex: 1,
+            itemType: 'WORK',
+            name: 'Монтаж и регулировка окна',
+            unitMeasurement: 'ч',
+            quantityPerUnit: 0.5,
+            unitCost: 1500,
+            totalCost: round(0.5 * item2Quantity * 1500),
+          },
+        ],
+      },
+    },
+  });
+
+  // Строка 3: пирог (snapshot слоёв)
+  const item3Quantity = 30;
+  const item3Markup = 25;
+  const item3UnitClient = round(DEMO_PIE1_UNIT_COST * (1 + item3Markup / 100));
+  const item3TotalCost = round(item3Quantity * DEMO_PIE1_UNIT_COST);
+  const item3TotalClient = round(item3Quantity * item3UnitClient);
+  await prisma.estimateItem.create({
+    data: {
+      orderIndex: 2,
+      itemType: 'PIE',
+      sectionUuid: DEMO_SECTION_1.uuid,
+      constructionPieUuid: DEMO_PIE_1.uuid,
+      name: DEMO_PIE_1.name,
+      unitMeasurement: DEMO_PIE_1.unitMeasurement,
+      quantity: item3Quantity,
+      unitCost: DEMO_PIE1_UNIT_COST,
+      markupPercent: item3Markup,
+      unitClientPrice: item3UnitClient,
+      totalCost: item3TotalCost,
+      totalClientPrice: item3TotalClient,
+      pieLayers: {
+        create: [
+          {
+            orderIndex: 0,
+            name: 'Пенополистирол XPS',
+            thickness: 50,
+            density: 35,
+            consumptionPerM2: 0.05,
+            unitMeasurement: 'м³',
+            unitCost: 3500,
+            totalCost: round(0.05 * item3Quantity * 3500),
+          },
+          {
+            orderIndex: 1,
+            name: 'Цементно-песчаная стяжка',
+            thickness: 50,
+            density: 2000,
+            consumptionPerM2: 100,
+            unitMeasurement: 'кг',
+            unitCost: 8,
+            totalCost: round(100 * item3Quantity * 8),
+          },
+        ],
+      },
+    },
+  });
+
+  // Строка 4: кастомная работа (без справочника)
+  const item4Quantity = 10;
+  const item4UnitCost = 2500;
+  const item4Markup = 20;
+  const item4UnitClient = round(item4UnitCost * (1 + item4Markup / 100));
+  const item4TotalCost = round(item4Quantity * item4UnitCost);
+  const item4TotalClient = round(item4Quantity * item4UnitClient);
+  await prisma.estimateItem.create({
+    data: {
+      orderIndex: 3,
+      itemType: 'WORK',
+      sectionUuid: DEMO_SECTION_1.uuid,
+      name: 'Прочие отделочные работы',
+      unitMeasurement: 'ч',
+      quantity: item4Quantity,
+      unitCost: item4UnitCost,
+      markupPercent: item4Markup,
+      unitClientPrice: item4UnitClient,
+      totalCost: item4TotalCost,
+      totalClientPrice: item4TotalClient,
+    },
+  });
+
+  // Финальный пересчёт totals секции и сметы (чтобы цифры на UI совпали сразу)
+  const sectionTotalCost = round(item1TotalCost + item2TotalCost + item3TotalCost + item4TotalCost);
+  const sectionTotalClient = round(
+    item1TotalClient + item2TotalClient + item3TotalClient + item4TotalClient,
+  );
+  await prisma.estimateSection.update({
+    where: { uuid: DEMO_SECTION_1.uuid },
+    data: {
+      sectionTotalCost,
+      sectionTotalClientPrice: sectionTotalClient,
+    },
+  });
+  await prisma.estimate.update({
+    where: { uuid: DEMO_ESTIMATE.uuid },
+    data: {
+      totalCost: sectionTotalCost,
+      totalClientPrice: sectionTotalClient,
+    },
+  });
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `[seed] Демо-смета "${DEMO_ESTIMATE.name}" создана в проекте "${MANAGER_PROJECT_1_2_1.name}": ` +
+      `${sectionTotalCost} ₽ → ${sectionTotalClient} ₽`,
+  );
+  //endregion
 }
 
 // execute the seed upload

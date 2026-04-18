@@ -4,9 +4,11 @@ import { EstimateBusinessValueSchema } from '../../models/estimate/estimate-busi
 import { EstimateSectionBusinessValueSchema } from '../../models/estimate/estimate-section.schema';
 import { EstimateItemBusinessValueSchema } from '../../models/estimate/estimate-item.schema';
 import { EstimateItemComponentBusinessValueSchema } from '../../models/estimate/estimate-item-component.schema';
+import { EstimateItemPieLayerBusinessValueSchema } from '../../models/estimate/estimate-item-pie-layer.schema';
 
 const EstimateItemInSectionSchema = EstimateItemBusinessValueSchema.extend({
   components: z.array(EstimateItemComponentBusinessValueSchema),
+  pieLayers: z.array(EstimateItemPieLayerBusinessValueSchema),
 });
 
 const EstimateSectionInTreeSchema: z.ZodType<unknown> = z.lazy(() =>

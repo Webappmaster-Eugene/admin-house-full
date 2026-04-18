@@ -4,6 +4,7 @@ import { EntityUrlParamCommand } from 'libs/contracts';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { KFI } from '../../common/utils/di';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
+import { roundMoney } from '../../common/helpers/round-money.helper';
 import { UnitTemplateEntity, UnitTemplateComponentEntity } from './entities/unit-template.entity';
 import { UnitTemplateCreateRequestDto } from './dto/controller/unit-template-create.dto';
 import { UnitTemplateUpdateRequestDto } from './dto/controller/unit-template-update.dto';
@@ -210,8 +211,4 @@ export class UnitTemplateRepository {
     });
     return Boolean(row);
   }
-}
-
-function roundMoney(value: number): number {
-  return Math.round(value * 100) / 100;
 }

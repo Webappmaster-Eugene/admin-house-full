@@ -37,6 +37,7 @@ import { StatusApproveModule } from './modules/status-approve/status-approve.mod
 import { MailModule } from './modules/mail/mail.module';
 import { EstimateModule } from './modules/estimate/estimate.module';
 import { UnitTemplateModule } from './modules/unit-template/unit-template.module';
+import { ConstructionPieModule } from './modules/construction-pie/construction-pie.module';
 const logger: LoggerConfig = new LoggerConfig();
 
 @Module({
@@ -94,6 +95,7 @@ const logger: LoggerConfig = new LoggerConfig();
     ProjectModule,
     EstimateModule,
     UnitTemplateModule,
+    ConstructionPieModule,
     GlobalCategoryMaterialModule,
     CategoryMaterialModule,
     PriceChangingModule,

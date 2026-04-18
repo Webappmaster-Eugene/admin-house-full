@@ -9,6 +9,7 @@ const EstimateItemCreateRequestSchema = EstimateItemSchema.pick({
   itemType: true,
   materialUuid: true,
   unitTemplateUuid: true,
+  constructionPieUuid: true,
   name: true,
   unitMeasurement: true,
   quantity: true,
@@ -18,6 +19,7 @@ const EstimateItemCreateRequestSchema = EstimateItemSchema.pick({
 }).partial({
   materialUuid: true,
   unitTemplateUuid: true,
+  constructionPieUuid: true,
   name: true,
   unitMeasurement: true,
   unitCost: true,

@@ -1,26 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
-import { EEstimateItemType } from '.prisma/client';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { EstimateRepository } from './estimate.repository';
-import { EstimateEntity, EstimateItemComponentEntity, EstimateItemEntity, EstimateSectionTreeNode } from './entities/estimate.entity';
-
-const ITEM_TYPE_RU: Record<EEstimateItemType, string> = {
-  MATERIAL: 'Материалы',
-  MECHANISM: 'Механизмы',
-  WORK: 'Работы',
-  OVERHEAD: 'Накладные',
-  UNIT: 'Единичка',
-};
-
-const TYPE_FILL_ARGB: Record<EEstimateItemType, string> = {
-  MATERIAL: 'FFE8F5E9',
-  MECHANISM: 'FFE3F2FD',
-  WORK: 'FFFFF3E0',
-  OVERHEAD: 'FFF3E5F5',
-  UNIT: 'FFFFECB3',
-};
+import {
+  EstimateItemComponentEntity,
+  EstimateItemEntity,
+  EstimateItemPieLayerEntity,
+  EstimateSectionTreeNode,
+} from './entities/estimate.entity';
+import {
+  BORDER_ARGB,
+  COMPONENT_FONT_ARGB,
+  CONSUMPTION_FORMAT,
+  HEADER_FILL_ARGB,
+  ITEM_TYPE_RU,
+  MONEY_FORMAT,
+  PERCENT_FORMAT,
+  PIE_LAYER_FONT_ARGB,
+  SECTION_FILL_ARGB,
+  TYPE_FILL_ARGB,
+} from './consts/excel-styles.const';
 
 @Injectable()
 export class EstimateExportService {
@@ -52,9 +52,8 @@ export class EstimateExportService {
       { header: 'Комментарий', key: 'comment', width: 30 },
     ];
 
-    sheet.getRow(1).font = { bold: true };
     sheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-    sheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF263238' } };
+    sheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: HEADER_FILL_ARGB } };
     sheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
 
     const titleRow = sheet.insertRow(1, [`Смета: ${estimate.name}`]);
@@ -83,21 +82,20 @@ export class EstimateExportService {
       totalClientPrice: estimate.totalClientPrice,
       comment: '',
     });
-    totalRow.font = { bold: true, size: 12 };
-    totalRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF263238' } };
+    totalRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: HEADER_FILL_ARGB } };
     totalRow.font = { bold: true, size: 12, color: { argb: 'FFFFFFFF' } };
-    totalRow.getCell('totalCost').numFmt = '#,##0.00';
-    totalRow.getCell('totalClientPrice').numFmt = '#,##0.00';
+    totalRow.getCell('totalCost').numFmt = MONEY_FORMAT;
+    totalRow.getCell('totalClientPrice').numFmt = MONEY_FORMAT;
     rowCounter.current++;
 
     for (let i = 3; i < totalRowNumber; i++) {
       const row = sheet.getRow(i);
       row.eachCell(cell => {
         cell.border = {
-          top: { style: 'thin', color: { argb: 'FFCFD8DC' } },
-          bottom: { style: 'thin', color: { argb: 'FFCFD8DC' } },
-          left: { style: 'thin', color: { argb: 'FFCFD8DC' } },
-          right: { style: 'thin', color: { argb: 'FFCFD8DC' } },
+          top: { style: 'thin', color: { argb: BORDER_ARGB } },
+          bottom: { style: 'thin', color: { argb: BORDER_ARGB } },
+          left: { style: 'thin', color: { argb: BORDER_ARGB } },
+          right: { style: 'thin', color: { argb: BORDER_ARGB } },
         };
       });
     }
@@ -133,10 +131,10 @@ export class EstimateExportService {
     sectionRow.fill = {
       type: 'pattern',
       pattern: 'solid',
-      fgColor: { argb: depth === 0 ? 'FFB2DFDB' : 'FFE0F2F1' },
+      fgColor: { argb: SECTION_FILL_ARGB[depth] ?? SECTION_FILL_ARGB[1] },
     };
-    sectionRow.getCell('totalCost').numFmt = '#,##0.00';
-    sectionRow.getCell('totalClientPrice').numFmt = '#,##0.00';
+    sectionRow.getCell('totalCost').numFmt = MONEY_FORMAT;
+    sectionRow.getCell('totalClientPrice').numFmt = MONEY_FORMAT;
     sectionRow.outlineLevel = depth;
     rowCounter.current++;
 
@@ -170,26 +168,66 @@ export class EstimateExportService {
       comment: item.comment ?? '',
     });
     row.outlineLevel = depth;
-    row.getCell('quantity').numFmt = '#,##0.00';
-    row.getCell('unitCost').numFmt = '#,##0.00';
-    row.getCell('totalCost').numFmt = '#,##0.00';
-    row.getCell('markup').numFmt = '0.##"%"';
-    row.getCell('unitClientPrice').numFmt = '#,##0.00';
-    row.getCell('totalClientPrice').numFmt = '#,##0.00';
+    row.getCell('quantity').numFmt = MONEY_FORMAT;
+    row.getCell('unitCost').numFmt = MONEY_FORMAT;
+    row.getCell('totalCost').numFmt = MONEY_FORMAT;
+    row.getCell('markup').numFmt = PERCENT_FORMAT;
+    row.getCell('unitClientPrice').numFmt = MONEY_FORMAT;
+    row.getCell('totalClientPrice').numFmt = MONEY_FORMAT;
     row.getCell('type').fill = {
       type: 'pattern',
       pattern: 'solid',
       fgColor: { argb: TYPE_FILL_ARGB[item.itemType] },
     };
-    if (item.itemType === 'UNIT') {
+    if (item.itemType === 'UNIT' || item.itemType === 'PIE') {
       row.font = { italic: true, bold: true };
     }
     rowCounter.current++;
 
-    // Компоненты единички — подстроки с outlineLevel + 1 (свёрнуты по умолчанию)
+    // Компоненты единички — подстроки с outlineLevel + 1 (свёрнуты по умолчанию).
     (item.components ?? []).forEach((component, componentIdx) => {
       this.writeComponentRow(sheet, component, `${num}.${componentIdx + 1}`, depth + 1, rowCounter);
     });
+
+    // Слои пирога — аналогично, со spec-колонками (толщина в названии).
+    (item.pieLayers ?? []).forEach((layer, layerIdx) => {
+      this.writePieLayerRow(sheet, layer, `${num}.${layerIdx + 1}`, depth + 1, rowCounter);
+    });
+  }
+
+  private writePieLayerRow(
+    sheet: ExcelJS.Worksheet,
+    layer: EstimateItemPieLayerEntity,
+    num: string,
+    depth: number,
+    rowCounter: { current: number },
+  ): void {
+    const thicknessLabel = layer.thickness > 0 ? ` [${layer.thickness} мм]` : '';
+    const row = sheet.addRow({
+      num,
+      type: 'Слой',
+      name: `   ↳ ${layer.name}${thicknessLabel}`,
+      quantity: layer.consumptionPerM2,
+      unit: layer.unitMeasurement,
+      unitCost: layer.unitCost,
+      totalCost: layer.totalCost,
+      markup: '',
+      unitClientPrice: '',
+      totalClientPrice: '',
+      comment: layer.comment ?? '',
+    });
+    row.outlineLevel = depth;
+    row.getCell('quantity').numFmt = CONSUMPTION_FORMAT;
+    row.getCell('unitCost').numFmt = MONEY_FORMAT;
+    row.getCell('totalCost').numFmt = MONEY_FORMAT;
+    row.getCell('type').fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: TYPE_FILL_ARGB.PIE },
+    };
+    row.font = { color: { argb: PIE_LAYER_FONT_ARGB }, italic: true };
+    row.hidden = true;
+    rowCounter.current++;
   }
 
   private writeComponentRow(
@@ -213,15 +251,15 @@ export class EstimateExportService {
       comment: component.comment ?? '',
     });
     row.outlineLevel = depth;
-    row.getCell('quantity').numFmt = '#,##0.00###';
-    row.getCell('unitCost').numFmt = '#,##0.00';
-    row.getCell('totalCost').numFmt = '#,##0.00';
+    row.getCell('quantity').numFmt = CONSUMPTION_FORMAT;
+    row.getCell('unitCost').numFmt = MONEY_FORMAT;
+    row.getCell('totalCost').numFmt = MONEY_FORMAT;
     row.getCell('type').fill = {
       type: 'pattern',
       pattern: 'solid',
       fgColor: { argb: TYPE_FILL_ARGB[component.itemType] },
     };
-    row.font = { color: { argb: 'FF455A64' }, italic: true };
+    row.font = { color: { argb: COMPONENT_FONT_ARGB }, italic: true };
     row.hidden = true;
     rowCounter.current++;
   }
@@ -231,11 +269,53 @@ export class EstimateExportService {
   }
 
   private slug(name: string): string {
-    return name
+    // ASCII-only slug — Content-Disposition в HTTP не допускает не-ASCII в plain виде.
+    const ru2en: Record<string, string> = {
+      а: 'a',
+      б: 'b',
+      в: 'v',
+      г: 'g',
+      д: 'd',
+      е: 'e',
+      ё: 'e',
+      ж: 'zh',
+      з: 'z',
+      и: 'i',
+      й: 'y',
+      к: 'k',
+      л: 'l',
+      м: 'm',
+      н: 'n',
+      о: 'o',
+      п: 'p',
+      р: 'r',
+      с: 's',
+      т: 't',
+      у: 'u',
+      ф: 'f',
+      х: 'h',
+      ц: 'c',
+      ч: 'ch',
+      ш: 'sh',
+      щ: 'sch',
+      ъ: '',
+      ы: 'y',
+      ь: '',
+      э: 'e',
+      ю: 'yu',
+      я: 'ya',
+    };
+    const transliterated = name
       .toLowerCase()
-      .replace(/[^a-z0-9а-яё\-]+/giu, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
-      .slice(0, 60);
+      .split('')
+      .map(ch => (ru2en[ch] !== undefined ? ru2en[ch] : ch))
+      .join('');
+    return (
+      transliterated
+        .replace(/[^a-z0-9-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 60) || 'estimate'
+    );
   }
 }

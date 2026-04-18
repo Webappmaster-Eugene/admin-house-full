@@ -33,6 +33,8 @@ export const paths = {
     concreteEstimate: `${ROOTS.DASHBOARD}/estimates/:estimateId`,
     unitTemplates: `${ROOTS.DASHBOARD}/unit-templates`,
     concreteUnitTemplate: `${ROOTS.DASHBOARD}/unit-templates/:templateId`,
+    constructionPies: `${ROOTS.DASHBOARD}/construction-pies`,
+    concreteConstructionPie: `${ROOTS.DASHBOARD}/construction-pies/:pieId`,
   },
   profile: {
     profile: `${ROOTS.PROFILE}`,

@@ -1,7 +1,8 @@
-import { Inject, Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
 import { InternalResponse, UniversalInternalResponse } from '../../common/types/responses/universal-internal-response.interface';
+import { BackendErrorNames, InternalError } from '../../common/errors/errors-description.backend';
 import { UnitTemplateRepository } from './unit-template.repository';
 import { UnitTemplateEntity, UnitTemplateComponentEntity } from './entities/unit-template.entity';
 import { UnitTemplateCreateRequestDto } from './dto/controller/unit-template-create.dto';
@@ -114,7 +115,7 @@ export class UnitTemplateService {
   ): Promise<void> {
     const ok = await this.repository.verifyHandbookInWorkspace(handbookUuid, workspaceUuid);
     if (!ok) {
-      throw new ForbiddenException(`Справочник ${handbookUuid} не принадлежит workspace ${workspaceUuid}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.UNAUTHORIZED_ACCESS));
     }
   }
 
@@ -126,7 +127,7 @@ export class UnitTemplateService {
     await this.assertHandbookInWorkspace(workspaceUuid, handbookUuid);
     const ok = await this.repository.verifyTemplateInHandbook(templateUuid, handbookUuid);
     if (!ok) {
-      throw new ForbiddenException(`Шаблон ${templateUuid} не принадлежит справочнику ${handbookUuid}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.UNAUTHORIZED_ACCESS));
     }
   }
 
@@ -136,7 +137,7 @@ export class UnitTemplateService {
   ): Promise<void> {
     const component = await this.repository.getComponentById(componentUuid);
     if (component.unitTemplateUuid !== templateUuid) {
-      throw new BadRequestException(`Компонент ${componentUuid} не принадлежит шаблону ${templateUuid}`);
+      throw new InternalResponse(new InternalError(BackendErrorNames.BAD_REQUEST));
     }
   }
 }

@@ -304,6 +304,7 @@ export const EstimateItemScalarFieldEnumSchema = z.enum([
   'sectionUuid',
   'materialUuid',
   'unitTemplateUuid',
+  'constructionPieUuid',
   'name',
   'unitMeasurement',
   'quantity',
@@ -341,6 +342,54 @@ export const UnitTemplateComponentScalarFieldEnumSchema = z.enum([
   'unitMeasurement',
   'quantityPerUnit',
   'unitCost',
+  'comment',
+  'createdAt',
+  'updatedAt',
+]);
+
+export const ConstructionPieScalarFieldEnumSchema = z.enum([
+  'uuid',
+  'name',
+  'description',
+  'unitMeasurement',
+  'totalThickness',
+  'unitCost',
+  'defaultMarkupPercent',
+  'unitClientPrice',
+  'handbookUuid',
+  'lastChangeByUserUuid',
+  'createdAt',
+  'updatedAt',
+]);
+
+export const PieLayerScalarFieldEnumSchema = z.enum([
+  'uuid',
+  'orderIndex',
+  'constructionPieUuid',
+  'materialUuid',
+  'name',
+  'thickness',
+  'density',
+  'consumptionPerM2',
+  'unitMeasurement',
+  'unitCost',
+  'comment',
+  'createdAt',
+  'updatedAt',
+]);
+
+export const EstimateItemPieLayerScalarFieldEnumSchema = z.enum([
+  'uuid',
+  'orderIndex',
+  'estimateItemUuid',
+  'materialUuid',
+  'name',
+  'thickness',
+  'density',
+  'consumptionPerM2',
+  'unitMeasurement',
+  'unitCost',
+  'totalCost',
   'comment',
   'createdAt',
   'updatedAt',
@@ -414,7 +463,7 @@ export const EActiveStatusesSchema = z.enum(['ACTIVE', 'INACTIVE', 'DELETED']);
 
 export type EActiveStatusesType = `${z.infer<typeof EActiveStatusesSchema>}`;
 
-export const EEstimateItemTypeSchema = z.enum(['MATERIAL', 'MECHANISM', 'WORK', 'OVERHEAD', 'UNIT']);
+export const EEstimateItemTypeSchema = z.enum(['MATERIAL', 'MECHANISM', 'WORK', 'OVERHEAD', 'UNIT', 'PIE']);
 
 export type EEstimateItemTypeType = `${z.infer<typeof EEstimateItemTypeSchema>}`;
 
@@ -1218,6 +1267,7 @@ export const EstimateItemSchema = z.object({
   sectionUuid: z.string(),
   materialUuid: z.string().nullish(),
   unitTemplateUuid: z.string().nullish(),
+  constructionPieUuid: z.string().nullish(),
   name: z.string(),
   unitMeasurement: z.string(),
   quantity: z.number(),
@@ -1316,6 +1366,118 @@ export const UnitTemplateComponentOptionalDefaultsSchema = UnitTemplateComponent
 );
 
 export type UnitTemplateComponentOptionalDefaults = z.infer<typeof UnitTemplateComponentOptionalDefaultsSchema>;
+
+/////////////////////////////////////////
+// CONSTRUCTION PIE SCHEMA
+/////////////////////////////////////////
+
+export const ConstructionPieSchema = z.object({
+  uuid: z.string(),
+  name: z.string(),
+  description: z.string().nullish(),
+  unitMeasurement: z.string(),
+  totalThickness: z.number(),
+  unitCost: z.number(),
+  defaultMarkupPercent: z.number(),
+  unitClientPrice: z.number(),
+  handbookUuid: z.string(),
+  lastChangeByUserUuid: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type ConstructionPie = z.infer<typeof ConstructionPieSchema>;
+
+// CONSTRUCTION PIE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ConstructionPieOptionalDefaultsSchema = ConstructionPieSchema.merge(
+  z.object({
+    uuid: z.string().optional(),
+    unitMeasurement: z.string().optional(),
+    totalThickness: z.number().optional(),
+    unitCost: z.number().optional(),
+    defaultMarkupPercent: z.number().optional(),
+    unitClientPrice: z.number().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+  }),
+);
+
+export type ConstructionPieOptionalDefaults = z.infer<typeof ConstructionPieOptionalDefaultsSchema>;
+
+/////////////////////////////////////////
+// PIE LAYER SCHEMA
+/////////////////////////////////////////
+
+export const PieLayerSchema = z.object({
+  uuid: z.string(),
+  orderIndex: z.number(),
+  constructionPieUuid: z.string(),
+  materialUuid: z.string().nullish(),
+  name: z.string(),
+  thickness: z.number(),
+  density: z.number(),
+  consumptionPerM2: z.number(),
+  unitMeasurement: z.string(),
+  unitCost: z.number(),
+  comment: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type PieLayer = z.infer<typeof PieLayerSchema>;
+
+// PIE LAYER OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const PieLayerOptionalDefaultsSchema = PieLayerSchema.merge(
+  z.object({
+    uuid: z.string().optional(),
+    density: z.number().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+  }),
+);
+
+export type PieLayerOptionalDefaults = z.infer<typeof PieLayerOptionalDefaultsSchema>;
+
+/////////////////////////////////////////
+// ESTIMATE ITEM PIE LAYER SCHEMA
+/////////////////////////////////////////
+
+export const EstimateItemPieLayerSchema = z.object({
+  uuid: z.string(),
+  orderIndex: z.number(),
+  estimateItemUuid: z.string(),
+  materialUuid: z.string().nullish(),
+  name: z.string(),
+  thickness: z.number(),
+  density: z.number(),
+  consumptionPerM2: z.number(),
+  unitMeasurement: z.string(),
+  unitCost: z.number(),
+  totalCost: z.number(),
+  comment: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
+export type EstimateItemPieLayer = z.infer<typeof EstimateItemPieLayerSchema>;
+
+// ESTIMATE ITEM PIE LAYER OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const EstimateItemPieLayerOptionalDefaultsSchema = EstimateItemPieLayerSchema.merge(
+  z.object({
+    uuid: z.string().optional(),
+    density: z.number().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+  }),
+);
+
+export type EstimateItemPieLayerOptionalDefaults = z.infer<typeof EstimateItemPieLayerOptionalDefaultsSchema>;
 
 /////////////////////////////////////////
 // ESTIMATE ITEM COMPONENT SCHEMA

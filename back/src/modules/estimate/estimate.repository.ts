@@ -1,10 +1,12 @@
 import { Inject, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { EEstimateItemType, Prisma, UnitTemplateComponent } from '.prisma/client';
+import { EEstimateItemType, PieLayer, Prisma, UnitTemplateComponent } from '.prisma/client';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { IPrismaService } from '../../common/types/main/prisma.interface';
 import { KFI } from '../../common/utils/di';
 import { errorRepositoryHandler } from '../../common/helpers/handlers/error-repository.handler';
+import { roundMoney } from '../../common/helpers/round-money.helper';
 import { EstimateEntity, EstimateItemEntity, EstimateSectionEntity, EstimateSectionTreeNode } from './entities/estimate.entity';
+import { ITEM_BREAKDOWN_INCLUDE, SECTION_TREE_INCLUDE } from './consts/prisma-includes.const';
 import { EstimateCreateRequestDto } from './dto/controller/estimate-create.dto';
 import { EstimateUpdateRequestDto } from './dto/controller/estimate-update.dto';
 import { EstimateSectionCreateRequestDto } from './dto/controller/section-create.dto';
@@ -14,40 +16,17 @@ import { EstimateItemUpdateRequestDto } from './dto/controller/item-update.dto';
 
 type SectionWithChildren = Prisma.EstimateSectionGetPayload<{
   include: {
-    items: { include: { components: true } };
+    items: { include: { components: true; pieLayers: true } };
     childSections: {
       include: {
-        items: { include: { components: true } };
-        childSections: { include: { items: { include: { components: true } } } };
+        items: { include: { components: true; pieLayers: true } };
+        childSections: {
+          include: { items: { include: { components: true; pieLayers: true } } };
+        };
       };
     };
   };
 }>;
-
-const SECTION_TREE_INCLUDE = {
-  items: {
-    orderBy: { orderIndex: 'asc' as const },
-    include: { components: { orderBy: { orderIndex: 'asc' as const } } },
-  },
-  childSections: {
-    orderBy: { orderIndex: 'asc' as const },
-    include: {
-      items: {
-        orderBy: { orderIndex: 'asc' as const },
-        include: { components: { orderBy: { orderIndex: 'asc' as const } } },
-      },
-      childSections: {
-        orderBy: { orderIndex: 'asc' as const },
-        include: {
-          items: {
-            orderBy: { orderIndex: 'asc' as const },
-            include: { components: { orderBy: { orderIndex: 'asc' as const } } },
-          },
-        },
-      },
-    },
-  },
-};
 
 @Injectable()
 export class EstimateRepository {
@@ -242,6 +221,10 @@ export class EstimateRepository {
 
   async createItem(sectionId: EntityUrlParamCommand.RequestUuidParam, dto: EstimateItemCreateRequestDto): Promise<EstimateItemEntity> {
     try {
+      if (dto.unitTemplateUuid && dto.constructionPieUuid) {
+        throw new BadRequestException('Строка не может одновременно ссылаться и на единичку, и на пирог');
+      }
+
       // Если указан unitTemplateUuid — денормализуем из шаблона: имя, ед.изм., unitCost, компоненты.
       let name = dto.name;
       let unitMeasurement = dto.unitMeasurement;
@@ -249,6 +232,7 @@ export class EstimateRepository {
       let markup = dto.markupPercent;
       let itemType = dto.itemType as EEstimateItemType;
       let templateComponents: UnitTemplateComponent[] = [];
+      let pieLayers: PieLayer[] = [];
 
       if (dto.unitTemplateUuid) {
         const template = await this.prisma.unitTemplate.findUnique({
@@ -266,6 +250,22 @@ export class EstimateRepository {
         templateComponents = template.components;
       }
 
+      if (dto.constructionPieUuid) {
+        const pie = await this.prisma.constructionPie.findUnique({
+          where: { uuid: dto.constructionPieUuid },
+          include: { layers: { orderBy: { orderIndex: 'asc' } } },
+        });
+        if (!pie) {
+          throw new NotFoundException(`ConstructionPie ${dto.constructionPieUuid} not found`);
+        }
+        name = name ?? pie.name;
+        unitMeasurement = unitMeasurement ?? pie.unitMeasurement;
+        unitCost = unitCost ?? pie.unitCost;
+        markup = markup ?? pie.defaultMarkupPercent;
+        itemType = EEstimateItemType.PIE;
+        pieLayers = pie.layers;
+      }
+
       if (name === undefined || unitMeasurement === undefined || unitCost === undefined) {
         throw new BadRequestException('Для обычной строки обязательны name, unitMeasurement, unitCost');
       }
@@ -281,6 +281,7 @@ export class EstimateRepository {
           itemType,
           materialUuid: dto.materialUuid ?? null,
           unitTemplateUuid: dto.unitTemplateUuid ?? null,
+          constructionPieUuid: dto.constructionPieUuid ?? null,
           name,
           unitMeasurement,
           quantity: dto.quantity,
@@ -303,8 +304,22 @@ export class EstimateRepository {
               comment: component.comment,
             })),
           },
+          pieLayers: {
+            create: pieLayers.map(layer => ({
+              orderIndex: layer.orderIndex,
+              materialUuid: layer.materialUuid,
+              name: layer.name,
+              thickness: layer.thickness,
+              density: layer.density,
+              consumptionPerM2: layer.consumptionPerM2,
+              unitMeasurement: layer.unitMeasurement,
+              unitCost: layer.unitCost,
+              totalCost: roundMoney(layer.consumptionPerM2 * dto.quantity * layer.unitCost),
+              comment: layer.comment,
+            })),
+          },
         },
-        include: { components: { orderBy: { orderIndex: 'asc' } } },
+        include: ITEM_BREAKDOWN_INCLUDE,
       });
       return new EstimateItemEntity(created);
     } catch (error) {
@@ -316,7 +331,7 @@ export class EstimateRepository {
     try {
       const existing = await this.prisma.estimateItem.findUnique({
         where: { uuid: itemId },
-        include: { components: true },
+        include: { components: true, pieLayers: true },
       });
       if (!existing) throw new NotFoundException(`EstimateItem ${itemId} not found`);
 
@@ -327,7 +342,7 @@ export class EstimateRepository {
       const totalCost = roundMoney(quantity * unitCost);
       const totalClientPrice = roundMoney(quantity * unitClientPrice);
 
-      // Если у строки есть компоненты-единички и изменилось quantity — пересчитать totalCost каждого компонента.
+      // Если у строки есть компоненты/слои и изменилось quantity — пересчитать totalCost каждого.
       const quantityChanged = dto.quantity !== undefined && dto.quantity !== existing.quantity;
 
       const updated = await this.prisma.$transaction(async tx => {
@@ -347,7 +362,7 @@ export class EstimateRepository {
             totalClientPrice,
             comment: dto.comment === undefined ? undefined : dto.comment,
           },
-          include: { components: { orderBy: { orderIndex: 'asc' } } },
+          include: ITEM_BREAKDOWN_INCLUDE,
         });
 
         if (quantityChanged && existing.components.length > 0) {
@@ -361,9 +376,20 @@ export class EstimateRepository {
           );
         }
 
+        if (quantityChanged && existing.pieLayers.length > 0) {
+          await Promise.all(
+            existing.pieLayers.map(layer =>
+              tx.estimateItemPieLayer.update({
+                where: { uuid: layer.uuid },
+                data: { totalCost: roundMoney(layer.consumptionPerM2 * quantity * layer.unitCost) },
+              }),
+            ),
+          );
+        }
+
         const refreshed = await tx.estimateItem.findUnique({
           where: { uuid: itemId },
-          include: { components: { orderBy: { orderIndex: 'asc' } } },
+          include: ITEM_BREAKDOWN_INCLUDE,
         });
         return refreshed ?? itemUpdate;
       });
@@ -460,8 +486,4 @@ export class EstimateRepository {
       errorRepositoryHandler(error);
     }
   }
-}
-
-function roundMoney(value: number): number {
-  return Math.round(value * 100) / 100;
 }

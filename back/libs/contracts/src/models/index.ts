@@ -23,3 +23,4 @@ export * from './characteristics-material';
 export * from './tech-log-changes';
 export * from './estimate';
 export * from './unit-template';
+export * from './construction-pie';

@@ -5,18 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 
 import {
-  Autocomplete,
   Box,
   Button,
   Card,
   CardContent,
   Collapse,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
-  MenuItem,
   Paper,
   Stack,
   Table,
@@ -25,7 +19,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -42,6 +35,9 @@ import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
 import { EEstimateItemType } from 'src/shared/contracts/estimate';
 
+import { AddUnitTemplateDialog } from './add-unit-template-dialog';
+import { AddComponentDialog } from './add-component-dialog';
+
 interface MaterialOption {
   uuid: string;
   name: string;
@@ -56,12 +52,12 @@ interface UnitTemplatesListProps {
   materials: MaterialOption[];
 }
 
-const ITEM_TYPE_OPTIONS: { value: EEstimateItemType; label: string }[] = [
-  { value: 'MATERIAL', label: 'Материалы' },
-  { value: 'MECHANISM', label: 'Механизмы' },
-  { value: 'WORK', label: 'Работы' },
-  { value: 'OVERHEAD', label: 'Накладные' },
-];
+const ITEM_TYPE_LABELS: Record<string, string> = {
+  MATERIAL: 'Материалы',
+  MECHANISM: 'Механизмы',
+  WORK: 'Работы',
+  OVERHEAD: 'Накладные',
+};
 
 const formatMoney = (value: number) =>
   new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value);
@@ -76,57 +72,36 @@ export function UnitTemplatesList({
   const { enqueueSnackbar } = useSnackbar();
 
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [componentDialogOpen, setComponentDialogOpen] = useState(false);
   const [targetTemplateId, setTargetTemplateId] = useState<string>('');
 
-  const [newTemplate, setNewTemplate] = useState({
-    name: '',
-    description: '',
-    unitMeasurement: 'м²',
-    defaultMarkupPercent: 0,
-  });
-
-  const [newComponent, setNewComponent] = useState<{
-    itemType: EEstimateItemType;
-    materialUuid: string | null;
+  const handleCreateTemplate = async (params: {
     name: string;
+    description: string;
     unitMeasurement: string;
-    quantityPerUnit: number;
-    unitCost: number;
-    comment: string;
-  }>({
-    itemType: 'MATERIAL',
-    materialUuid: null,
-    name: '',
-    unitMeasurement: 'шт',
-    quantityPerUnit: 1,
-    unitCost: 0,
-    comment: '',
-  });
-
-  const handleCreate = async () => {
-    if (!newTemplate.name.trim() || !newTemplate.unitMeasurement.trim()) {
+    defaultMarkupPercent: number;
+  }) => {
+    if (!params.name.trim() || !params.unitMeasurement.trim()) {
       enqueueSnackbar('Заполните название и ед.изм.', { variant: 'warning' });
       return;
     }
     const result = await createUnitTemplate(workspaceId, handbookId, {
-      name: newTemplate.name.trim(),
-      description: newTemplate.description.trim() || undefined,
-      unitMeasurement: newTemplate.unitMeasurement.trim(),
-      defaultMarkupPercent: newTemplate.defaultMarkupPercent,
+      name: params.name.trim(),
+      description: params.description.trim() || undefined,
+      unitMeasurement: params.unitMeasurement.trim(),
+      defaultMarkupPercent: params.defaultMarkupPercent,
     });
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Не удалось создать единичку', { variant: 'error' });
       return;
     }
     enqueueSnackbar('Единичка создана', { variant: 'success' });
-    setDialogOpen(false);
-    setNewTemplate({ name: '', description: '', unitMeasurement: 'м²', defaultMarkupPercent: 0 });
+    setTemplateDialogOpen(false);
     router.refresh();
   };
 
-  const handleDelete = async (templateId: string) => {
+  const handleDeleteTemplate = async (templateId: string) => {
     if (!window.confirm('Удалить единичку? Действие необратимо.')) return;
     const result = await deleteUnitTemplate(workspaceId, handbookId, templateId);
     if (isErrorFieldTypeGuard(result)) {
@@ -142,39 +117,42 @@ export function UnitTemplatesList({
     setComponentDialogOpen(true);
   };
 
-  const handleAddComponent = async () => {
-    if (!newComponent.name.trim()) {
+  const handleAddComponent = async (params: {
+    itemType: EEstimateItemType;
+    materialUuid: string | null;
+    name: string;
+    unitMeasurement: string;
+    quantityPerUnit: number;
+    unitCost: number;
+    comment: string;
+  }) => {
+    if (!params.name.trim()) {
       enqueueSnackbar('Введите название компонента', { variant: 'warning' });
       return;
     }
     const template = templates.find((t) => t.uuid === targetTemplateId);
     const orderIndex = template?.components.length ?? 0;
-
-    const result = await createUnitTemplateComponent(workspaceId, handbookId, targetTemplateId, {
-      orderIndex,
-      itemType: newComponent.itemType,
-      materialUuid: newComponent.materialUuid,
-      name: newComponent.name.trim(),
-      unitMeasurement: newComponent.unitMeasurement.trim() || 'шт',
-      quantityPerUnit: newComponent.quantityPerUnit,
-      unitCost: newComponent.unitCost,
-      comment: newComponent.comment.trim() || null,
-    });
+    const result = await createUnitTemplateComponent(
+      workspaceId,
+      handbookId,
+      targetTemplateId,
+      {
+        orderIndex,
+        itemType: params.itemType,
+        materialUuid: params.materialUuid,
+        name: params.name.trim(),
+        unitMeasurement: params.unitMeasurement.trim() || 'шт',
+        quantityPerUnit: params.quantityPerUnit,
+        unitCost: params.unitCost,
+        comment: params.comment.trim() || null,
+      }
+    );
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Не удалось добавить компонент', { variant: 'error' });
       return;
     }
     enqueueSnackbar('Компонент добавлен', { variant: 'success' });
     setComponentDialogOpen(false);
-    setNewComponent({
-      itemType: 'MATERIAL',
-      materialUuid: null,
-      name: '',
-      unitMeasurement: 'шт',
-      quantityPerUnit: 1,
-      unitCost: 0,
-      comment: '',
-    });
     router.refresh();
   };
 
@@ -198,7 +176,7 @@ export function UnitTemplatesList({
             Справочник комплексных единиц (работы + материалы) для использования в сметах
           </Typography>
         </Box>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setTemplateDialogOpen(true)}>
           Создать единичку
         </Button>
       </Stack>
@@ -251,7 +229,7 @@ export function UnitTemplatesList({
                     </IconButton>
                     <IconButton
                       size="small"
-                      onClick={() => handleDelete(template.uuid)}
+                      onClick={() => handleDeleteTemplate(template.uuid)}
                       title="Удалить единичку"
                     >
                       <DeleteIcon />
@@ -284,8 +262,7 @@ export function UnitTemplatesList({
                             {template.components.map((component, idx) => {
                               const totalForOne = component.quantityPerUnit * component.unitCost;
                               const typeLabel =
-                                ITEM_TYPE_OPTIONS.find((o) => o.value === component.itemType)?.label ??
-                                component.itemType;
+                                ITEM_TYPE_LABELS[component.itemType] ?? component.itemType;
                               return (
                                 <TableRow key={component.uuid}>
                                   <TableCell>{idx + 1}</TableCell>
@@ -325,171 +302,18 @@ export function UnitTemplatesList({
         })}
       </Stack>
 
-      {/* Диалог создания единички */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>Новая единичка</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} mt={1}>
-            <TextField
-              label="Название"
-              value={newTemplate.name}
-              onChange={(event) => setNewTemplate({ ...newTemplate, name: event.target.value })}
-              fullWidth
-              required
-              placeholder="Например: Монтаж окна ПВХ"
-            />
-            <TextField
-              label="Описание"
-              value={newTemplate.description}
-              onChange={(event) =>
-                setNewTemplate({ ...newTemplate, description: event.target.value })
-              }
-              fullWidth
-              multiline
-              minRows={2}
-            />
-            <TextField
-              label="Ед. измерения"
-              value={newTemplate.unitMeasurement}
-              onChange={(event) =>
-                setNewTemplate({ ...newTemplate, unitMeasurement: event.target.value })
-              }
-              fullWidth
-              required
-              placeholder="м², шт, м.п., комплект"
-            />
-            <TextField
-              type="number"
-              label="Наценка по умолчанию, %"
-              value={newTemplate.defaultMarkupPercent}
-              onChange={(event) =>
-                setNewTemplate({
-                  ...newTemplate,
-                  defaultMarkupPercent: Number(event.target.value) || 0,
-                })
-              }
-              inputProps={{ min: 0, step: 1 }}
-              fullWidth
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Отмена</Button>
-          <Button variant="contained" onClick={handleCreate}>
-            Создать
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <AddUnitTemplateDialog
+        open={templateDialogOpen}
+        onClose={() => setTemplateDialogOpen(false)}
+        onSubmit={handleCreateTemplate}
+      />
 
-      {/* Диалог добавления компонента */}
-      <Dialog
+      <AddComponentDialog
         open={componentDialogOpen}
+        materials={materials}
         onClose={() => setComponentDialogOpen(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>Добавить компонент в единичку</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} mt={1}>
-            <TextField
-              select
-              label="Тип"
-              value={newComponent.itemType}
-              onChange={(event) =>
-                setNewComponent({
-                  ...newComponent,
-                  itemType: event.target.value as EEstimateItemType,
-                })
-              }
-              fullWidth
-            >
-              {ITEM_TYPE_OPTIONS.map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            {newComponent.itemType === 'MATERIAL' && (
-              <Autocomplete<MaterialOption>
-                options={materials}
-                getOptionLabel={(option) => option.name}
-                value={materials.find((m) => m.uuid === newComponent.materialUuid) ?? null}
-                onChange={(_event, value) => {
-                  setNewComponent({
-                    ...newComponent,
-                    materialUuid: value?.uuid ?? null,
-                    name: value?.name ?? newComponent.name,
-                    unitMeasurement: value?.unitMeasurement?.name ?? newComponent.unitMeasurement,
-                    unitCost: value?.price ?? newComponent.unitCost,
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Материал из справочника" />
-                )}
-                isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
-              />
-            )}
-
-            <TextField
-              label="Название компонента"
-              value={newComponent.name}
-              onChange={(event) => setNewComponent({ ...newComponent, name: event.target.value })}
-              fullWidth
-              required
-            />
-            <Stack direction="row" spacing={2}>
-              <TextField
-                type="number"
-                label="Расход на 1 единицу"
-                value={newComponent.quantityPerUnit}
-                onChange={(event) =>
-                  setNewComponent({
-                    ...newComponent,
-                    quantityPerUnit: Number(event.target.value) || 0,
-                  })
-                }
-                inputProps={{ min: 0, step: 0.0001 }}
-                fullWidth
-              />
-              <TextField
-                label="Ед. изм. компонента"
-                value={newComponent.unitMeasurement}
-                onChange={(event) =>
-                  setNewComponent({ ...newComponent, unitMeasurement: event.target.value })
-                }
-                fullWidth
-              />
-            </Stack>
-            <TextField
-              type="number"
-              label="Цена себестоимости за единицу"
-              value={newComponent.unitCost}
-              onChange={(event) =>
-                setNewComponent({ ...newComponent, unitCost: Number(event.target.value) || 0 })
-              }
-              inputProps={{ min: 0, step: 0.01 }}
-              fullWidth
-            />
-            <TextField
-              label="Комментарий"
-              value={newComponent.comment}
-              onChange={(event) =>
-                setNewComponent({ ...newComponent, comment: event.target.value })
-              }
-              fullWidth
-              multiline
-              minRows={2}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setComponentDialogOpen(false)}>Отмена</Button>
-          <Button variant="contained" onClick={handleAddComponent}>
-            Добавить
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onSubmit={handleAddComponent}
+      />
     </Box>
   );
 }

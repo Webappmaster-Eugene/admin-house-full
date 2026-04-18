@@ -17,24 +17,29 @@ import {
   DialogTitle,
   Divider,
   IconButton,
+  List,
+  ListItemButton,
+  ListItemSecondaryAction,
+  ListItemText,
   MenuItem,
   Stack,
   TextField,
   Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
-import AddIcon from '@mui/icons-material/Add';
 
 import { createEstimate } from 'src/api/actions/estimate/create-estimate.action';
 import { deleteEstimate } from 'src/api/actions/estimate/delete-estimate.action';
 import { exportEstimate } from 'src/api/actions/estimate/export-estimate.action';
+import { cloneEstimate } from 'src/api/actions/estimate/clone-estimate.action';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
+
 import { EstimateBusinessValue } from 'src/shared/contracts/estimate';
+
+import { formatMoney } from './_consts';
 
 type Project = ProjectGetAllCommand.ResponseEntity[number];
 
@@ -48,9 +53,6 @@ interface EstimatesListProps {
   estimatesPerProject: EstimatesPerProject[];
 }
 
-const formatMoney = (value: number) =>
-  new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value);
-
 export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesListProps) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -62,6 +64,10 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [markup, setMarkup] = useState<number>(0);
+
+  const openEstimate = (estimateId: string) => {
+    router.push(`/dashboard/estimates/${estimateId}`);
+  };
 
   const handleCreate = async () => {
     if (!selectedProjectId || !name.trim()) {
@@ -95,6 +101,18 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
     }
     enqueueSnackbar('Смета удалена', { variant: 'success' });
     router.refresh();
+  };
+
+  const handleClone = async (projectId: string, estimateId: string) => {
+    enqueueSnackbar('Создаю копию...', { variant: 'info' });
+    const result = await cloneEstimate(workspaceId, projectId, estimateId);
+    if ('error' in result) {
+      enqueueSnackbar('Не удалось скопировать смету', { variant: 'error' });
+      return;
+    }
+    enqueueSnackbar('Копия сметы создана', { variant: 'success' });
+    router.refresh();
+    router.push(`/dashboard/estimates/${result.uuid}`);
   };
 
   const handleExport = async (projectId: string, estimateId: string) => {
@@ -145,10 +163,7 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
       <Stack spacing={3}>
         {estimatesPerProject.map(({ project, estimates }) => (
           <Card key={project.uuid}>
-            <CardHeader
-              title={project.name}
-              subheader={`Смет: ${estimates.length}`}
-            />
+            <CardHeader title={project.name} subheader={`Смет: ${estimates.length}`} />
             <Divider />
             <CardContent>
               {estimates.length === 0 ? (
@@ -158,16 +173,28 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
               ) : (
                 <List disablePadding>
                   {estimates.map((estimate) => (
-                    <ListItem
+                    <ListItemButton
                       key={estimate.uuid}
-                      sx={{ cursor: 'pointer', borderRadius: 1, '&:hover': { bgcolor: 'action.hover' } }}
-                      onClick={() => router.push(`/dashboard/estimates/${estimate.uuid}`)}
+                      onClick={() => openEstimate(estimate.uuid)}
+                      sx={{ borderRadius: 1, pr: 18 }}
                     >
                       <ListItemText
                         primary={estimate.name}
-                        secondary={`Себестоимость: ${formatMoney(estimate.totalCost)} · Для заказчика: ${formatMoney(estimate.totalClientPrice)}`}
+                        secondary={`Себестоимость: ${formatMoney(
+                          estimate.totalCost
+                        )} · Для заказчика: ${formatMoney(estimate.totalClientPrice)}`}
                       />
                       <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleClone(project.uuid, estimate.uuid);
+                          }}
+                          title="Дублировать смету"
+                        >
+                          <ContentCopyIcon />
+                        </IconButton>
                         <IconButton
                           edge="end"
                           onClick={(event) => {
@@ -189,7 +216,7 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
                           <DeleteIcon />
                         </IconButton>
                       </ListItemSecondaryAction>
-                    </ListItem>
+                    </ListItemButton>
                   ))}
                 </List>
               )}

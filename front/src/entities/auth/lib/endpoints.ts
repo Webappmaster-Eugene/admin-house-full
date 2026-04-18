@@ -160,6 +160,22 @@ export const axiosEndpoints = {
     delete:
       'responsible-partner-producer/workspace/:workspaceId/handbook/:handbookId/responsible-partner-producer/:responsiblePartnerProducerId',
   },
+  // DOC construction-pie/workspace/:workspaceId/handbook/:handbookId/...
+  construction_pie: {
+    get: 'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId',
+    get_all_in_handbook: 'construction-pie/workspace/:workspaceId/handbook/:handbookId/get-all',
+    create: 'construction-pie/workspace/:workspaceId/handbook/:handbookId/create',
+    update:
+      'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/update',
+    delete:
+      'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/delete',
+    layer_create:
+      'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/layer/create',
+    layer_update:
+      'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/layer/:layerId/update',
+    layer_delete:
+      'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/layer/:layerId/delete',
+  },
   // DOC unit-template/workspace/:workspaceId/handbook/:handbookId/...
   unit_template: {
     get: 'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId',

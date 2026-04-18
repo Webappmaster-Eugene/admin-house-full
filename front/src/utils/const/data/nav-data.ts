@@ -74,6 +74,15 @@ export const NavData: NavItems = [
         icon: ICONS.kanban,
         roles: [UserRoles.MANAGER],
       },
+      {
+        title: 'Пироги',
+        titleShort: 'Пироги',
+        caption: 'Справочник многослойных конструкций',
+        captionFull: 'Справочник пирогов (стен, полов, перекрытий) для использования в сметах',
+        path: paths.dashboard.constructionPies,
+        icon: ICONS.banking,
+        roles: [UserRoles.MANAGER],
+      },
       // {
       //   title: 'Характеристики',
       //   titleShort: 'Харак-ки',

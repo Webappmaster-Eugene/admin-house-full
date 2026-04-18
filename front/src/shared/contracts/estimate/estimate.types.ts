@@ -1,7 +1,7 @@
 // Локальные типы контрактов сметы (синхронизированы с first/back/libs/contracts/src/commands/estimate/).
 // Пакет @numart/house-admin-contracts не обновляем — всё локально.
 
-export type EEstimateItemType = 'MATERIAL' | 'MECHANISM' | 'WORK' | 'OVERHEAD' | 'UNIT';
+export type EEstimateItemType = 'MATERIAL' | 'MECHANISM' | 'WORK' | 'OVERHEAD' | 'UNIT' | 'PIE';
 
 export type EstimateActiveStatus = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 
@@ -35,6 +35,23 @@ export interface EstimateItemComponentBusinessValue {
   updatedAt: string;
 }
 
+export interface EstimateItemPieLayerBusinessValue {
+  uuid: string;
+  orderIndex: number;
+  estimateItemUuid: string;
+  materialUuid: string | null;
+  name: string;
+  thickness: number;
+  density: number;
+  consumptionPerM2: number;
+  unitMeasurement: string;
+  unitCost: number;
+  totalCost: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface EstimateItemBusinessValue {
   uuid: string;
   orderIndex: number;
@@ -42,6 +59,7 @@ export interface EstimateItemBusinessValue {
   sectionUuid: string;
   materialUuid: string | null;
   unitTemplateUuid: string | null;
+  constructionPieUuid: string | null;
   name: string;
   unitMeasurement: string;
   quantity: number;
@@ -52,6 +70,7 @@ export interface EstimateItemBusinessValue {
   totalClientPrice: number;
   comment: string | null;
   components: EstimateItemComponentBusinessValue[];
+  pieLayers: EstimateItemPieLayerBusinessValue[];
   createdAt: string;
   updatedAt: string;
 }
@@ -138,6 +157,7 @@ export namespace EstimateItemCreateCommand {
     itemType: EEstimateItemType;
     materialUuid?: string | null;
     unitTemplateUuid?: string | null;
+    constructionPieUuid?: string | null;
     name?: string;
     unitMeasurement?: string;
     quantity: number;
@@ -154,6 +174,7 @@ export namespace EstimateItemUpdateCommand {
     itemType?: EEstimateItemType;
     materialUuid?: string | null;
     unitTemplateUuid?: string | null;
+    constructionPieUuid?: string | null;
     name?: string;
     unitMeasurement?: string;
     quantity?: number;
