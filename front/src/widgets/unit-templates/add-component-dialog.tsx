@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 
 import { EEstimateItemType } from 'src/shared/contracts/estimate';
+import { UnitMeasurementOption, UnitMeasurementSelect } from 'src/shared/unit-measurement-select';
 
 interface MaterialOption {
   uuid: string;
@@ -24,6 +25,7 @@ interface MaterialOption {
 interface AddComponentDialogProps {
   open: boolean;
   materials: MaterialOption[];
+  unitMeasurements: UnitMeasurementOption[];
   onClose: () => void;
   onSubmit: (params: {
     itemType: EEstimateItemType;
@@ -53,7 +55,13 @@ const initialState = {
   comment: '',
 };
 
-export function AddComponentDialog({ open, materials, onClose, onSubmit }: AddComponentDialogProps) {
+export function AddComponentDialog({
+  open,
+  materials,
+  unitMeasurements,
+  onClose,
+  onSubmit,
+}: AddComponentDialogProps) {
   const [state, setState] = useState(initialState);
 
   const handleSubmit = async () => {
@@ -119,11 +127,11 @@ export function AddComponentDialog({ open, materials, onClose, onSubmit }: AddCo
               inputProps={{ min: 0, step: 0.0001 }}
               fullWidth
             />
-            <TextField
+            <UnitMeasurementSelect
               label="Ед. изм. компонента"
               value={state.unitMeasurement}
-              onChange={(event) => setState({ ...state, unitMeasurement: event.target.value })}
-              fullWidth
+              onChange={(next) => setState({ ...state, unitMeasurement: next })}
+              options={unitMeasurements}
             />
           </Stack>
           <TextField

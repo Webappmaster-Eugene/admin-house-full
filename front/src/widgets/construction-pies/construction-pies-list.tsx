@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -30,9 +31,12 @@ import { createConstructionPie } from 'src/api/actions/construction-pie/create-p
 import { deleteConstructionPie } from 'src/api/actions/construction-pie/delete-pie.action';
 import { createPieLayer } from 'src/api/actions/construction-pie/create-layer.action';
 import { deletePieLayer } from 'src/api/actions/construction-pie/delete-layer.action';
+import { exportAllConstructionPies } from 'src/api/actions/construction-pie/export-construction-pies.action';
 
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
+import { UnitMeasurementOption } from 'src/shared/unit-measurement-select';
+import { triggerFileDownload, XLSX_MIME_TYPE } from 'src/shared/file-download';
 
 import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 
@@ -51,6 +55,7 @@ interface ConstructionPiesListProps {
   handbookId: string;
   pies: ConstructionPieWithLayers[];
   materials: MaterialOption[];
+  unitMeasurements: UnitMeasurementOption[];
 }
 
 const formatMoney = (value: number) =>
@@ -61,6 +66,7 @@ export function ConstructionPiesList({
   handbookId,
   pies,
   materials,
+  unitMeasurements,
 }: ConstructionPiesListProps) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -152,6 +158,19 @@ export function ConstructionPiesList({
     router.refresh();
   };
 
+  const handleExportAll = async () => {
+    const result = await exportAllConstructionPies(workspaceId, handbookId);
+    if ('error' in result) {
+      enqueueSnackbar('Не удалось выгрузить Excel', { variant: 'error' });
+      return;
+    }
+    triggerFileDownload({
+      base64: result.base64,
+      fileName: result.fileName,
+      mimeType: XLSX_MIME_TYPE,
+    });
+  };
+
   const handleDeleteLayer = async (pieId: string, layerId: string) => {
     if (!window.confirm('Удалить слой?')) return;
     const result = await deletePieLayer(workspaceId, handbookId, pieId, layerId);
@@ -174,9 +193,19 @@ export function ConstructionPiesList({
             Шаблоны многослойных конструкций (стены, полы, перекрытия) для использования в сметах
           </Typography>
         </Box>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setPieDialogOpen(true)}>
-          Создать пирог
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={handleExportAll}
+            disabled={pies.length === 0}
+          >
+            Экспорт в Excel
+          </Button>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setPieDialogOpen(true)}>
+            Создать пирог
+          </Button>
+        </Stack>
       </Stack>
 
       {pies.length === 0 && (
@@ -299,6 +328,7 @@ export function ConstructionPiesList({
 
       <AddPieDialog
         open={pieDialogOpen}
+        unitMeasurements={unitMeasurements}
         onClose={() => setPieDialogOpen(false)}
         onSubmit={handleCreatePie}
       />
@@ -306,6 +336,7 @@ export function ConstructionPiesList({
       <AddLayerDialog
         open={layerDialogOpen}
         materials={materials}
+        unitMeasurements={unitMeasurements}
         onClose={() => setLayerDialogOpen(false)}
         onSubmit={handleAddLayer}
       />

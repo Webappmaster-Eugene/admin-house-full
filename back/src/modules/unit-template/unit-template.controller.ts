@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseUUIDPipe, Post, Put, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodSerializerDto, zodToOpenAPI } from 'nestjs-zod';
 import {
@@ -15,6 +16,7 @@ import {
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { KFI } from '../../common/utils/di';
 import { UnitTemplateService } from './unit-template.service';
+import { UnitTemplateExportService } from './unit-template-export.service';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
@@ -42,6 +44,8 @@ export class UnitTemplateController {
   constructor(
     @Inject(KFI.UNIT_TEMPLATE_SERVICE)
     private readonly service: UnitTemplateService,
+    @Inject(KFI.UNIT_TEMPLATE_EXPORT_SERVICE)
+    private readonly exportService: UnitTemplateExportService,
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: ILogger,
   ) {}
@@ -61,6 +65,30 @@ export class UnitTemplateController {
     try {
       const { ok, data } = await this.service.getAllInHandbook(workspaceId, handbookId);
       return okResponseHandler(ok, data, this.logger);
+    } catch (error: unknown) {
+      errorResponseHandler(this.logger, error, EntityName.UNIT_TEMPLATE, urlParams);
+    }
+  }
+
+  @ApiOperation({ summary: 'Экспорт всех единичек справочника в Excel (.xlsx)' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @Get('workspace/:workspaceId/handbook/:handbookId/export')
+  async exportAllEP(
+    @Param('workspaceId', ParseUUIDPipe) workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    @Param('handbookId', ParseUUIDPipe) handbookId: EntityUrlParamCommand.RequestUuidParam,
+    @UrlParams() urlParams: IUrlParams,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      // getAllInHandbook уже проверяет ownership handbookId <-> workspaceId
+      await this.service.getAllInHandbook(workspaceId, handbookId);
+      const { buffer, fileName } = await this.exportService.exportAllToBuffer(handbookId);
+      res
+        .status(200)
+        .setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        .setHeader('Content-Disposition', `attachment; filename="${fileName}"`)
+        .send(buffer);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.UNIT_TEMPLATE, urlParams);
     }

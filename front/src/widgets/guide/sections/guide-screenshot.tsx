@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { Box, Stack, Typography } from '@mui/material';
-import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupportedOutlined';
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 
 import { GuideScreenshot as GuideScreenshotType } from '../_types';
 
@@ -11,6 +11,13 @@ interface GuideScreenshotProps {
   screenshot: GuideScreenshotType;
 }
 
+/**
+ * Отображает скриншот с graceful fallback, если PNG отсутствует.
+ *
+ * Fallback — аккуратная иллюстративная карточка с описанием (alt) и подписью (caption),
+ * а не "битая картинка". Это позволяет держать руководство связным и до момента,
+ * когда реальные скриншоты будут сняты и положены в public/assets/onboarding/.
+ */
 export function GuideScreenshot({ screenshot }: GuideScreenshotProps) {
   const [failed, setFailed] = useState(false);
 
@@ -30,15 +37,28 @@ export function GuideScreenshot({ screenshot }: GuideScreenshotProps) {
           <Stack
             alignItems="center"
             justifyContent="center"
-            spacing={1}
-            sx={{ position: 'absolute', inset: 0, color: 'text.disabled', p: 3 }}
+            spacing={1.5}
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              p: 3,
+              background:
+                'linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(14, 165, 233, 0.08) 100%)',
+            }}
           >
-            <ImageNotSupportedOutlinedIcon sx={{ fontSize: 64 }} />
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-              Скриншот будет добавлен
-            </Typography>
-            <Typography variant="caption" color="text.disabled" sx={{ textAlign: 'center' }}>
+            <InsertPhotoOutlinedIcon sx={{ fontSize: 48, color: 'primary.main', opacity: 0.65 }} />
+            <Typography
+              variant="subtitle2"
+              sx={{ textAlign: 'center', color: 'text.primary', maxWidth: 480 }}
+            >
               {screenshot.alt}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.disabled"
+              sx={{ textAlign: 'center', fontStyle: 'italic' }}
+            >
+              Иллюстрация — скриншот будет добавлен после снятия с live-стенда
             </Typography>
           </Stack>
         ) : (

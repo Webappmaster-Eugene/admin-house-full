@@ -6,6 +6,7 @@ import { getEstimate } from 'src/api/actions/estimate/get-estimate.action';
 import { getAllMaterialsInHandbook } from 'src/api/actions/material/get-all-materials-in-handbook.action';
 import { getAllUnitTemplates } from 'src/api/actions/unit-template/get-all-unit-templates.action';
 import { getAllConstructionPies } from 'src/api/actions/construction-pie/get-all-pies.action';
+import { getAllFieldUnitMeasurementsOfHandbook } from 'src/api/actions/field-unit-measurement/get-all-field-unit-measurements-of-handbook.action';
 
 import { Error } from 'src/shared/error/error';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
@@ -14,6 +15,7 @@ import { EstimateEditor } from 'src/widgets/estimates/estimate-editor';
 import { EstimateFull } from 'src/shared/contracts/estimate';
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
 import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
+import { UnitMeasurementOption } from 'src/shared/unit-measurement-select';
 
 export const metadata = {
   title: 'Dashboard: Редактор сметы',
@@ -46,13 +48,14 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
   const projectId = hit.projectUuid;
   const estimateTree = hit.res;
 
-  const [materialsResult, templatesResult, piesResult] = handbookId
+  const [materialsResult, templatesResult, piesResult, unitsResult] = handbookId
     ? await Promise.all([
         getAllMaterialsInHandbook(workspaceId, handbookId),
         getAllUnitTemplates(workspaceId, handbookId),
         getAllConstructionPies(workspaceId, handbookId),
+        getAllFieldUnitMeasurementsOfHandbook(workspaceId, handbookId),
       ])
-    : [null, null, null];
+    : [null, null, null, null];
 
   const materials =
     materialsResult && !isErrorFieldTypeGuard(materialsResult)
@@ -74,6 +77,14 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
       ? (piesResult as ConstructionPieWithLayers[])
       : [];
 
+  const fieldUnitMeasurements =
+    unitsResult && !isErrorFieldTypeGuard(unitsResult)
+      ? (unitsResult as unknown as Array<{ uuid: string; name: string }>).map((unit) => ({
+          uuid: unit.uuid,
+          name: unit.name,
+        }))
+      : ([] as UnitMeasurementOption[]);
+
   return (
     <EstimateEditor
       workspaceId={workspaceId}
@@ -82,6 +93,7 @@ export default async function EstimatePage({ params }: { params: { estimateId: s
       materials={materials}
       unitTemplates={unitTemplates}
       constructionPies={constructionPies}
+      fieldUnitMeasurements={fieldUnitMeasurements}
     />
   );
 }

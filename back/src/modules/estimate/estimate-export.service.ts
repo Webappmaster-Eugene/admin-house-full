@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
 import { EntityUrlParamCommand } from 'libs/contracts';
 import { KFI } from '../../common/utils/di';
+import { buildExcelFileName, sanitizeSheetName } from '../../common/helpers/excel-name.helper';
 import { EstimateRepository } from './estimate.repository';
 import {
   EstimateItemComponentEntity,
@@ -36,7 +37,7 @@ export class EstimateExportService {
     workbook.creator = 'Admin House';
     workbook.created = new Date();
 
-    const sheet = workbook.addWorksheet(this.sanitizeSheetName(estimate.name || 'Смета'));
+    const sheet = workbook.addWorksheet(sanitizeSheetName(estimate.name || 'Смета', 'Смета'));
 
     sheet.columns = [
       { header: '№', key: 'num', width: 10 },
@@ -101,9 +102,7 @@ export class EstimateExportService {
     }
 
     const buffer = (await workbook.xlsx.writeBuffer()) as Buffer;
-    const safeName = this.slug(estimate.name || 'estimate');
-    const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-    const fileName = `estimate-${safeName}-${ts}.xlsx`;
+    const fileName = buildExcelFileName('estimate', estimate.name || 'estimate');
     return { buffer, fileName };
   }
 
@@ -264,58 +263,4 @@ export class EstimateExportService {
     rowCounter.current++;
   }
 
-  private sanitizeSheetName(name: string): string {
-    return name.replace(/[\\\/\?\*\[\]:]/g, '').slice(0, 31) || 'Смета';
-  }
-
-  private slug(name: string): string {
-    // ASCII-only slug — Content-Disposition в HTTP не допускает не-ASCII в plain виде.
-    const ru2en: Record<string, string> = {
-      а: 'a',
-      б: 'b',
-      в: 'v',
-      г: 'g',
-      д: 'd',
-      е: 'e',
-      ё: 'e',
-      ж: 'zh',
-      з: 'z',
-      и: 'i',
-      й: 'y',
-      к: 'k',
-      л: 'l',
-      м: 'm',
-      н: 'n',
-      о: 'o',
-      п: 'p',
-      р: 'r',
-      с: 's',
-      т: 't',
-      у: 'u',
-      ф: 'f',
-      х: 'h',
-      ц: 'c',
-      ч: 'ch',
-      ш: 'sh',
-      щ: 'sch',
-      ъ: '',
-      ы: 'y',
-      ь: '',
-      э: 'e',
-      ю: 'yu',
-      я: 'ya',
-    };
-    const transliterated = name
-      .toLowerCase()
-      .split('')
-      .map(ch => (ru2en[ch] !== undefined ? ru2en[ch] : ch))
-      .join('');
-    return (
-      transliterated
-        .replace(/[^a-z0-9-]+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '')
-        .slice(0, 60) || 'estimate'
-    );
-  }
 }

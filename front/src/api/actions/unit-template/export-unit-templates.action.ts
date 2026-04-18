@@ -6,22 +6,19 @@ import { axiosEndpoints } from 'src/entities/auth/lib';
 import { getAccessToken, getRefreshToken } from 'src/entities/auth/lib/auth.service';
 
 /**
- * Экспорт сметы в XLSX.
+ * Экспорт всех единичек справочника в Excel.
  *
- * Не используем общий axiosInstance, потому что его response-interceptor разворачивает
- * ответ до res.data, после чего HTTP-headers (Content-Disposition) становятся недоступны
- * и теряется тип данных — buffer нельзя достать для base64-кодирования.
+ * Не используем общий axiosInstance: его response-interceptor разворачивает ответ до res.data,
+ * после чего содержимое буфера и HTTP-headers становятся недоступны.
  */
-export async function exportEstimate(
+export async function exportAllUnitTemplates(
   workspaceId: string,
-  projectId: string,
-  estimateId: string,
+  handbookId: string,
 ): Promise<{ base64: string; fileName: string } | { error: string }> {
   try {
-    const url = axiosEndpoints.estimate.export
+    const url = axiosEndpoints.unit_template.export_all
       .replace(':workspaceId', workspaceId)
-      .replace(':projectId', projectId)
-      .replace(':estimateId', estimateId);
+      .replace(':handbookId', handbookId);
 
     const accessToken = await getAccessToken();
     const refreshToken = await getRefreshToken();
@@ -41,7 +38,7 @@ export async function exportEstimate(
 
     const disposition = (response.headers['content-disposition'] as string) ?? '';
     const match = disposition.match(/filename="([^"]+)"/);
-    const fileName = match?.[1] ?? `estimate-${estimateId}.xlsx`;
+    const fileName = match?.[1] ?? `unit-templates-${handbookId}.xlsx`;
 
     const base64 = Buffer.from(response.data).toString('base64');
     return { base64, fileName };

@@ -3,12 +3,14 @@ import { UserGetFullInfoCommand } from '@numart/house-admin-contracts';
 import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
 import { getAllConstructionPies } from 'src/api/actions/construction-pie/get-all-pies.action';
 import { getAllMaterialsInHandbook } from 'src/api/actions/material/get-all-materials-in-handbook.action';
+import { getAllFieldUnitMeasurementsOfHandbook } from 'src/api/actions/field-unit-measurement/get-all-field-unit-measurements-of-handbook.action';
 
 import { Error } from 'src/shared/error/error';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
 import { ConstructionPiesList } from 'src/widgets/construction-pies/construction-pies-list';
 import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
+import { UnitMeasurementOption } from 'src/shared/unit-measurement-select';
 
 export const metadata = {
   title: 'Dashboard: Пироги',
@@ -26,9 +28,10 @@ export default async function ConstructionPiesPage() {
 
   if (!workspaceId || !handbookId) return <Error />;
 
-  const [piesRes, materialsRes] = await Promise.all([
+  const [piesRes, materialsRes, unitsRes] = await Promise.all([
     getAllConstructionPies(workspaceId, handbookId),
     getAllMaterialsInHandbook(workspaceId, handbookId),
+    getAllFieldUnitMeasurementsOfHandbook(workspaceId, handbookId),
   ]);
 
   if (isErrorFieldTypeGuard(piesRes)) return <Error />;
@@ -42,6 +45,13 @@ export default async function ConstructionPiesPage() {
           unitMeasurement?: { name: string } | null;
         }>)
       : [];
+  const unitMeasurements: UnitMeasurementOption[] =
+    unitsRes && !isErrorFieldTypeGuard(unitsRes)
+      ? (unitsRes as unknown as Array<{ uuid: string; name: string }>).map((unit) => ({
+          uuid: unit.uuid,
+          name: unit.name,
+        }))
+      : [];
 
   return (
     <ConstructionPiesList
@@ -49,6 +59,7 @@ export default async function ConstructionPiesPage() {
       handbookId={handbookId}
       pies={pies}
       materials={materials}
+      unitMeasurements={unitMeasurements}
     />
   );
 }

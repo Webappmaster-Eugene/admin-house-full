@@ -1,10 +1,12 @@
 import {
   EEstimateItemType,
   EstimateFull,
+  EstimateItemBusinessValue,
   EstimateSectionTree,
 } from 'src/shared/contracts/estimate';
 import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
+import { UnitMeasurementOption } from 'src/shared/unit-measurement-select';
 
 /** Опция для autocomplete материала из справочника handbook'а. */
 export interface MaterialOption {
@@ -29,6 +31,16 @@ export interface NewItemFormState {
   comment: string;
 }
 
+/** Состояние формы редактирования существующей строки. */
+export interface EditItemFormState {
+  name: string;
+  unitMeasurement: string;
+  quantity: number;
+  unitCost: number;
+  markupPercent: number;
+  comment: string;
+}
+
 export interface EstimateEditorProps {
   workspaceId: string;
   projectId: string;
@@ -36,12 +48,15 @@ export interface EstimateEditorProps {
   materials: MaterialOption[];
   unitTemplates: UnitTemplateWithComponents[];
   constructionPies: ConstructionPieWithLayers[];
+  fieldUnitMeasurements: UnitMeasurementOption[];
 }
 
 /** Колбэки, которые рекурсивно прокидываются в SectionBlock. */
 export interface SectionCallbacks {
   onAddItem: (sectionId: string) => void;
+  onEditItem: (sectionId: string, item: EstimateItemBusinessValue) => void;
   onDeleteItem: (sectionId: string, itemId: string) => void;
+  onEditSection: (section: EstimateSectionTree) => void;
   onDeleteSection: (sectionId: string) => void;
 }
 

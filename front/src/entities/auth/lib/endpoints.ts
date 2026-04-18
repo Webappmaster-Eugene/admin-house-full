@@ -175,6 +175,7 @@ export const axiosEndpoints = {
       'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/layer/:layerId/update',
     layer_delete:
       'construction-pie/workspace/:workspaceId/handbook/:handbookId/construction-pie/:pieId/layer/:layerId/delete',
+    export_all: 'construction-pie/workspace/:workspaceId/handbook/:handbookId/export',
   },
   // DOC unit-template/workspace/:workspaceId/handbook/:handbookId/...
   unit_template: {
@@ -191,6 +192,7 @@ export const axiosEndpoints = {
       'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/component/:componentId/update',
     component_delete:
       'unit-template/workspace/:workspaceId/handbook/:handbookId/unit-template/:templateId/component/:componentId/delete',
+    export_all: 'unit-template/workspace/:workspaceId/handbook/:handbookId/export',
   },
   // DOC estimate/workspace/:workspaceId/project/:projectId/...
   estimate: {

@@ -10,8 +10,11 @@ import {
   TextField,
 } from '@mui/material';
 
+import { UnitMeasurementOption, UnitMeasurementSelect } from 'src/shared/unit-measurement-select';
+
 interface AddPieDialogProps {
   open: boolean;
+  unitMeasurements: UnitMeasurementOption[];
   onClose: () => void;
   onSubmit: (params: {
     name: string;
@@ -28,7 +31,7 @@ const initialState = {
   defaultMarkupPercent: 0,
 };
 
-export function AddPieDialog({ open, onClose, onSubmit }: AddPieDialogProps) {
+export function AddPieDialog({ open, unitMeasurements, onClose, onSubmit }: AddPieDialogProps) {
   const [state, setState] = useState(initialState);
 
   const handleSubmit = async () => {
@@ -57,13 +60,12 @@ export function AddPieDialog({ open, onClose, onSubmit }: AddPieDialogProps) {
             multiline
             minRows={2}
           />
-          <TextField
+          <UnitMeasurementSelect
             label="Ед. измерения"
             value={state.unitMeasurement}
-            onChange={(event) => setState({ ...state, unitMeasurement: event.target.value })}
-            fullWidth
+            onChange={(next) => setState({ ...state, unitMeasurement: next })}
+            options={unitMeasurements}
             required
-            placeholder="м², м.п."
           />
           <TextField
             type="number"

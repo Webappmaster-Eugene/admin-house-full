@@ -13,16 +13,35 @@ import { createEstimateSection } from 'src/api/actions/estimate/create-section.a
 import { deleteEstimateItem } from 'src/api/actions/estimate/delete-item.action';
 import { deleteEstimateSection } from 'src/api/actions/estimate/delete-section.action';
 import { exportEstimate } from 'src/api/actions/estimate/export-estimate.action';
+import { updateEstimateItem } from 'src/api/actions/estimate/update-item.action';
+import { updateEstimateSection } from 'src/api/actions/estimate/update-section.action';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
+
+import {
+  EstimateItemBusinessValue,
+  EstimateSectionTree,
+} from 'src/shared/contracts/estimate';
 
 import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 
 import { formatMoney } from './_consts';
-import { EstimateEditorProps, NewItemFormState } from './_types';
+import {
+  EditItemFormState,
+  EstimateEditorProps,
+  NewItemFormState,
+} from './_types';
 import { findSection } from './_helpers';
 import { SectionBlock } from './section-block';
 import { AddSectionDialog } from './add-section-dialog';
 import { AddItemDialog } from './add-item-dialog';
+import { EditItemDialog } from './edit-item-dialog';
+import { EditSectionDialog } from './edit-section-dialog';
+import { triggerFileDownload, XLSX_MIME_TYPE } from 'src/shared/file-download';
+
+interface EditItemTarget {
+  sectionId: string;
+  item: EstimateItemBusinessValue;
+}
 
 export function EstimateEditor({
   workspaceId,
@@ -31,6 +50,7 @@ export function EstimateEditor({
   materials,
   unitTemplates,
   constructionPies,
+  fieldUnitMeasurements,
 }: EstimateEditorProps) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -39,24 +59,20 @@ export function EstimateEditor({
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
   const [targetSectionId, setTargetSectionId] = useState<string>('');
 
+  const [editItemTarget, setEditItemTarget] = useState<EditItemTarget | null>(null);
+  const [editSectionTarget, setEditSectionTarget] = useState<EstimateSectionTree | null>(null);
+
   const handleExport = async () => {
     const result = await exportEstimate(workspaceId, projectId, estimate.uuid);
     if ('error' in result) {
       enqueueSnackbar('Не удалось выгрузить Excel', { variant: 'error' });
       return;
     }
-    const byteArray = Uint8Array.from(atob(result.base64), (c) => c.charCodeAt(0));
-    const blob = new Blob([byteArray], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    triggerFileDownload({
+      base64: result.base64,
+      fileName: result.fileName,
+      mimeType: XLSX_MIME_TYPE,
     });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = result.fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
   };
 
   const handleAddSection = async ({
@@ -84,6 +100,24 @@ export function EstimateEditor({
     }
     enqueueSnackbar('Раздел создан', { variant: 'success' });
     setSectionDialogOpen(false);
+    router.refresh();
+  };
+
+  const handleEditSection = async (name: string) => {
+    if (!editSectionTarget) return;
+    const result = await updateEstimateSection(
+      workspaceId,
+      projectId,
+      estimate.uuid,
+      editSectionTarget.uuid,
+      { name },
+    );
+    if (isErrorFieldTypeGuard(result)) {
+      enqueueSnackbar('Не удалось обновить раздел', { variant: 'error' });
+      return;
+    }
+    enqueueSnackbar('Раздел обновлён', { variant: 'success' });
+    setEditSectionTarget(null);
     router.refresh();
   };
 
@@ -132,7 +166,7 @@ export function EstimateEditor({
         unitCost: form.unitCost,
         markupPercent: form.markupPercent,
         comment: form.comment.trim() || null,
-      }
+      },
     );
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Не удалось добавить строку', { variant: 'error' });
@@ -165,7 +199,7 @@ export function EstimateEditor({
         quantity: params.quantity,
         markupPercent: params.markupPercent,
         comment: params.comment.trim() || null,
-      }
+      },
     );
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Не удалось добавить единичку', { variant: 'error' });
@@ -198,7 +232,7 @@ export function EstimateEditor({
         quantity: params.quantity,
         markupPercent: params.markupPercent,
         comment: params.comment.trim() || null,
-      }
+      },
     );
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Не удалось добавить пирог', { variant: 'error' });
@@ -209,6 +243,40 @@ export function EstimateEditor({
     router.refresh();
   };
 
+  const handleEditItem = async (state: EditItemFormState) => {
+    if (!editItemTarget) return;
+    const { sectionId, item } = editItemTarget;
+    if (state.quantity <= 0) {
+      enqueueSnackbar('Количество должно быть положительным', { variant: 'warning' });
+      return;
+    }
+    const isLocked = item.itemType === 'UNIT' || item.itemType === 'PIE';
+    const result = await updateEstimateItem(
+      workspaceId,
+      projectId,
+      estimate.uuid,
+      sectionId,
+      item.uuid,
+      {
+        // Для snapshot-строк (UNIT/PIE) меняем только quantity/markup/comment —
+        // name/unit/unitCost фиксируются на момент добавления.
+        name: isLocked ? undefined : state.name.trim() || undefined,
+        unitMeasurement: isLocked ? undefined : state.unitMeasurement.trim() || undefined,
+        unitCost: isLocked ? undefined : state.unitCost,
+        quantity: state.quantity,
+        markupPercent: state.markupPercent,
+        comment: state.comment.trim() || null,
+      },
+    );
+    if (isErrorFieldTypeGuard(result)) {
+      enqueueSnackbar('Не удалось обновить строку', { variant: 'error' });
+      return;
+    }
+    enqueueSnackbar('Строка обновлена', { variant: 'success' });
+    setEditItemTarget(null);
+    router.refresh();
+  };
+
   const handleDeleteItem = async (sectionId: string, itemId: string) => {
     if (!window.confirm('Удалить строку?')) return;
     const result = await deleteEstimateItem(
@@ -216,7 +284,7 @@ export function EstimateEditor({
       projectId,
       estimate.uuid,
       sectionId,
-      itemId
+      itemId,
     );
     if (isErrorFieldTypeGuard(result)) {
       enqueueSnackbar('Не удалось удалить строку', { variant: 'error' });
@@ -293,7 +361,9 @@ export function EstimateEditor({
             section={section}
             numPrefix={`${idx + 1}`}
             onAddItem={openAddItem}
+            onEditItem={(sectionId, item) => setEditItemTarget({ sectionId, item })}
             onDeleteItem={handleDeleteItem}
+            onEditSection={setEditSectionTarget}
             onDeleteSection={handleDeleteSection}
           />
         ))}
@@ -315,10 +385,26 @@ export function EstimateEditor({
         materials={materials}
         unitTemplates={unitTemplates}
         constructionPies={constructionPies}
+        unitMeasurements={fieldUnitMeasurements}
         onClose={() => setItemDialogOpen(false)}
         onSubmitManual={handleAddManual}
         onSubmitTemplate={handleAddTemplate}
         onSubmitPie={handleAddPie}
+      />
+
+      <EditItemDialog
+        open={editItemTarget !== null}
+        item={editItemTarget?.item ?? null}
+        unitMeasurements={fieldUnitMeasurements}
+        onClose={() => setEditItemTarget(null)}
+        onSubmit={handleEditItem}
+      />
+
+      <EditSectionDialog
+        open={editSectionTarget !== null}
+        section={editSectionTarget}
+        onClose={() => setEditSectionTarget(null)}
+        onSubmit={handleEditSection}
       />
     </Box>
   );

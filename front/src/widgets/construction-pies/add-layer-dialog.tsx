@@ -11,6 +11,8 @@ import {
   TextField,
 } from '@mui/material';
 
+import { UnitMeasurementOption, UnitMeasurementSelect } from 'src/shared/unit-measurement-select';
+
 interface MaterialOption {
   uuid: string;
   name: string;
@@ -21,6 +23,7 @@ interface MaterialOption {
 interface AddLayerDialogProps {
   open: boolean;
   materials: MaterialOption[];
+  unitMeasurements: UnitMeasurementOption[];
   onClose: () => void;
   onSubmit: (params: {
     materialUuid: string | null;
@@ -45,7 +48,13 @@ const initialState = {
   comment: '',
 };
 
-export function AddLayerDialog({ open, materials, onClose, onSubmit }: AddLayerDialogProps) {
+export function AddLayerDialog({
+  open,
+  materials,
+  unitMeasurements,
+  onClose,
+  onSubmit,
+}: AddLayerDialogProps) {
   const [state, setState] = useState(initialState);
 
   const handleSubmit = async () => {
@@ -118,11 +127,11 @@ export function AddLayerDialog({ open, materials, onClose, onSubmit }: AddLayerD
               required
               helperText="Например, 0.2 м³/м² или 1.05 шт/м²"
             />
-            <TextField
+            <UnitMeasurementSelect
               label="Ед. изм. расхода"
               value={state.unitMeasurement}
-              onChange={(event) => setState({ ...state, unitMeasurement: event.target.value })}
-              fullWidth
+              onChange={(next) => setState({ ...state, unitMeasurement: next })}
+              options={unitMeasurements}
             />
           </Stack>
 

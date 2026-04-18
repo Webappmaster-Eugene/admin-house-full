@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { formatMoney } from './_consts';
 import { SectionBlockProps } from './_types';
@@ -24,7 +25,9 @@ export function SectionBlock({
   section,
   numPrefix,
   onAddItem,
+  onEditItem,
   onDeleteItem,
+  onEditSection,
   onDeleteSection,
 }: SectionBlockProps) {
   return (
@@ -41,6 +44,9 @@ export function SectionBlock({
             </Typography>
             <IconButton size="small" onClick={() => onAddItem(section.uuid)} title="Добавить строку">
               <AddIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" onClick={() => onEditSection(section)} title="Переименовать раздел">
+              <EditIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
@@ -77,6 +83,7 @@ export function SectionBlock({
                     key={item.uuid}
                     item={item}
                     num={`${numPrefix}.${idx + 1}`}
+                    onEdit={() => onEditItem(section.uuid, item)}
                     onDelete={() => onDeleteItem(section.uuid, item.uuid)}
                   />
                 ))}
@@ -93,7 +100,9 @@ export function SectionBlock({
                 section={child}
                 numPrefix={`${numPrefix}.${idx + 1}`}
                 onAddItem={onAddItem}
+                onEditItem={onEditItem}
                 onDeleteItem={onDeleteItem}
+                onEditSection={onEditSection}
                 onDeleteSection={onDeleteSection}
               />
             ))}

@@ -27,6 +27,7 @@ import {
 import { EEstimateItemType, EstimateSectionTree } from 'src/shared/contracts/estimate';
 import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
+import { UnitMeasurementOption, UnitMeasurementSelect } from 'src/shared/unit-measurement-select';
 
 import { MANUAL_ITEM_TYPE_OPTIONS, formatMoney } from './_consts';
 import { ItemSourceMode, MaterialOption, NewItemFormState } from './_types';
@@ -41,6 +42,7 @@ interface AddItemDialogProps {
   materials: MaterialOption[];
   unitTemplates: UnitTemplateWithComponents[];
   constructionPies: ConstructionPieWithLayers[];
+  unitMeasurements: UnitMeasurementOption[];
   onClose: () => void;
   onSubmitManual: (state: NewItemFormState) => Promise<void>;
   onSubmitTemplate: (params: {
@@ -77,6 +79,7 @@ export function AddItemDialog({
   materials,
   unitTemplates,
   constructionPies,
+  unitMeasurements,
   onClose,
   onSubmitManual,
   onSubmitTemplate,
@@ -179,7 +182,12 @@ export function AddItemDialog({
         )}
 
         {mode === 'manual' && (
-          <ManualModeForm form={form} materials={materials} onChange={handleFormChange} />
+          <ManualModeForm
+            form={form}
+            materials={materials}
+            unitMeasurements={unitMeasurements}
+            onChange={handleFormChange}
+          />
         )}
 
         {leafSections.length > 1 && (
@@ -426,10 +434,11 @@ function PieModeForm({
 interface ManualModeFormProps {
   form: NewItemFormState;
   materials: MaterialOption[];
+  unitMeasurements: UnitMeasurementOption[];
   onChange: (patch: Partial<NewItemFormState>) => void;
 }
 
-function ManualModeForm({ form, materials, onChange }: ManualModeFormProps) {
+function ManualModeForm({ form, materials, unitMeasurements, onChange }: ManualModeFormProps) {
   return (
     <Stack spacing={2} mt={1}>
       <TextField
@@ -486,11 +495,10 @@ function ManualModeForm({ form, materials, onChange }: ManualModeFormProps) {
           fullWidth
           inputProps={{ min: 0, step: 0.01 }}
         />
-        <TextField
-          label="Ед. изм."
+        <UnitMeasurementSelect
           value={form.unitMeasurement}
-          onChange={(event) => onChange({ unitMeasurement: event.target.value })}
-          fullWidth
+          onChange={(next) => onChange({ unitMeasurement: next })}
+          options={unitMeasurements}
         />
       </Stack>
       <Stack direction="row" spacing={2}>

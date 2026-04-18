@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
@@ -30,10 +31,13 @@ import { createUnitTemplate } from 'src/api/actions/unit-template/create-unit-te
 import { deleteUnitTemplate } from 'src/api/actions/unit-template/delete-unit-template.action';
 import { createUnitTemplateComponent } from 'src/api/actions/unit-template/create-component.action';
 import { deleteUnitTemplateComponent } from 'src/api/actions/unit-template/delete-component.action';
+import { exportAllUnitTemplates } from 'src/api/actions/unit-template/export-unit-templates.action';
 
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
 import { EEstimateItemType } from 'src/shared/contracts/estimate';
+import { UnitMeasurementOption } from 'src/shared/unit-measurement-select';
+import { triggerFileDownload, XLSX_MIME_TYPE } from 'src/shared/file-download';
 
 import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 
@@ -52,6 +56,7 @@ interface UnitTemplatesListProps {
   handbookId: string;
   templates: UnitTemplateWithComponents[];
   materials: MaterialOption[];
+  unitMeasurements: UnitMeasurementOption[];
 }
 
 const ITEM_TYPE_LABELS: Record<string, string> = {
@@ -69,6 +74,7 @@ export function UnitTemplatesList({
   handbookId,
   templates,
   materials,
+  unitMeasurements,
 }: UnitTemplatesListProps) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -158,6 +164,19 @@ export function UnitTemplatesList({
     router.refresh();
   };
 
+  const handleExportAll = async () => {
+    const result = await exportAllUnitTemplates(workspaceId, handbookId);
+    if ('error' in result) {
+      enqueueSnackbar('Не удалось выгрузить Excel', { variant: 'error' });
+      return;
+    }
+    triggerFileDownload({
+      base64: result.base64,
+      fileName: result.fileName,
+      mimeType: XLSX_MIME_TYPE,
+    });
+  };
+
   const handleDeleteComponent = async (templateId: string, componentId: string) => {
     if (!window.confirm('Удалить компонент?')) return;
     const result = await deleteUnitTemplateComponent(workspaceId, handbookId, templateId, componentId);
@@ -180,9 +199,19 @@ export function UnitTemplatesList({
             Шаблоны комплексных единиц работ (материал + работа на 1 ед.) для использования в сметах
           </Typography>
         </Box>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setTemplateDialogOpen(true)}>
-          Создать единичку
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={handleExportAll}
+            disabled={templates.length === 0}
+          >
+            Экспорт в Excel
+          </Button>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setTemplateDialogOpen(true)}>
+            Создать единичку
+          </Button>
+        </Stack>
       </Stack>
 
       {templates.length === 0 && (
@@ -308,6 +337,7 @@ export function UnitTemplatesList({
 
       <AddUnitTemplateDialog
         open={templateDialogOpen}
+        unitMeasurements={unitMeasurements}
         onClose={() => setTemplateDialogOpen(false)}
         onSubmit={handleCreateTemplate}
       />
@@ -315,6 +345,7 @@ export function UnitTemplatesList({
       <AddComponentDialog
         open={componentDialogOpen}
         materials={materials}
+        unitMeasurements={unitMeasurements}
         onClose={() => setComponentDialogOpen(false)}
         onSubmit={handleAddComponent}
       />

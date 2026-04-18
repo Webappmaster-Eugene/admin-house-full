@@ -10,8 +10,11 @@ import {
   TextField,
 } from '@mui/material';
 
+import { UnitMeasurementOption, UnitMeasurementSelect } from 'src/shared/unit-measurement-select';
+
 interface AddUnitTemplateDialogProps {
   open: boolean;
+  unitMeasurements: UnitMeasurementOption[];
   onClose: () => void;
   onSubmit: (params: {
     name: string;
@@ -28,7 +31,12 @@ const initialState = {
   defaultMarkupPercent: 0,
 };
 
-export function AddUnitTemplateDialog({ open, onClose, onSubmit }: AddUnitTemplateDialogProps) {
+export function AddUnitTemplateDialog({
+  open,
+  unitMeasurements,
+  onClose,
+  onSubmit,
+}: AddUnitTemplateDialogProps) {
   const [state, setState] = useState(initialState);
 
   const handleSubmit = async () => {
@@ -57,13 +65,12 @@ export function AddUnitTemplateDialog({ open, onClose, onSubmit }: AddUnitTempla
             multiline
             minRows={2}
           />
-          <TextField
+          <UnitMeasurementSelect
             label="Ед. измерения"
             value={state.unitMeasurement}
-            onChange={(event) => setState({ ...state, unitMeasurement: event.target.value })}
-            fullWidth
+            onChange={(next) => setState({ ...state, unitMeasurement: next })}
+            options={unitMeasurements}
             required
-            placeholder="м², шт, м.п., комплект"
           />
           <TextField
             type="number"

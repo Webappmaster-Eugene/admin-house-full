@@ -3000,10 +3000,484 @@ async function seedEstimatesDemo(): Promise<void> {
   );
 }
 
+/**
+ * Идемпотентно дополняет справочник реалистичными единичками и пирогами
+ * (штукатурка, плитка, ламинат, стяжка, перегородка из газоблока).
+ * Возвращает карту uuid'ов, доступных для использования в `seedRealisticRenovationEstimate`.
+ */
+async function seedRealisticHandbookTemplates(handbookUuid: string, managerUuid: string) {
+  // ————— Единичка «Штукатурка стен гипсовая 10мм» —————
+  const UT_PLASTER_NAME = 'Штукатурка стен гипсовая 10 мм, 1 м²';
+  let plaster = await prisma.unitTemplate.findFirst({
+    where: { name: UT_PLASTER_NAME, handbookUuid },
+  });
+  if (!plaster) {
+    plaster = await prisma.unitTemplate.create({
+      data: {
+        name: UT_PLASTER_NAME,
+        description: 'Штукатурная смесь Ротбанд + работа маяков и набрызга',
+        unitMeasurement: 'м²',
+        defaultMarkupPercent: 25,
+        handbookUuid,
+        lastChangeByUserUuid: managerUuid,
+        components: {
+          create: [
+            { orderIndex: 0, itemType: 'MATERIAL', name: 'Штукатурка Ротбанд 30 кг', unitMeasurement: 'кг', quantityPerUnit: 8, unitCost: 22 },
+            { orderIndex: 1, itemType: 'MATERIAL', name: 'Маяки штукатурные 3 м', unitMeasurement: 'шт', quantityPerUnit: 0.35, unitCost: 45 },
+            { orderIndex: 2, itemType: 'WORK', name: 'Оштукатуривание по маякам', unitMeasurement: 'ч', quantityPerUnit: 0.6, unitCost: 1200 },
+          ],
+        },
+      },
+    });
+    const cost = round(8 * 22 + 0.35 * 45 + 0.6 * 1200);
+    plaster = await prisma.unitTemplate.update({
+      where: { uuid: plaster.uuid },
+      data: { unitCost: cost, unitClientPrice: round(cost * 1.25) },
+    });
+  }
+
+  // ————— Единичка «Укладка керамической плитки» —————
+  const UT_TILE_NAME = 'Укладка керамогранита на пол, 1 м²';
+  let tile = await prisma.unitTemplate.findFirst({
+    where: { name: UT_TILE_NAME, handbookUuid },
+  });
+  if (!tile) {
+    tile = await prisma.unitTemplate.create({
+      data: {
+        name: UT_TILE_NAME,
+        description: 'Керамогранит 60×60 + клей Ceresit CM11 + затирка + работа',
+        unitMeasurement: 'м²',
+        defaultMarkupPercent: 30,
+        handbookUuid,
+        lastChangeByUserUuid: managerUuid,
+        components: {
+          create: [
+            { orderIndex: 0, itemType: 'MATERIAL', name: 'Керамогранит 60×60', unitMeasurement: 'м²', quantityPerUnit: 1.08, unitCost: 1450 },
+            { orderIndex: 1, itemType: 'MATERIAL', name: 'Клей плиточный Ceresit CM11', unitMeasurement: 'кг', quantityPerUnit: 5, unitCost: 38 },
+            { orderIndex: 2, itemType: 'MATERIAL', name: 'Затирка швов Ceresit CE40', unitMeasurement: 'кг', quantityPerUnit: 0.4, unitCost: 110 },
+            { orderIndex: 3, itemType: 'MATERIAL', name: 'Крестики плиточные 2 мм', unitMeasurement: 'упак', quantityPerUnit: 0.05, unitCost: 85 },
+            { orderIndex: 4, itemType: 'WORK', name: 'Укладка керамогранита с раскроем', unitMeasurement: 'ч', quantityPerUnit: 1.2, unitCost: 1500 },
+          ],
+        },
+      },
+    });
+    const cost = round(1.08 * 1450 + 5 * 38 + 0.4 * 110 + 0.05 * 85 + 1.2 * 1500);
+    tile = await prisma.unitTemplate.update({
+      where: { uuid: tile.uuid },
+      data: { unitCost: cost, unitClientPrice: round(cost * 1.3) },
+    });
+  }
+
+  // ————— Единичка «Укладка ламината 33 класс» —————
+  const UT_LAMINATE_NAME = 'Укладка ламината 33 класс с подложкой, 1 м²';
+  let laminate = await prisma.unitTemplate.findFirst({
+    where: { name: UT_LAMINATE_NAME, handbookUuid },
+  });
+  if (!laminate) {
+    laminate = await prisma.unitTemplate.create({
+      data: {
+        name: UT_LAMINATE_NAME,
+        description: 'Ламинат + подложка 2 мм + плёнка + работа укладки',
+        unitMeasurement: 'м²',
+        defaultMarkupPercent: 28,
+        handbookUuid,
+        lastChangeByUserUuid: managerUuid,
+        components: {
+          create: [
+            { orderIndex: 0, itemType: 'MATERIAL', name: 'Ламинат 33 класс 12 мм', unitMeasurement: 'м²', quantityPerUnit: 1.05, unitCost: 1250 },
+            { orderIndex: 1, itemType: 'MATERIAL', name: 'Подложка XPS 2 мм', unitMeasurement: 'м²', quantityPerUnit: 1.02, unitCost: 110 },
+            { orderIndex: 2, itemType: 'MATERIAL', name: 'Плёнка пароизоляционная', unitMeasurement: 'м²', quantityPerUnit: 1.05, unitCost: 35 },
+            { orderIndex: 3, itemType: 'WORK', name: 'Укладка ламината', unitMeasurement: 'ч', quantityPerUnit: 0.4, unitCost: 900 },
+          ],
+        },
+      },
+    });
+    const cost = round(1.05 * 1250 + 1.02 * 110 + 1.05 * 35 + 0.4 * 900);
+    laminate = await prisma.unitTemplate.update({
+      where: { uuid: laminate.uuid },
+      data: { unitCost: cost, unitClientPrice: round(cost * 1.28) },
+    });
+  }
+
+  // ————— Пирог «Перегородка из газоблока 100 мм + штукатурка двусторонняя» —————
+  const PIE_WALL_NAME = 'Перегородка из газоблока 100 мм + двусторонняя штукатурка';
+  let wallPie = await prisma.constructionPie.findFirst({
+    where: { name: PIE_WALL_NAME, handbookUuid },
+  });
+  if (!wallPie) {
+    wallPie = await prisma.constructionPie.create({
+      data: {
+        name: PIE_WALL_NAME,
+        description: 'Перегородка на 1 м²: газоблок D500 100 мм + штукатурка по 10 мм с двух сторон',
+        unitMeasurement: 'м²',
+        defaultMarkupPercent: 22,
+        handbookUuid,
+        lastChangeByUserUuid: managerUuid,
+        layers: {
+          create: [
+            { orderIndex: 0, name: 'Газоблок D500 100×250×625', thickness: 100, density: 500, consumptionPerM2: 6.5, unitMeasurement: 'шт', unitCost: 180 },
+            { orderIndex: 1, name: 'Клей для газоблока', thickness: 0, density: 0, consumptionPerM2: 3, unitMeasurement: 'кг', unitCost: 25 },
+            { orderIndex: 2, name: 'Штукатурка Ротбанд (с двух сторон)', thickness: 20, density: 0, consumptionPerM2: 16, unitMeasurement: 'кг', unitCost: 22 },
+          ],
+        },
+      },
+    });
+    const unitCost = round(6.5 * 180 + 3 * 25 + 16 * 22);
+    wallPie = await prisma.constructionPie.update({
+      where: { uuid: wallPie.uuid },
+      data: { unitCost, unitClientPrice: round(unitCost * 1.22), totalThickness: 120 },
+    });
+  }
+
+  return { plaster, tile, laminate, wallPie };
+}
+
+/**
+ * Идемпотентно создаёт реалистичную демо-смету на ремонт квартиры 40 м² —
+ * 6 разделов, 25+ строк разных типов. Если смета с таким именем уже есть — пропускает.
+ */
+async function seedRealisticRenovationEstimate(
+  projectUuid: string,
+  handbookUuid: string,
+  managerUuid: string,
+  templates: Awaited<ReturnType<typeof seedRealisticHandbookTemplates>>,
+  firstBaseUnitTemplateUuid: string,
+): Promise<void> {
+  const ESTIMATE_NAME = 'Демо — ремонт однокомнатной квартиры 40 м²';
+  const existing = await prisma.estimate.findFirst({
+    where: { name: ESTIMATE_NAME, projectUuid },
+  });
+  if (existing) {
+    // eslint-disable-next-line no-console
+    console.log(`[seed] Реалистичная демо-смета "${ESTIMATE_NAME}" уже существует — пропускаем.`);
+    return;
+  }
+
+  const { plaster, tile, laminate, wallPie } = templates;
+  const defaultMarkup = 20;
+
+  const estimate = await prisma.estimate.create({
+    data: {
+      name: ESTIMATE_NAME,
+      description: 'Полный цикл ремонта: демонтаж → черновая → инженерия → чистовая отделка. 6 разделов, 25+ строк.',
+      defaultMarkupPercent: defaultMarkup,
+      projectUuid,
+      lastChangeByUserUuid: managerUuid,
+    },
+  });
+
+  // Каждая строка считается единообразно:
+  const makeItem = (args: {
+    orderIndex: number;
+    itemType: 'MATERIAL' | 'MECHANISM' | 'WORK' | 'OVERHEAD' | 'UNIT' | 'PIE';
+    name: string;
+    unitMeasurement: string;
+    quantity: number;
+    unitCost: number;
+    markupPercent?: number;
+    unitTemplateUuid?: string | null;
+    constructionPieUuid?: string | null;
+    comment?: string | null;
+  }) => {
+    const markup = args.markupPercent ?? defaultMarkup;
+    const unitClientPrice = round(args.unitCost * (1 + markup / 100));
+    return {
+      orderIndex: args.orderIndex,
+      itemType: args.itemType,
+      name: args.name,
+      unitMeasurement: args.unitMeasurement,
+      quantity: args.quantity,
+      unitCost: args.unitCost,
+      markupPercent: markup,
+      unitClientPrice,
+      totalCost: round(args.quantity * args.unitCost),
+      totalClientPrice: round(args.quantity * unitClientPrice),
+      unitTemplateUuid: args.unitTemplateUuid ?? null,
+      constructionPieUuid: args.constructionPieUuid ?? null,
+      comment: args.comment ?? null,
+    };
+  };
+
+  type SectionPlan = {
+    name: string;
+    items: ReturnType<typeof makeItem>[];
+    /** Для UNIT/PIE прикладываем "снэпшот" компонентов/слоёв через вложенные writes. */
+    componentsByOrderIndex?: Record<number, { orderIndex: number; itemType: 'MATERIAL' | 'MECHANISM' | 'WORK' | 'OVERHEAD'; name: string; unitMeasurement: string; quantityPerUnit: number; unitCost: number; totalCost: number }[]>;
+    pieLayersByOrderIndex?: Record<number, { orderIndex: number; name: string; thickness: number; density: number; consumptionPerM2: number; unitMeasurement: string; unitCost: number; totalCost: number }[]>;
+  };
+
+  // —————————— РАЗДЕЛ 1. Демонтажные работы ——————————
+  const section1: SectionPlan = {
+    name: 'Демонтажные работы',
+    items: [
+      makeItem({ orderIndex: 0, itemType: 'WORK', name: 'Демонтаж обоев со стен', unitMeasurement: 'м²', quantity: 80, unitCost: 120 }),
+      makeItem({ orderIndex: 1, itemType: 'WORK', name: 'Демонтаж ламината и подложки', unitMeasurement: 'м²', quantity: 35, unitCost: 95 }),
+      makeItem({ orderIndex: 2, itemType: 'WORK', name: 'Демонтаж плитки в санузле', unitMeasurement: 'м²', quantity: 18, unitCost: 450 }),
+      makeItem({ orderIndex: 3, itemType: 'WORK', name: 'Демонтаж старой сантехники (унитаз/ванна/смесители)', unitMeasurement: 'комплект', quantity: 1, unitCost: 3500 }),
+      makeItem({ orderIndex: 4, itemType: 'MECHANISM', name: 'Вынос строительного мусора (контейнер 8 м³)', unitMeasurement: 'услуга', quantity: 1, unitCost: 12000 }),
+    ],
+  };
+
+  // —————————— РАЗДЕЛ 2. Черновые и подготовительные ——————————
+  // Item index 2 использует единичку штукатурки, index 3 — пирог стены
+  const plasterQuantity = 65; // стены кухня+комната под штукатурку
+  const wallQuantity = 4.5; // перегородка — м²
+  const plasterMarkup = plaster.defaultMarkupPercent;
+  const wallMarkup = wallPie.defaultMarkupPercent;
+  const section2: SectionPlan = {
+    name: 'Черновые и подготовительные работы',
+    items: [
+      makeItem({ orderIndex: 0, itemType: 'MATERIAL', name: 'Грунтовка Ceresit CT17 (10 л)', unitMeasurement: 'кан', quantity: 4, unitCost: 1350 }),
+      makeItem({ orderIndex: 1, itemType: 'WORK', name: 'Грунтование стен и потолка', unitMeasurement: 'м²', quantity: 120, unitCost: 85 }),
+      makeItem({
+        orderIndex: 2,
+        itemType: 'UNIT',
+        name: plaster.name,
+        unitMeasurement: plaster.unitMeasurement,
+        quantity: plasterQuantity,
+        unitCost: plaster.unitCost,
+        markupPercent: plasterMarkup,
+        unitTemplateUuid: plaster.uuid,
+      }),
+      makeItem({
+        orderIndex: 3,
+        itemType: 'PIE',
+        name: wallPie.name,
+        unitMeasurement: wallPie.unitMeasurement,
+        quantity: wallQuantity,
+        unitCost: wallPie.unitCost,
+        markupPercent: wallMarkup,
+        constructionPieUuid: wallPie.uuid,
+      }),
+      makeItem({ orderIndex: 4, itemType: 'MATERIAL', name: 'Профиль для гипсокартона UD+CD', unitMeasurement: 'м.п.', quantity: 35, unitCost: 95 }),
+      makeItem({ orderIndex: 5, itemType: 'MATERIAL', name: 'Лист ГКЛ 12.5 мм', unitMeasurement: 'лист', quantity: 8, unitCost: 520 }),
+    ],
+    componentsByOrderIndex: {
+      2: [
+        { orderIndex: 0, itemType: 'MATERIAL', name: 'Штукатурка Ротбанд 30 кг', unitMeasurement: 'кг', quantityPerUnit: 8, unitCost: 22, totalCost: round(8 * plasterQuantity * 22) },
+        { orderIndex: 1, itemType: 'MATERIAL', name: 'Маяки штукатурные 3 м', unitMeasurement: 'шт', quantityPerUnit: 0.35, unitCost: 45, totalCost: round(0.35 * plasterQuantity * 45) },
+        { orderIndex: 2, itemType: 'WORK', name: 'Оштукатуривание по маякам', unitMeasurement: 'ч', quantityPerUnit: 0.6, unitCost: 1200, totalCost: round(0.6 * plasterQuantity * 1200) },
+      ],
+    },
+    pieLayersByOrderIndex: {
+      3: [
+        { orderIndex: 0, name: 'Газоблок D500 100×250×625', thickness: 100, density: 500, consumptionPerM2: 6.5, unitMeasurement: 'шт', unitCost: 180, totalCost: round(6.5 * wallQuantity * 180) },
+        { orderIndex: 1, name: 'Клей для газоблока', thickness: 0, density: 0, consumptionPerM2: 3, unitMeasurement: 'кг', unitCost: 25, totalCost: round(3 * wallQuantity * 25) },
+        { orderIndex: 2, name: 'Штукатурка Ротбанд (с двух сторон)', thickness: 20, density: 0, consumptionPerM2: 16, unitMeasurement: 'кг', unitCost: 22, totalCost: round(16 * wallQuantity * 22) },
+      ],
+    },
+  };
+
+  // —————————— РАЗДЕЛ 3. Электромонтаж ——————————
+  const section3: SectionPlan = {
+    name: 'Электромонтажные работы',
+    items: [
+      makeItem({ orderIndex: 0, itemType: 'MATERIAL', name: 'Кабель ВВГнг 3×2.5', unitMeasurement: 'м.п.', quantity: 120, unitCost: 95, markupPercent: 15 }),
+      makeItem({ orderIndex: 1, itemType: 'MATERIAL', name: 'Кабель ВВГнг 3×1.5 (освещение)', unitMeasurement: 'м.п.', quantity: 60, unitCost: 68, markupPercent: 15 }),
+      makeItem({ orderIndex: 2, itemType: 'MATERIAL', name: 'Гофротруба ПВХ Ø16', unitMeasurement: 'м.п.', quantity: 180, unitCost: 18 }),
+      makeItem({ orderIndex: 3, itemType: 'MATERIAL', name: 'Розетка Schneider AtlasDesign', unitMeasurement: 'шт', quantity: 14, unitCost: 320 }),
+      makeItem({ orderIndex: 4, itemType: 'MATERIAL', name: 'Выключатель Schneider AtlasDesign', unitMeasurement: 'шт', quantity: 6, unitCost: 310 }),
+      makeItem({ orderIndex: 5, itemType: 'MATERIAL', name: 'Подрозетник монтажный', unitMeasurement: 'шт', quantity: 20, unitCost: 35 }),
+      makeItem({ orderIndex: 6, itemType: 'MATERIAL', name: 'Автомат C16 ABB', unitMeasurement: 'шт', quantity: 6, unitCost: 450 }),
+      makeItem({ orderIndex: 7, itemType: 'MATERIAL', name: 'УЗО 40А/30мА ABB', unitMeasurement: 'шт', quantity: 2, unitCost: 2800 }),
+      makeItem({ orderIndex: 8, itemType: 'WORK', name: 'Штробление стен под кабель', unitMeasurement: 'м.п.', quantity: 180, unitCost: 180 }),
+      makeItem({ orderIndex: 9, itemType: 'WORK', name: 'Прокладка кабеля в штробе/гофре', unitMeasurement: 'м.п.', quantity: 180, unitCost: 95 }),
+      makeItem({ orderIndex: 10, itemType: 'WORK', name: 'Установка и подключение розеток/выключателей', unitMeasurement: 'шт', quantity: 20, unitCost: 250 }),
+      makeItem({ orderIndex: 11, itemType: 'WORK', name: 'Сборка щитка с автоматикой', unitMeasurement: 'услуга', quantity: 1, unitCost: 9500 }),
+    ],
+  };
+
+  // —————————— РАЗДЕЛ 4. Сантехнические работы ——————————
+  const section4: SectionPlan = {
+    name: 'Сантехнические работы',
+    items: [
+      makeItem({ orderIndex: 0, itemType: 'MATERIAL', name: 'Полипропилен PN20 Ø25 (ГВС/ХВС)', unitMeasurement: 'м.п.', quantity: 35, unitCost: 85 }),
+      makeItem({ orderIndex: 1, itemType: 'MATERIAL', name: 'Фитинги PPR (тройник, отвод, муфта)', unitMeasurement: 'комплект', quantity: 1, unitCost: 3800, comment: 'Расход по проекту' }),
+      makeItem({ orderIndex: 2, itemType: 'MATERIAL', name: 'Коллектор водоснабжения 4-х выводной', unitMeasurement: 'шт', quantity: 2, unitCost: 2200 }),
+      makeItem({ orderIndex: 3, itemType: 'MATERIAL', name: 'Кран шаровой 1/2"', unitMeasurement: 'шт', quantity: 8, unitCost: 420 }),
+      makeItem({ orderIndex: 4, itemType: 'MATERIAL', name: 'Унитаз подвесной (комплект с инсталляцией)', unitMeasurement: 'комплект', quantity: 1, unitCost: 28500 }),
+      makeItem({ orderIndex: 5, itemType: 'MATERIAL', name: 'Смеситель для раковины Grohe', unitMeasurement: 'шт', quantity: 1, unitCost: 12500 }),
+      makeItem({ orderIndex: 6, itemType: 'MATERIAL', name: 'Смеситель для душа термостат', unitMeasurement: 'шт', quantity: 1, unitCost: 18900 }),
+      makeItem({ orderIndex: 7, itemType: 'WORK', name: 'Штробление под трубы ХВС/ГВС/канализация', unitMeasurement: 'м.п.', quantity: 35, unitCost: 220 }),
+      makeItem({ orderIndex: 8, itemType: 'WORK', name: 'Монтаж полипропиленовых труб со сваркой', unitMeasurement: 'м.п.', quantity: 35, unitCost: 280 }),
+      makeItem({ orderIndex: 9, itemType: 'WORK', name: 'Установка и подключение сантехники', unitMeasurement: 'точка', quantity: 6, unitCost: 2500 }),
+    ],
+  };
+
+  // —————————— РАЗДЕЛ 5. Чистовая отделка ——————————
+  const laminateQuantity = 28;
+  const tileQuantity = 18;
+  const laminateMarkup = laminate.defaultMarkupPercent;
+  const tileMarkup = tile.defaultMarkupPercent;
+  const section5: SectionPlan = {
+    name: 'Чистовая отделка',
+    items: [
+      makeItem({
+        orderIndex: 0,
+        itemType: 'UNIT',
+        name: laminate.name,
+        unitMeasurement: laminate.unitMeasurement,
+        quantity: laminateQuantity,
+        unitCost: laminate.unitCost,
+        markupPercent: laminateMarkup,
+        unitTemplateUuid: laminate.uuid,
+      }),
+      makeItem({
+        orderIndex: 1,
+        itemType: 'UNIT',
+        name: tile.name,
+        unitMeasurement: tile.unitMeasurement,
+        quantity: tileQuantity,
+        unitCost: tile.unitCost,
+        markupPercent: tileMarkup,
+        unitTemplateUuid: tile.uuid,
+      }),
+      makeItem({ orderIndex: 2, itemType: 'MATERIAL', name: 'Обои флизелиновые (рулон 10×1.06)', unitMeasurement: 'рулон', quantity: 14, unitCost: 2800 }),
+      makeItem({ orderIndex: 3, itemType: 'MATERIAL', name: 'Клей обойный Metylan', unitMeasurement: 'пач', quantity: 5, unitCost: 680 }),
+      makeItem({ orderIndex: 4, itemType: 'WORK', name: 'Поклейка обоев', unitMeasurement: 'м²', quantity: 80, unitCost: 280 }),
+      makeItem({ orderIndex: 5, itemType: 'MATERIAL', name: 'Плинтус ПВХ 70 мм (2.5 м)', unitMeasurement: 'шт', quantity: 18, unitCost: 185 }),
+      makeItem({ orderIndex: 6, itemType: 'WORK', name: 'Монтаж напольного плинтуса', unitMeasurement: 'м.п.', quantity: 45, unitCost: 120 }),
+      makeItem({ orderIndex: 7, itemType: 'UNIT', name: 'Монтаж окна ПВХ 60-серии (витрина)', unitMeasurement: 'м²', quantity: 8.5, unitCost: 9250, markupPercent: 30, unitTemplateUuid: firstBaseUnitTemplateUuid }),
+      makeItem({ orderIndex: 8, itemType: 'MATERIAL', name: 'Межкомнатная дверь ЛДСП (комплект с коробкой)', unitMeasurement: 'шт', quantity: 4, unitCost: 15500 }),
+      makeItem({ orderIndex: 9, itemType: 'WORK', name: 'Установка межкомнатных дверей', unitMeasurement: 'шт', quantity: 4, unitCost: 4200 }),
+    ],
+    componentsByOrderIndex: {
+      0: [
+        { orderIndex: 0, itemType: 'MATERIAL', name: 'Ламинат 33 класс 12 мм', unitMeasurement: 'м²', quantityPerUnit: 1.05, unitCost: 1250, totalCost: round(1.05 * laminateQuantity * 1250) },
+        { orderIndex: 1, itemType: 'MATERIAL', name: 'Подложка XPS 2 мм', unitMeasurement: 'м²', quantityPerUnit: 1.02, unitCost: 110, totalCost: round(1.02 * laminateQuantity * 110) },
+        { orderIndex: 2, itemType: 'MATERIAL', name: 'Плёнка пароизоляционная', unitMeasurement: 'м²', quantityPerUnit: 1.05, unitCost: 35, totalCost: round(1.05 * laminateQuantity * 35) },
+        { orderIndex: 3, itemType: 'WORK', name: 'Укладка ламината', unitMeasurement: 'ч', quantityPerUnit: 0.4, unitCost: 900, totalCost: round(0.4 * laminateQuantity * 900) },
+      ],
+      1: [
+        { orderIndex: 0, itemType: 'MATERIAL', name: 'Керамогранит 60×60', unitMeasurement: 'м²', quantityPerUnit: 1.08, unitCost: 1450, totalCost: round(1.08 * tileQuantity * 1450) },
+        { orderIndex: 1, itemType: 'MATERIAL', name: 'Клей плиточный Ceresit CM11', unitMeasurement: 'кг', quantityPerUnit: 5, unitCost: 38, totalCost: round(5 * tileQuantity * 38) },
+        { orderIndex: 2, itemType: 'MATERIAL', name: 'Затирка швов Ceresit CE40', unitMeasurement: 'кг', quantityPerUnit: 0.4, unitCost: 110, totalCost: round(0.4 * tileQuantity * 110) },
+        { orderIndex: 3, itemType: 'MATERIAL', name: 'Крестики плиточные 2 мм', unitMeasurement: 'упак', quantityPerUnit: 0.05, unitCost: 85, totalCost: round(0.05 * tileQuantity * 85) },
+        { orderIndex: 4, itemType: 'WORK', name: 'Укладка керамогранита с раскроем', unitMeasurement: 'ч', quantityPerUnit: 1.2, unitCost: 1500, totalCost: round(1.2 * tileQuantity * 1500) },
+      ],
+      7: [
+        { orderIndex: 0, itemType: 'MATERIAL', name: 'Окно ПВХ 60-серия', unitMeasurement: 'шт', quantityPerUnit: 1, unitCost: 8500, totalCost: round(1 * 8.5 * 8500) },
+        { orderIndex: 1, itemType: 'WORK', name: 'Монтаж и регулировка окна', unitMeasurement: 'ч', quantityPerUnit: 0.5, unitCost: 1500, totalCost: round(0.5 * 8.5 * 1500) },
+      ],
+    },
+  };
+
+  // —————————— РАЗДЕЛ 6. Накладные и логистика ——————————
+  const section6: SectionPlan = {
+    name: 'Накладные расходы и логистика',
+    items: [
+      makeItem({ orderIndex: 0, itemType: 'OVERHEAD', name: 'Доставка материалов (грузовик 3.5 т, 6 ходок)', unitMeasurement: 'услуга', quantity: 6, unitCost: 4500, markupPercent: 0 }),
+      makeItem({ orderIndex: 1, itemType: 'OVERHEAD', name: 'Подъём материалов на этаж (без лифта)', unitMeasurement: 'услуга', quantity: 1, unitCost: 18000, markupPercent: 0 }),
+      makeItem({ orderIndex: 2, itemType: 'OVERHEAD', name: 'Расходные материалы (плёнка, скотч, перчатки)', unitMeasurement: 'пакет', quantity: 1, unitCost: 8500 }),
+      makeItem({ orderIndex: 3, itemType: 'OVERHEAD', name: 'Клининг финишный (с мойкой окон)', unitMeasurement: 'услуга', quantity: 1, unitCost: 12500, markupPercent: 15 }),
+      makeItem({ orderIndex: 4, itemType: 'OVERHEAD', name: 'Организация работ прораба', unitMeasurement: 'услуга', quantity: 1, unitCost: 35000, markupPercent: 10 }),
+    ],
+  };
+
+  const sectionsPlan = [section1, section2, section3, section4, section5, section6];
+
+  let globalTotalCost = 0;
+  let globalTotalClient = 0;
+
+  for (let sectionIdx = 0; sectionIdx < sectionsPlan.length; sectionIdx++) {
+    const plan = sectionsPlan[sectionIdx];
+    const section = await prisma.estimateSection.create({
+      data: {
+        name: plan.name,
+        orderIndex: sectionIdx,
+        estimateUuid: estimate.uuid,
+      },
+    });
+
+    let sectionCost = 0;
+    let sectionClient = 0;
+
+    // Последовательно — чтобы данные для сопоставления orderIndex ↔ компоненты не путались.
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of plan.items) {
+      const components = plan.componentsByOrderIndex?.[item.orderIndex] ?? [];
+      const pieLayers = plan.pieLayersByOrderIndex?.[item.orderIndex] ?? [];
+      // eslint-disable-next-line no-await-in-loop
+      await prisma.estimateItem.create({
+        data: {
+          sectionUuid: section.uuid,
+          orderIndex: item.orderIndex,
+          itemType: item.itemType,
+          unitTemplateUuid: item.unitTemplateUuid,
+          constructionPieUuid: item.constructionPieUuid,
+          name: item.name,
+          unitMeasurement: item.unitMeasurement,
+          quantity: item.quantity,
+          unitCost: item.unitCost,
+          markupPercent: item.markupPercent,
+          unitClientPrice: item.unitClientPrice,
+          totalCost: item.totalCost,
+          totalClientPrice: item.totalClientPrice,
+          comment: item.comment,
+          components: components.length ? { create: components } : undefined,
+          pieLayers: pieLayers.length ? { create: pieLayers } : undefined,
+        },
+      });
+      sectionCost += item.totalCost;
+      sectionClient += item.totalClientPrice;
+    }
+
+    await prisma.estimateSection.update({
+      where: { uuid: section.uuid },
+      data: {
+        sectionTotalCost: round(sectionCost),
+        sectionTotalClientPrice: round(sectionClient),
+      },
+    });
+
+    globalTotalCost += sectionCost;
+    globalTotalClient += sectionClient;
+  }
+
+  await prisma.estimate.update({
+    where: { uuid: estimate.uuid },
+    data: {
+      totalCost: round(globalTotalCost),
+      totalClientPrice: round(globalTotalClient),
+    },
+  });
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `[seed] Реалистичная демо-смета "${ESTIMATE_NAME}" создана: ` +
+      `${round(globalTotalCost)} ₽ → ${round(globalTotalClient)} ₽ (${sectionsPlan.length} разделов).`,
+  );
+}
+
 // execute the seed upload
 main()
   .then(async () => {
     await seedEstimatesDemo();
+
+    // После базовой демо-сметы дополняем справочник реалистичными шаблонами и создаём большую смету.
+    const manager1 = await prisma.user.findUnique({ where: { email: 'manager1@mail.ru' } });
+    if (manager1?.handbookManagerUuid) {
+      const demoProject = await prisma.project.findFirst({
+        where: { responsibleManagerUuid: manager1.uuid, name: 'Лучи - дом №1.2.1' },
+      });
+      const baseUnitTemplate = await prisma.unitTemplate.findFirst({
+        where: { name: 'Монтаж окна ПВХ 1 м²', handbookUuid: manager1.handbookManagerUuid },
+      });
+      if (demoProject && baseUnitTemplate) {
+        const handbookTemplates = await seedRealisticHandbookTemplates(
+          manager1.handbookManagerUuid,
+          manager1.uuid,
+        );
+        await seedRealisticRenovationEstimate(
+          demoProject.uuid,
+          manager1.handbookManagerUuid,
+          manager1.uuid,
+          handbookTemplates,
+          baseUnitTemplate.uuid,
+        );
+      }
+    }
+
     await prisma.$disconnect();
   })
   .catch(async e => {

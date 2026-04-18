@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { IconButton, TableCell, TableRow } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -15,10 +16,11 @@ import { PieLayerRow } from './pie-layer-row';
 interface ItemRowProps {
   item: EstimateItemBusinessValue;
   num: string;
+  onEdit: () => void;
   onDelete: () => void;
 }
 
-export function ItemRow({ item, num, onDelete }: ItemRowProps) {
+export function ItemRow({ item, num, onEdit, onDelete }: ItemRowProps) {
   const [expanded, setExpanded] = useState(false);
   const typeLabel = ITEM_TYPE_OPTIONS.find((o) => o.value === item.itemType)?.label ?? item.itemType;
   const isUnit = item.itemType === 'UNIT';
@@ -47,6 +49,9 @@ export function ItemRow({ item, num, onDelete }: ItemRowProps) {
           <strong>{formatMoney(item.totalClientPrice)}</strong>
         </TableCell>
         <TableCell>
+          <IconButton size="small" onClick={onEdit} title="Редактировать строку">
+            <EditIcon fontSize="small" />
+          </IconButton>
           <IconButton size="small" onClick={onDelete} title="Удалить строку">
             <DeleteIcon fontSize="small" />
           </IconButton>
