@@ -22,6 +22,8 @@ import {
   EstimateSectionTree,
 } from 'src/shared/contracts/estimate';
 
+import { triggerFileDownload, XLSX_MIME_TYPE } from 'src/shared/file-download';
+
 import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 
 import { formatMoney } from './_consts';
@@ -36,7 +38,6 @@ import { AddSectionDialog } from './add-section-dialog';
 import { AddItemDialog } from './add-item-dialog';
 import { EditItemDialog } from './edit-item-dialog';
 import { EditSectionDialog } from './edit-section-dialog';
-import { triggerFileDownload, XLSX_MIME_TYPE } from 'src/shared/file-download';
 
 interface EditItemTarget {
   sectionId: string;

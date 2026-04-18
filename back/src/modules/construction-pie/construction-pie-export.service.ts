@@ -23,9 +23,7 @@ export class ConstructionPieExportService {
   /**
    * Полный список пирогов справочника одним листом: заголовок пирога + строки слоёв ниже.
    */
-  async exportAllToBuffer(
-    handbookUuid: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<{ buffer: Buffer; fileName: string }> {
+  async exportAllToBuffer(handbookUuid: EntityUrlParamCommand.RequestUuidParam): Promise<{ buffer: Buffer; fileName: string }> {
     const pies = await this.repository.getAllInHandbook(handbookUuid);
 
     const workbook = new ExcelJS.Workbook();

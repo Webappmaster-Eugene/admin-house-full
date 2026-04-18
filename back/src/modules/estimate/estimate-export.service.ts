@@ -262,5 +262,4 @@ export class EstimateExportService {
     row.hidden = true;
     rowCounter.current++;
   }
-
 }

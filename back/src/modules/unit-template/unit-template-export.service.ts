@@ -24,9 +24,7 @@ export class UnitTemplateExportService {
   /**
    * Полный список единичек справочника одним листом: шапка с агрегатами + строки компонентов.
    */
-  async exportAllToBuffer(
-    handbookUuid: EntityUrlParamCommand.RequestUuidParam,
-  ): Promise<{ buffer: Buffer; fileName: string }> {
+  async exportAllToBuffer(handbookUuid: EntityUrlParamCommand.RequestUuidParam): Promise<{ buffer: Buffer; fileName: string }> {
     const templates = await this.repository.getAllInHandbook(handbookUuid);
 
     const workbook = new ExcelJS.Workbook();
