@@ -15,6 +15,8 @@ import { deleteEstimateSection } from 'src/api/actions/estimate/delete-section.a
 import { exportEstimate } from 'src/api/actions/estimate/export-estimate.action';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
+
 import { formatMoney } from './_consts';
 import { EstimateEditorProps, NewItemFormState } from './_types';
 import { findSection } from './_helpers';
@@ -226,6 +228,8 @@ export function EstimateEditor({
 
   return (
     <Box>
+      <GuideInfoAlert section="estimates" variant="compact" />
+
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Box>
           <Typography variant="h4">{estimate.name}</Typography>

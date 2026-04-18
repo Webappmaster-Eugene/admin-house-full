@@ -89,6 +89,7 @@ import { isEntityResponsiblePartnerTG } from 'src/utils/type-guards/is-entity-re
 import { isEntityFieldUnitMeasurementTG } from 'src/utils/type-guards/is-entity-field-unit-measurement.type-guard';
 
 import { MaterialsProps } from 'src/widgets/materials/material.props';
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 import CustomBreadcrumbs from 'src/shared/breadcrumbs/custom-breadcrumbs';
 import { useWorkspaceInfoStore } from 'src/store/workspace/workspace.store';
 import { TMaterialTableEntity } from 'src/widgets/materials/material.entity';
@@ -1029,6 +1030,7 @@ export default function Materials({
   return (
     <>
       <Container maxWidth="xl">
+        <GuideInfoAlert section="handbook" />
         {materialsDataGridInitialState ? (
           <>
             <Typography variant="h4">

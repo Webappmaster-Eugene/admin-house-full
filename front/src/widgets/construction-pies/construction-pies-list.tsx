@@ -34,6 +34,8 @@ import { deletePieLayer } from 'src/api/actions/construction-pie/delete-layer.ac
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 import { ConstructionPieWithLayers } from 'src/shared/contracts/construction-pie';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
+
 import { AddPieDialog } from './add-pie-dialog';
 import { AddLayerDialog } from './add-layer-dialog';
 
@@ -163,11 +165,13 @@ export function ConstructionPiesList({
 
   return (
     <Box>
+      <GuideInfoAlert section="pies" />
+
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
         <Box>
           <Typography variant="h4">Пироги</Typography>
           <Typography variant="body2" color="text.secondary">
-            Справочник многослойных конструкций (стены, полы, перекрытия) для использования в сметах
+            Шаблоны многослойных конструкций (стены, полы, перекрытия) для использования в сметах
           </Typography>
         </Box>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setPieDialogOpen(true)}>
@@ -178,7 +182,7 @@ export function ConstructionPiesList({
       {pies.length === 0 && (
         <Card>
           <CardContent>
-            <Typography>В справочнике пока нет пирогов. Создайте первый.</Typography>
+            <Typography>Пока нет ни одного пирога. Создайте первый.</Typography>
           </CardContent>
         </Card>
       )}

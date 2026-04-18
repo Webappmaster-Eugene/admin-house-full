@@ -35,6 +35,8 @@ import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type
 import { UnitTemplateWithComponents } from 'src/shared/contracts/unit-template';
 import { EEstimateItemType } from 'src/shared/contracts/estimate';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
+
 import { AddUnitTemplateDialog } from './add-unit-template-dialog';
 import { AddComponentDialog } from './add-component-dialog';
 
@@ -169,11 +171,13 @@ export function UnitTemplatesList({
 
   return (
     <Box>
+      <GuideInfoAlert section="units" />
+
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
         <Box>
           <Typography variant="h4">Единички</Typography>
           <Typography variant="body2" color="text.secondary">
-            Справочник комплексных единиц (работы + материалы) для использования в сметах
+            Шаблоны комплексных единиц работ (материал + работа на 1 ед.) для использования в сметах
           </Typography>
         </Box>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setTemplateDialogOpen(true)}>
@@ -184,7 +188,7 @@ export function UnitTemplatesList({
       {templates.length === 0 && (
         <Card>
           <CardContent>
-            <Typography>В справочнике пока нет единичек. Создайте первую.</Typography>
+            <Typography>Пока нет ни одной единички. Создайте первую.</Typography>
           </CardContent>
         </Card>
       )}

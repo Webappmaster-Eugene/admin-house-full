@@ -59,8 +59,8 @@ export const NavData: NavItems = [
       {
         title: 'Сметы',
         titleShort: 'Сметы',
-        caption: 'Сметы по проектам workspace',
-        captionFull: 'Классические сметы с иерархией разделов и экспортом в Excel',
+        caption: 'Сметы проектов',
+        captionFull: 'Сметы проектов: иерархические документы со строками разных типов и экспортом в Excel',
         path: paths.dashboard.estimates,
         icon: ICONS.invoice,
         roles: [UserRoles.MANAGER],
@@ -68,8 +68,8 @@ export const NavData: NavItems = [
       {
         title: 'Единички',
         titleShort: 'Единички',
-        caption: 'Справочник комплексных единиц (шаблонов)',
-        captionFull: 'Справочник единичек (шаблонов комплексных работ с материалами) для смет',
+        caption: 'Шаблоны комплексных единиц',
+        captionFull: 'Шаблоны комплексных единиц работ (материал + работа на 1 ед.) для использования в сметах',
         path: paths.dashboard.unitTemplates,
         icon: ICONS.kanban,
         roles: [UserRoles.MANAGER],
@@ -77,8 +77,8 @@ export const NavData: NavItems = [
       {
         title: 'Пироги',
         titleShort: 'Пироги',
-        caption: 'Справочник многослойных конструкций',
-        captionFull: 'Справочник пирогов (стен, полов, перекрытий) для использования в сметах',
+        caption: 'Шаблоны многослойных конструкций',
+        captionFull: 'Шаблоны многослойных конструкций (стены, полы, перекрытия) для использования в сметах',
         path: paths.dashboard.constructionPies,
         icon: ICONS.banking,
         roles: [UserRoles.MANAGER],
@@ -101,6 +101,15 @@ export const NavData: NavItems = [
   {
     subheader: 'Управление',
     items: [
+      {
+        title: 'Руководство',
+        titleShort: 'Руководство',
+        caption: 'Как пользоваться приложением',
+        captionFull: 'Пошаговое руководство: справочник, шаблоны, сметы, экспорт в Excel',
+        path: paths.dashboard.guide,
+        icon: ICONS.tour,
+        roles: [UserRoles.MANAGER],
+      },
       {
         title: 'Личный кабинет',
         titleShort: 'Кабинет',

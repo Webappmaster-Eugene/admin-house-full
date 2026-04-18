@@ -41,6 +41,8 @@ import { CategoryMaterialProps } from 'src/widgets/categories/category-materials
 import { applyFilterHandler } from 'src/widgets/categories/category-materials/helpers/apply-filter.handler';
 import { deleteManyCategoryMaterial } from 'src/api/actions/category-material/delete-many-category-material.action';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
+
 import FileManagerFiltersResult from '../unused-components/file-manager-filters-result';
 
 export default function CategoryMaterials({
@@ -213,6 +215,8 @@ export default function CategoryMaterials({
   return (
     <>
       <Container maxWidth="xl">
+        <GuideInfoAlert section="handbook" />
+
         <Stack
           spacing={2.5}
           sx={{

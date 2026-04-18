@@ -70,6 +70,57 @@ export default function DashboardMain({ currentUser, stats }: DashboardMainProps
         </Typography>
       </Box>
 
+      {isManager && (
+        <Card
+          sx={{
+            mb: 4,
+            p: 3,
+            background:
+              'linear-gradient(135deg, rgba(0, 167, 111, 0.08) 0%, rgba(0, 184, 217, 0.08) 100%)',
+            borderColor: 'primary.light',
+            borderWidth: 1,
+            borderStyle: 'solid',
+          }}
+        >
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ md: 'center' }} justifyContent="space-between">
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Box
+                sx={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 1.5,
+                  bgcolor: 'background.paper',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'primary.main',
+                  flexShrink: 0,
+                }}
+              >
+                <Iconify icon="solar:notebook-bookmark-bold" width={32} />
+              </Box>
+              <Box>
+                <Typography variant="h6">Руководство: как пользоваться приложением</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Быстрый старт за 5 шагов, детальные инструкции по справочнику и сметам, словарь
+                  терминов и FAQ.
+                </Typography>
+              </Box>
+            </Stack>
+            <Button
+              variant="contained"
+              component={RouterLink}
+              href={paths.dashboard.guide}
+              size="large"
+              startIcon={<Iconify icon="solar:arrow-right-bold" />}
+              sx={{ flexShrink: 0 }}
+            >
+              Открыть руководство
+            </Button>
+          </Stack>
+        </Card>
+      )}
+
       {hasWorkspace && (
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <StatCard

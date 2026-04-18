@@ -39,6 +39,8 @@ import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type
 
 import { EstimateBusinessValue } from 'src/shared/contracts/estimate';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
+
 import { formatMoney } from './_consts';
 
 type Project = ProjectGetAllCommand.ResponseEntity[number];
@@ -137,8 +139,16 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
 
   return (
     <Box>
+      <GuideInfoAlert section="estimates" />
+
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Сметы</Typography>
+        <Box>
+          <Typography variant="h4">Сметы</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Сметы проектов: иерархические документы со строками разных типов (материалы, работы,
+            единички, пироги) и экспортом в Excel
+          </Typography>
+        </Box>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

@@ -2667,105 +2667,162 @@ async function main() {
   });
   //endregion
 
-  //DOC ESTIMATES SHOWCASE - демо-сметы со всеми 3 типами строк (классическая + единичка + пирог)
-  //region ESTIMATES_DEMO
-  const round = (value: number) => Math.round(value * 100) / 100;
+  //DOC Базовый сидинг закончен. Демо-сметы создаются отдельной идемпотентной функцией
+  //DOC seedEstimatesDemo() — она запускается ПОСЛЕ main() и работает даже на уже засеянной БД.
+}
 
-  // Шаблон единички в Handbook менеджера 1 — «Монтаж окна ПВХ»
-  const DEMO_UNIT_TEMPLATE_1 = await prisma.unitTemplate.create({
-    data: {
-      name: 'Монтаж окна ПВХ 1 м²',
-      description: 'Демо-единичка: окно + работа монтажа на 1 м² проёма',
-      unitMeasurement: 'м²',
-      defaultMarkupPercent: 30,
-      handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      lastChangeByUserUuid: MANAGER_USER_1.uuid,
-      components: {
-        create: [
-          {
-            orderIndex: 0,
-            itemType: 'MATERIAL',
-            name: 'Окно ПВХ 60-серия',
-            unitMeasurement: 'шт',
-            quantityPerUnit: 1,
-            unitCost: 8500,
-            comment: null,
-          },
-          {
-            orderIndex: 1,
-            itemType: 'WORK',
-            name: 'Монтаж и регулировка окна',
-            unitMeasurement: 'ч',
-            quantityPerUnit: 0.5,
-            unitCost: 1500,
-            comment: null,
-          },
-        ],
+const round = (value: number) => Math.round(value * 100) / 100;
+
+/**
+ * Идемпотентно создаёт демо-сметы (UnitTemplate + ConstructionPie + Estimate со всеми 3 типами строк).
+ * Запускается всегда, в т.ч. на уже засеянной БД (где основной main() выходит на early-exit).
+ * Если объект уже существует (по name + parent), — пропускает создание.
+ */
+async function seedEstimatesDemo(): Promise<void> {
+  // 1. Найти manager1 и его handbook/проект.
+  const manager1 = await prisma.user.findUnique({ where: { email: 'manager1@mail.ru' } });
+  if (!manager1?.handbookManagerUuid) {
+    // eslint-disable-next-line no-console
+    console.warn('[seed] manager1 не найден или не имеет handbook — демо-сметы пропущены.');
+    return;
+  }
+  const handbook = await prisma.handbook.findUnique({
+    where: { uuid: manager1.handbookManagerUuid },
+  });
+  if (!handbook) {
+    // eslint-disable-next-line no-console
+    console.warn('[seed] handbook manager1 не найден — демо-сметы пропущены.');
+    return;
+  }
+  const demoProject = await prisma.project.findFirst({
+    where: { responsibleManagerUuid: manager1.uuid, name: 'Лучи - дом №1.2.1' },
+  });
+  if (!demoProject) {
+    // eslint-disable-next-line no-console
+    console.warn('[seed] Проект "Лучи - дом №1.2.1" не найден — демо-сметы пропущены.');
+    return;
+  }
+  // Любой материал handbook'а для строки 1 (опционально — если нет, поле materialUuid останется null).
+  const anyMaterial = await prisma.material.findFirst({
+    where: { categoryMaterial: { handbookUuid: handbook.uuid } },
+  });
+
+  // 2. UnitTemplate «Монтаж окна ПВХ 1 м²» — создать, если ещё нет.
+  const UNIT_TEMPLATE_NAME = 'Монтаж окна ПВХ 1 м²';
+  let unitTemplate = await prisma.unitTemplate.findFirst({
+    where: { name: UNIT_TEMPLATE_NAME, handbookUuid: handbook.uuid },
+  });
+  if (!unitTemplate) {
+    unitTemplate = await prisma.unitTemplate.create({
+      data: {
+        name: UNIT_TEMPLATE_NAME,
+        description: 'Демо-единичка: окно + работа монтажа на 1 м² проёма',
+        unitMeasurement: 'м²',
+        defaultMarkupPercent: 30,
+        handbookUuid: handbook.uuid,
+        lastChangeByUserUuid: manager1.uuid,
+        components: {
+          create: [
+            {
+              orderIndex: 0,
+              itemType: 'MATERIAL',
+              name: 'Окно ПВХ 60-серия',
+              unitMeasurement: 'шт',
+              quantityPerUnit: 1,
+              unitCost: 8500,
+              comment: null,
+            },
+            {
+              orderIndex: 1,
+              itemType: 'WORK',
+              name: 'Монтаж и регулировка окна',
+              unitMeasurement: 'ч',
+              quantityPerUnit: 0.5,
+              unitCost: 1500,
+              comment: null,
+            },
+          ],
+        },
       },
-    },
-  });
-  const DEMO_UT1_UNIT_COST = round(1 * 8500 + 0.5 * 1500); // 9250
-  await prisma.unitTemplate.update({
-    where: { uuid: DEMO_UNIT_TEMPLATE_1.uuid },
-    data: {
-      unitCost: DEMO_UT1_UNIT_COST,
-      unitClientPrice: round(DEMO_UT1_UNIT_COST * 1.3),
-    },
-  });
+    });
+    const unitCost = round(1 * 8500 + 0.5 * 1500);
+    unitTemplate = await prisma.unitTemplate.update({
+      where: { uuid: unitTemplate.uuid },
+      data: { unitCost, unitClientPrice: round(unitCost * 1.3) },
+    });
+  }
+  const DEMO_UT1_UNIT_COST = unitTemplate.unitCost || round(1 * 8500 + 0.5 * 1500);
 
-  // Пирог в Handbook менеджера 1 — «Тёплый пол со стяжкой 100 мм»
-  const DEMO_PIE_1 = await prisma.constructionPie.create({
-    data: {
-      name: 'Тёплый пол со стяжкой 100 мм',
-      description: 'Демо-пирог: XPS 50мм + цементная стяжка 50мм с тёплым полом',
-      unitMeasurement: 'м²',
-      defaultMarkupPercent: 25,
-      handbookUuid: MANAGER_HANDBOOK_1.uuid,
-      lastChangeByUserUuid: MANAGER_USER_1.uuid,
-      layers: {
-        create: [
-          {
-            orderIndex: 0,
-            name: 'Пенополистирол XPS',
-            thickness: 50,
-            density: 35,
-            consumptionPerM2: 0.05,
-            unitMeasurement: 'м³',
-            unitCost: 3500,
-            comment: null,
-          },
-          {
-            orderIndex: 1,
-            name: 'Цементно-песчаная стяжка',
-            thickness: 50,
-            density: 2000,
-            consumptionPerM2: 100,
-            unitMeasurement: 'кг',
-            unitCost: 8,
-            comment: null,
-          },
-        ],
+  // 3. ConstructionPie «Тёплый пол со стяжкой 100 мм» — создать, если ещё нет.
+  const PIE_NAME = 'Тёплый пол со стяжкой 100 мм';
+  let pie = await prisma.constructionPie.findFirst({
+    where: { name: PIE_NAME, handbookUuid: handbook.uuid },
+  });
+  if (!pie) {
+    pie = await prisma.constructionPie.create({
+      data: {
+        name: PIE_NAME,
+        description: 'Демо-пирог: XPS 50мм + цементная стяжка 50мм с тёплым полом',
+        unitMeasurement: 'м²',
+        defaultMarkupPercent: 25,
+        handbookUuid: handbook.uuid,
+        lastChangeByUserUuid: manager1.uuid,
+        layers: {
+          create: [
+            {
+              orderIndex: 0,
+              name: 'Пенополистирол XPS',
+              thickness: 50,
+              density: 35,
+              consumptionPerM2: 0.05,
+              unitMeasurement: 'м³',
+              unitCost: 3500,
+              comment: null,
+            },
+            {
+              orderIndex: 1,
+              name: 'Цементно-песчаная стяжка',
+              thickness: 50,
+              density: 2000,
+              consumptionPerM2: 100,
+              unitMeasurement: 'кг',
+              unitCost: 8,
+              comment: null,
+            },
+          ],
+        },
       },
-    },
-  });
-  const DEMO_PIE1_UNIT_COST = round(0.05 * 3500 + 100 * 8); // 975
-  await prisma.constructionPie.update({
-    where: { uuid: DEMO_PIE_1.uuid },
-    data: {
-      unitCost: DEMO_PIE1_UNIT_COST,
-      unitClientPrice: round(DEMO_PIE1_UNIT_COST * 1.25),
-      totalThickness: 100,
-    },
-  });
+    });
+    const pieUnitCost = round(0.05 * 3500 + 100 * 8);
+    pie = await prisma.constructionPie.update({
+      where: { uuid: pie.uuid },
+      data: {
+        unitCost: pieUnitCost,
+        unitClientPrice: round(pieUnitCost * 1.25),
+        totalThickness: 100,
+      },
+    });
+  }
+  const DEMO_PIE1_UNIT_COST = pie.unitCost || round(0.05 * 3500 + 100 * 8);
 
-  // Демо-смета в первом проекте manager1
+  // 4. Demo Estimate — если уже есть, пропустить полностью (вместе с секцией и строками).
+  const ESTIMATE_NAME = 'Демо-смета — все типы строк';
+  const existingEstimate = await prisma.estimate.findFirst({
+    where: { name: ESTIMATE_NAME, projectUuid: demoProject.uuid },
+  });
+  if (existingEstimate) {
+    // eslint-disable-next-line no-console
+    console.log(`[seed] Демо-смета "${ESTIMATE_NAME}" уже существует — пропускаем.`);
+    return;
+  }
+
   const DEMO_ESTIMATE = await prisma.estimate.create({
     data: {
-      name: 'Демо-смета — все типы строк',
+      name: ESTIMATE_NAME,
       description: 'Тестовая смета с примерами всех типов: материал, работа, единичка, пирог',
       defaultMarkupPercent: 17,
-      projectUuid: MANAGER_PROJECT_1_2_1.uuid,
-      lastChangeByUserUuid: MANAGER_USER_1.uuid,
+      projectUuid: demoProject.uuid,
+      lastChangeByUserUuid: manager1.uuid,
     },
   });
 
@@ -2789,7 +2846,7 @@ async function main() {
       orderIndex: 0,
       itemType: 'MATERIAL',
       sectionUuid: DEMO_SECTION_1.uuid,
-      materialUuid: MATERIAL_UNIT_LISTOVOI1?.uuid ?? null,
+      materialUuid: anyMaterial?.uuid ?? null,
       name: 'Фанера ФСФ 18мм (демо-материал)',
       unitMeasurement: 'м²',
       quantity: item1Quantity,
@@ -2812,9 +2869,9 @@ async function main() {
       orderIndex: 1,
       itemType: 'UNIT',
       sectionUuid: DEMO_SECTION_1.uuid,
-      unitTemplateUuid: DEMO_UNIT_TEMPLATE_1.uuid,
-      name: DEMO_UNIT_TEMPLATE_1.name,
-      unitMeasurement: DEMO_UNIT_TEMPLATE_1.unitMeasurement,
+      unitTemplateUuid: unitTemplate.uuid,
+      name: unitTemplate.name,
+      unitMeasurement: unitTemplate.unitMeasurement,
       quantity: item2Quantity,
       unitCost: DEMO_UT1_UNIT_COST,
       markupPercent: item2Markup,
@@ -2857,9 +2914,9 @@ async function main() {
       orderIndex: 2,
       itemType: 'PIE',
       sectionUuid: DEMO_SECTION_1.uuid,
-      constructionPieUuid: DEMO_PIE_1.uuid,
-      name: DEMO_PIE_1.name,
-      unitMeasurement: DEMO_PIE_1.unitMeasurement,
+      constructionPieUuid: pie.uuid,
+      name: pie.name,
+      unitMeasurement: pie.unitMeasurement,
       quantity: item3Quantity,
       unitCost: DEMO_PIE1_UNIT_COST,
       markupPercent: item3Markup,
@@ -2938,15 +2995,15 @@ async function main() {
 
   // eslint-disable-next-line no-console
   console.log(
-    `[seed] Демо-смета "${DEMO_ESTIMATE.name}" создана в проекте "${MANAGER_PROJECT_1_2_1.name}": ` +
+    `[seed] Демо-смета "${DEMO_ESTIMATE.name}" создана в проекте "${demoProject.name}": ` +
       `${sectionTotalCost} ₽ → ${sectionTotalClient} ₽`,
   );
-  //endregion
 }
 
 // execute the seed upload
 main()
   .then(async () => {
+    await seedEstimatesDemo();
     await prisma.$disconnect();
   })
   .catch(async e => {
