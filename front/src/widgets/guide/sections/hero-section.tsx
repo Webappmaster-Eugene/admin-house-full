@@ -8,10 +8,14 @@ export function HeroSection() {
     <Box id="hero" sx={{ mb: 6 }}>
       <Stack spacing={2}>
         <Typography variant="h3">{guideContent.hero.title}</Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 820 }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ maxWidth: 820, lineHeight: 1.65 }}
+        >
           {guideContent.hero.lead}
         </Typography>
-        <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1 }}>
           <Button
             variant="contained"
             size="large"

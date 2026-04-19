@@ -9,7 +9,11 @@ export function UnitsSection() {
       <Typography variant="h4" sx={{ mb: 1 }}>
         {guideContent.units.title}
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 820 }}>
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        sx={{ mb: 3, maxWidth: 820, lineHeight: 1.65 }}
+      >
         {guideContent.units.lead}
       </Typography>
 
