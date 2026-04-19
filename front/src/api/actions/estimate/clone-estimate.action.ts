@@ -31,13 +31,18 @@ export async function cloneEstimate(
 ): Promise<{ uuid: string } | ErrorFromBackend> {
   try {
     // 1. Получить полную исходную смету.
+    // ВНИМАНИЕ: axiosInstance имеет response-interceptor `(res) => res.data`, поэтому
+    // `await axiosInstance.get(url)` уже возвращает BackendResponse вида
+    // { statusCode, message, data, errors } — обращаться нужно к `.data`, а не к `.data.data`.
     const url = axiosEndpoints.estimate.get
       .replace(':workspaceId', workspaceId)
       .replace(':projectId', projectId)
       .replace(':estimateId', estimateId);
-    const original = (await axiosInstance.get(url)).data?.data as
-      | EstimateGetCommand.ResponseEntity
-      | undefined;
+    const getRes = (await axiosInstance.get(url)) as unknown as {
+      statusCode?: number;
+      data?: EstimateGetCommand.ResponseEntity;
+    };
+    const original = getRes?.data;
     if (!original) return { error: 'Не удалось получить исходную смету' };
 
     // 2. Создать новую смету-обёртку.
@@ -49,10 +54,11 @@ export async function cloneEstimate(
       description: original.description ?? undefined,
       defaultMarkupPercent: original.defaultMarkupPercent,
     };
-    const createRes = await axiosInstance.post(createUrl, createReq);
-    const newEstimate = createRes.data?.data;
-    if (!newEstimate?.uuid) return { error: 'Не удалось создать копию сметы' };
-    const newEstimateId = newEstimate.uuid;
+    const createRes = (await axiosInstance.post(createUrl, createReq)) as unknown as {
+      data?: { uuid?: string };
+    };
+    const newEstimateId = createRes?.data?.uuid;
+    if (!newEstimateId) return { error: 'Не удалось создать копию сметы' };
 
     // 3. Скопировать секции + строки рекурсивно (только 2 уровня глубины).
     for (const section of original.sections) {
@@ -90,8 +96,11 @@ async function cloneSection(
     orderIndex: section.orderIndex,
     parentSectionUuid,
   };
-  const sectionRes = await axiosInstance.post(sectionUrl, sectionReq);
-  const newSectionId = sectionRes.data?.data?.uuid as string;
+  const sectionRes = (await axiosInstance.post(sectionUrl, sectionReq)) as unknown as {
+    data?: { uuid?: string };
+  };
+  const newSectionId = sectionRes?.data?.uuid;
+  if (!newSectionId) throw new Error(`Не удалось создать раздел "${section.name}" в копии сметы`);
 
   for (const item of section.items) {
     const itemUrl = axiosEndpoints.estimate.item_create

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { IconButton, TableCell, TableRow } from '@mui/material';
+import { IconButton, Stack, TableCell, TableRow } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -49,12 +49,19 @@ export function ItemRow({ item, num, onEdit, onDelete }: ItemRowProps) {
           <strong>{formatMoney(item.totalClientPrice)}</strong>
         </TableCell>
         <TableCell>
-          <IconButton size="small" onClick={onEdit} title="Редактировать строку">
-            <EditIcon fontSize="small" />
-          </IconButton>
-          <IconButton size="small" onClick={onDelete} title="Удалить строку">
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+            <IconButton
+              size="small"
+              onClick={onEdit}
+              title="Редактировать строку"
+              color="primary"
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" onClick={onDelete} title="Удалить строку" color="error">
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Stack>
         </TableCell>
       </TableRow>
 

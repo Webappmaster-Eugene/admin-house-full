@@ -21,6 +21,13 @@ export function cssBaseline(theme: Theme) {
           padding: 0,
           width: '100%',
           height: '100%',
+          // Явный fontFamily на body + всех form-элементах — гарантирует, что везде
+          // используется один Public_Sans (input/button/textarea/select НЕ наследуют
+          // шрифт от body по умолчанию, из-за чего возникала разница шрифтов в UI).
+          fontFamily: theme.typography.fontFamily,
+        },
+        'input, button, textarea, select': {
+          fontFamily: 'inherit',
         },
         '#root, #__next': {
           width: '100%',
