@@ -33,7 +33,8 @@ services:
 
   s3-minio:
     container_name: admin-house-minio
-    image: minio/minio
+    # Официальные образы minio/* удалены с Docker Hub — используем поддерживаемую сборку Pigsty (drop-in).
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
     restart: always
     ports:
       - "9000:9000"
@@ -48,7 +49,7 @@ services:
     command: server --console-address ":9001" /data
 
   s3-minio-create-buckets:
-    image: minio/mc
+    image: pgsty/mc:latest
     depends_on:
       - s3-minio
     entrypoint: >
