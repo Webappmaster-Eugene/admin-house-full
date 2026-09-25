@@ -122,7 +122,7 @@ export class ProjectController {
   //endregion
   @UseGuards(AuthGuard, WorkspaceMembersGuard)
   @ZodSerializerDto(ProjectGetAllResponseDto)
-  @Get('workspace/:workspaceId/organization/:organizationId//get-all-in-organization')
+  @Get('workspace/:workspaceId/organization/:organizationId/get-all-in-organization')
   async getAllInOrganizationEP(
     @UrlParams() urlParams: IUrlParams,
     @Param('organizationId') organizationId: EntityUrlParamCommand.RequestUuidParam,
