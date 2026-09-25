@@ -131,7 +131,7 @@ export class PriceChangingRepository implements IPriceChangingRepository {
     try {
       const { newPrice, oldPrice, comment, source } = dto;
       const newPriceChanging = await this.databaseService.priceChanging.create({
-        data: { newPrice, oldPrice, comment, source, materialUuid: materialId },
+        data: { newPrice, oldPrice, comment, source, materialUuid: materialId, lastChangeByUserUuid: changedById },
         include: {
           material: true,
         },

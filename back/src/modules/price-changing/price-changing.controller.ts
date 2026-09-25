@@ -24,6 +24,7 @@ import { PriceChangingEntity } from './entities/price-changing.entity';
 import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
+import { User } from '../../common/decorators/user.decorator';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '.prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
@@ -200,11 +201,12 @@ export class PriceChangingController implements IPriceChangingController {
   async createEP(
     @Body() dto: PriceChangingCreateRequestDto,
     @UrlParams() urlParams: IUrlParams,
-    userInfoFromJWT: IJWTPayload,
+    @User() userInfoFromJWT: IJWTPayload,
+    @Param('materialId', ParseUUIDPipe)
     materialId: EntityUrlParamCommand.RequestUuidParam,
   ): Promise<PriceChangingCreateResponseDto> {
     try {
-      const { ok, data } = await this.priceChangingService.create(dto, userInfoFromJWT.uuid, materialId);
+      const { ok, data } = await this.priceChangingService.create(dto, materialId, userInfoFromJWT.uuid);
       return okResponseHandler(ok, data, this.logger);
     } catch (error: unknown) {
       errorResponseHandler(this.logger, error, EntityName.PRICE_CHANGING, urlParams);
