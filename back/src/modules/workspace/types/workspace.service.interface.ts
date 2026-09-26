@@ -22,6 +22,11 @@ export interface IWorkspaceService extends IServiceCommon<WorkspaceCreateRequest
     dto: WorkspaceUpdateRequestDto,
     transactionDbClient?: TransactionDbClient,
   ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
+  linkHandbook: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
+  ) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   deleteById: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<UniversalInternalResponse<WorkspaceEntity>>;
   changeWorkspaceOwner: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

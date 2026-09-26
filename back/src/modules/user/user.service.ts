@@ -134,13 +134,9 @@ export class UserService implements IUserService {
 
           const newHandbookInfo = dataInternalExtractor(newManagerHandbook);
 
-          await this.workspaceService.updateById(
-            newWorkspaceInfo.uuid,
-            {
-              handbookOfWorkspaceUuid: newHandbookInfo.uuid,
-            },
-            transactionDbClient,
-          );
+          // linkHandbook, а не updateById: updateById сохраняет только name/description, и справочник
+          // не привязывался — у менеджера падали страницы единичек и пирогов (handbookOfWorkspaceUuid = null).
+          await this.workspaceService.linkHandbook(newWorkspaceInfo.uuid, newHandbookInfo.uuid, transactionDbClient);
 
           // Репозиторий напрямую, а не addExistedWorkspaceToManager/addExistedHandbookToManager сервиса:
           // те читают пользователя через getById вне транзакции (незакоммиченный пользователь → 404,

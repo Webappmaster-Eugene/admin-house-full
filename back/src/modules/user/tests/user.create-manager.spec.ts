@@ -34,6 +34,7 @@ function buildService() {
   const workspaceService = {
     create: jest.fn().mockResolvedValue({ ok: true, data: { uuid: WORKSPACE_UUID } }),
     updateById: jest.fn().mockResolvedValue({ ok: true, data: { uuid: WORKSPACE_UUID } }),
+    linkHandbook: jest.fn().mockResolvedValue({ ok: true, data: { uuid: WORKSPACE_UUID, handbookOfWorkspaceUuid: HANDBOOK_UUID } }),
   };
   const handbookService = { create: jest.fn().mockResolvedValue({ ok: true, data: { uuid: HANDBOOK_UUID } }) };
   const cacheManager = { get: jest.fn(), set: jest.fn(), del: jest.fn() };
@@ -49,7 +50,7 @@ function buildService() {
     cacheManager as unknown as CacheStore,
     databaseService as unknown as IPrismaService,
   );
-  return { service, tx, userRepository };
+  return { service, tx, userRepository, workspaceService };
 }
 
 describe('Создание пользователя с ролью MANAGER', () => {
@@ -66,5 +67,18 @@ describe('Создание пользователя с ролью MANAGER', () =
     expect(userRepository.addExistedWorkspaceToManager).toHaveBeenCalledWith(USER_UUID, WORKSPACE_UUID, tx);
     expect(userRepository.addExistedHandbookToManager).toHaveBeenCalledWith(USER_UUID, HANDBOOK_UUID, tx);
     expect(result).toMatchObject({ ok: true, data: { creatorOfWorkspaceUuid: WORKSPACE_UUID, handbookManagerUuid: HANDBOOK_UUID } });
+  });
+
+  it('should link the new handbook to the new workspace', async () => {
+    // Arrange
+    const { service, tx, workspaceService } = buildService();
+
+    // Act
+    await service.create(dto, [ROLE_IDS.MANAGER_ROLE_ID]);
+
+    // Assert: updateById сохраняет только name/description — через него справочник не привязывался,
+    // и страницы единичек/пирогов у нового менеджера падали (handbookOfWorkspaceUuid = null).
+    expect(workspaceService.linkHandbook).toHaveBeenCalledWith(WORKSPACE_UUID, HANDBOOK_UUID, tx);
+    expect(workspaceService.updateById).not.toHaveBeenCalled();
   });
 });

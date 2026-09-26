@@ -53,6 +53,15 @@ export class WorkspaceService implements IWorkspaceService {
     return new InternalResponse(updatedWorkspace);
   }
 
+  async linkHandbook(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
+  ): Promise<UniversalInternalResponse<WorkspaceEntity>> {
+    const updatedWorkspace = await this.workspaceRepository.linkHandbook(workspaceId, handbookId, transactionDbClient);
+    return new InternalResponse(updatedWorkspace);
+  }
+
   async deleteById(workspaceId: EntityUrlParamCommand.RequestUuidParam): Promise<UniversalInternalResponse<WorkspaceEntity>> {
     const deletedWorkspace = await this.workspaceRepository.deleteById(workspaceId);
     return new InternalResponse(deletedWorkspace);

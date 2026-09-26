@@ -22,6 +22,11 @@ export interface IWorkspaceRepository extends IRepositoryCommon<WorkspaceCreateR
     dto: WorkspaceUpdateRequestDto,
     transactionDbClient?: TransactionDbClient,
   ) => Promise<WorkspaceEntity>;
+  linkHandbook: (
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient?: TransactionDbClient,
+  ) => Promise<WorkspaceEntity>;
   deleteById: (workspaceId: EntityUrlParamCommand.RequestUuidParam) => Promise<WorkspaceEntity>;
   changeWorkspaceOwner: (
     workspaceId: EntityUrlParamCommand.RequestUuidParam,

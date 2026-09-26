@@ -129,6 +129,33 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     }
   }
 
+  /**
+   * Привязка справочника к workspace. Отдельный метод, а не поле в updateById: updateById доступен через API,
+   * и приём handbookOfWorkspaceUuid там позволил бы привязать к своему workspace чужой справочник.
+   * Используется при создании менеджера (UserService.create), в той же транзакции.
+   */
+  async linkHandbook(
+    workspaceId: EntityUrlParamCommand.RequestUuidParam,
+    handbookId: EntityUrlParamCommand.RequestUuidParam,
+    transactionDbClient: TransactionDbClient = this.databaseService,
+  ): Promise<WorkspaceEntity> {
+    try {
+      const updatedWorkspace = await transactionDbClient.workspace.update({
+        where: { uuid: workspaceId },
+        data: { handbookOfWorkspaceUuid: handbookId },
+        include: {
+          workspaceMembers: true,
+          organizations: true,
+          handbookOfWorkspace: true,
+          workspaceCreator: true,
+        },
+      });
+      return existenceEntityHandler(updatedWorkspace, WorkspaceEntity, EntityName.WORKSPACE) as WorkspaceEntity;
+    } catch (error: unknown) {
+      errorRepositoryHandler(error);
+    }
+  }
+
   async updateById(
     workspaceId: string,
     { name, description }: WorkspaceUpdateRequestDto,
