@@ -15,7 +15,9 @@ pre-commit:
       run: npx eslint --fix {staged_files} && git add {staged_files}
 
 pre-push:
-  parallel: true
+  # Последовательно: четыре параллельные сборки/линта (front и back) не помещались в память машины
+  # разработчика — push обрывался. Медленнее, но стабильно.
+  parallel: false
   commands:
     front-lint:
       root: "front/"
