@@ -27,11 +27,13 @@ export default function Main({ children, sx, ...other }: BoxProps) {
         alignContent: 'flex-start',
         flexDirection: 'column',
         py: `${HEADER.H_MOBILE + SPACING}px`,
+        // На широком экране шапка выше (H_DESKTOP) — без этого верх контента уходил под неё
+        ...(lgUp && { pt: `${HEADER.H_DESKTOP + SPACING}px` }),
         px: 2,
-        ml: lgUp ? 0 : `88px`,
-        width: `calc(100% - ${NAV.W_MINI}px)`,
-        ...(isNavVertical && {
-          width: `calc(100% - ${NAV.W_VERTICAL}px)`,
+        // Ниже lg меню выезжает поверх страницы и места не занимает
+        width: '100%',
+        ...(lgUp && {
+          width: `calc(100% - ${isNavVertical ? NAV.W_VERTICAL : NAV.W_MINI}px)`,
         }),
         ...sx,
       }}

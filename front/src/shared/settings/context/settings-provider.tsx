@@ -33,10 +33,10 @@ export function SettingsProvider({ children, defaultSettings }: SettingsProvider
     [update]
   );
 
+  // Ниже lg меню всегда выезжающее (бургер), themeLayout там не используется —
+  // поэтому переключаем в полное меню только при выходе на широкий экран.
   useEffect(() => {
-    if (!isMediaMoreThanLg) {
-      update('themeLayout', 'mini');
-    } else {
+    if (isMediaMoreThanLg) {
       update('themeLayout', 'vertical');
     }
   }, [isMediaMoreThanLg, update]);
