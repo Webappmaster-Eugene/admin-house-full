@@ -11,8 +11,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/utils/routes/paths';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { landingPricing } from '../landing-content';
 import { sectionOverlineSx } from './landing-styles';
 
@@ -63,7 +62,7 @@ export default function PricingSection() {
           <Stack spacing={1.5} sx={{ mb: 4, textAlign: 'left', maxWidth: 320, mx: 'auto' }}>
             {landingPricing.features.map((feature) => (
               <Stack key={feature} direction="row" spacing={1.5} alignItems="center">
-                <Iconify
+                <LandingIcon
                   icon="solar:check-circle-bold"
                   width={20}
                   sx={{ color: 'success.main', flexShrink: 0 }}
@@ -80,7 +79,7 @@ export default function PricingSection() {
             color="primary"
             size="large"
             fullWidth
-            endIcon={<Iconify icon="solar:arrow-right-linear" />}
+            endIcon={<LandingIcon icon="solar:arrow-right-linear" />}
             sx={{ py: 1.5, fontSize: 16 }}
           >
             {landingPricing.ctaLabel}

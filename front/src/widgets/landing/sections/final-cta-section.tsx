@@ -10,8 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/utils/routes/paths';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { landingFinalCta } from '../landing-content';
 
 export default function FinalCtaSection() {
@@ -47,7 +46,7 @@ export default function FinalCtaSection() {
             variant="contained"
             color="inherit"
             size="large"
-            endIcon={<Iconify icon="solar:arrow-right-linear" />}
+            endIcon={<LandingIcon icon="solar:arrow-right-linear" />}
             sx={{
               mt: 2,
               px: 5,

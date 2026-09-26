@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { SettingsProvider } from '@/shared/settings';
+// Импорт из context, а не из barrel '@/shared/settings': barrel реэкспортирует SettingsDrawer,
+// и панель настроек (simplebar, Drawer, Slider) попадала в бандл каждой страницы.
+import { SettingsProvider } from '@/shared/settings/context';
 
 import ThemeProvider from 'src/utils/theme';
 import { PropsReactNode } from 'src/utils/types';

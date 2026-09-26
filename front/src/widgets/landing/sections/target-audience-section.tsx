@@ -6,8 +6,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { sectionOverlineSx } from './landing-styles';
 import { landingTargetAudiences } from '../landing-content';
 
@@ -75,7 +74,7 @@ export default function TargetAudienceSection() {
                     color: 'primary.main',
                   }}
                 >
-                  <Iconify icon={audience.icon} width={32} />
+                  <LandingIcon icon={audience.icon} width={32} />
                 </Box>
 
                 <Typography component="h3" variant="h6" sx={{ fontWeight: 700 }}>
@@ -89,7 +88,7 @@ export default function TargetAudienceSection() {
                 <Stack spacing={1} sx={{ mt: 1 }}>
                   {audience.useCases.map((useCase) => (
                     <Stack key={useCase} direction="row" spacing={1} alignItems="flex-start">
-                      <Iconify
+                      <LandingIcon
                         icon="solar:check-circle-bold"
                         width={18}
                         sx={{ color: 'success.main', mt: 0.25, flexShrink: 0 }}

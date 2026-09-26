@@ -1,25 +1,27 @@
+import type { LandingIconName } from './landing-icons';
+
 // --------------- Interfaces ---------------
 
 export interface LandingAdvantage {
-  icon: string;
+  icon: LandingIconName;
   title: string;
   description: string;
 }
 
 export interface LandingFeature {
-  icon: string;
+  icon: LandingIconName;
   title: string;
   description: string;
 }
 
 export interface LandingEconomyItem {
-  icon: string;
+  icon: LandingIconName;
   metric: string;
   description: string;
 }
 
 export interface LandingTargetAudience {
-  icon: string;
+  icon: LandingIconName;
   title: string;
   description: string;
   useCases: string[];
@@ -310,7 +312,15 @@ export const landingFooter = {
 
 // --------------- Author (footer contacts) ---------------
 
-export const landingAuthor = {
+export interface LandingContact {
+  type: 'telegram' | 'email' | 'phone' | 'website';
+  label: string;
+  value: string;
+  href: string;
+  icon: LandingIconName;
+}
+
+export const landingAuthor: { name: string; role: string; contacts: LandingContact[] } = {
   name: 'Евгений Надточеев',
   role: 'Основатель SMETAS',
   contacts: [

@@ -10,8 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/utils/routes/paths';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { landingHero } from '../landing-content';
 
 export default function HeroSection() {
@@ -63,7 +62,7 @@ export default function HeroSection() {
             variant="contained"
             color="primary"
             size="large"
-            endIcon={<Iconify icon="solar:arrow-right-linear" />}
+            endIcon={<LandingIcon icon="solar:arrow-right-linear" />}
             sx={{ mt: { xs: 2, md: 3 }, px: 5, py: 1.5, fontSize: 16 }}
           >
             {landingHero.ctaLabel}

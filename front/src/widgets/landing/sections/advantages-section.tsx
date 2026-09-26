@@ -6,8 +6,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { sectionOverlineSx } from './landing-styles';
 import { landingAdvantages } from '../landing-content';
 
@@ -71,7 +70,7 @@ export default function AdvantagesSection() {
                     color: 'primary.main',
                   }}
                 >
-                  <Iconify icon={advantage.icon} width={32} />
+                  <LandingIcon icon={advantage.icon} width={32} />
                 </Box>
 
                 <Typography component="h3" variant="h6" sx={{ fontWeight: 700 }}>

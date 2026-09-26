@@ -11,8 +11,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { landingCompetitorTable } from '../landing-content';
 import { accentTextColor, sectionOverlineSx } from './landing-styles';
 
@@ -34,7 +33,7 @@ function CellValue({ value }: { value: boolean | string }) {
   if (typeof value === 'boolean') {
     return (
       <>
-        <Iconify
+        <LandingIcon
           aria-hidden
           icon={value ? 'solar:check-circle-bold' : 'solar:close-circle-bold'}
           width={22}

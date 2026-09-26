@@ -2,17 +2,10 @@ import 'src/global.css';
 
 // ----------------------------------------------------------------------
 
-import { Suspense } from 'react';
-import { cookies } from 'next/headers';
-import { jwtDecode } from 'jwt-decode';
 import type { Metadata, Viewport } from 'next';
-import { SettingsDrawer } from '@/shared/settings';
 
-import { cookieKeys } from 'src/utils/const';
 import { PropsReactNode } from 'src/utils/types';
 import { primaryFont } from 'src/utils/theme/typography';
-import { isCurrentUserTypeGuard } from 'src/utils/type-guards/is-current-user.type-guard';
-import { isUserWithRelatedWorkspaceTG } from 'src/utils/type-guards/is-user-with-related-workspace.type-guard';
 import {
   AUTHOR,
   SITE_URL,
@@ -22,14 +15,7 @@ import {
   SITE_TITLE_DEFAULT,
 } from 'src/utils/const/seo';
 
-import { SnackbarProvider } from 'src/shared/snackbar';
-import { StyledProgressBar } from 'src/shared/progress-bar';
 import GeneralProvider from 'src/providers/general-provider';
-import CurrentUserProvider from 'src/providers/current-user-provider';
-import { AppState } from 'src/api/realisation-requests/app-state.type';
-import WorkspaceInfoProvider from 'src/providers/workspace-info-provider';
-import { getCurrentUser } from 'src/api/actions/auth/get-current-user.action';
-import { getFullWorkspaceInfo } from 'src/api/realisation-requests/workspace.global-getter.realisation';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -94,42 +80,14 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function RootLayout({ children }: PropsReactNode) {
-  let currentUserInfo = null;
-  let workspaceInfo: AppState | null = null;
-
-  const refreshToken = cookies().get(cookieKeys.REFRESH_KEY)?.value;
-  let isRefreshTokenValid = false;
-  if (refreshToken) {
-    try {
-      const { exp } = jwtDecode<{ exp: number }>(refreshToken);
-      isRefreshTokenValid = exp * 1000 > Date.now();
-    } catch {
-      // malformed token — treat as expired
-    }
-  }
-  if (isRefreshTokenValid) {
-    currentUserInfo = await getCurrentUser();
-    if (isCurrentUserTypeGuard(currentUserInfo) && isUserWithRelatedWorkspaceTG(currentUserInfo)) {
-        workspaceInfo = await getFullWorkspaceInfo(currentUserInfo);
-    }
-  }
-
+// Корневой layout не читает cookies и не ходит в API — иначе все страницы, включая лендинг,
+// становятся динамическими (Cache-Control: no-store). Пользователь и workspace загружаются
+// в app/(app)/layout.tsx только для входа, dashboard и профиля.
+export default function RootLayout({ children }: PropsReactNode) {
   return (
     <html lang="ru" className={primaryFont.className}>
       <body>
-        <CurrentUserProvider
-          currentUserInfo={isCurrentUserTypeGuard(currentUserInfo) ? currentUserInfo : null}
-        >
-          <WorkspaceInfoProvider workspaceInfo={workspaceInfo}>
-            <GeneralProvider>
-              <SettingsDrawer />
-              <SnackbarProvider>
-                <Suspense fallback={<StyledProgressBar />}>{children}</Suspense>
-              </SnackbarProvider>
-            </GeneralProvider>
-          </WorkspaceInfoProvider>
-        </CurrentUserProvider>
+        <GeneralProvider>{children}</GeneralProvider>
       </body>
     </html>
   );

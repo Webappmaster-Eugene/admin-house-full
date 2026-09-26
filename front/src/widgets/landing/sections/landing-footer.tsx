@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 
 import Logo from 'src/shared/logo';
-import Iconify from 'src/shared/iconify';
 
+import LandingIcon from '../landing-icon';
 import { landingAuthor, landingFooter } from '../landing-content';
 
 const FOOTER_CONTACT_TYPES = ['telegram', 'email', 'phone', 'website'] as const;
@@ -106,7 +106,7 @@ export default function LandingFooter() {
                 size="small"
                 sx={{ color: 'text.secondary' }}
               >
-                <Iconify icon={contact.icon} width={20} />
+                <LandingIcon icon={contact.icon} width={20} />
               </IconButton>
             ))}
           </Stack>

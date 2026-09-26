@@ -6,8 +6,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { landingEconomy } from '../landing-content';
 import { sectionOverlineSx } from './landing-styles';
 
@@ -73,7 +72,7 @@ export default function EconomySection() {
                     color: 'primary.main',
                   }}
                 >
-                  <Iconify icon={item.icon} width={32} />
+                  <LandingIcon icon={item.icon} width={32} />
                 </Box>
 
                 <Typography component="h3" variant="h4" sx={{ fontWeight: 800 }}>

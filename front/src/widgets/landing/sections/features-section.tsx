@@ -5,8 +5,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import Iconify from 'src/shared/iconify';
-
+import LandingIcon from '../landing-icon';
 import { landingFeatures } from '../landing-content';
 import { sectionOverlineSx } from './landing-styles';
 
@@ -68,7 +67,7 @@ export default function FeaturesSection() {
                   boxShadow: (theme) => theme.customShadows.z8,
                 }}
               >
-                <Iconify icon={feature.icon} width={26} />
+                <LandingIcon icon={feature.icon} width={26} />
               </Box>
 
               <Stack spacing={0.75}>

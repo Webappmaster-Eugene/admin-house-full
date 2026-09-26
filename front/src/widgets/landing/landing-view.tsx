@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 
 import HeroSection from './sections/hero-section';
+import LandingIconSprite from './landing-icon-sprite';
 import LandingHeader from './sections/landing-header';
 import LandingFooter from './sections/landing-footer';
 import EconomySection from './sections/economy-section';
@@ -14,6 +15,8 @@ import CompetitorComparisonSection from './sections/competitor-comparison-sectio
 export default function LandingView() {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <LandingIconSprite />
+
       <LandingHeader />
 
       <Box component="main" sx={{ flex: 1 }}>
