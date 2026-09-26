@@ -30,6 +30,8 @@ export const paths = {
     materials: `${ROOTS.DASHBOARD}/materials`,
     fields: `${ROOTS.DASHBOARD}/fields`,
     characteristics: `${ROOTS.DASHBOARD}/characteristics`,
+    organizations: `${ROOTS.DASHBOARD}/organizations`,
+    projects: `${ROOTS.DASHBOARD}/projects`,
     estimates: `${ROOTS.DASHBOARD}/estimates`,
     concreteEstimate: `${ROOTS.DASHBOARD}/estimates/:estimateId`,
     unitTemplates: `${ROOTS.DASHBOARD}/unit-templates`,

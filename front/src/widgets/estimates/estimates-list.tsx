@@ -1,5 +1,6 @@
 'use client';
 
+import NextLink from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
@@ -35,6 +36,7 @@ import { createEstimate } from 'src/api/actions/estimate/create-estimate.action'
 import { deleteEstimate } from 'src/api/actions/estimate/delete-estimate.action';
 import { exportEstimate } from 'src/api/actions/estimate/export-estimate.action';
 import { cloneEstimate } from 'src/api/actions/estimate/clone-estimate.action';
+import { paths } from 'src/utils/routes/paths';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
 import { EstimateBusinessValue } from 'src/shared/contracts/estimate';
@@ -162,10 +164,13 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
       {estimatesPerProject.length === 0 && (
         <Card>
           <CardContent>
-            <Typography>
+            <Typography sx={{ mb: 2 }}>
               В вашем workspace пока нет ни одного проекта. Сметы создаются в рамках проекта —
               сначала создайте проект.
             </Typography>
+            <Button component={NextLink} href={paths.dashboard.projects} variant="outlined">
+              Перейти к проектам
+            </Button>
           </CardContent>
         </Card>
       )}
