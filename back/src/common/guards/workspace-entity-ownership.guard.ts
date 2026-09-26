@@ -100,7 +100,10 @@ export class WorkspaceEntityOwnershipGuard implements CanActivate {
     this.throwError(BackendErrorNames.NOT_FOUND, { name: 'Entity is not in workspace', message });
   }
 
-  private throwError(errorName: BackendErrorNames.BAD_REQUEST | BackendErrorNames.NOT_FOUND, details: { name: string; message: string }): never {
+  private throwError(
+    errorName: BackendErrorNames.BAD_REQUEST | BackendErrorNames.NOT_FOUND,
+    details: { name: string; message: string },
+  ): never {
     const description = BACKEND_ERRORS.STANDARD_ERRORS[errorName];
     this.logger.error(description.error.description, details);
     const response = new ExternalResponse(null, description.httpCode, description.error.description, [details]);
