@@ -54,6 +54,9 @@ export function GuideScreenshot({ screenshot }: GuideScreenshotProps) {
           component="img"
           src={screenshot.src}
           alt={screenshot.alt}
+          // В руководстве два десятка PNG: без lazy страница ждала загрузки ~2,5 МБ картинок
+          loading="lazy"
+          decoding="async"
           onError={() => setFailed(true)}
           sx={{
             position: 'absolute',
