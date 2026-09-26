@@ -150,7 +150,7 @@ export function ProjectFormDialog({
             fullWidth
             required
             label="Название"
-            placeholder="Например, Частный дом 10×12 м, ул. Лесная, 5"
+            placeholder="Например, Дом 10×12 м на Лесной"
             value={values.name}
             onChange={setField('name')}
             error={nameError}

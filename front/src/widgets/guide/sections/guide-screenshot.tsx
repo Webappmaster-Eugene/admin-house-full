@@ -35,7 +35,21 @@ export function GuideScreenshot({ screenshot }: GuideScreenshotProps) {
         bgcolor: 'background.neutral',
       }}
     >
-      <Box sx={{ position: 'relative', width: '100%', aspectRatio: '16 / 10' }}>
+      {/* Ссылка на кадр в полном размере: на телефоне миниатюра интерфейса нечитаема */}
+      <Box
+        component="a"
+        href={screenshot.src}
+        target="_blank"
+        rel="noopener"
+        aria-label={`${screenshot.alt} — открыть в полном размере`}
+        sx={{
+          display: 'block',
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '16 / 10',
+          cursor: 'zoom-in',
+        }}
+      >
         <Box
           component="img"
           src={screenshot.src}

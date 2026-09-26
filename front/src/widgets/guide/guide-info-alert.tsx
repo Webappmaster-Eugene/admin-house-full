@@ -21,6 +21,10 @@ const HINT_COPY: Record<GuideAnchor, { title: string; body: string }> = {
     title: 'Справочник — фундамент всех смет',
     body: 'Наполните категории и материалы один раз — и добавляйте их в любую смету одним кликом. Цены и характеристики сохраняются в истории.',
   },
+  organizations: {
+    title: 'Организация → проект → смета',
+    body: 'Смета живёт в проекте, проект — в организации. Удаление каскадное: с организацией уходят её проекты и сметы, с проектом — его сметы.',
+  },
   estimates: {
     title: 'Как работают сметы в Admin House',
     body: 'Смета = иерархия разделов (до 2 уровней) + строки 3 типов: вручную, из единички, из пирога. Итоги пересчитываются автоматически, экспорт в Excel — одной кнопкой.',
@@ -74,7 +78,18 @@ export function GuideInfoAlert({ section, variant = 'default' }: GuideInfoAlertP
     <Alert
       severity="info"
       variant="outlined"
-      sx={{ mb: variant === 'compact' ? 2 : 3 }}
+      sx={{
+        mb: variant === 'compact' ? 2 : 3,
+        // На узком экране кнопки справа сжимали текст до слова в строку — переносим их под текст
+        flexWrap: { xs: 'wrap', sm: 'nowrap' },
+        '& .MuiAlert-message': { flex: { xs: '1 1 0' }, minWidth: 0 },
+        '& .MuiAlert-action': {
+          width: { xs: '100%', sm: 'auto' },
+          ml: { xs: 0, sm: 'auto' },
+          pl: { xs: 4.5, sm: 2 },
+          pt: { xs: 0, sm: '4px' },
+        },
+      }}
       action={
         <Stack direction="row" spacing={1} alignItems="center">
           <Button

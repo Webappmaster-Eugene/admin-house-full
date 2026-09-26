@@ -143,7 +143,13 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
     <Box>
       <GuideInfoAlert section="estimates" />
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        spacing={2}
+        mb={3}
+      >
         <Box>
           <Typography variant="h4">Сметы</Typography>
           <Typography variant="body2" color="text.secondary">
@@ -156,6 +162,7 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
           startIcon={<AddIcon />}
           onClick={() => setDialogOpen(true)}
           disabled={estimatesPerProject.length === 0}
+          sx={{ flexShrink: 0 }}
         >
           Создать смету
         </Button>
@@ -191,7 +198,8 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
                     <ListItemButton
                       key={estimate.uuid}
                       onClick={() => openEstimate(estimate.uuid)}
-                      sx={{ borderRadius: 1, pr: 18 }}
+                      // На телефоне три иконки справа сжимали текст до слова в строку — переносим их вниз
+                      sx={{ borderRadius: 1, pr: { xs: 2, sm: 18 }, flexWrap: { xs: 'wrap', sm: 'nowrap' } }}
                     >
                       <ListItemText
                         primary={estimate.name}
@@ -199,7 +207,15 @@ export function EstimatesList({ workspaceId, estimatesPerProject }: EstimatesLis
                           estimate.totalCost
                         )} · Для заказчика: ${formatMoney(estimate.totalClientPrice)}`}
                       />
-                      <ListItemSecondaryAction>
+                      <ListItemSecondaryAction
+                        sx={{
+                          position: { xs: 'static', sm: 'absolute' },
+                          transform: { xs: 'none', sm: 'translateY(-50%)' },
+                          width: { xs: '100%', sm: 'auto' },
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                        }}
+                      >
                         <IconButton
                           edge="end"
                           onClick={(event) => {

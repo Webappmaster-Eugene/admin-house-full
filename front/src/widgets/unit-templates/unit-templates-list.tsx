@@ -192,14 +192,20 @@ export function UnitTemplatesList({
     <Box>
       <GuideInfoAlert section="units" />
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        spacing={2}
+        mb={3}
+      >
         <Box>
           <Typography variant="h4">Единички</Typography>
           <Typography variant="body2" color="text.secondary">
             Шаблоны комплексных единиц работ (материал + работа на 1 ед.) для использования в сметах
           </Typography>
         </Box>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ flexShrink: 0 }}>
           <Button
             variant="outlined"
             startIcon={<DownloadIcon />}
@@ -228,7 +234,12 @@ export function UnitTemplatesList({
           return (
             <Card key={template.uuid}>
               <CardContent>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  justifyContent="space-between"
+                  alignItems={{ xs: 'stretch', sm: 'center' }}
+                  spacing={1}
+                >
                   <Box>
                     <Typography variant="h6">
                       {template.name} <small>({template.unitMeasurement})</small>
@@ -245,7 +256,7 @@ export function UnitTemplatesList({
                       {template.defaultMarkupPercent}%)
                     </Typography>
                   </Box>
-                  <Stack direction="row" spacing={1}>
+                  <Stack direction="row" spacing={1} justifyContent="flex-end" sx={{ flexShrink: 0 }}>
                     <IconButton
                       size="small"
                       onClick={() => setExpanded(isExpanded ? null : template.uuid)}
