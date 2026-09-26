@@ -16,6 +16,7 @@ import {
   Table,
   Stack,
   Button,
+  Divider,
   Tooltip,
   MenuItem,
   TableRow,
@@ -32,6 +33,7 @@ import {
 import { paths } from 'src/utils/routes/paths';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 import { createProject } from 'src/api/actions/project/create-project.action';
 import { updateProject } from 'src/api/actions/project/update-project.action';
 import { deleteProject } from 'src/api/actions/project/delete-project.action';
@@ -170,8 +172,37 @@ export function ProjectsList({
 
   const hasOrganizations = organizations.length > 0;
 
+  // Одни и те же действия в строке таблицы (десктоп) и в карточке (телефон)
+  const renderActions = (project: Project) => (
+    <>
+      <Link component={NextLink} href={paths.dashboard.estimates} variant="body2" sx={{ mr: 1 }}>
+        Сметы
+      </Link>
+      <Tooltip title="Изменить">
+        <IconButton
+          size="small"
+          aria-label={`Изменить проект «${project.name}»`}
+          onClick={() => openEdit(project)}
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Удалить">
+        <IconButton
+          size="small"
+          aria-label={`Удалить проект «${project.name}»`}
+          onClick={() => openDelete(project)}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+
   return (
     <Box>
+      <GuideInfoAlert section="organizations" />
+
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         justifyContent="space-between"
@@ -247,79 +278,105 @@ export function ProjectsList({
               </Button>
             </CardContent>
           ) : (
-            <TableContainer>
-              <Table sx={{ minWidth: 720 }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Проект</TableCell>
-                    <TableCell>Организация</TableCell>
-                    <TableCell>Email заказчика</TableCell>
-                    <TableCell>Изменён</TableCell>
-                    <TableCell align="right">Действия</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {visibleProjects.map((project) => (
-                    <TableRow key={project.uuid} hover>
-                      <TableCell sx={{ maxWidth: 360 }}>
-                        <Typography variant="subtitle2" sx={{ wordBreak: 'break-word' }}>
-                          {project.name}
-                        </Typography>
-                        {project.description && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden',
-                            }}
-                          >
-                            {project.description}
-                          </Typography>
-                        )}
-                      </TableCell>
-                      <TableCell>{project.organization.name}</TableCell>
-                      <TableCell sx={{ wordBreak: 'break-all' }}>
-                        {project.customerMail || '—'}
-                      </TableCell>
-                      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                        {dateFormatter.format(new Date(project.updatedAt))}
-                      </TableCell>
-                      <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
-                        <Link
-                          component={NextLink}
-                          href={paths.dashboard.estimates}
-                          variant="body2"
-                          sx={{ mr: 1 }}
-                        >
-                          Сметы
-                        </Link>
-                        <Tooltip title="Изменить">
-                          <IconButton
-                            size="small"
-                            aria-label={`Изменить проект «${project.name}»`}
-                            onClick={() => openEdit(project)}
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Удалить">
-                          <IconButton
-                            size="small"
-                            aria-label={`Удалить проект «${project.name}»`}
-                            onClick={() => openDelete(project)}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
+            <>
+              <TableContainer sx={{ display: { xs: 'none', md: 'block' } }}>
+                <Table sx={{ minWidth: 720 }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Проект</TableCell>
+                      <TableCell>Организация</TableCell>
+                      <TableCell>Email заказчика</TableCell>
+                      <TableCell>Изменён</TableCell>
+                      <TableCell align="right">Действия</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {visibleProjects.map((project) => (
+                      <TableRow key={project.uuid} hover>
+                        <TableCell sx={{ maxWidth: 360 }}>
+                          <Typography variant="subtitle2" sx={{ wordBreak: 'break-word' }}>
+                            {project.name}
+                          </Typography>
+                          {project.description && (
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                              }}
+                            >
+                              {project.description}
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>{project.organization.name}</TableCell>
+                        <TableCell sx={{ wordBreak: 'break-all' }}>
+                          {project.customerMail || '—'}
+                        </TableCell>
+                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                          {dateFormatter.format(new Date(project.updatedAt))}
+                        </TableCell>
+                        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                          {renderActions(project)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              {/* На узком экране таблица в 5 колонок нечитаема — те же данные карточками */}
+              <Stack divider={<Divider />} sx={{ display: { xs: 'flex', md: 'none' } }}>
+                {visibleProjects.map((project) => (
+                  <Box key={project.uuid} sx={{ px: 2.5, py: 2 }}>
+                    <Typography variant="subtitle1" sx={{ wordBreak: 'break-word' }}>
+                      {project.name}
+                    </Typography>
+                    {project.description && (
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 0.5, wordBreak: 'break-word' }}
+                      >
+                        {project.description}
+                      </Typography>
+                    )}
+                    <Box
+                      component="dl"
+                      sx={{
+                        m: 0,
+                        mt: 1.5,
+                        display: 'grid',
+                        gridTemplateColumns: 'auto 1fr',
+                        columnGap: 1.5,
+                        rowGap: 0.5,
+                        typography: 'body2',
+                        '& dt': { color: 'text.secondary' },
+                        '& dd': { m: 0, minWidth: 0, wordBreak: 'break-word' },
+                      }}
+                    >
+                      <dt>Организация</dt>
+                      <dd>{project.organization.name}</dd>
+                      <dt>Заказчик</dt>
+                      <dd>{project.customerMail || '—'}</dd>
+                      <dt>Изменён</dt>
+                      <dd>{dateFormatter.format(new Date(project.updatedAt))}</dd>
+                    </Box>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="flex-end"
+                      sx={{ mt: 1 }}
+                    >
+                      {renderActions(project)}
+                    </Stack>
+                  </Box>
+                ))}
+              </Stack>
+            </>
           )}
         </Card>
       )}

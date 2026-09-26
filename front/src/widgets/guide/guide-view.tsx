@@ -5,6 +5,7 @@ import { FaqSection } from './sections/faq-section';
 import { GlossarySection } from './sections/glossary-section';
 import { HandbookSection } from './sections/handbook-section';
 import { HeroSection } from './sections/hero-section';
+import { OrganizationsSection } from './sections/organizations-section';
 import { PiesSection } from './sections/pies-section';
 import { QuickStartSection } from './sections/quick-start-section';
 import { UnitsSection } from './sections/units-section';
@@ -17,6 +18,7 @@ export function GuideView() {
         <QuickStartSection />
         <GlossarySection />
         <HandbookSection />
+        <OrganizationsSection />
         <EstimatesSection />
         <UnitsSection />
         <PiesSection />

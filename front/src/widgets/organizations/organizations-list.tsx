@@ -25,6 +25,7 @@ import { paths } from 'src/utils/routes/paths';
 import { pluralize } from 'src/utils/helpers/pluralize.helper';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
 
+import { GuideInfoAlert } from 'src/widgets/guide/guide-info-alert';
 import { createOrganization } from 'src/api/actions/organization/create-organization.action';
 import { updateOrganization } from 'src/api/actions/organization/update-organization.action';
 import { deleteOrganization } from 'src/api/actions/organization/delete-organization.action';
@@ -35,6 +36,14 @@ import { OrganizationFormDialog, OrganizationFormValues } from './organization-f
 // ----------------------------------------------------------------------
 
 type Organization = OrganizationGetAllCommand.ResponseEntity[number];
+
+const formatUserName = ({
+  firstName,
+  secondName,
+}: {
+  firstName: string;
+  secondName?: string | null;
+}) => [firstName, secondName].filter(Boolean).join(' ');
 
 interface OrganizationsListProps {
   workspaceId: string;
@@ -115,6 +124,8 @@ export function OrganizationsList({ workspaceId, organizations }: OrganizationsL
 
   return (
     <Box>
+      <GuideInfoAlert section="organizations" />
+
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         justifyContent="space-between"
@@ -200,23 +211,26 @@ export function OrganizationsList({ workspaceId, organizations }: OrganizationsL
                   </Typography>
                 </CardContent>
 
+                {/* На узкой карточке ссылка и руководитель не помещаются в строку — ставим друг под другом */}
                 <Stack
-                  direction="row"
+                  direction={{ xs: 'column', sm: 'row' }}
                   justifyContent="space-between"
-                  alignItems="center"
+                  alignItems={{ xs: 'flex-start', sm: 'center' }}
+                  spacing={{ xs: 0.5, sm: 2 }}
                   sx={{ px: 3, pb: 2.5 }}
                 >
                   <Link
                     component={NextLink}
                     href={`${paths.dashboard.projects}?organization=${organization.uuid}`}
                     variant="subtitle2"
+                    sx={{ whiteSpace: 'nowrap' }}
                   >
                     {projectsCount > 0
                       ? pluralize(projectsCount, ['проект', 'проекта', 'проектов'])
                       : 'Нет проектов'}
                   </Link>
                   <Typography variant="caption" color="text.secondary">
-                    {`Руководитель: ${[organization.organizationLeader.firstName, organization.organizationLeader.secondName].filter(Boolean).join(' ')}`}
+                    {`Руководитель: ${formatUserName(organization.organizationLeader)}`}
                   </Typography>
                 </Stack>
               </Card>

@@ -3,13 +3,21 @@ export type GuideSectionId =
   | 'quick-start'
   | 'glossary'
   | 'handbook'
+  | 'organizations'
   | 'estimates'
   | 'units'
   | 'pies'
   | 'faq';
 
 /** Идентификаторы для inline-подсказок GuideInfoAlert — соответствуют якорям внутри /dashboard/guide */
-export type GuideAnchor = 'quick-start' | 'handbook' | 'estimates' | 'units' | 'pies' | 'faq';
+export type GuideAnchor =
+  | 'quick-start'
+  | 'handbook'
+  | 'organizations'
+  | 'estimates'
+  | 'units'
+  | 'pies'
+  | 'faq';
 
 export interface GuideScreenshot {
   src: string;
@@ -57,6 +65,11 @@ export interface GuideContent {
     items: GuideGlossaryItem[];
   };
   handbook: {
+    title: string;
+    lead: string;
+    blocks: GuideDetailBlock[];
+  };
+  organizations: {
     title: string;
     lead: string;
     blocks: GuideDetailBlock[];
