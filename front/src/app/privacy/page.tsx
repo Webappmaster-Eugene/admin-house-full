@@ -4,18 +4,18 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { SITE_URL } from 'src/utils/const/seo';
+import { SITE_URL, buildPageSeo } from 'src/utils/const/seo';
 
 import { LegalPageLayout } from 'src/widgets/legal';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageSeo({
+  path: '/privacy/',
   title: 'Политика конфиденциальности',
   description:
     'Политика конфиденциальности платформы SMETAS — порядок сбора, обработки и хранения персональных данных.',
-  alternates: { canonical: `${SITE_URL}/privacy` },
-};
+});
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
       <Stack spacing={4}>
         {/* 1. Общие положения */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             1. Общие положения
           </Typography>
           <Typography variant="body1" paragraph>
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
 
         {/* 2. Оператор персональных данных */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             2. Оператор персональных данных
           </Typography>
           <Typography variant="body1" paragraph>
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
 
         {/* 3. Определения */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             3. Определения
           </Typography>
           <Typography variant="body1" component="div">
@@ -116,7 +116,7 @@ export default function PrivacyPage() {
 
         {/* 4. Состав собираемых данных */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             4. Состав собираемых данных
           </Typography>
           <Typography variant="body1" paragraph>
@@ -140,7 +140,7 @@ export default function PrivacyPage() {
 
         {/* 5. Цели обработки персональных данных */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             5. Цели обработки персональных данных
           </Typography>
           <Typography variant="body1" paragraph>
@@ -160,7 +160,7 @@ export default function PrivacyPage() {
 
         {/* 6. Правовые основания обработки */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             6. Правовые основания обработки
           </Typography>
           <Typography variant="body1" paragraph>
@@ -182,7 +182,7 @@ export default function PrivacyPage() {
 
         {/* 7. Сроки обработки и хранения */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             7. Сроки обработки и хранения
           </Typography>
           <Typography variant="body1" paragraph>
@@ -202,7 +202,7 @@ export default function PrivacyPage() {
 
         {/* 8. Передача данных третьим лицам */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             8. Передача данных третьим лицам
           </Typography>
           <Typography variant="body1" paragraph>
@@ -229,7 +229,7 @@ export default function PrivacyPage() {
 
         {/* 9. Трансграничная передача данных */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             9. Трансграничная передача данных
           </Typography>
           <Typography variant="body1" paragraph>
@@ -244,7 +244,7 @@ export default function PrivacyPage() {
 
         {/* 10. Cookies */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             10. Cookies
           </Typography>
           <Typography variant="body1" paragraph>
@@ -252,7 +252,7 @@ export default function PrivacyPage() {
             Подробная информация об использовании cookies приведена в{' '}
             <Typography
               component="a"
-              href="/cookies"
+              href="/cookies/"
               variant="body1"
               sx={{ color: 'primary.main', textDecoration: 'none' }}
             >
@@ -264,7 +264,7 @@ export default function PrivacyPage() {
 
         {/* 11. Меры безопасности */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             11. Меры безопасности
           </Typography>
           <Typography variant="body1" paragraph>
@@ -285,7 +285,7 @@ export default function PrivacyPage() {
 
         {/* 12. Права пользователя */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             12. Права пользователя
           </Typography>
           <Typography variant="body1" paragraph>
@@ -321,7 +321,7 @@ export default function PrivacyPage() {
 
         {/* 13. Обязанности оператора */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             13. Обязанности оператора
           </Typography>
           <Typography variant="body1" component="div">
@@ -346,7 +346,7 @@ export default function PrivacyPage() {
 
         {/* 14. Изменение политики */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             14. Изменение политики
           </Typography>
           <Typography variant="body1" paragraph>
@@ -361,7 +361,7 @@ export default function PrivacyPage() {
 
         {/* 15. Контактная информация */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             15. Контактная информация
           </Typography>
           <Typography variant="body1" paragraph>

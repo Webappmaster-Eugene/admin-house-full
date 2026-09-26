@@ -79,6 +79,7 @@ export default function CodeEnteringView({ setForgotState, forgotState }: CodeEn
       >
         <Image src="/images/ic-email-inbox.svg" alt="" width={100} height={100} />
         <Typography
+          component="h1"
           variant="h3"
           sx={{
             textAlign: 'center',

@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Iconify from 'src/shared/iconify';
 
 import { landingEconomy } from '../landing-content';
+import { sectionOverlineSx } from './landing-styles';
 
 export default function EconomySection() {
   return (
@@ -21,10 +22,7 @@ export default function EconomySection() {
     >
       <Container maxWidth="lg">
         <Stack spacing={2} alignItems="center" textAlign="center" sx={{ mb: { xs: 5, md: 8 } }}>
-          <Typography
-            variant="overline"
-            sx={{ color: 'primary.main', letterSpacing: 1.5, fontWeight: 700 }}
-          >
+          <Typography variant="overline" sx={sectionOverlineSx}>
             Экономия
           </Typography>
           <Typography variant="h2" sx={{ fontSize: { xs: 28, md: 40 }, fontWeight: 700 }}>
@@ -78,7 +76,7 @@ export default function EconomySection() {
                   <Iconify icon={item.icon} width={32} />
                 </Box>
 
-                <Typography variant="h4" sx={{ fontWeight: 800 }}>
+                <Typography component="h3" variant="h4" sx={{ fontWeight: 800 }}>
                   {item.metric}
                 </Typography>
 

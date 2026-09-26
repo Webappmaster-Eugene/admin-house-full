@@ -75,6 +75,7 @@ export default function ForgotPasswordView({
       >
         <Image src="/images/ic-password.svg" alt="" width={100} height={100} />
         <Typography
+          component="h1"
           variant="h3"
           sx={{
             textAlign: 'center',

@@ -10,10 +10,11 @@ const ROOTS = {
 
 export const paths = {
   // LEGAL
-  terms: '/terms',
-  privacy: '/privacy',
-  offer: '/offer',
-  cookies: '/cookies',
+  // Со слешем на конце (trailingSlash): обычные <a> без него получают редирект 308.
+  terms: '/terms/',
+  privacy: '/privacy/',
+  offer: '/offer/',
+  cookies: '/cookies/',
   // AUTH
   auth: {
     login: `${ROOTS.AUTH}/login`,

@@ -60,7 +60,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
-    url: SITE_URL,
     siteName: SITE_NAME,
     title: SITE_TITLE_DEFAULT,
     description: SITE_DESCRIPTION,

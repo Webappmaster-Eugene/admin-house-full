@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Iconify from 'src/shared/iconify';
 
 import { landingFeatures } from '../landing-content';
+import { sectionOverlineSx } from './landing-styles';
 
 export default function FeaturesSection() {
   return (
@@ -22,7 +23,7 @@ export default function FeaturesSection() {
         <Stack spacing={2} alignItems="center" textAlign="center" sx={{ mb: { xs: 5, md: 8 } }}>
           <Typography
             variant="overline"
-            sx={{ color: 'primary.main', letterSpacing: 1.5, fontWeight: 700 }}
+            sx={sectionOverlineSx}
           >
             Возможности системы
           </Typography>

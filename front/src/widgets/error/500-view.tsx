@@ -18,7 +18,7 @@ export default function Page500() {
     <CompactLayout>
       <MotionContainer>
         <m.div variants={varBounce().in}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
+          <Typography component="h1" variant="h3" sx={{ mb: 2 }}>
             500 Internal Server Error
           </Typography>
         </m.div>

@@ -19,7 +19,8 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
       <Box
         component="img"
         src="/logo/logo_single.svg"
-        alt="SMETAS"
+        // Рядом с текстом «SMETAS» картинка декоративная: иначе скринридер прочитает название дважды.
+        alt={showText ? '' : 'SMETAS'}
         sx={{ width: 40, height: 40, flexShrink: 0 }}
       />
     );
@@ -28,9 +29,21 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
       <Stack ref={ref} direction="row" alignItems="center" spacing={1} sx={sx} {...other}>
         {logoImage}
         {showText && (
+          // component="span": subtitle1 по умолчанию рендерится как <h6> и ломает иерархию заголовков.
+          // Вместо наследуемого primary.main (контраст 3.1:1) — оттенок с контрастом выше 4.5:1 (WCAG AA).
           <Typography
             variant="subtitle1"
-            sx={{ fontWeight: 700, letterSpacing: 1, lineHeight: 1, userSelect: 'none' }}
+            component="span"
+            sx={{
+              color: (theme) =>
+                theme.palette.mode === 'light'
+                  ? theme.palette.primary.dark
+                  : theme.palette.primary.light,
+              fontWeight: 700,
+              letterSpacing: 1,
+              lineHeight: 1,
+              userSelect: 'none',
+            }}
           >
             SMETAS
           </Typography>

@@ -101,7 +101,7 @@ export default function RegisterView() {
     <>
       {/* render head */}
       <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-        <Typography variant="h4">Начать пользоваться можно бесплатно</Typography>
+        <Typography component="h1" variant="h4">Начать пользоваться можно бесплатно</Typography>
 
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2"> Уже есть аккаунт? </Typography>

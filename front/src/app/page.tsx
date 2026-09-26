@@ -5,6 +5,8 @@ import {
   LOGO_URL,
   SITE_URL,
   SITE_NAME,
+  SITE_NAME_RU,
+  buildPageSeo,
   SITE_KEYWORDS,
   SITE_DESCRIPTION,
   SITE_TITLE_DEFAULT,
@@ -13,17 +15,17 @@ import {
 import LandingView from 'src/widgets/landing/landing-view';
 
 export const metadata: Metadata = {
-  title: SITE_TITLE_DEFAULT,
-  description: SITE_DESCRIPTION,
+  ...buildPageSeo({ path: '/', title: SITE_TITLE_DEFAULT, description: SITE_DESCRIPTION }),
+  // absolute: заголовок главной уже содержит бренд, суффикс шаблона « · SMETAS» не нужен.
+  title: { absolute: SITE_TITLE_DEFAULT },
   keywords: SITE_KEYWORDS,
-  alternates: { canonical: '/' },
 };
 
 const softwareApplicationLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: SITE_NAME,
-  alternateName: 'SMETAS',
+  alternateName: SITE_NAME_RU,
   description: SITE_DESCRIPTION,
   url: SITE_URL,
   applicationCategory: 'BusinessApplication',

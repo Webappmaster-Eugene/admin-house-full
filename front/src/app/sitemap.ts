@@ -6,7 +6,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: `${SITE_URL}/`,
-      lastModified: new Date(),
+      // Дата последнего содержательного изменения лендинга. new Date() менял бы её на каждый запрос,
+      // и поисковики перестают доверять lastmod.
+      lastModified: new Date('2026-09-26'),
       changeFrequency: 'weekly',
       priority: 1,
     },

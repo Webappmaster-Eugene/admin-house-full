@@ -18,7 +18,7 @@ export default function NotFoundView() {
     <CompactLayout>
       <MotionContainer>
         <m.div variants={varBounce().in}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
+          <Typography component="h1" variant="h3" sx={{ mb: 2 }}>
             Извините, страница не найдена!
           </Typography>
         </m.div>

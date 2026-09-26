@@ -4,18 +4,18 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { SITE_URL } from 'src/utils/const/seo';
+import { SITE_URL, buildPageSeo } from 'src/utils/const/seo';
 
 import { LegalPageLayout } from 'src/widgets/legal';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageSeo({
+  path: '/offer/',
   title: 'Публичная оферта',
   description:
     'Публичная оферта платформы SMETAS — условия предоставления доступа к SaaS-сервису для строительных смет.',
-  alternates: { canonical: `${SITE_URL}/offer` },
-};
+});
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function OfferPage() {
       <Stack spacing={4}>
         {/* 1. Общие положения */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             1. Общие положения
           </Typography>
           <Typography variant="body1" paragraph>
@@ -43,7 +43,7 @@ export default function OfferPage() {
 
         {/* 2. Предмет оферты */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             2. Предмет оферты
           </Typography>
           <Typography variant="body1" paragraph>
@@ -60,7 +60,7 @@ export default function OfferPage() {
 
         {/* 3. Описание услуг */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             3. Описание услуг
           </Typography>
           <Typography variant="body1" paragraph>
@@ -99,7 +99,7 @@ export default function OfferPage() {
 
         {/* 4. Стоимость услуг и порядок оплаты */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             4. Стоимость услуг и порядок оплаты
           </Typography>
           <Typography variant="body1" paragraph>
@@ -119,7 +119,7 @@ export default function OfferPage() {
 
         {/* 5. Срок действия и расторжение */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             5. Срок действия и расторжение
           </Typography>
           <Typography variant="body1" paragraph>
@@ -132,7 +132,7 @@ export default function OfferPage() {
             Заказчиком условий настоящей оферты или{' '}
             <Typography
               component="a"
-              href="/terms"
+              href="/terms/"
               variant="body1"
               sx={{ color: 'primary.main', textDecoration: 'none' }}
             >
@@ -144,7 +144,7 @@ export default function OfferPage() {
 
         {/* 6. Отказ от услуг */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             6. Отказ от услуг
           </Typography>
           <Typography variant="body1" paragraph>
@@ -156,7 +156,7 @@ export default function OfferPage() {
             файлы и персональные данные) будут удалены в сроки, предусмотренные{' '}
             <Typography
               component="a"
-              href="/privacy"
+              href="/privacy/"
               variant="body1"
               sx={{ color: 'primary.main', textDecoration: 'none' }}
             >
@@ -168,14 +168,14 @@ export default function OfferPage() {
 
         {/* 7. Конфиденциальность */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             7. Конфиденциальность
           </Typography>
           <Typography variant="body1" paragraph>
             Порядок сбора, обработки и хранения персональных данных Заказчика определяется{' '}
             <Typography
               component="a"
-              href="/privacy"
+              href="/privacy/"
               variant="body1"
               sx={{ color: 'primary.main', textDecoration: 'none' }}
             >
@@ -191,7 +191,7 @@ export default function OfferPage() {
 
         {/* 8. Ответственность */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             8. Ответственность
           </Typography>
           <Typography variant="body1" paragraph>
@@ -220,7 +220,7 @@ export default function OfferPage() {
 
         {/* 9. Форс-мажор */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             9. Форс-мажор
           </Typography>
           <Typography variant="body1" paragraph>
@@ -237,7 +237,7 @@ export default function OfferPage() {
 
         {/* 10. Порядок разрешения споров */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             10. Порядок разрешения споров
           </Typography>
           <Typography variant="body1" paragraph>
@@ -258,7 +258,7 @@ export default function OfferPage() {
 
         {/* 11. Контактная информация */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             11. Контактная информация
           </Typography>
           <Typography variant="body1" paragraph>

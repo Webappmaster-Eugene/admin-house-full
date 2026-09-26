@@ -19,11 +19,12 @@ import { landingAuthor, landingFooter } from '../landing-content';
 
 const FOOTER_CONTACT_TYPES = ['telegram', 'email', 'phone', 'website'] as const;
 
+// Со слешем на конце (next.config: trailingSlash) — без него каждый переход проходит через редирект 308.
 const LEGAL_LINKS = [
-  { label: 'Пользовательское соглашение', href: '/terms' },
-  { label: 'Политика конфиденциальности', href: '/privacy' },
-  { label: 'Публичная оферта', href: '/offer' },
-  { label: 'Cookies', href: '/cookies' },
+  { label: 'Пользовательское соглашение', href: '/terms/' },
+  { label: 'Политика конфиденциальности', href: '/privacy/' },
+  { label: 'Публичная оферта', href: '/offer/' },
+  { label: 'Cookies', href: '/cookies/' },
 ] as const;
 
 export default function LandingFooter() {
@@ -86,7 +87,8 @@ export default function LandingFooter() {
                 component={NextLink}
                 href={link.href}
                 underline="hover"
-                sx={{ color: 'text.disabled', typography: 'caption' }}
+                // text.secondary: у text.disabled контраст 2.7:1; py — область нажатия не меньше 24px.
+                sx={{ color: 'text.secondary', typography: 'caption', py: 0.5 }}
               >
                 {link.label}
               </Link>

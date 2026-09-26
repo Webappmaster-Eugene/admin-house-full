@@ -4,18 +4,18 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { SITE_URL } from 'src/utils/const/seo';
+import { SITE_URL, buildPageSeo } from 'src/utils/const/seo';
 
 import { LegalPageLayout } from 'src/widgets/legal';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageSeo({
+  path: '/terms/',
   title: 'Пользовательское соглашение',
   description:
     'Пользовательское соглашение платформы SMETAS — условия использования сервиса для составления строительных смет.',
-  alternates: { canonical: `${SITE_URL}/terms` },
-};
+});
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function TermsPage() {
       <Stack spacing={4}>
         {/* 1. Общие положения */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             1. Общие положения
           </Typography>
           <Typography variant="body1" paragraph>
@@ -47,7 +47,7 @@ export default function TermsPage() {
 
         {/* 2. Предмет соглашения */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             2. Предмет соглашения
           </Typography>
           <Typography variant="body1" paragraph>
@@ -63,7 +63,7 @@ export default function TermsPage() {
 
         {/* 3. Права и обязанности сторон */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             3. Права и обязанности сторон
           </Typography>
 
@@ -135,7 +135,7 @@ export default function TermsPage() {
 
         {/* 4. Персональные данные */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             4. Персональные данные
           </Typography>
           <Typography variant="body1" paragraph>
@@ -143,7 +143,7 @@ export default function TermsPage() {
             Федеральным законом от 27.07.2006 N 152-ФЗ «О персональных данных» и{' '}
             <Typography
               component="a"
-              href="/privacy"
+              href="/privacy/"
               variant="body1"
               sx={{ color: 'primary.main', textDecoration: 'none' }}
             >
@@ -159,7 +159,7 @@ export default function TermsPage() {
 
         {/* 5. Отказ от ответственности */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             5. Отказ от ответственности
           </Typography>
           <Typography variant="body1" paragraph>
@@ -180,7 +180,7 @@ export default function TermsPage() {
 
         {/* 6. Интеллектуальная собственность */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             6. Интеллектуальная собственность
           </Typography>
           <Typography variant="body1" paragraph>
@@ -196,7 +196,7 @@ export default function TermsPage() {
 
         {/* 7. Ответственность сторон */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             7. Ответственность сторон
           </Typography>
           <Typography variant="body1" paragraph>
@@ -218,7 +218,7 @@ export default function TermsPage() {
 
         {/* 8. Разрешение споров */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             8. Разрешение споров
           </Typography>
           <Typography variant="body1" paragraph>
@@ -239,7 +239,7 @@ export default function TermsPage() {
 
         {/* 9. Изменение условий */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             9. Изменение условий
           </Typography>
           <Typography variant="body1" paragraph>
@@ -255,7 +255,7 @@ export default function TermsPage() {
 
         {/* 10. Применимое право */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             10. Применимое право
           </Typography>
           <Typography variant="body1" paragraph>
@@ -267,7 +267,7 @@ export default function TermsPage() {
 
         {/* 11. Контактная информация */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             11. Контактная информация
           </Typography>
           <Typography variant="body1" paragraph>

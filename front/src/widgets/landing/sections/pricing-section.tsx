@@ -14,6 +14,7 @@ import { paths } from 'src/utils/routes/paths';
 import Iconify from 'src/shared/iconify';
 
 import { landingPricing } from '../landing-content';
+import { sectionOverlineSx } from './landing-styles';
 
 export default function PricingSection() {
   return (
@@ -28,7 +29,7 @@ export default function PricingSection() {
         <Stack spacing={2} alignItems="center" textAlign="center" sx={{ mb: { xs: 5, md: 8 } }}>
           <Typography
             variant="overline"
-            sx={{ color: 'primary.main', letterSpacing: 1.5, fontWeight: 700 }}
+            sx={sectionOverlineSx}
           >
             Тарифы
           </Typography>

@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import Iconify from 'src/shared/iconify';
 
+import { sectionOverlineSx } from './landing-styles';
 import { landingAdvantages } from '../landing-content';
 
 export default function AdvantagesSection() {
@@ -21,14 +22,11 @@ export default function AdvantagesSection() {
     >
       <Container maxWidth="lg">
         <Stack spacing={2} alignItems="center" textAlign="center" sx={{ mb: { xs: 5, md: 8 } }}>
-          <Typography
-            variant="overline"
-            sx={{ color: 'primary.main', letterSpacing: 1.5, fontWeight: 700 }}
-          >
+          <Typography variant="overline" sx={sectionOverlineSx}>
             Преимущества
           </Typography>
           <Typography variant="h2" sx={{ fontSize: { xs: 28, md: 40 }, fontWeight: 700 }}>
-            Почему выбирают Сметы
+            Почему выбирают SMETAS
           </Typography>
           <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 720 }}>
             Современная платформа, которая решает реальные задачи строительных команд каждый день.

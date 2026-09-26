@@ -1,12 +1,18 @@
+import { jwtDecode } from 'jwt-decode';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtDecode } from 'jwt-decode';
 
 const AUTH_ROUTES_PREFIX = '/auth';
 const DASHBOARD_REDIRECT = '/dashboard';
 const LOGIN_REDIRECT = '/auth/login';
 const REFRESH_COOKIE_KEY = 'REFRESH_KEY';
-const PUBLIC_ROUTES = ['/terms', '/privacy', '/offer', '/cookies'];
+// Требуют авторизации только эти разделы. Остальные пути (лендинг, юридические страницы,
+// несуществующие адреса) пропускаются: неизвестный путь должен отдавать 404, а не редирект на вход.
+const PROTECTED_PREFIXES = ['/dashboard', '/profile'];
+
+function matchesPrefix(pathname: string, prefix: string): boolean {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
 
 function isRefreshTokenValid(token: string): boolean {
   try {
@@ -20,19 +26,21 @@ function isRefreshTokenValid(token: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/' || PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
+  const isAuthRoute = matchesPrefix(pathname, AUTH_ROUTES_PREFIX);
+  const isProtectedRoute = PROTECTED_PREFIXES.some((prefix) => matchesPrefix(pathname, prefix));
+
+  if (!isAuthRoute && !isProtectedRoute) {
     return NextResponse.next();
   }
 
   const refreshToken = request.cookies.get(REFRESH_COOKIE_KEY)?.value;
   const isAuthenticated = refreshToken ? isRefreshTokenValid(refreshToken) : false;
-  const isAuthRoute = pathname.startsWith(AUTH_ROUTES_PREFIX);
 
   if (isAuthenticated && isAuthRoute) {
     return NextResponse.redirect(new URL(DASHBOARD_REDIRECT, request.url));
   }
 
-  if (!isAuthenticated && !isAuthRoute) {
+  if (!isAuthenticated && isProtectedRoute) {
     return NextResponse.redirect(new URL(LOGIN_REDIRECT, request.url));
   }
 

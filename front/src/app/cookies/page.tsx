@@ -4,18 +4,18 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { SITE_URL } from 'src/utils/const/seo';
+import { SITE_URL, buildPageSeo } from 'src/utils/const/seo';
 
 import { LegalPageLayout } from 'src/widgets/legal';
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageSeo({
+  path: '/cookies/',
   title: 'Политика использования cookies',
   description:
     'Политика использования cookies платформы SMETAS — какие cookies используются и для чего.',
-  alternates: { canonical: `${SITE_URL}/cookies` },
-};
+});
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function CookiesPage() {
       <Stack spacing={4}>
         {/* 1. Что такое cookies */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             1. Что такое cookies
           </Typography>
           <Typography variant="body1" paragraph>
@@ -42,7 +42,7 @@ export default function CookiesPage() {
 
         {/* 2. Какие cookies мы используем */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             2. Какие cookies мы используем
           </Typography>
 
@@ -147,7 +147,7 @@ export default function CookiesPage() {
 
         {/* 3. Управление cookies */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             3. Управление cookies
           </Typography>
           <Typography variant="body1" paragraph>
@@ -233,7 +233,7 @@ export default function CookiesPage() {
 
         {/* 4. Блокировка технических cookies */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             4. Влияние блокировки cookies
           </Typography>
           <Typography variant="body1" paragraph sx={{ fontWeight: 500 }}>
@@ -258,7 +258,7 @@ export default function CookiesPage() {
 
         {/* 5. Контактная информация */}
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography component="h2" variant="h5" gutterBottom>
             5. Контактная информация
           </Typography>
           <Typography variant="body1" paragraph>

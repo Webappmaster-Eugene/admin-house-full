@@ -46,6 +46,8 @@ export default function HeroSection() {
 
           <Typography
             variant="h5"
+            // Подзаголовок — абзац, а не заголовок: иначе после h1 идёт h5 и ломается иерархия.
+            component="p"
             sx={{
               color: 'text.secondary',
               fontWeight: 400,

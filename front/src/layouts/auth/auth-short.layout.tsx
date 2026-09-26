@@ -85,7 +85,9 @@ export default function AuthShortLayout({ children, image, title }: AuthLayoutPr
               fill="#637381"
             />
           </svg>
-          <Typography variant="subtitle2"> Служба поддержки </Typography>
+          <Typography variant="subtitle2" component="span">
+            Служба поддержки
+          </Typography>
         </Stack>
       </Link>
     </Stack>

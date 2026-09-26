@@ -14,16 +14,50 @@ import TableContainer from '@mui/material/TableContainer';
 import Iconify from 'src/shared/iconify';
 
 import { landingCompetitorTable } from '../landing-content';
+import { accentTextColor, sectionOverlineSx } from './landing-styles';
+
+// Текст только для скринридеров: иконки в ячейках сами по себе ничего не сообщают.
+// Размеры строками: в sx число 1 означает 100%, а m: -1 — отступ темы (-8px).
+const visuallyHiddenSx = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  p: 0,
+  m: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+} as const;
 
 function CellValue({ value }: { value: boolean | string }) {
-  if (value === true) {
-    return <Iconify icon="solar:check-circle-bold" width={22} sx={{ color: 'success.main' }} />;
-  }
-  if (value === false) {
-    return <Iconify icon="solar:close-circle-bold" width={22} sx={{ color: 'text.disabled' }} />;
+  if (typeof value === 'boolean') {
+    return (
+      <>
+        <Iconify
+          aria-hidden
+          icon={value ? 'solar:check-circle-bold' : 'solar:close-circle-bold'}
+          width={22}
+          sx={{ color: value ? 'success.main' : 'text.disabled' }}
+        />
+        <Box component="span" sx={visuallyHiddenSx}>
+          {value ? 'Есть' : 'Нет'}
+        </Box>
+      </>
+    );
   }
   return (
-    <Typography variant="caption" sx={{ color: 'warning.main', fontWeight: 600 }}>
+    <Typography
+      variant="caption"
+      sx={{
+        // warning.main (#FFAB00) на белом — контраст 1.9:1, текст почти не читается.
+        color: (theme) =>
+          theme.palette.mode === 'light'
+            ? theme.palette.warning.darker
+            : theme.palette.warning.light,
+        fontWeight: 600,
+      }}
+    >
       {value}
     </Typography>
   );
@@ -42,10 +76,7 @@ export default function CompetitorComparisonSection() {
     >
       <Container maxWidth="lg">
         <Stack spacing={2} alignItems="center" textAlign="center" sx={{ mb: { xs: 5, md: 8 } }}>
-          <Typography
-            variant="overline"
-            sx={{ color: 'primary.main', letterSpacing: 1.5, fontWeight: 700 }}
-          >
+          <Typography variant="overline" sx={sectionOverlineSx}>
             Сравнение
           </Typography>
           <Typography variant="h2" sx={{ fontSize: { xs: 28, md: 40 }, fontWeight: 700 }}>
@@ -75,7 +106,7 @@ export default function CompetitorComparisonSection() {
                       fontWeight: 700,
                       whiteSpace: 'nowrap',
                       ...(col === 'SMETAS' && {
-                        color: 'primary.main',
+                        color: accentTextColor,
                         backgroundColor: 'primary.lighter',
                       }),
                     }}

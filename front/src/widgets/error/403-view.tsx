@@ -18,7 +18,7 @@ export default function View403() {
     <CompactLayout>
       <MotionContainer>
         <m.div variants={varBounce().in}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
+          <Typography component="h1" variant="h3" sx={{ mb: 2 }}>
             No permission
           </Typography>
         </m.div>
