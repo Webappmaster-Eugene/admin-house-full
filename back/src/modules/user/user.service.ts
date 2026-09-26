@@ -142,14 +142,16 @@ export class UserService implements IUserService {
             transactionDbClient,
           );
 
-          await this.addExistedWorkspaceToManager(createdUser.uuid, newWorkspaceInfo.uuid, transactionDbClient);
-
-          const newUserWithWorkspaceAndHandbook = await this.addExistedHandbookToManager(
+          // Репозиторий напрямую, а не addExistedWorkspaceToManager/addExistedHandbookToManager сервиса:
+          // те читают пользователя через getById вне транзакции (незакоммиченный пользователь → 404,
+          // регистрация менеджера откатывалась) и запрещают привязку, если workspace/справочник уже есть —
+          // а здесь они только что созданы для этого же пользователя.
+          await this.userRepository.addExistedWorkspaceToManager(createdUser.uuid, newWorkspaceInfo.uuid, transactionDbClient);
+          const userWithWPAndHB = await this.userRepository.addExistedHandbookToManager(
             createdUser.uuid,
             newHandbookInfo.uuid,
             transactionDbClient,
           );
-          const userWithWPAndHB = dataInternalExtractor(newUserWithWorkspaceAndHandbook);
           return new InternalResponse(userWithWPAndHB);
         }
         return new InternalResponse(createdUser);
