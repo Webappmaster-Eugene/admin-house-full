@@ -18,6 +18,7 @@ import { EntityName } from '../../common/types/entity.enum';
 import { ILogger } from '../../common/types/main/logger.interface';
 import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decorator';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
+import { WorkspaceEntityOwnershipGuard } from '../../common/guards/workspace-entity-ownership.guard';
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '.prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
@@ -43,7 +44,7 @@ export class OrganizationController {
   @ApiResponse({ status: 200, type: OrganizationGetResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard, WorkspaceEntityOwnershipGuard)
   @ZodSerializerDto(OrganizationGetResponseDto)
   @Get('workspace/:workspaceId/organization/:organizationId')
   async getByIdEP(
@@ -153,7 +154,7 @@ export class OrganizationController {
   @ApiResponse({ status: 200, type: OrganizationUpdateResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard, WorkspaceEntityOwnershipGuard)
   @ZodSerializerDto(OrganizationUpdateResponseDto)
   @Put('workspace/:workspaceId/organization/:organizationId')
   async updateByIdEP(
@@ -180,7 +181,7 @@ export class OrganizationController {
   @ApiResponse({ status: 200, type: OrganizationDeleteResponseDto })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard, WorkspaceEntityOwnershipGuard)
   @Delete('workspace/:workspaceId/organization/:organizationId')
   async deleteByIdEP(
     @Param('organizationId', ParseUUIDPipe)

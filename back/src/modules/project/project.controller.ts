@@ -21,6 +21,7 @@ import { IUrlParams, UrlParams } from '../../common/decorators/url-params.decora
 import { WorkspaceMembersGuard } from '../../common/guards/workspace-members.guard';
 import { EUserTypeVariants } from '.prisma/client';
 import { WorkspaceCreatorGuard } from '../../common/guards/workspace-creator.guard';
+import { WorkspaceEntityOwnershipGuard } from '../../common/guards/workspace-entity-ownership.guard';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { okResponseHandler } from '../../common/helpers/handlers/ok-response.handler';
 import { errorResponseHandler } from '../../common/helpers/handlers/error-response.handler';
@@ -44,7 +45,7 @@ export class ProjectController {
   @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(ProjectGetResponseDto)
-  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard, WorkspaceEntityOwnershipGuard)
   @Get('workspace/:workspaceId/organization/:organizationId/project/:projectId')
   async getByIdEP(
     @Param('projectId') projectId: EntityUrlParamCommand.RequestUuidParam,
@@ -120,7 +121,7 @@ export class ProjectController {
   @ApiResponse({ status: 200, type: [ProjectEntity] })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceMembersGuard)
+  @UseGuards(AuthGuard, WorkspaceMembersGuard, WorkspaceEntityOwnershipGuard)
   @ZodSerializerDto(ProjectGetAllResponseDto)
   @Get('workspace/:workspaceId/organization/:organizationId/get-all-in-organization')
   async getAllInOrganizationEP(
@@ -147,7 +148,7 @@ export class ProjectController {
   @ApiResponse({ status: 201, type: ProjectEntity })
   @ApiBearerAuth('access-token')
   //endregion
-  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard, WorkspaceEntityOwnershipGuard)
   @ZodSerializerDto(ProjectCreateResponseDto)
   @Post('workspace/:workspaceId/organization/:organizationId')
   async create(
@@ -177,7 +178,7 @@ export class ProjectController {
   @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(ProjectUpdateResponseDto)
-  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard, WorkspaceEntityOwnershipGuard)
   @Put('workspace/:workspaceId/organization/:organizationId/project/:projectId')
   async updateIdEP(
     @Body() dto: ProjectUpdateRequestDto,
@@ -204,7 +205,7 @@ export class ProjectController {
   @ApiBearerAuth('access-token')
   //endregion
   @ZodSerializerDto(ProjectDeleteResponseDto)
-  @UseGuards(AuthGuard, WorkspaceCreatorGuard)
+  @UseGuards(AuthGuard, WorkspaceCreatorGuard, WorkspaceEntityOwnershipGuard)
   @Delete('workspace/:workspaceId/organization/:organizationId/project/:projectId')
   async deleteByIdEP(
     @Param('projectId', ParseUUIDPipe)
