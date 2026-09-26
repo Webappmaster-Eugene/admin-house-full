@@ -3,6 +3,7 @@
 import NextLink from 'next/link';
 
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -10,6 +11,8 @@ import Container from '@mui/material/Container';
 import { paths } from 'src/utils/routes/paths';
 
 import Logo from 'src/shared/logo';
+
+import { HOW_IT_WORKS_ID } from '../landing-content';
 
 export default function LandingHeader() {
   return (
@@ -33,15 +36,30 @@ export default function LandingHeader() {
         >
           <Logo showText />
 
-          <Button
-            component={NextLink}
-            href={paths.auth.login}
-            variant="contained"
-            color="primary"
-            size="medium"
-          >
-            Войти
-          </Button>
+          <Stack direction="row" spacing={3} alignItems="center">
+            <Link
+              href={`#${HOW_IT_WORKS_ID}`}
+              underline="hover"
+              sx={{
+                display: { xs: 'none', sm: 'inline' },
+                color: 'text.primary',
+                typography: 'body2',
+                fontWeight: 600,
+              }}
+            >
+              Как это работает
+            </Link>
+
+            <Button
+              component={NextLink}
+              href={paths.auth.login}
+              variant="contained"
+              color="primary"
+              size="medium"
+            >
+              Войти
+            </Button>
+          </Stack>
         </Stack>
       </Container>
     </Box>

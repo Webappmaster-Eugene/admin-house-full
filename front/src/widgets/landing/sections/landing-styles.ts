@@ -9,9 +9,25 @@ import type { Theme, SxProps } from '@mui/material/styles';
 export const accentTextColor = (theme: Theme) =>
   theme.palette.mode === 'light' ? theme.palette.primary.dark : theme.palette.primary.light;
 
-/** Надпись-рубрика над заголовком секции («ЭКОНОМИЯ», «ПРЕИМУЩЕСТВА»...). */
+/** Надпись-рубрика над заголовком секции («ЗАЧЕМ ЭТО НУЖНО», «КАК ЭТО РАБОТАЕТ»...). */
 export const sectionOverlineSx: SxProps<Theme> = {
   color: accentTextColor,
   letterSpacing: 1.5,
   fontWeight: 700,
 };
+
+/**
+ * Текст только для скринридеров. Размеры строками: в sx число 1 означает 100%, а m: -1 — отступ темы.
+ * Без функций — можно использовать в серверных компонентах.
+ */
+export const visuallyHiddenSx = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  p: 0,
+  m: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+} as const;

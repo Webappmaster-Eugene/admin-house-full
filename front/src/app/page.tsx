@@ -13,6 +13,7 @@ import {
 } from 'src/utils/const/seo';
 
 import LandingView from 'src/widgets/landing/landing-view';
+import { landingFaq, landingSteps, SUPPORT_EMAIL } from 'src/widgets/landing/landing-content';
 
 export const metadata: Metadata = {
   ...buildPageSeo({ path: '/', title: SITE_TITLE_DEFAULT, description: SITE_DESCRIPTION }),
@@ -21,86 +22,73 @@ export const metadata: Metadata = {
   keywords: SITE_KEYWORDS,
 };
 
-const softwareApplicationLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: SITE_NAME,
-  alternateName: SITE_NAME_RU,
-  description: SITE_DESCRIPTION,
-  url: SITE_URL,
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web',
-  inLanguage: 'ru-RU',
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'RUB',
-    availability: 'https://schema.org/InStock',
-  },
-  author: {
-    '@type': 'Person',
-    name: AUTHOR.name,
-    email: AUTHOR.email,
-    url: AUTHOR.url,
-    sameAs: [AUTHOR.url, AUTHOR.telegram],
-  },
-  publisher: {
-    '@type': 'Person',
-    name: AUTHOR.name,
-    url: AUTHOR.url,
-  },
-};
+const PERSON_ID = `${SITE_URL}/#founder`;
+const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 
-const webSiteLd = {
+// Один @graph со ссылками по @id: поисковики связывают сайт, приложение, организацию и автора.
+// FAQPage строится из тех же вопросов, что показаны на странице (landingFaq), — разметка обязана
+// совпадать с видимым текстом.
+const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: SITE_NAME,
-  url: SITE_URL,
-  inLanguage: 'ru-RU',
-  description: SITE_DESCRIPTION,
-  publisher: {
-    '@type': 'Person',
-    name: AUTHOR.name,
-    url: AUTHOR.url,
-  },
-};
-
-const personLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: AUTHOR.name,
-  jobTitle: 'Основатель SMETAS',
-  email: `mailto:${AUTHOR.email}`,
-  url: AUTHOR.url,
-  sameAs: [
-    AUTHOR.url,
-    AUTHOR.telegram,
-  ],
-};
-
-const organizationLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: SITE_NAME,
-  url: SITE_URL,
-  logo: LOGO_URL,
-  founder: {
-    '@type': 'Person',
-    name: AUTHOR.name,
-    url: AUTHOR.url,
-  },
-  contactPoint: [
+  '@graph': [
     {
-      '@type': 'ContactPoint',
-      contactType: 'customer support',
-      email: 'support@hhos.ru',
-      availableLanguage: ['Russian'],
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      alternateName: SITE_NAME_RU,
+      url: `${SITE_URL}/`,
+      inLanguage: 'ru-RU',
+      description: SITE_DESCRIPTION,
+      publisher: { '@id': ORGANIZATION_ID },
     },
     {
-      '@type': 'ContactPoint',
-      contactType: 'founder',
-      email: AUTHOR.email,
-      availableLanguage: ['Russian'],
+      '@type': 'SoftwareApplication',
+      name: SITE_NAME,
+      alternateName: SITE_NAME_RU,
+      description: SITE_DESCRIPTION,
+      url: `${SITE_URL}/`,
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      inLanguage: 'ru-RU',
+      featureList: landingSteps.map((step) => step.title),
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'RUB',
+        availability: 'https://schema.org/InStock',
+      },
+      author: { '@id': PERSON_ID },
+      publisher: { '@id': ORGANIZATION_ID },
+    },
+    {
+      '@type': 'Organization',
+      '@id': ORGANIZATION_ID,
+      name: SITE_NAME,
+      url: `${SITE_URL}/`,
+      logo: LOGO_URL,
+      founder: { '@id': PERSON_ID },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer support',
+        email: SUPPORT_EMAIL,
+        availableLanguage: ['Russian'],
+      },
+    },
+    {
+      '@type': 'Person',
+      '@id': PERSON_ID,
+      name: AUTHOR.name,
+      jobTitle: AUTHOR.role,
+      url: AUTHOR.url,
+      sameAs: [AUTHOR.url, AUTHOR.telegram],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: landingFaq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
     },
   ],
 };
@@ -111,9 +99,7 @@ export default function LandingPage() {
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([webSiteLd, softwareApplicationLd, organizationLd, personLd]),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <LandingView />
     </>

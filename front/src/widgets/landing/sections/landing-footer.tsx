@@ -2,15 +2,7 @@
 
 import NextLink from 'next/link';
 
-import {
-  Box,
-  Link,
-  Stack,
-  Divider,
-  Container,
-  Typography,
-  IconButton,
-} from '@mui/material';
+import { Box, Link, Stack, Divider, Container, Typography, IconButton } from '@mui/material';
 
 import Logo from 'src/shared/logo';
 
@@ -76,11 +68,7 @@ export default function LandingFooter() {
 
           <Divider />
 
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2 }}
-            flexWrap="wrap"
-          >
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2 }} flexWrap="wrap">
             {LEGAL_LINKS.map((link) => (
               <Link
                 key={link.href}

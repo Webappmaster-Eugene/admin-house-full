@@ -21,12 +21,14 @@ export default function NavToggleButton({ sx, ...other }: IconButtonProps) {
     return null;
   }
 
+  const isVertical = settings.themeLayout === 'vertical';
+
   return (
     <IconButton
       size="small"
-      onClick={() =>
-        settings.onUpdate('themeLayout', settings.themeLayout === 'vertical' ? 'mini' : 'vertical')
-      }
+      // Кнопка только с иконкой — без подписи скринридер её не озвучит.
+      aria-label={isVertical ? 'Свернуть меню' : 'Развернуть меню'}
+      onClick={() => settings.onUpdate('themeLayout', isVertical ? 'mini' : 'vertical')}
       sx={{
         p: 0.5,
         top: 32,
@@ -44,11 +46,7 @@ export default function NavToggleButton({ sx, ...other }: IconButtonProps) {
     >
       <Iconify
         width={16}
-        icon={
-          settings.themeLayout === 'vertical'
-            ? 'eva:arrow-ios-back-fill'
-            : 'eva:arrow-ios-forward-fill'
-        }
+        icon={isVertical ? 'eva:arrow-ios-back-fill' : 'eva:arrow-ios-forward-fill'}
       />
     </IconButton>
   );

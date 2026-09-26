@@ -1,16 +1,15 @@
 import Box from '@mui/material/Box';
 
+import FaqSection from './sections/faq-section';
 import HeroSection from './sections/hero-section';
 import LandingIconSprite from './landing-icon-sprite';
 import LandingHeader from './sections/landing-header';
 import LandingFooter from './sections/landing-footer';
-import EconomySection from './sections/economy-section';
 import PricingSection from './sections/pricing-section';
-import FeaturesSection from './sections/features-section';
+import AudienceSection from './sections/audience-section';
+import ProblemsSection from './sections/problems-section';
 import FinalCtaSection from './sections/final-cta-section';
-import AdvantagesSection from './sections/advantages-section';
-import TargetAudienceSection from './sections/target-audience-section';
-import CompetitorComparisonSection from './sections/competitor-comparison-section';
+import HowItWorksSection from './sections/how-it-works-section';
 
 export default function LandingView() {
   return (
@@ -21,11 +20,10 @@ export default function LandingView() {
 
       <Box component="main" sx={{ flex: 1 }}>
         <HeroSection />
-        <EconomySection />
-        <AdvantagesSection />
-        <FeaturesSection />
-        <TargetAudienceSection />
-        <CompetitorComparisonSection />
+        <ProblemsSection />
+        <HowItWorksSection />
+        <AudienceSection />
+        <FaqSection />
         <PricingSection />
         <FinalCtaSection />
       </Box>

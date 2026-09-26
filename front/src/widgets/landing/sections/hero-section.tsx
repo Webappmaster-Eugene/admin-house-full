@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/utils/routes/paths';
 
 import LandingIcon from '../landing-icon';
-import { landingHero } from '../landing-content';
+import { landingHero, HOW_IT_WORKS_ID } from '../landing-content';
 
 export default function HeroSection() {
   return (
@@ -35,8 +35,8 @@ export default function HeroSection() {
           <Typography
             variant="h1"
             sx={{
-              fontSize: { xs: 36, sm: 48, md: 64 },
-              lineHeight: 1.1,
+              fontSize: { xs: 34, sm: 46, md: 58 },
+              lineHeight: 1.12,
               fontWeight: 800,
             }}
           >
@@ -56,17 +56,32 @@ export default function HeroSection() {
             {landingHero.subtitle}
           </Typography>
 
-          <Button
-            component={NextLink}
-            href={paths.auth.login}
-            variant="contained"
-            color="primary"
-            size="large"
-            endIcon={<LandingIcon icon="solar:arrow-right-linear" />}
-            sx={{ mt: { xs: 2, md: 3 }, px: 5, py: 1.5, fontSize: 16 }}
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            sx={{ mt: { xs: 2, md: 3 }, width: { xs: '100%', sm: 'auto' } }}
           >
-            {landingHero.ctaLabel}
-          </Button>
+            <Button
+              href={`#${HOW_IT_WORKS_ID}`}
+              variant="contained"
+              color="primary"
+              size="large"
+              endIcon={<LandingIcon icon="solar:arrow-right-linear" />}
+              sx={{ px: 5, py: 1.5, fontSize: 16 }}
+            >
+              {landingHero.primaryCta}
+            </Button>
+            <Button
+              component={NextLink}
+              href={paths.auth.login}
+              variant="outlined"
+              color="inherit"
+              size="large"
+              sx={{ px: 5, py: 1.5, fontSize: 16 }}
+            >
+              {landingHero.secondaryCta}
+            </Button>
+          </Stack>
         </Stack>
       </Container>
     </Box>
