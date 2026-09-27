@@ -18,6 +18,7 @@ import {
   Button,
   Dialog,
   Tooltip,
+  Divider,
   TableRow,
   Checkbox,
   Container,
@@ -148,6 +149,47 @@ export default function AdminView() {
     await loadUsers();
   };
 
+  const renderRoleLabels = (user: UserRow) => (
+    <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+      {(user.roles ?? []).map((r: { name: string }) => (
+        <Label key={r.name} color={roleChipColor(r.name)}>
+          {roleLabel(r.name)}
+        </Label>
+      ))}
+    </Stack>
+  );
+
+  const renderStatus = (user: UserRow) => (
+    <Chip
+      size="small"
+      label={user.userStatus ?? 'ACTIVE'}
+      color={user.userStatus === 'ACTIVE' ? 'success' : 'default'}
+    />
+  );
+
+  const renderActions = (user: UserRow) => (
+    <>
+      <Tooltip title="Изменить роли">
+        <IconButton size="small" onClick={() => setRolesUser(user)} aria-label="Изменить роли">
+          <Iconify icon="solar:shield-user-bold" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Удалить">
+        <IconButton
+          size="small"
+          color="error"
+          onClick={() => setDeleteUserRow(user)}
+          aria-label="Удалить пользователя"
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+
+  const userFullName = (user: UserRow) =>
+    [user.firstName, user.secondName].filter(Boolean).join(' ') || 'Без имени';
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs
@@ -185,7 +227,8 @@ export default function AdminView() {
                   <CircularProgress />
                 </Box>
               ) : (
-                <TableContainer>
+                <>
+                <TableContainer sx={{ display: { xs: 'none', md: 'block' } }}>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
@@ -198,9 +241,7 @@ export default function AdminView() {
                     </TableHead>
                     <TableBody>
                       {(users ?? []).map((user) => {
-                        const fullName =
-                          [user.firstName, user.secondName].filter(Boolean).join(' ') ||
-                          'Без имени';
+                        const fullName = userFullName(user);
                         return (
                           <TableRow key={user.uuid} hover>
                             <TableCell>
@@ -216,37 +257,10 @@ export default function AdminView() {
                                 {user.email}
                               </Typography>
                             </TableCell>
-                            <TableCell>
-                              <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
-                                {(user.roles ?? []).map((r: { name: string }) => (
-                                  <Label key={r.name} color={roleChipColor(r.name)}>
-                                    {roleLabel(r.name)}
-                                  </Label>
-                                ))}
-                              </Stack>
-                            </TableCell>
-                            <TableCell>
-                              <Chip
-                                size="small"
-                                label={user.userStatus ?? 'ACTIVE'}
-                                color={user.userStatus === 'ACTIVE' ? 'success' : 'default'}
-                              />
-                            </TableCell>
-                            <TableCell align="right">
-                              <Tooltip title="Изменить роли">
-                                <IconButton size="small" onClick={() => setRolesUser(user)}>
-                                  <Iconify icon="solar:shield-user-bold" />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Удалить">
-                                <IconButton
-                                  size="small"
-                                  color="error"
-                                  onClick={() => setDeleteUserRow(user)}
-                                >
-                                  <Iconify icon="solar:trash-bin-trash-bold" />
-                                </IconButton>
-                              </Tooltip>
+                            <TableCell>{renderRoleLabels(user)}</TableCell>
+                            <TableCell>{renderStatus(user)}</TableCell>
+                            <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                              {renderActions(user)}
                             </TableCell>
                           </TableRow>
                         );
@@ -263,6 +277,51 @@ export default function AdminView() {
                     </TableBody>
                   </Table>
                 </TableContainer>
+
+                <Stack divider={<Divider />} sx={{ display: { xs: 'flex', md: 'none' } }}>
+                  {(users ?? []).map((user) => {
+                    const fullName = userFullName(user);
+                    return (
+                      <Stack key={user.uuid} direction="row" spacing={1.5} sx={{ py: 1.5 }}>
+                        <Avatar src={user.avatar || undefined} sx={{ width: 36, height: 36 }}>
+                          {fullName.charAt(0)}
+                        </Avatar>
+                        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                          <Typography variant="subtitle2" sx={{ wordBreak: 'break-word' }}>
+                            {fullName}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ wordBreak: 'break-all' }}
+                          >
+                            {user.email}
+                          </Typography>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                            flexWrap="wrap"
+                            useFlexGap
+                            sx={{ mt: 1 }}
+                          >
+                            {renderRoleLabels(user)}
+                            {renderStatus(user)}
+                          </Stack>
+                        </Box>
+                        <Stack direction="row" alignItems="flex-start" sx={{ flexShrink: 0 }}>
+                          {renderActions(user)}
+                        </Stack>
+                      </Stack>
+                    );
+                  })}
+                  {users && users.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>
+                      Пользователей нет
+                    </Typography>
+                  )}
+                </Stack>
+                </>
               )}
             </CardContent>
           </Card>

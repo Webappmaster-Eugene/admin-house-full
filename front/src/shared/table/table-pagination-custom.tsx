@@ -29,6 +29,11 @@ export default function TablePaginationCustom({
         {...other}
         sx={{
           borderTopColor: 'transparent',
+          // На телефоне подпись «Строк на странице» выталкивала стрелку «вперёд» за край
+          // (TablePagination прокручивается и прячет её). Сам выбор количества остаётся.
+          '& .MuiTablePagination-selectLabel': { display: { xs: 'none', sm: 'block' } },
+          '& .MuiTablePagination-toolbar': { pl: { xs: 1, sm: 2 } },
+          '& .MuiTablePagination-input': { ml: { xs: 0, sm: 1 }, mr: { xs: 1, sm: 4 } },
         }}
         lang="ru-RU"
       />

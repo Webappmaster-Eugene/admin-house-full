@@ -60,8 +60,9 @@ export default function CustomBreadcrumbs({
 
   return (
     <Box sx={{ ...sx }}>
-      <Stack direction="row" alignItems="center">
-        <Box sx={{ flexGrow: 1 }}>
+      {/* Кнопка переносится под заголовок, если не помещается рядом (на телефоне сжимала его) */}
+      <Stack direction="row" alignItems="center" flexWrap="wrap" useFlexGap spacing={2}>
+        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
           {/* HEADING */}
           {heading && (
             <Typography variant="h4" gutterBottom>

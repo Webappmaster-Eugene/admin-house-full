@@ -61,7 +61,7 @@ export default function AuthShortLayout({ children, image, title }: AuthLayoutPr
               transitionDelay: '0.2s',
               // backgroundColor: 'red',
             },
-            mr: { xs: 1, md: 2 },
+            mr: 2,
             justifyContent: 'flex-end',
             alignItems: 'center',
           }}
