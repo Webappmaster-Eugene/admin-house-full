@@ -49,11 +49,11 @@ export function AddSectionDialog({
           />
           <TextField
             select
-            label="Родительский раздел (необязательно)"
+            label="Родительский раздел"
             value={parent}
             onChange={(event) => setParent(event.target.value)}
             fullWidth
-            helperText="Оставьте пустым для создания раздела верхнего уровня"
+            helperText="Необязательно. Оставьте пустым для раздела верхнего уровня"
           >
             <MenuItem value="">— Верхний уровень —</MenuItem>
             {rootSections.map((section) => (

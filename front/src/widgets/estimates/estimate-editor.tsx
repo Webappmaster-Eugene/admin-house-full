@@ -299,16 +299,25 @@ export function EstimateEditor({
     <Box>
       <GuideInfoAlert section="estimates" variant="compact" />
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-        <Box>
-          <Typography variant="h4">{estimate.name}</Typography>
+      {/* На телефоне кнопки сжимали название до слова в строку — переносим их под него */}
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        spacing={2}
+        mb={2}
+      >
+        <Box sx={{ minWidth: 0 }}>
+          <Typography variant="h4" sx={{ wordBreak: 'break-word' }}>
+            {estimate.name}
+          </Typography>
           {estimate.description && (
             <Typography variant="body2" color="text.secondary">
               {estimate.description}
             </Typography>
           )}
         </Box>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ flexShrink: 0 }}>
           <Button
             variant="outlined"
             startIcon={<AddIcon />}
@@ -324,7 +333,8 @@ export function EstimateEditor({
 
       <Card sx={{ mb: 2 }}>
         <CardContent>
-          <Stack direction="row" spacing={4}>
+          {/* Три итога не помещаются в строку на телефоне — переносим, а не обрезаем */}
+          <Stack direction="row" spacing={{ xs: 2, sm: 4 }} useFlexGap flexWrap="wrap">
             <Stack>
               <Typography variant="caption" color="text.secondary">
                 Себестоимость

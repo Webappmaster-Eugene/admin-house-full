@@ -20,6 +20,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import { formatMoney } from './_consts';
 import { SectionBlockProps } from './_types';
 import { ItemRow } from './item-row';
+import { ItemCard } from './item-card';
+
+// Таблица строк (11 колонок) требует ~870px. Решаем по ширине самого раздела (container query),
+// а не окна: вложенный подраздел уже родителя на рамку и отступы и на 1280px уже не помещается.
+const TABLE_CONTAINER_QUERY = '@container (min-width: 880px)';
 
 export function SectionBlock({
   section,
@@ -32,13 +37,26 @@ export function SectionBlock({
 }: SectionBlockProps) {
   return (
     <Card>
-      <CardContent>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="h6">
+      <CardContent sx={{ p: { xs: 2, sm: 3 }, containerType: 'inline-size' }}>
+        {/* На телефоне суммы и кнопки не помещаются рядом с названием — ставим их под ним */}
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          justifyContent="space-between"
+          alignItems={{ xs: 'stretch', sm: 'center' }}
+          spacing={{ xs: 0.5, sm: 2 }}
+          mb={1}
+        >
+          <Typography variant="h6" sx={{ wordBreak: 'break-word' }}>
             {numPrefix}. {section.name}
           </Typography>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Typography variant="body2">
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent={{ xs: 'space-between', sm: 'flex-end' }}
+            sx={{ flexShrink: 0 }}
+          >
+            <Typography variant="body2" sx={{ flexGrow: { xs: 1, sm: 0 } }}>
               {formatMoney(section.sectionTotalCost)} →{' '}
               <strong>{formatMoney(section.sectionTotalClientPrice)}</strong>
             </Typography>
@@ -60,8 +78,14 @@ export function SectionBlock({
         <Divider sx={{ mb: 1 }} />
 
         {section.items.length > 0 && (
-          <TableContainer component={Paper} variant="outlined">
-            <Table size="small">
+          <TableContainer
+            component={Paper}
+            variant="outlined"
+            sx={{ display: 'none', [TABLE_CONTAINER_QUERY]: { display: 'block' } }}
+          >
+            {/* Отступы ячеек 8px вместо 16px: иначе таблица вложенного раздела не помещалась
+                даже на 1440px и уезжала вбок вместе с кнопкой удаления */}
+            <Table size="small" sx={{ '& .MuiTableCell-root': { px: 1 } }}>
               <TableHead>
                 <TableRow>
                   <TableCell width={48} />
@@ -92,8 +116,25 @@ export function SectionBlock({
           </TableContainer>
         )}
 
+        {section.items.length > 0 && (
+          <Stack
+            divider={<Divider />}
+            sx={{ display: 'flex', [TABLE_CONTAINER_QUERY]: { display: 'none' } }}
+          >
+            {section.items.map((item, idx) => (
+              <ItemCard
+                key={item.uuid}
+                item={item}
+                num={`${numPrefix}.${idx + 1}`}
+                onEdit={() => onEditItem(section.uuid, item)}
+                onDelete={() => onDeleteItem(section.uuid, item.uuid)}
+              />
+            ))}
+          </Stack>
+        )}
+
         {section.childSections.length > 0 && (
-          <Stack spacing={1} mt={2} pl={3}>
+          <Stack spacing={1} mt={2} pl={{ xs: 0, sm: 2 }}>
             {section.childSections.map((child, idx) => (
               <SectionBlock
                 key={child.uuid}

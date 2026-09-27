@@ -290,7 +290,7 @@ function TemplateModeForm({
         </Card>
       )}
 
-      <Stack direction="row" spacing={2}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <TextField
           type="number"
           label={`Количество (${selected?.unitMeasurement ?? 'ед'})`}
@@ -399,7 +399,7 @@ function PieModeForm({
         </Card>
       )}
 
-      <Stack direction="row" spacing={2}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <TextField
           type="number"
           label={`Площадь (${selected?.unitMeasurement ?? 'м²'})`}
@@ -486,7 +486,7 @@ function ManualModeForm({ form, materials, unitMeasurements, onChange }: ManualM
         fullWidth
         required
       />
-      <Stack direction="row" spacing={2}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <TextField
           type="number"
           label="Количество"
@@ -501,7 +501,7 @@ function ManualModeForm({ form, materials, unitMeasurements, onChange }: ManualM
           options={unitMeasurements}
         />
       </Stack>
-      <Stack direction="row" spacing={2}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <TextField
           type="number"
           label="Цена себестоимости"

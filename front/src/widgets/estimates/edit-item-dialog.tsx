@@ -96,7 +96,7 @@ export function EditItemDialog({
             disabled={isUnit || isPie}
           />
 
-          <Stack direction="row" spacing={2}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               type="number"
               label="Количество"
@@ -117,7 +117,7 @@ export function EditItemDialog({
             />
           </Stack>
 
-          <Stack direction="row" spacing={2}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               type="number"
               label="Цена себестоимости"
