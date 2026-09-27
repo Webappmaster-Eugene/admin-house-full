@@ -112,6 +112,7 @@ import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-varia
 import { getAllFieldUnitMeasurementsOfHandbook } from 'src/api/actions/field-unit-measurement/get-all-field-unit-measurements-of-handbook.action';
 import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
 import { DataGridCellUnitMeasurement } from 'src/shared/mui-data-grid/datagrid-materials-cell-unit-measurement/datagrid-materials-cell-unit-measurement';
+import { paths } from 'src/utils/routes/paths';
 import { renderCellExpandWithIcon } from 'src/shared/mui-data-grid/datagrid-materials-cell-name/components/datagrid-materials-cell-name/datagrid-materials-cell-name-with-icon.export';
 
 export default function Materials({
@@ -146,7 +147,6 @@ export default function Materials({
       }),
     [materialsInfo]
   );
-  const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
   const [rows, setRows] = useState<TMaterialTableEntity[]>(allMaterialsEntity);
   const [isCreateRowMode, setIsCreateRowMode] = useState<boolean>(false);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -1055,18 +1055,18 @@ export default function Materials({
                     ? [
                         {
                           name: 'Дашборд',
-                          href: `https://alibaba.hhos.ru/dashboard`,
+                          href: paths.dashboard.root,
                         },
-                        { name: 'Материалы', href: `https://alibaba.hhos.ru/dashboard/materials` },
+                        { name: 'Материалы', href: paths.dashboard.materials },
                         {
                           name: currentCategory.name,
-                          href: `https://alibaba.hhos.ru/dashboard/materials/${currentCategory.uuid}`,
+                          href: `${paths.dashboard.categoryMaterials}/${currentCategory.uuid}`,
                         },
                       ]
                     : [
                         {
                           name: 'Дашборд',
-                          href: `https://alibaba.hhos.ru/dashboard`,
+                          href: paths.dashboard.root,
                         },
                         { name: 'Материалы' },
                       ]

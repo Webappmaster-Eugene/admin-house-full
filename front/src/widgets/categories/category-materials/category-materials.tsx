@@ -50,7 +50,6 @@ export default function CategoryMaterials({
   allCategoriesInWorkspace,
 }: CategoryMaterialProps) {
   const { enqueueSnackbar } = useSnackbar();
-  const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
 
   const [categoryToChange, setCategoryToChange] = useState<
     CategoryMaterialGetCommand.ResponseEntity | undefined

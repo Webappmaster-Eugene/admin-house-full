@@ -95,6 +95,7 @@ import { createFieldVariantOfFieldOfCategory } from 'src/api/actions/field-varia
 import { deleteFieldVariantOfFieldOfCategory } from 'src/api/actions/field-variants/delete-field-variant-in-field-of-category-material.action';
 import { DataGridCellCharacteristic } from 'src/shared/mui-data-grid/datagrid-materials-cell-characteristic/datagrid-materials-cell-characteristic';
 import { DataGridCellUnitMeasurement } from 'src/shared/mui-data-grid/datagrid-materials-cell-unit-measurement/datagrid-materials-cell-unit-measurement';
+import { paths } from 'src/utils/routes/paths';
 
 import { columnsInitialState } from './table-initial-state';
 
@@ -106,7 +107,6 @@ export default function FieldsOfCategoryMaterials({
   const isDeleteFieldCategoryDialogOpen = useBoolean();
   const isChangeTypeFieldOfCategoryDialogOpen = useBoolean();
   const isChangingFieldVariantsForFieldOfCategoryDialogOpen = useBoolean();
-  const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
 
   const [fieldTypeToChange, setFieldTypeToChange] = useState<FieldTypeToChange | null>(null);
   const [cellValueBeforeEdit, setCellValueBeforeEdit] = useState<CellValueBeforeEdit | null>(null);
@@ -892,7 +892,7 @@ export default function FieldsOfCategoryMaterials({
               concreteCrumbs={[
                 {
                   name: 'Дашборд',
-                  href: `https://alibaba.hhos.ru/dashboard`,
+                  href: paths.dashboard.root,
                 },
                 { name: 'Поля категорий' },
               ]}

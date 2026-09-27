@@ -1,3 +1,5 @@
+import { paths } from 'src/utils/routes/paths';
+
 type BreadcrumbItem = {
   name: string;
   link: string;
@@ -5,35 +7,35 @@ type BreadcrumbItem = {
 
 type BreadcrumbsMapType = Record<string, BreadcrumbItem>;
 
-const startLink = process.env.NEXT_PUBLIC_FRONT_ADDRESS;
-
+// Относительные пути из paths: раньше ссылки строились от NEXT_PUBLIC_FRONT_ADDRESS, а в прод-сборке
+// переменной нет — крошки вели на «undefinedprofile» и отдавали 404.
 export const PathsTransformerBreadcrumbMap: BreadcrumbsMapType = {
   dashboard: {
     name: 'Дашборд',
-    link: `${startLink}dashboard`,
+    link: paths.dashboard.root,
   },
   materials: {
     name: 'Материалы',
-    link: `${startLink}dashboard/materials`,
+    link: paths.dashboard.materials,
   },
   'category-materials': {
     name: 'Категории',
-    link: `${startLink}dashboard/category-materials`,
+    link: paths.dashboard.categoryMaterials,
   },
   fields: {
     name: 'Поля категорий',
-    link: `${startLink}dashboard/fields`,
+    link: paths.dashboard.fields,
   },
   characteristics: {
     name: 'Характеристики',
-    link: `${startLink}dashboard/characteristics`,
+    link: paths.dashboard.characteristics,
   },
   profile: {
     name: 'Профиль',
-    link: `${startLink}profile`,
+    link: paths.profile.profile,
   },
   settings: {
     name: 'Настройки',
-    link: `${startLink}profile/settings`,
+    link: paths.profile.settings,
   },
 };
