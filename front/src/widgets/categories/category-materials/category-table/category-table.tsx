@@ -20,6 +20,23 @@ import {
 } from 'src/shared/table';
 import { CategoryTableHeaders } from 'src/widgets/categories/category-materials/category-table/category-table.headers';
 
+// Колонки по порядку CategoryTableHeaders (1 — чекбокс): 3 описание, 4 материалы,
+// 5 глобальная категория, 6 шаблонное имя, 7 поля, 8 меню «⋮».
+const column = (n: number) => `& th:nth-of-type(${n}), & td:nth-of-type(${n})`;
+
+// Набор колонок зависит от ширины блока таблицы, а не экрана (сайдбар съедает до 280px):
+// раньше таблица была не уже 960px, и меню «⋮» на телефоне и ноутбуке 1280 пряталось за прокруткой.
+const RESPONSIVE_COLUMNS_SX = {
+  [[3, 4, 5, 6, 7].map(column).join(', ')]: { display: 'none' },
+  '@container (min-width: 760px)': {
+    [[4, 5, 7].map(column).join(', ')]: { display: 'table-cell' },
+  },
+  '@container (min-width: 1100px)': {
+    minWidth: 960,
+    [[3, 6].map(column).join(', ')]: { display: 'table-cell' },
+  },
+};
+
 export default function AllCategoriesTable({
   table,
   notFound,
@@ -53,6 +70,7 @@ export default function AllCategoriesTable({
       <Box
         sx={{
           position: 'relative',
+          containerType: 'inline-size',
           m: theme.spacing(-2, -3, -3, -3),
         }}
       >
@@ -96,7 +114,7 @@ export default function AllCategoriesTable({
           <Table
             size={dense ? 'small' : 'medium'}
             sx={{
-              minWidth: 960,
+              ...RESPONSIVE_COLUMNS_SX,
               // borderCollapse: 'separate',
               // borderSpacing: '0 16px',
             }}

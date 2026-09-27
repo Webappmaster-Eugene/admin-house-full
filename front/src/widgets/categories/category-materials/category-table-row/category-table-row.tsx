@@ -142,6 +142,8 @@ export default function CategoryTableRow({
               variant="inherit"
               sx={{
                 maxWidth: 360,
+                // Длинное название переносится по словам: в одну строку оно распирало таблицу шире экрана
+                whiteSpace: 'normal',
                 cursor: 'pointer',
                 ...(details.value && { fontWeight: 'fontWeightBold' }),
               }}

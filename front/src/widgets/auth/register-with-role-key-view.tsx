@@ -6,8 +6,10 @@ import { useForm } from 'react-hook-form';
 import { RouterLink } from '@/shared/router-link';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormProvider, { RHFTextField } from '@/shared/hook-form';
+import { RHFSelect } from '@/shared/hook-form/rhf-select';
 
 import Link from '@mui/material/Link';
+import MenuItem from '@mui/material/MenuItem';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +19,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/utils/routes/paths';
 import { useBoolean } from 'src/utils/hooks/use-boolean';
+import { ROLE_IDS, ROLE_NAME_BY_ID } from 'src/utils/const/role-ids';
 import { useRouter } from 'src/utils/hooks/router-hooks/use-router';
 import { useSearchParams } from 'src/utils/hooks/router-hooks/use-search-params';
 import { isErrorFieldTypeGuard } from 'src/utils/type-guards/is-error-field.type-guard';
@@ -26,6 +29,9 @@ import { isNameInErrorTypeGuard } from 'src/utils/type-guards/is-name-in-error.t
 import { registerWithRoleKey } from 'src/api/actions/auth/register-with-role-key.action';
 
 // ----------------------------------------------------------------------
+
+// Раньше роль вводилась числом (1–4) — пользователь видел «4» вместо названия
+const ROLE_OPTIONS: number[] = Object.values(ROLE_IDS);
 
 export default function RegisterWithRoleKeyView() {
   const router = useRouter();
@@ -44,9 +50,8 @@ export default function RegisterWithRoleKeyView() {
       .required('Подтверждение пароля обязательно')
       .oneOf([Yup.ref('password')], 'Пароли должны совпадать'),
     roleId: Yup.number()
-      .positive()
-      .lessThan(5, 'Код роли должен быть меньше 5')
-      .required('Код роли (1-4) обязателен'),
+      .oneOf(ROLE_OPTIONS, 'Выберите роль из списка')
+      .required('Выберите роль'),
     secretKey: Yup.string().required('Секретный ключ обязателен для заполнения'),
   });
 
@@ -56,7 +61,7 @@ export default function RegisterWithRoleKeyView() {
     email: '',
     password: '',
     confirmPassword: '',
-    roleId: 4,
+    roleId: ROLE_IDS.CUSTOMER as number,
     secretKey: '',
   };
 
@@ -173,7 +178,13 @@ export default function RegisterWithRoleKeyView() {
             }}
           />
 
-          <RHFTextField name="roleId" label="Роль" type="number" />
+          <RHFSelect name="roleId" label="Роль" helperText="Роль, для которой выдан секретный ключ">
+            {ROLE_OPTIONS.map((id) => (
+              <MenuItem key={id} value={id}>
+                {ROLE_NAME_BY_ID[id]}
+              </MenuItem>
+            ))}
+          </RHFSelect>
 
           <RHFTextField name="secretKey" label="Секретный ключ" type="text" />
 
