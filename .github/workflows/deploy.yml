@@ -14,6 +14,7 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Trigger Dokploy deployment
         run: |
@@ -24,11 +25,14 @@ jobs:
           fi
 
           echo "Triggering Dokploy webhook..."
-          ATTEMPTS=3
+          # Пока на сервере собираются соседние проекты, Dokploy отвечает 502/таймаутом минутами —
+          # 3 попытки за полторы минуты не хватало. Ждём до ~25 мин. Если запрос дошёл, но ответ
+          # потерялся, повтор поставит в очередь второй деплой тех же образов — это лишь минута.
+          ATTEMPTS=10
           for i in $(seq 1 "$ATTEMPTS"); do
             HTTP_CODE=$(curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
               --silent --output /dev/stderr --write-out "%{http_code}" \
-              --max-time 30) || HTTP_CODE="000"
+              --max-time 60) || HTTP_CODE="000"
 
             if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
               echo "Deployment triggered successfully! (HTTP $HTTP_CODE, attempt $i/$ATTEMPTS)"
@@ -37,7 +41,9 @@ jobs:
 
             echo "::warning::Dokploy webhook returned HTTP $HTTP_CODE (attempt $i/$ATTEMPTS)"
             if [ "$i" -lt "$ATTEMPTS" ]; then
-              sleep $((i * 5))
+              DELAY=$((i * 30))
+              if [ "$DELAY" -gt 120 ]; then DELAY=120; fi
+              sleep "$DELAY"
             fi
           done
 
