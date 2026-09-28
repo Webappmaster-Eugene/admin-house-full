@@ -12,6 +12,9 @@ FROM node:20.11.1-alpine AS builder
 WORKDIR /front
 COPY --from=deps /front/node_modules ./node_modules
 COPY . .
+# Коммит сборки для /version.json — по нему CI проверяет, что деплой дошёл до прода
+ARG APP_COMMIT_SHA=unknown
+ENV APP_COMMIT_SHA=$APP_COMMIT_SHA
 RUN npm run build
 
 # ─── Stage 3: Runner ───

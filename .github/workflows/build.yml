@@ -55,6 +55,9 @@ jobs:
           context: ./front
           file: ./front/Dockerfile.front
           push: true
+          # Отдаётся фронтом на /version.json — Deploy ждёт этот коммит на проде
+          build-args: |
+            APP_COMMIT_SHA=${{ github.sha }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/admin-house-front:${{ github.sha }}

@@ -44,6 +44,75 @@ jobs:
           echo "::error::Dokploy webhook failed after $ATTEMPTS attempts (last HTTP $HTTP_CODE) — production was NOT updated. Check Dokploy dashboard."
           exit 1
 
+  # Вебхук лишь ставит деплой в очередь Dokploy. Очередь общая для всех проектов на сервере, а соседние
+  # проекты собирают образы прямо там (~30 мин каждый) — старт нашего деплоя откладывался до 3 часов,
+  # а CI уже рапортовал об успехе. Поэтому ждём, пока фронт прода не отдаст коммит этой сборки.
+  verify:
+    name: Verify production version
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    env:
+      EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+      FRONT_URL: https://alibaba.hhos.ru
+      API_URL: https://api.alibaba.hhos.ru/api/v1.0
+      WAIT_MINUTES: 180
+      POLL_SECONDS: 60
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Wait for the new version on production
+        run: |
+          deadline=$(( $(date +%s) + WAIT_MINUTES * 60 ))
+          started=$(date +%s)
+          last_report=0
+          echo "Ждём на проде коммит $EXPECTED_SHA (до $WAIT_MINUTES мин)"
+
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            deployed=$(curl -fsS --max-time 20 "$FRONT_URL/version.json?t=$(date +%s)" 2>/dev/null | jq -r '.commit // empty' 2>/dev/null || true)
+
+            if [ "$deployed" = "$EXPECTED_SHA" ]; then
+              echo "Прод обновлён до $EXPECTED_SHA за $(( ($(date +%s) - started) / 60 )) мин"
+              exit 0
+            fi
+
+            # Пока ждали, мог выкатиться более новый коммит — это тоже успех для текущего
+            if [ -n "$deployed" ] && [ "$deployed" != "unknown" ]; then
+              relation=$(gh api "repos/$REPO/compare/$EXPECTED_SHA...$deployed" --jq '.status' 2>/dev/null || true)
+              if [ "$relation" = "ahead" ]; then
+                echo "::notice::На проде уже более новый коммит $deployed (включает $EXPECTED_SHA)"
+                exit 0
+              fi
+            fi
+
+            now=$(date +%s)
+            if [ $(( now - last_report )) -ge 300 ]; then
+              echo "$(( (now - started) / 60 )) мин: на проде ${deployed:-нет ответа} — деплой ещё в очереди Dokploy или идёт"
+              last_report=$now
+            fi
+            sleep "$POLL_SECONDS"
+          done
+
+          echo "::error::За $WAIT_MINUTES мин прод не обновился до $EXPECTED_SHA (сейчас: ${deployed:-нет ответа}). Проверьте очередь и лог деплоя в Dokploy."
+          exit 1
+
+      - name: Smoke check
+        run: |
+          for url in "$FRONT_URL/" "$API_URL/app-info"; do
+            ok=""
+            for i in 1 2 3 4 5; do
+              code=$(curl -s -o /dev/null --max-time 30 -w "%{http_code}" "$url" || true)
+              if [ "$code" = "200" ]; then ok=1; break; fi
+              echo "::warning::$url → HTTP $code (попытка $i/5)"
+              sleep 15
+            done
+            if [ -z "$ok" ]; then
+              echo "::error::$url не отвечает 200 после деплоя"
+              exit 1
+            fi
+            echo "$url → 200"
+          done
+
   send-start-deploy-telegram-message:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Notify deployment started
@@ -62,7 +131,7 @@ jobs:
 
   send-telegram-message:
     name: Notify deployment succeeded
-    needs: [deploy]
+    needs: [deploy, verify]
     if: success()
     runs-on: ubuntu-latest
     steps:
@@ -80,7 +149,7 @@ jobs:
   notify-on-error:
     name: Notify deployment failed
     runs-on: ubuntu-latest
-    needs: [deploy]
+    needs: [deploy, verify]
     if: failure()
     steps:
       - uses: actions/checkout@v4
